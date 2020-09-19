@@ -1,0 +1,26 @@
+# Sitewide Alert routing definition
+sitewide_alert.settings_tab:
+  route_name: sitewide_alert.settings
+  title: 'Settings'
+  base_route: sitewide_alert.settings
+
+entity.sitewide_alert.canonical:
+  route_name: entity.sitewide_alert.canonical
+  base_route: entity.sitewide_alert.canonical
+  title: 'View'
+
+entity.sitewide_alert.edit_form:
+  route_name: entity.sitewide_alert.edit_form
+  base_route: entity.sitewide_alert.canonical
+  title: 'Edit'
+
+entity.sitewide_alert.version_history:
+  route_name: entity.sitewide_alert.version_history
+  base_route: entity.sitewide_alert.canonical
+  title: 'Revisions'
+
+entity.sitewide_alert.delete_form:
+  route_name:  entity.sitewide_alert.delete_form
+  base_route:  entity.sitewide_alert.canonical
+  title: Delete
+  weight: 10

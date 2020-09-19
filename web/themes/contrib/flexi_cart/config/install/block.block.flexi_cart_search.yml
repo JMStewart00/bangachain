@@ -1,0 +1,22 @@
+uuid: 7bb33504-2a7e-42f0-98bb-89935a294ae6
+langcode: en
+status: true
+dependencies:
+  module:
+    - search
+  theme:
+    - flexi_cart
+_core:
+  default_config_hash: za-39d5WDUg6XvbyqSnuVYEeq6QM4qKJxW8MnoAha5A
+id: flexi_cart_search
+theme: flexi_cart
+region: search_area
+weight: -7
+provider: null
+plugin: search_form_block
+settings:
+  id: search_form_block
+  label: Search
+  provider: search
+  label_display: visible
+visibility: {  }

@@ -1,0 +1,41 @@
+/**
+ * Generic Components
+*/
+
+* {
+	@include box-sizing(border-box);
+}
+body {
+	color: $base_color;
+	font-family: $base-font-family;
+	background: $dark_grey_color;
+}
+a {
+	color: $link_color;
+	transition: color 0.1s linear 0s,background-color 0.1s linear 0s,opacity 0.2s linear 0s!important;
+	text-decoration: none;
+	outline: 0;
+}
+a:focus, a:hover, a:active {
+	color: $link_h_color;
+}
+
+ul, ol {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 15px 0;
+  line-height: normal;
+}
+p {
+  margin: 10px 0;
+}
+
+@media only screen and (max-width: 64em) {
+	.container {
+    max-width: 100% !important;
+	}
+}

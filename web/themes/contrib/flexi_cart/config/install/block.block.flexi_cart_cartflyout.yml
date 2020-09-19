@@ -1,0 +1,21 @@
+uuid: 3c8e6f51-2ea4-4d32-b250-6ebefff53ced
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_cart_flyout
+  theme:
+    - flexi_cart
+id: flexi_cart_cartflyout
+theme: flexi_cart
+region: header_top
+weight: 0
+provider: null
+plugin: commerce_cart_flyout
+settings:
+  id: commerce_cart_flyout
+  label: 'Cart Flyout'
+  provider: commerce_cart_flyout
+  label_display: '0'
+  use_quantity_count: false
+visibility: {  }

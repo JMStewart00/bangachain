@@ -1,0 +1,72 @@
+.views-form {
+  overflow-x: auto;
+}
+table {
+	width: 100%;
+	margin: 5px 0 10px;
+	border-collapse: collapse;
+	border: 1px solid $light_grey_color;
+	thead tr th {
+		background: $pink-color;
+		border-bottom: 1px solid $light_grey_color;
+    font-weight: 600;
+    padding: 10px 8px;
+    color: $white-text;
+    text-align: left;
+    font-size: 14px;
+    a {
+    	color: $black_color;
+    }
+    &.active a, a:active {
+    	color: $base_color;
+    }
+    img {
+    	margin-left: 10px;
+    }
+	}
+	tbody tr {
+		td {
+			vertical-align: top;
+			border-bottom: 1px solid $light_grey_color;
+			padding: 12px 8px;
+			background: $white_color;
+			.form-item {
+				margin: 0;
+			}
+			ul {
+				margin: 0;
+				list-style-type: none;
+      }
+      &.cart-block--offcanvas-cart-table__remove button, 
+      &.views-field-remove-button .delete-order-item {
+        background: transparent;
+        min-width: auto;
+        padding: 3px 5px;
+        border: none;
+        height: auto;
+        color: $base_color;
+        &:hover {
+          color: $base_color;
+          background: transparent;
+        }
+      }
+      &.cart-block--offcanvas-cart-table__quantity input[type="number"] {
+        width: 60px !important;
+        height: auto;
+        padding: 2px 12px;
+      }
+      &.views-field-purchased-entity {
+        .field--name-title {
+          display: none;
+        }
+      }
+		}
+		&.odd td {
+			background: $grey_color;
+		}
+		&:hover td {
+			background: $grey_color;
+		}
+	}
+}
+

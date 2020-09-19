@@ -1,0 +1,6 @@
+services:
+  block_class.section_component_render:
+    class: Drupal\block_class\EventSubscriber\SectionComponentRender
+    arguments: []
+    tags:
+      - { name: event_subscriber }

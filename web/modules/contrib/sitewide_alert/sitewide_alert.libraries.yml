@@ -1,0 +1,28 @@
+# Global/3rd party libraries
+polyfill:
+  version: 3
+  js:
+    https://polyfill.io/v3/polyfill.min.js?features=fetch: { type: external, minified: true }
+react:
+  version: 16.12.0
+  js:
+    https://unpkg.com/react@16.12.0/umd/react.production.min.js: { type: external, minified: true }
+react-dom:
+  version: 16.12.0
+  js:
+    https://unpkg.com/react-dom@16.12.0/umd/react-dom.production.min.js: { type: external, minified: true }
+
+# Sitewide Alert Component
+init:
+  version: VERSION
+  js:
+    js/init.js: {}
+  css:
+    theme:
+      css/sitewide_alert.css: {}
+  dependencies:
+    - sitewide_alert/polyfill
+    - sitewide_alert/react
+    - sitewide_alert/react-dom
+    - core/drupal
+    - core/drupalSettings

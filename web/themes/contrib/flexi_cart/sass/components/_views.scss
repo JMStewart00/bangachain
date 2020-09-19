@@ -1,0 +1,112 @@
+/*
+** Views
+*/
+.view-commerce-checkout-order-summary {
+  table {
+    tr td {
+      text-align: right;
+    }
+  }
+}
+
+/*
+** Grid List
+*/
+.grd-list {
+  .views-row {
+    padding: 0 10px;
+    position: relative;
+    @include transition (all 0.3s ease-in-out);
+    margin-bottom: 20px;
+    cursor: pointer;
+    .views-field-field-image {
+      height: 320px;
+      overflow: hidden;
+      @include transition (all 0.3s ease-in-out);
+      img {
+        width: 100%;
+        display: block;
+        height: auto;
+        @include scale(1);
+        @include transition (all 0.3s ease-in-out);
+        position: relative;
+        &:before {
+          content: '';
+          position: absolute;
+          background: rgba(0, 0, 0, 0.3);
+          height: 100%;
+          width: 100%;
+        }
+      }
+     
+    }
+    .views-field-title, .views-field-field-price {
+      padding: 10px 10px 0;
+      background:$white_color;
+      text-transform: capitalize;
+      font-weight: 600;
+    }
+    .views-field-field-price {
+      padding: 2px 10px 10px;
+      font-weight: 700;
+    }
+  }
+}
+
+@media only screen and (min-width: 35.5em) {
+  .grd-list {
+    @include display-flex;
+    flex-wrap: wrap;
+    .views-row {
+      @include flex(0 0 50%);
+      max-width: 50%;
+    }
+  }
+}
+@media only screen and (min-width: 48em) {
+  .grd-list {
+    .views-row {
+      @include flex(0 0 33%);
+      max-width: 33%;
+    }
+  }
+}
+@media only screen and (min-width: 64em) {
+  .grd-list {
+    .views-row {
+      @include flex(0 0 25%);
+      max-width: 25%;
+      .views-field-variations {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-left: -60px;
+        opacity: 0;
+        visibility: hidden;
+        @include transition (all 0.3s ease-in-out);
+        @include translateY (50px);
+        .button--add-to-cart {
+          background: $white_color;
+          color: $base_color;
+          border: 1px solid transparent;
+          &:hover {
+            background: $link_h_color;
+            color: $white_text;
+          }
+        }
+      }
+      &:hover {
+        .views-field-variations {
+          visibility: visible;
+          opacity: 1;
+          @include translateY (0px);
+        }
+        .views-field-field-image {
+          img {
+            @include scale(1.1);
+          }
+        }
+      }
+    }
+  }
+}

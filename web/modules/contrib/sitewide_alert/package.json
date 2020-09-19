@@ -1,0 +1,21 @@
+{
+  "name": "drupal-sitewide-alert",
+  "description": "Drupal is an open source content management platform powering millions of websites and applications.",
+  "license": "GPL-2.0",
+  "private": true,
+  "engines": {
+    "yarn": ">= 1.6",
+    "node": ">= 8.11"
+  },
+  "scripts": {
+    "start": "./node_modules/.bin/drupal-js-build watch --css",
+    "build": "./node_modules/.bin/drupal-js-build --css"
+  },
+  "dependencies": {
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0"
+  },
+  "devDependencies": {
+    "drupal-js-build": "^1.1.1"
+  }
+}

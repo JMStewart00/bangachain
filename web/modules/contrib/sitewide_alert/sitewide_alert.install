@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the sitewide_alert module.
+ */
+
+use Drupal\Core\Session\AccountInterface;
+
+/**
+ * Implements hook_install().
+ */
+function sitewide_alert_install() {
+  // By default allow anonymous users to view Sitewide Alerts.
+  user_role_grant_permissions(AccountInterface::ANONYMOUS_ROLE, ['view published sitewide alert entities']);
+}

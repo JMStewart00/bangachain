@@ -1,0 +1,97 @@
+/**
+ * Form Fields
+*/
+input[type="text"], input.form-text, select, textarea, 
+input[type="email"], input[type="number"] {
+	border: 1px solid $light_grey_color;
+	background: $white_color;
+	color: $base_color;
+	height: 35px;
+	padding: 6px 12px;
+	font-size: 100%;
+	@include border-radius(2px);
+	max-width: 100%;
+  vertical-align: middle;
+  width: 100%;
+	&:focus {
+		border-color: rgba(0,0,0,0.1);
+		outline: 0 !important;
+		background: $grey_color;
+		@include box-shadow(none);
+	}
+}
+textarea, select[multiple="multiple"] {
+	height: auto;
+	padding: 5px;
+}
+button, .form-submit, .button, input[type="button"] {
+	background: $base_color;
+	border: 1px solid $base_color;
+	@include transition(color 0.1s linear 0s,background-color 0.1s linear 0s,opacity 0.2s linear 0s!important);
+	color: $white_text;
+	min-width: 120px;
+	margin-right: 5px;
+	@include inline-block;
+	padding: 6px 12px;
+	white-space: nowrap;
+	cursor: pointer;
+	@include user-select(none);
+	@include border-radius(4px);
+	height: 35px;
+	line-height: 20px;
+	text-align: center;
+	&:hover {
+		background: $link_h_color;
+    border-color: $link_h_color;
+    color: $white_text;
+	}
+}
+a.button {
+	color: $white_text;
+}
+.address-book-edit-button {
+  margin-left: 0;
+}
+.container-inline-date .form-item .description {
+	width: 150px;
+}
+.description {
+	font-size: 0.846em;
+	line-height: 1.5;
+	margin-top: 5px;
+}
+
+.form-type-radios .form-type-radio, .form-type-checkboxes .form-type-checkbox {
+	margin-bottom: 8px;
+}
+.form-item label {
+	font-size: 11px;
+	font-weight: 600;
+	margin: 0 10px 3px 0;
+	display: block;
+}
+fieldset {
+  border: none;
+  padding: 0;
+}
+.commerce-checkout-flow-multistep-default {
+  background: $white_color;
+  padding: 5px 20px;
+  margin-bottom: 20px;
+}
+
+@media only screen and (max-width: 767px) {
+  div.address-container-inline > .form-item {
+    display: block;
+    margin-right: 0;
+  }
+}
+@media only screen and (min-width: 48em) {
+  input[type="text"], input.form-text, select, textarea, 
+  input[type="email"], input[type="number"] {
+    width: auto;
+  }
+}
+
+
+

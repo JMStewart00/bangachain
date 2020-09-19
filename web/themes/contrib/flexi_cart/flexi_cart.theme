@@ -1,0 +1,180 @@
+
+<?php
+
+/**
+ * @file
+ * Functions to support theming in the flexi_cart theme.
+ */
+
+define('THEME_PATH', base_path() . drupal_get_path('theme', 'flexi_cart'));
+define('SLIDESHOW_COUNT', 5);
+
+use Drupal\Core\Theme\ThemeSettings;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Template\Attribute;
+use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Xss;
+use Drupal\file\Plugin\Core\Entity\FileInterface;
+
+
+function flexi_cart_preprocess_page(&$variables) {
+  $face_book = theme_get_setting('face_book');
+  $twitter = theme_get_setting('twitter');
+  $linkedin = theme_get_setting('linkedin');
+  $instagram = theme_get_setting('instagram');
+  $email = theme_get_setting('email');
+  $copyrights = theme_get_setting('copyrights');
+
+  //Social Icons
+  $variables['face_book'] = theme_get_setting('face_book','flexi_cart');
+  $variables['twitter'] = theme_get_setting('twitter','flexi_cart');
+  $variables['linkedin'] = theme_get_setting('linkedin','flexi_cart');
+  $variables['instagram'] = theme_get_setting('instagram','flexi_cart');
+  $variables['email'] = theme_get_setting('email','flexi_cart');
+  $variables['copyrights'] = theme_get_setting('copyrights','flexi_cart');
+
+  $show_slideshow = theme_get_setting('slideshow_display', 'flexi_cart');
+  if ($variables['is_front'] && $show_slideshow) {
+    $variables['slider'] = array();
+    for ($i = 1; $i <= SLIDESHOW_COUNT; $i++) {
+      $fid = theme_get_setting("slide_image_{$i}", "flexi_cart");
+      $file = isset($fid[0]) ? \Drupal\file\Entity\File::load($fid[0]) : [];
+      if (!empty($file)) {
+        $uri = $file->getFileUri();
+        $image_path = file_create_url($uri);
+      }
+      else {
+        $image_path = THEME_PATH . "/images/slide-{$i}.jpg";
+      }
+      $variables['slider'][] = array(
+        'url' => theme_get_setting("slide_url_{$i}", "flexi_cart"),
+        'src' => $image_path,
+        'title' => theme_get_setting("slide_title_{$i}", "flexi_cart"),
+        'desc' => theme_get_setting("slide_desc_{$i}", "flexi_cart"),
+      );
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * @param $form
+ *   The form.
+ * @param $form_state
+ *   The form state.
+ */
+
+function flexi_cart_form_system_theme_settings_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state) {
+  $form['flexi_cart_settings']['social_settings'] = [
+    '#type' => 'details',
+    '#title' => t('Social Media Settings'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#group' => 'tabs',
+  ];
+  $form['flexi_cart_settings']['social_settings']['face_book'] = [
+    '#type' => 'textfield',
+    '#title' => t('Facebook'),
+    '#default_value' => theme_get_setting('face_book', 'flexi_cart'),
+  ];
+  $form['flexi_cart_settings']['social_settings']['twitter'] = [
+    '#type' => 'textfield',
+    '#title' => t('Twitter'),
+    '#default_value' => theme_get_setting('twitter', 'flexi_cart'),
+  ];
+  $form['flexi_cart_settings']['social_settings']['linkedin'] = [
+    '#type' => 'textfield',
+    '#title' => t('Linked in'),
+    '#default_value' => theme_get_setting('linkedin', 'flexi_cart'),
+  ];
+  $form['flexi_cart_settings']['social_settings']['instagram'] = [
+    '#type' => 'textfield',
+    '#title' => t('Instagram'),
+    '#default_value' => theme_get_setting('instagram', 'flexi_cart'),
+  ];
+  $form['flexi_cart_settings']['copy_right_settings'] = [
+    '#type' => 'details',
+    '#title' => t('Copy rights'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#group' => 'tabs',
+  ];
+  $form['flexi_cart_settings']['copy_right_settings']['copyrights'] = [
+    '#type' => 'textfield',
+    '#title' => t('Copyrights'),
+    '#default_value' => theme_get_setting('copyrights', 'flexi_cart'),
+  ];
+  $form['flexi_cart_settings']['copy_right_settings']['email'] = [
+    '#type' => 'email',
+    '#title' => t('Email'),
+    '#default_value' => theme_get_setting('email', 'flexi_cart'),
+  ];
+
+  $form['flexi_cart_settings']['slideshow'] = [
+    '#type' => 'details',
+    '#title' => t('Front Page Slideshow'),
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+  ];
+  $form['flexi_cart_settings']['slideshow']['slideshow_display'] =[
+    '#type' => 'checkbox',
+    '#title' => t('Show slideshow'),
+    '#default_value' => theme_get_setting('slideshow_display', 'flexi_cart'),
+    '#description'   => t("Check this option to show Slideshow in front page. Uncheck to hide."),
+  ];
+  $form['flexi_cart_settings']['slideshow']['slide'] = [
+    '#markup' => t('You can change the title, url and image of each slide in the following Slide Setting fieldsets.'),
+  ];
+  for ($i = 1; $i <= SLIDESHOW_COUNT; $i++) {
+    $form['flexi_cart_settings']['slideshow']['slide' . $i] = [
+      '#type' => 'details',
+      '#title' => t('Slide '.$i),
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+    ];
+    $form['flexi_cart_settings']['slideshow']['slide' . $i]['slide_title_' . $i] = [
+      '#type' => 'textfield',
+      '#title' => t('Slide '.$i.' Title'),
+      '#default_value' => theme_get_setting("slide_title_{$i}", "flexi_cart"),
+    ];
+    $form['flexi_cart_settings']['slideshow']['slide' . $i]['slide_desc_' . $i] = [
+      '#type' => 'textarea',
+      '#title' => t('Slide '.$i.' Description'),
+      '#default_value' => theme_get_setting("slide_desc_{$i}", "flexi_cart"),
+    ];
+    $form['flexi_cart_settings']['slideshow']['slide' . $i]['slide_image_' . $i] = [
+      '#type' => 'managed_file',
+      '#title' => t('Slide '.$i.' Image'),
+      '#description' => t('Use same size for all the slideshow images(Recommented size : 1900 x 720).'),
+      '#default_value' => theme_get_setting("slide_image_{$i}", "flexi_cart"),
+      '#upload_location' => 'public://',
+    ];
+    $form['flexi_cart_settings']['slideshow']['slide' . $i]['slide_url_' . $i] = [
+      '#type' => 'textfield',
+      '#title' => t('Slide '.$i.' URL'),
+      '#default_value' => theme_get_setting("slide_url_{$i}", "flexi_cart"),
+    ];
+  }
+  $filename = drupal_get_path('theme', 'flexi_cart') . '/flexi_cart.theme';
+  $form_state->addBuildInfo('files', array($filename));
+  $form['#submit'][] = 'flexi_cart_settings_form_submit';
+}
+
+/**
+ * Custom submit handler for integrity settings form.
+*/
+function flexi_cart_settings_form_submit(&$form, \Drupal\Core\Form\FormStateInterface $form_state) {
+  $account = \Drupal::currentUser();
+  $values = $form_state->getValues();
+  for ($i = 0; $i <= SLIDESHOW_COUNT; $i++) {
+    if (isset($values["slide_image_{$i}"]) && !empty($values["slide_image_{$i}"])) {
+      if ($file = \Drupal\file\Entity\File::load($values["slide_image_{$i}"][0])) {
+        $file->setPermanent();
+        $file->save();
+        $file_usage = \Drupal::service('file.usage');
+        $file_usage->add($file, 'user', 'user', $account->id());
+      }
+    }
+  }
+}

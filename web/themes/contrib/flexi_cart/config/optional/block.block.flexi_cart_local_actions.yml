@@ -1,0 +1,20 @@
+uuid: 3a9d1bd0-f325-492f-92d4-04f523027108
+langcode: en
+status: true
+dependencies:
+  theme:
+    - flexi_cart
+_core:
+  default_config_hash: 13GQpeITIJsp1kyPniXtWZfyFH87vb1xxJCHifL4UeE
+id: flexi_cart_local_actions
+theme: flexi_cart
+region: content
+weight: -20
+provider: null
+plugin: local_actions_block
+settings:
+  id: local_actions_block
+  label: 'Primary admin actions'
+  provider: core
+  label_display: '0'
+visibility: {  }

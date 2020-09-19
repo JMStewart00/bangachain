@@ -1,0 +1,112 @@
+.slider {
+  .slider-caption {
+    position: absolute;
+    top: 50%;
+    z-index: 8;
+    margin-top: -80px;
+    padding: 20px;
+    left: 0;
+    h2, p {
+      color: $white_color;
+    }
+    h2 {
+      font-size: 1.5em;
+      text-transform: uppercase;
+    }
+    p.flex-desc {
+      letter-spacing: 0.5px;
+    }
+    a {
+      background: $white_color;
+      color: $base_color;
+      @include border-radius(50px);
+      padding: 7px 20px;
+      display: inline-block;
+      margin-top: 15px;
+      @include transition(all 0.3s ease-in);
+      text-decoration: none;
+      animation: pulse 1s infinite alternate;
+      &:hover {
+        background: $link_h_color;
+        color: $white_text;
+      }
+    }
+  }
+  .slides li{
+    position: relative;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 380px;
+    &:before {
+      content: '';
+      position: absolute;
+      background: rgba(0, 0, 0, 0.3);
+      height: 100%;
+      width: 100%;
+      z-index: 5;
+    }
+    img {
+      visibility: hidden;
+    }
+  }
+}
+@keyframes pulse {
+  0% {
+    margin-top: 0px;
+  }
+  100% {
+    margin-top: 6px; 
+  } 
+}
+
+.slick-arrow {
+  background: $white_color;
+  min-width: auto;
+  border: none;
+  height: auto;
+  color: $base_color;
+  font-size: 0;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  margin-top: -30px;
+  z-index: 20;
+  line-height: normal;
+  @include border-radius(0);
+  @include transition (all 0.3s ease-in);
+}
+.slick-prev, .slick-next {
+  &:before {
+    content: '\f104';
+    font: normal normal normal 16px/1 FontAwesome;
+    color: $base_color;
+  }
+}
+
+.slick-next {
+  right: -5px;
+  left: auto;
+  &:before {
+    content: '\f105';
+  }
+}
+
+
+@media only screen and (min-width: 64em) {
+  .slider {
+    .slider-caption {
+      width: 40%;
+      margin-left: 8rem;
+      h2 {
+        font-size: 2.8em;
+      }
+      a {
+        padding: 7px 40px;
+      }
+    }
+    .slides li{
+      height: 560px;
+    }
+  }
+}

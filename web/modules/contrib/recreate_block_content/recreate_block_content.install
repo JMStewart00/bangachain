@@ -1,0 +1,14 @@
+<?php
+
+/**
+ * @file
+ * Contains recreate_block_content.install.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function recreate_block_content_install() {
+  // Triggers the block rebuild.
+  recreate_block_content_rebuild();
+}

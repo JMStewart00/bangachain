@@ -1,0 +1,56 @@
+.sidebar {
+  background: rgba(219, 204, 143, 0.58);
+  padding: 15px;
+  @include border-radius(5px);
+  margin-bottom: 15px;
+}
+@media only screen and (min-width: 48em) {
+
+}
+
+@media only screen and (min-width: 64em) {
+  .sidebar-first,
+  .sidebar-second, 
+  .main-section {
+    float: left;
+  }
+  .sidebar-first {
+    padding-right: 15px;
+  }
+  .sidebar-second {
+    padding-left: 15px;
+  }
+  .two-sidebars {
+    .sidebar-first,
+    .sidebar-second {
+      width: 20%;
+    }
+    .main-section {
+      width: 60%;
+    }
+  }
+  .g-sidebar-first {
+    .sidebar-first {
+      width: 25%;
+    }
+    .main-section {
+      width: 75%;
+    }
+  }
+  .g-sidebar-second {
+    .sidebar-second {
+      width: 25%;
+    }
+    .main-section {
+      width: 75%;
+    }
+  }
+  .no-sidebars {
+    .sidebar-first,
+    .sidebar-second, 
+    .main-section {
+      float: none;
+      width: 100%;
+    }
+  }
+}

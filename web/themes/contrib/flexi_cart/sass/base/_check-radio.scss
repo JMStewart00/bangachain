@@ -1,0 +1,98 @@
+.js-form-type-checkbox, .js-form-type-radio {
+	position: relative;
+  input + label {
+    display: inline-block;
+    position: relative;
+    padding-left: 25px;
+    &:before {
+      content: "";
+      display: inline-block;
+      position: absolute;
+      width: 17px;
+      height: 17px;
+      left: 1px;
+      top: 0px;
+      border: 1px solid $light_grey_color;
+      background-color: $white_color;
+      @include border-radius(3px);      
+      @include transition-duration(0.15s);
+      @include transition-property(border);
+    }
+    &:after {
+      display: inline-block;
+      position: absolute;
+    }
+  }
+  & > input[type="checkbox"]:checked + label:before, & > input[type="radio"]:checked + label:before {
+  	background-color: $link_h_color;
+  	border-color: $link_h_color;
+ 	}
+}
+.js-form-type-checkbox {
+  input + label {
+    &:after {
+      width: 16px;
+      height: 16px;
+      left: 1px;
+      top: 0;
+      padding-left: 3px;
+      padding-top: 1px;
+      font-size: 11px;
+      color: $white_color;
+    }
+  }
+  & > input[type="checkbox"] {
+    opacity: 0;
+    position: absolute;
+    z-index: -999;
+    &:checked + label:after {
+      font: normal normal normal 13px/1 FontAwesome;
+      content: "\f00c";
+    }
+    &:disabled + label {
+      opacity: 0.65;
+      &:before {
+        cursor: not-allowed;
+      }
+    }
+  }
+}   
+.js-form-type-radio {
+  input + label {
+    &:before {
+      @include border-radius(50%);
+    }
+    &:after {
+      content: " ";
+      width: 11px;
+      height: 11px;
+      left: 4px;
+      top: 6px;
+      @include border-radius(50%);
+      background-color: $white_color;
+      @include scale(0, 0);
+      @include transition-property(transform);
+      @include transition-duration(0.1s);
+      @include transition-timing-function(cubic-bezier(0.8, -0.33, 0.2, 1.33));
+    }
+  }
+  & > input[type="radio"] {
+    opacity: 0;
+    position: absolute;
+    z-index: -999;
+    &:checked + label:after {
+      @include scale(1, 1);
+    }
+    &:disabled + label {
+      opacity: 0.65;
+      &:before {
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+.js-form-type-checkbox > input[type="checkbox"]:last-child, .js-form-type-radio > input[type="radio"]:last-child, .js-form-type-checkbox label + input[type="checkbox"], .js-form-type-radio label + input[type="radio"] {
+	opacity: 1;
+	position: static;
+}
+

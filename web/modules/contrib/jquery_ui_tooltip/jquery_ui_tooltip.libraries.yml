@@ -1,0 +1,15 @@
+tooltip:
+  version: 1.12.1
+  license:
+    name: Public Domain
+    url: https://github.com/jquery/jquery-ui/blob/1.12.1/LICENSE.txt
+    gpl-compatible: true
+  js:
+    jquery.ui/ui/widgets/tooltip-min.js: { minified: true }
+  css:
+    component:
+      jquery.ui/themes/base/tooltip.css: {}
+  dependencies:
+    - jquery_ui/core
+    - jquery_ui/position
+    - jquery_ui/widget

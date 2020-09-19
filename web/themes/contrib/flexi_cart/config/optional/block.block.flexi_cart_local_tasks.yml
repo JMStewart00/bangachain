@@ -1,0 +1,22 @@
+uuid: cec464d6-a1ac-4814-ad3d-4c4f9c1682e5
+langcode: en
+status: true
+dependencies:
+  theme:
+    - flexi_cart
+_core:
+  default_config_hash: X9I1OB0W3WlWtrK-CNcg6hNWwa8wficanpH8pYnDZDE
+id: flexi_cart_local_tasks
+theme: flexi_cart
+region: content
+weight: -40
+provider: null
+plugin: local_tasks_block
+settings:
+  id: local_tasks_block
+  label: Tabs
+  provider: core
+  label_display: '0'
+  primary: true
+  secondary: true
+visibility: {  }

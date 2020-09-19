@@ -1,0 +1,15 @@
+name: 'Sitewide Alert'
+type: module
+description: 'Provides ability to display an alert message at the top of all pages.'
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: 'Other'
+configure: sitewide_alert.sitewide_alert_config_form
+dependencies:
+  - drupal:text
+  - drupal:datetime_range
+
+# Information added by Drupal.org packaging script on 2020-04-29
+version: '8.x-1.3'
+project: 'sitewide_alert'
+datestamp: 1588182522

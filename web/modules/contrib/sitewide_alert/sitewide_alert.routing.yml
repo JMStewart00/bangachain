@@ -1,0 +1,17 @@
+
+sitewide_alert.sitewide_alerts_controller_load:
+  path: '/sitewide_alert/load'
+  defaults:
+    _controller: '\Drupal\sitewide_alert\Controller\SitewideAlertsController::load'
+    _title: 'load'
+  requirements:
+    _permission: 'access content'
+sitewide_alert.sitewide_alert_config_form:
+  path: '/admin/config/sitewide_alerts'
+  defaults:
+    _form: '\Drupal\sitewide_alert\Form\SitewideAlertConfigForm'
+    _title: 'Sitewide Alert Global Settings'
+  requirements:
+    _permission: 'administer sitewide alert'
+  options:
+    _admin_route: TRUE

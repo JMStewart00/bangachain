@@ -1,0 +1,22 @@
+uuid: 23517a93-2970-4e1c-87b9-acd4f59c752c
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - flexi_cart
+_core:
+  default_config_hash: oXUb3JZR2WW5VOdw4HrhRicCsq51mCgLfRyvheG68ck
+id: flexi_cart_breadcrumbs
+theme: flexi_cart
+region: breadcrumb
+weight: 0
+provider: null
+plugin: system_breadcrumb_block
+settings:
+  id: system_breadcrumb_block
+  label: Breadcrumbs
+  provider: system
+  label_display: '0'
+visibility: {  }

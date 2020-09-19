@@ -1,0 +1,37 @@
+name: Flexi Cart
+type: theme
+core: 8.x
+base theme: classy
+description: 'Flexi Cart is a ecommerce domain theme.'
+
+libraries:
+  - flexi_cart/bootstrap-cdn
+  - flexi_cart/fontawesome
+  - flexi_cart/global-styling
+
+regions:
+  header_top: 'Header Top'
+  header: 'Header'
+  navigation: 'Navigation'
+  search_area: 'Search'
+  banner: 'Banner'
+  breadcrumb: 'Breadcrumb'
+  system_messages: 'System Messages'
+  category: 'Category List'
+  content: 'Content'
+  sidebar_first: 'Sidebar First'
+  sidebar_second: 'Sidebar Second'
+  highlighted: 'Highlighted'
+  featured_top: 'Featured Top'
+  featured: 'Featured'
+  featured_bottom: 'Featured Bottom'
+  footer: 'Footer'
+  footer_bottom: 'Footer Bottom'
+  hidden_blocks_collection: 'Hidden blocks collection'
+
+settings:
+  face_book: 'option_2'
+# Information added by Drupal.org packaging script on 2019-10-10
+version: '8.x-1.2'
+project: 'flexi_cart'
+datestamp: 1570693990

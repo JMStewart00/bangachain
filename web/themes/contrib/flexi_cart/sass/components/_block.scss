@@ -1,0 +1,37 @@
+/*
+** blocks
+*/
+.block-page-title-block {
+  h1.page-title {
+    margin-bottom: 20px;
+    font-size: 2em;
+    text-transform: capitalize;
+    .field--name-title {
+      text-align: left;
+      text-transform: capitalize;
+    }
+  }
+}
+
+.sidebar {
+  .block {
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid $white_color;
+    img {
+      width: 100%;
+      display: block;
+      height: auto;
+    }
+    &:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    &:first-child {
+      h2 {
+        margin-top: 0;
+      }
+    }
+  }
+}

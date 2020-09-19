@@ -1,0 +1,14 @@
+name: 'Media Library Theme Reset'
+type: module
+description: 'Display the Media Library with an administrative theme'
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: 'Custom'
+dependencies:
+  - drupal:system (>=8.8.0)
+  - drupal:layout_builder
+
+# Information added by Drupal.org packaging script on 2020-06-16
+version: '8.x-1.0'
+project: 'media_library_theme_reset'
+datestamp: 1592330454

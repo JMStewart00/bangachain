@@ -1,0 +1,22 @@
+uuid: a57022e6-d0d1-4784-8d9f-d4dcbf8b2ca3
+langcode: en
+status: true
+dependencies:
+  module:
+    - help
+  theme:
+    - flexi_cart
+_core:
+  default_config_hash: 8I8iACSa0sKO3k3jlvUG1ge52rfcKX7USJAQYnzuBgg
+id: flexi_cart_help
+theme: flexi_cart
+region: content
+weight: -30
+provider: null
+plugin: help_block
+settings:
+  id: help_block
+  label: Help
+  provider: help
+  label_display: '0'
+visibility: {  }

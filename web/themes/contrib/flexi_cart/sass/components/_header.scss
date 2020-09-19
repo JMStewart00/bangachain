@@ -1,0 +1,136 @@
+/*
+** Header top
+*/ 
+.header-left {
+	margin-left: 40px;
+}
+.header-top {
+	background: $base_color;
+	padding: 2px 0;
+}
+
+.social-links {
+	ul li {
+		display: inline-block;
+		vertical-align: bottom;
+		@include transition(all 0.3s ease);
+		cursor: pointer;
+		line-height: normal;
+		a{
+			color: $white_text;
+			margin: 0 5px;
+			display: block;
+		}
+		&:hover a{
+			color: $link_h_color;
+		}
+	}
+}
+
+.usr-log-info {
+	position: relative;
+	margin-right: 15px;
+	.user-account {
+	& > .fa-user {
+			color: $white_text;
+			font: normal normal normal 14px/1 FontAwesome;
+			cursor: pointer;
+			@include inline-block;
+			vertical-align: middle;
+		}
+	}
+	.user-login-menu {
+		position: absolute;
+		width: 150px;
+		background: $white_color;
+		padding: 0 10px;
+		top: 21px;
+		right: 0;
+		z-index: 99;
+		opacity: 0;
+		visibility: hidden;
+		@include transition(all 0.3s ease);
+		padding: 10px 15px;
+	}
+	.user-account:hover .user-login-menu {
+		opacity: 1;
+		visibility: visible;
+	}
+	.login-menu li{
+		a {
+			color: $white_color;
+			text-decoration: none;
+			@include transition(all 0.3s ease);
+			&:hover {
+				color: $link_h_color;
+			}
+		}
+	}
+}
+
+.cart-flyout {
+	.cart-block--summary__icon {
+		& > img {
+			width: 15px;
+			height: 20px;
+			display: none;
+		}
+		&:before {
+			content: '\f290';
+			font: normal normal normal 16px/1 FontAwesome;
+			color: $white_text;
+		}
+	}
+	.cart-block--link__expand {
+		text-decoration: none;
+		display:block;
+		position: relative;
+		@include transition(all 0.3s ease);
+		&:hover {
+			.cart-block--summary__count {
+				background: $white_color;
+				color: $base_color;
+			}
+		}
+	}
+	.cart-block--summary__count {
+		background: $pink_color;
+		height: 14px;
+		width: 14px;
+		@include border-radius(50%);
+		position: absolute;
+		top: 0;
+		left: 10px;
+    text-align: center;
+    color:$white_text;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 15px;
+	}
+}
+
+/*
+** Header Level 2
+*/
+.header-second {
+	background: $white_color;
+  padding: 5px 0;
+  line-height: 32px;
+  @include box-shadow(0 2px 6px 0 rgba(0,0,0,.12), inset 0 -1px 0 0 #dadce0);
+}
+
+.header-logo {
+  a{
+    display: block;
+    width: 150px;
+  }
+  img{
+    height: 32px;
+  }
+}
+
+@media only screen and (min-width: 48em) {
+	.header-left {
+		margin-left: 0;
+	}
+}

@@ -1,0 +1,14 @@
+{
+  "name": "drupal/recreate_block_content",
+  "type": "drupal-module",
+  "description": "Recreates the block content for a exported block.",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "https://www.drupal.org/project/recreate_block_content",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/recreate_block_content",
+    "source": "http://cgit.drupalcode.org/recreate_block_content"
+  },
+  "require": { }
+}

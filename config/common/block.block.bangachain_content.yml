@@ -1,0 +1,22 @@
+uuid: 91e3dd65-28fd-4b50-b45b-f7d3178f85b8
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - bangachain
+_core:
+  default_config_hash: nspd8ROkgNPzSqnIzn62iCbjWoYLQjC1YmIabC-54l0
+id: bangachain_content
+theme: bangachain
+region: content
+weight: 0
+provider: null
+plugin: system_main_block
+settings:
+  id: system_main_block
+  label: 'Main page content'
+  provider: system
+  label_display: '0'
+visibility: {  }

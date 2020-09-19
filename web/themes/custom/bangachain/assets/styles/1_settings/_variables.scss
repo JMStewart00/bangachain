@@ -1,0 +1,17 @@
+/*
+  Settings - General Variables
+ */
+
+$border-radius: 10px;
+$border: 1px solid $gray-500;
+
+$project-transition: all 250ms ease;
+$project-kerning: 0.03125em;
+
+// Focus styles
+$focus-outline-width: 0.125rem;
+$focus-outline-style: solid;
+
+// Drupal admin toolbars
+$toolbar-fixed: 2.4375rem; // 39px
+$toolbar-tray-open: 5.125rem; // 82px

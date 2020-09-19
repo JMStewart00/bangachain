@@ -1,0 +1,22 @@
+uuid: b3b6e1e5-664e-4e99-9257-ede2cbf2195c
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - bangachain
+_core:
+  default_config_hash: jdNUiNHJiXPyLHqgLfmYRTNcgOEnmfcDe2tfleM29Tc
+id: bangachain_messages
+theme: bangachain
+region: highlighted
+weight: 0
+provider: null
+plugin: system_messages_block
+settings:
+  id: system_messages_block
+  label: 'Status messages'
+  provider: system
+  label_display: '0'
+visibility: {  }

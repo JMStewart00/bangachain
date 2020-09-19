@@ -1,0 +1,42 @@
+$rhythm-intervals: (
+  1,
+  2,
+  3,
+  4,
+  5
+);
+
+.u-vr {
+  &__base {
+    margin-top: rvr(4);
+    margin-bottom: rvr(4);
+  }
+
+  @each $key in $rhythm-intervals {
+    &__pt--#{$key} {
+      padding-top: rvr($key);
+    }
+
+    &__pb--#{$key} {
+      padding-bottom: rvr($key);
+    }
+
+    &__py--#{$key} {
+      padding-bottom: rvr($key);
+      padding-top: rvr($key);
+    }
+
+    &__mt--#{$key} {
+      margin-top: rvr($key);
+    }
+
+    &__mb--#{$key} {
+      margin-bottom: rvr($key);
+    }
+
+    &__my--#{$key} {
+      margin-bottom: rvr($key);
+      margin-top: rvr($key);
+    }
+  }
+}

@@ -1,0 +1,25 @@
+uuid: 5f060127-1910-434c-8632-27cbeb31da2c
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - bangachain
+_core:
+  default_config_hash: tROqFWV52jTOPDMQvMpoRNoWH8aed-0XZGq0Hkd6MqE
+id: bangachain_branding
+theme: bangachain
+region: header
+weight: 0
+provider: null
+plugin: system_branding_block
+settings:
+  id: system_branding_block
+  label: 'Site branding'
+  provider: system
+  label_display: '0'
+  use_site_logo: true
+  use_site_name: false
+  use_site_slogan: false
+visibility: {  }

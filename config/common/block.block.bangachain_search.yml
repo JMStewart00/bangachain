@@ -1,0 +1,23 @@
+uuid: 5fbfeb38-01ce-4b60-8ef6-d6ebc8a20148
+langcode: en
+status: true
+dependencies:
+  module:
+    - search
+  theme:
+    - bangachain
+_core:
+  default_config_hash: 0UL7221Kxjq3NQoTcjBKVIrKfOSOPeDZnlkjXNQkn34
+id: bangachain_search
+theme: bangachain
+region: sidebar_first
+weight: -7
+provider: null
+plugin: search_form_block
+settings:
+  id: search_form_block
+  label: Search
+  provider: search
+  label_display: visible
+  page_id: ''
+visibility: {  }

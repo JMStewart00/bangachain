@@ -1,0 +1,50 @@
+/*
+  Elements - Typography
+ */
+
+h1,
+.h1 {
+  font-size: font-size(36);
+  line-height: (46/36);
+  font-weight: $fw-semi-bold;
+}
+
+h2,
+.h2 {
+  font-size: font-size(24);
+  line-height: (34/24);
+  font-weight: $fw-bold;
+}
+
+h3,
+.h3 {
+  font-size: font-size(20);
+  line-height: (3/2);
+  font-weight: $fw-bold;
+}
+
+p {
+  line-height: $project-lineheight-base;
+}
+
+a {
+  font-weight: $fw-semi-bold;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+blockquote {
+  color: $brand-blue;
+  font-size: rem(32);
+  line-height: (42/32);
+  font-weight: $fw-semi-bold;
+  margin: rvr(2) 0;
+
+  p {
+    line-height: (42/32);
+  }
+}

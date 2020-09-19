@@ -1,0 +1,31 @@
+{#
+/**
+ * @file
+ * Theme override to display a remote video media item.
+ *
+ * Available variables:
+ * - name: Name of the media.
+ * - content: Media content.
+ *
+ * @see template_preprocess_media()
+ *
+ * @ingroup themeable
+ */
+#}
+{{ attach_library('lifespan/remote-video-base') }}
+
+{%
+  set classes = [
+    'c-media',
+    'c-remote-video',
+    view_mode ? 'c-remote-video--' ~ view_mode|clean_class,
+  ]
+%}
+
+<article{{ attributes.addClass(classes) }}>
+  {{ title_suffix.contextual_links }}
+  {% if content %}
+    {{ content }}
+    <div class="c-remote-video__play-icon"><i class="o-icon fas fa-play fa-2x"></i></div>
+  {% endif %}
+</article>

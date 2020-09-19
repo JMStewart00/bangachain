@@ -1,0 +1,40 @@
+global-styling:
+  version: 1
+  css:
+    theme:
+      assets/styles/main.css: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/modernizr
+
+bootstrap-js:
+  version: 4.4
+  js:
+    /libraries/bootstrap/js/dist/util.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/modernizr
+
+bootstrap-collapse:
+  version: 1.0
+  js:
+    /libraries/bootstrap/js/dist/collapse.js: {}
+  dependencies:
+    - bangachain/bootstrap-js
+
+bootstrap-dropdown:
+  version: 4.4
+  js:
+    /libraries/bootstrap/js/dist/dropdown.js: {}
+  dependencies:
+    - bangachain/popper-js
+    - bangachain/bootstrap-js
+
+bootstrap-tab:
+  version: 1.0
+  js:
+    /libraries/bootstrap/js/dist/tab.js: {}
+  dependencies:
+    - bangachain/bootstrap-js

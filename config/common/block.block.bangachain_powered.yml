@@ -1,0 +1,22 @@
+uuid: c26c126e-ff88-42db-a153-da4d4511b945
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - bangachain
+_core:
+  default_config_hash: 7TEAo2YD6GOWqRpH7cmeeW46bgvjCPf5KjKSYuT6eQo
+id: bangachain_powered
+theme: bangachain
+region: sidebar_first
+weight: -7
+provider: null
+plugin: system_powered_by_block
+settings:
+  id: system_powered_by_block
+  label: 'Powered by Drupal'
+  provider: system
+  label_display: '0'
+visibility: {  }

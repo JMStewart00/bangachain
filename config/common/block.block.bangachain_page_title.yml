@@ -1,0 +1,20 @@
+uuid: e3d334f0-af36-4f2b-be35-17fc9461ebbf
+langcode: en
+status: true
+dependencies:
+  theme:
+    - bangachain
+_core:
+  default_config_hash: peQNe_tXWHHCjA1l9JRzbZuMbvwL3jdZ_cmJGpKBi2c
+id: bangachain_page_title
+theme: bangachain
+region: content
+weight: -4
+provider: null
+plugin: page_title_block
+settings:
+  id: page_title_block
+  label: 'Page title'
+  provider: core
+  label_display: '0'
+visibility: {  }

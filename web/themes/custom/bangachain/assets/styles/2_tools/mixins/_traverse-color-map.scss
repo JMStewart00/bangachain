@@ -1,0 +1,105 @@
+// Traverse Color Map
+
+/// Loop through a color map to output defined foreground,
+/// background, link, and hover colors
+///
+/// @example scss – Basic Usage Sass
+///   .element {
+///     background-color: transparent;
+///     @include traverse-color-map(named-color);
+///   }
+///
+/// @example scss – Basic Usage CSS output
+///   .element {
+///     background-color: transparent;
+///     color: black;
+///
+///     a {
+///       color: red;
+///     }
+///
+///     a:hover,
+///     a:focus,
+///     a:active {
+///       color: yellow;
+///     }
+///   }
+///
+/// @required
+///   Color map named $background-color-map
+///   Bootstrap 4 mixin for hover-focus-active {}
+///
+/// @accepts
+///   Named color key present in $background-color-map
+///   Optional Boolean value for background color output
+///
+
+@mixin traverse-color-map($bg-color: white) {
+  @if variable-exists(background-color-map) == false {
+    @warn 'The required color map `$background-color-map` is not defined';
+  }
+
+  // @uses the SASS map $background-color-map defined in _color-loop.scss
+
+  // color background color
+  @if color-palette($bg-color, bg) {
+    background-color: color-palette($bg-color, bg);
+  }
+
+  // color foreground color
+  @if color-palette($bg-color, fg) {
+    color: color-palette($bg-color, fg);
+  }
+
+  // color heading colors
+  @if color-palette($bg-color, headings) {
+    #{$headings} {
+      color: color-palette($bg-color, headings);
+    }
+  }
+
+  // color link
+  @if color-palette($bg-color, link) {
+    a:not(.o-btn) {
+      color: color-palette($bg-color, link);
+    }
+  }
+
+  // slider buttons
+  @if color-palette($bg-color, slider-button-background) {
+    .slick-arrow {
+      // button background color
+      background-color: color-palette($bg-color, slider-button-background);
+
+      // button hover background color
+      @if color-palette($bg-color, slider-button-background-hover) {
+        @include hover-focus-active {
+          background-color: color-palette($bg-color, slider-button-background-hover);
+        }
+      }
+
+      // button icon color
+      @if color-palette($bg-color, slider-button-icon) {
+        svg {
+          color: color-palette($bg-color, slider-button-icon);
+        }
+      }
+    }
+  }
+
+  // slider pagination
+  @if color-palette($bg-color, slider-pagination) {
+    .c-slider .slick-dots button {
+      background-color: color-palette($bg-color, slider-pagination);
+    }
+  }
+
+  // color link hover
+  @if color-palette($bg-color, link-hover) {
+    a:not(.o-btn) {
+      @include hover-focus-active {
+        color: color-palette($bg-color, link-hover);
+      }
+    }
+  }
+}

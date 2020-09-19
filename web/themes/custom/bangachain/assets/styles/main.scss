@@ -1,0 +1,33 @@
+/*
+  Settings – used with preprocessors and contain font, colors definitions, etc.
+  Tools – globally used mixins and functions
+  Elements – styling for bare HTML elements (like H1, A, etc.)
+  Layouts – styling for global layout elements
+  Objects – are the smallest building blocks of a website
+  Components – specific UI components.
+  Utilities – utilities and helper classes with ability to override anything
+ */
+
+// Settings
+@import '1_settings/index';
+
+// Tools
+@import '2_tools/index';
+
+// Elements
+@import '3_elements/index';
+
+// Layouts
+@import '4_layouts/index';
+
+// Objects
+@import '5_objects/index';
+
+// Components
+@import '6_components/index';
+
+// Utilities
+@import '7_utilities/index';
+
+// Extras
+@import '8_extras/index';

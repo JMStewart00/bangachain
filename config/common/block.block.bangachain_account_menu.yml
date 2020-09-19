@@ -1,0 +1,27 @@
+uuid: 5f3904a4-81cc-4745-9f07-da623c119669
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.account
+  module:
+    - system
+  theme:
+    - bangachain
+_core:
+  default_config_hash: bqa_zUJcVrUq3EGaqAFiFWZSABlYoWAkJnOKAe4MLNg
+id: bangachain_account_menu
+theme: bangachain
+region: sidebar_first
+weight: -7
+provider: null
+plugin: 'system_menu_block:account'
+settings:
+  id: 'system_menu_block:account'
+  label: 'User account menu'
+  provider: system
+  label_display: '0'
+  level: 1
+  depth: 1
+  expand_all_items: false
+visibility: {  }

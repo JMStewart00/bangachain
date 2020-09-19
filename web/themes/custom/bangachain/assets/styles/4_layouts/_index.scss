@@ -1,0 +1,13 @@
+/*
+  Layouts - are for positioning.
+
+  Types:
+    - Global Layouts: are for global structure. See _layout.scss
+    - Block Layouts: are responsible for positioning objects or components. File specific: _media-card.scss
+ */
+
+@import 'box';
+@import 'layout';
+@import 'grid';
+@import 'search';
+@import 'footer';

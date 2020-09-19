@@ -1,0 +1,29 @@
+/*
+  Settings - Colors
+ */
+
+// Brand colors
+$brand-blue: #587b85;
+$brand-amber: #edaf3f;
+
+// Supporting colors
+$teal: #18535c;
+
+$gray-200: #f5f5f5;
+$gray-500: #dbdbdb;
+$gray-700: #999;
+$gray-800: #525252;
+$gray-900: #303030;
+
+// Development colors
+// Font
+$body-color: $gray-800;
+$link-color: $brand-blue;
+$link-hover-color: darken($brand-blue, 20%);
+
+// Border
+$button-border: #26464f;
+
+// Alpha
+$white-alpha-1: rgba(255, 255, 255, 0.1);
+$black-alpha-1: rgba(0, 0, 0, 0.1);

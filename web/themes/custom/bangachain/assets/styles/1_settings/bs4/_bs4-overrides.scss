@@ -1,0 +1,25 @@
+// Colors
+$primary: $brand-blue;
+$secondary: $brand-amber;
+
+// Grid
+$grid-breakpoints: (
+  xs: 0, // Extra small screen / phone
+  sm: 576px, // Small screen / phone
+  md: 768px, // Medium screen / tablet
+  lg: 992px, // Large screen / desktop
+  xl: 1200px, // Extra large screen / wide desktop
+  xxl: 1440px  // Extra Extra large screen / widest desktop
+);
+
+$container-max-widths: (
+  xxl: 1440px
+);
+
+// Fonts
+$font-family-base: $font-custom-family, 'sans-serif';
+
+$font-weight-normal: $fw-medium;
+$font-weight-bold: $fw-bold;
+$font-weight-base: $fw-medium;
+

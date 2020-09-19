@@ -1,0 +1,44 @@
+/*
+ Global layout styles
+ */
+
+// Use bootrap grid mixins
+// Container widths controlled in bs4-overrides
+.l-container {
+  @include make-container();
+
+  @include media-breakpoint-up(xxl) {
+    @include make-container-max-widths();
+  }
+}
+
+.l-row {
+  @include make-row();
+
+  // Removes bootrap left/right negative margin
+  &--no-columns {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  // Center all single columns regardless of width
+  &--one-column {
+    justify-content: center;
+  }
+}
+
+.l-col {
+  @include make-col-ready();
+
+  // Create column sizes
+  // Everything below medium will be full-width
+  @for $size from 1 through 12 {
+    &--#{$size} {
+      @include make-col($size);
+
+      @include media-breakpoint-down(md) {
+        @include make-col(12);
+      }
+    }
+  }
+}

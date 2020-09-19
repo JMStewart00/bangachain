@@ -1,0 +1,22 @@
+uuid: d147d6f1-d12a-4e1e-b7af-10e21a0071e8
+langcode: en
+status: true
+dependencies:
+  module:
+    - help
+  theme:
+    - bangachain
+_core:
+  default_config_hash: C3u9Snt6lZo8WcW5vsLW6x9hZvIc0x_XC4P7p8m4wro
+id: bangachain_help
+theme: bangachain
+region: content
+weight: -30
+provider: null
+plugin: help_block
+settings:
+  id: help_block
+  label: Help
+  provider: help
+  label_display: '0'
+visibility: {  }

@@ -1,0 +1,52 @@
+// @file layout_builder.scss
+// Layout Builder style overrides
+
+// Keep layout builder links color to prevent contrast issues
+.layout-builder {
+  &__link--add {
+    color: #686868 !important;
+  }
+
+  // Prevent content from leaving block area and ensure the contextual link is clickable
+  &__section > div {
+    overflow: hidden;
+    position: relative;
+  }
+
+  &-block {
+    // Add 48px to the block to prevent empty blocks from being hidden.
+    min-height: spacer(2); // 48px;
+    // Remove white background by default from blocks
+    background: inherit;
+  }
+}
+
+
+// Layout Builder configure block form
+.layout-builder-configure-block {
+  // Fix checkbox styling.
+  .c-form__checkbox + label {
+    padding-left: 40px !important;
+    display: block !important;
+    line-height: rem(30) !important;
+  }
+
+  // Prevent users from removing single instances of paragraph.
+  .paragraph-type-title,
+  .paragraph-type-top {
+    display: none;
+  }
+
+  // Make paragraph subform stand out a little bit.
+  .paragraphs-subform {
+    margin: rvr(2) 0;
+    padding: spacer(1);
+    border: 1px solid #bfbfbf;
+    border-radius: 3px;
+  }
+
+  // Prevent buttons from being all caps.
+  .o-btn--secondary {
+    text-transform: capitalize;
+  }
+}

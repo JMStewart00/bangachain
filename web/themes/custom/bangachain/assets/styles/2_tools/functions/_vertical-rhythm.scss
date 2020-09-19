@@ -1,0 +1,21 @@
+// Simple Responsive Vertical Rhythm implementation
+// Large screens take line height base multiplied by 1rem
+// Small screens get that value cut in half
+
+:root {
+  --rvr-multiplier: 0.5rem;
+
+  @include media-breakpoint-up(lg) {
+    --rvr-multiplier: 1rem;
+  }
+}
+
+// Responsive vertical rhythm
+@function rvr($multiple) {
+  @return calc(var(--lh__base) * #{$multiple} * var(--rvr-multiplier));
+}
+
+// Vertical rhythm - constant all screen sizes
+@function vr($multiple) {
+  @return calc(var(--lh__base) * #{$multiple} * 1rem);
+}

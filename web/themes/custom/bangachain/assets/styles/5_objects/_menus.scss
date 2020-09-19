@@ -1,0 +1,44 @@
+.o-menu {
+  // Universal dropdown styles
+  &-dropdown {
+    // override bootstrap defaults
+    border: 0;
+    border-radius: 0;
+    float: none;
+    padding: 0;
+    margin: 0;
+    left: 50%;
+    transform: translate(-50%, 0);
+    min-width: px(220);
+
+    // Default dropdown menu item styles
+    .o-menu {
+      &__item {
+        border-top: 1px solid $border-color;
+
+        &:first-child {
+          border-top: 0;
+        }
+      }
+    }
+
+    // Default link styles
+    .o-link {
+      width: 100%;
+      display: block;
+      padding: spacer(1.25);
+      font-weight: $fw-medium;
+    }
+
+    // Dropdown toggle
+    &__toggle {
+      color: currentColor;
+
+      &::after {
+        // Remove default bootsrap caret down
+        // Use <i class="fas fa-chevron-down"></i> inside button tag instead
+        border: 0;
+      }
+    }
+  }
+}

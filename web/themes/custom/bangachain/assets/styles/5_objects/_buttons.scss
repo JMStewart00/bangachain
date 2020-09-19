@@ -1,0 +1,109 @@
+.o-btn {
+  cursor: pointer;
+  display: inline-block;
+  padding: spacer(0.5) spacer(1);
+
+  @include hover-focus() {
+    text-decoration: none;
+  }
+
+  &--primary {
+    background-color: $white;
+    border: 2px solid $button-border;
+    border-radius: $border-radius * 2;
+    color: $brand-blue;
+    font-weight: $fw-bold;
+    font-size: rem(17);
+    max-width: 380px;
+    width: 100%;
+    transition: $transition-base;
+
+    @include hover-focus() {
+      color: $white;
+      background-color: $brand-blue;
+    }
+  }
+
+  &--secondary {
+    padding: spacer(0.5) spacer(2.5);
+    background-color: $brand-blue;
+    border: 0;
+    border-radius: $border-radius;
+    color: $white;
+    letter-spacing: rem(0.5);
+    text-transform: uppercase;
+    transition: background-color 0.2s ease-in;
+
+    @include hover-focus() {
+      color: $white;
+      background-color: $teal;
+    }
+  }
+
+  &--input-addon {
+    background-color: $brand-blue;
+    border: $border;
+    border-left: 0;
+    border-radius: 0 $border-radius $border-radius 0;
+    color: $gray-200;
+
+    @include media-breakpoint-down(sm) {
+      width: 30%;
+    }
+  }
+
+  &--large {
+    border-radius: $border-radius * 3;
+    padding: spacer(1) spacer(1.5);
+  }
+
+  &--icon {
+    svg {
+      color: $brand-amber;
+      float: right;
+      position: relative;
+      top: 2px;
+    }
+
+    // Not sure what else to do here
+    .ext {
+      display: none;
+    }
+  }
+
+  &--square {
+    border: 1px solid $border-color;
+    border-radius: 0;
+    margin: 0 rem(2) rem(2);
+    max-width: 150px;
+    text-transform: uppercase;
+    text-align: center;
+
+    @include hover-focus() {
+      background-color: $brand-blue;
+
+      a {
+        color: $white !important;
+        text-decoration: none;
+      }
+    }
+
+    a {
+      color: $gray-800 !important;
+      display: inline-block;
+      font-weight: $fw-medium;
+      font-size: rem(15);
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+  &--active {
+    background-color: $brand-blue;
+
+    a {
+      color: $white !important;
+      text-decoration: none;
+    }
+  }
+}

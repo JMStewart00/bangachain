@@ -1,0 +1,11 @@
+uuid: cab909f8-491d-4cfa-a0e7-b3a516f0dbb4
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: PS-z03VbhvMPW8pe7N_Pya5JDfVm1mL_F07cJ_srmYE
+id: google
+label: Google
+url: 'https://www.google.com/ping?sitemap=[sitemap]'
+sitemap_variants: {  }
+last_submitted: null

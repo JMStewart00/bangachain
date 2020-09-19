@@ -1,0 +1,22 @@
+uuid: 5f891444-9bdd-4271-a203-1f2170eed122
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - bangachain
+_core:
+  default_config_hash: ZajcI-Fc9NuKn1S1uzlTcKaSv-1lifgSXpgHcXE-MTE
+id: bangachain_breadcrumbs
+theme: bangachain
+region: breadcrumb
+weight: 0
+provider: null
+plugin: system_breadcrumb_block
+settings:
+  id: system_breadcrumb_block
+  label: Breadcrumbs
+  provider: system
+  label_display: '0'
+visibility: {  }

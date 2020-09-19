@@ -1,0 +1,75 @@
+$sidebar-size: 326px;
+
+.l-grid {
+  display: grid;
+
+  // Layouts
+  &__sidebar {
+    grid-area: sidebar;
+    max-width: 100%;
+  }
+
+  &__main {
+    grid-area: main;
+    max-width: 100%;
+  }
+
+  // Layouts: Sidebar left
+  &--sidebar-left {
+    grid-template-areas:
+      'sidebar'
+      'main';
+
+    grid-template-columns: minmax(0, 1fr);
+
+    @include media-breakpoint-up(lg) {
+      grid-template-areas: 'sidebar main';
+      grid-template-columns: $sidebar-size minmax(0, 1fr);
+      grid-gap: 60px;
+    }
+  }
+
+  // Layouts: Sidebar Right
+  &--sidebar-right {
+    grid-template-areas:
+      'main'
+      'sidebar';
+
+    grid-template-columns: minmax(0, 1fr);
+
+    @include media-breakpoint-up(lg) {
+      grid-template-areas: 'main sidebar';
+      grid-template-columns: minmax(0, 1fr) #{$sidebar-size};
+      grid-gap: 40px;
+    }
+
+    @include media-breakpoint-up(xl) {
+      grid-gap: 140px;
+    }
+  }
+
+  // Content grid
+  &__content {
+    gap: 60px;
+
+    &--2col {
+      grid-template-columns: repeat(1, 1fr);
+
+      @include media-breakpoint-up(md) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    &--3col {
+      grid-template-columns: repeat(1, 1fr);
+
+      @include media-breakpoint-up(md) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      @include media-breakpoint-up(lg) {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+  }
+}

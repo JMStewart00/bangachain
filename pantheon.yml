@@ -1,3 +1,24 @@
-# Put overrides to your pantheon.upstream.yml file here.
-# For more information, see: https://pantheon.io/docs/pantheon-yml/
+# Pantheon configuration
 api_version: 1
+php_version: 7.3
+
+# Use the web directory as the docroot
+web_docroot: true
+
+# enforce HTTPS on all domains in Pantheon
+enforce_https: full+subdomains
+
+# Automated workflows
+workflows:
+  # Dev/Multidev, git commits
+  sync_code:
+    after:
+      - type: webphp
+        description: Run post-deploy tasks
+        script: private/scripts/post-deploy.php
+  # Test and Live deployments
+  deploy:
+    after:
+      - type: webphp
+        description: Run post-deploy tasks
+        script: private/scripts/post-deploy.php

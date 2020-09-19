@@ -1,0 +1,20 @@
+uuid: 79ff0d55-ac61-413b-b999-c739a37e29f3
+langcode: en
+status: true
+dependencies:
+  theme:
+    - bangachain
+_core:
+  default_config_hash: 7RF0Yt5Y4Fr4VlUL-f5qig-1EqqO2LUyYv5AfA3wXbY
+id: bangachain_local_actions
+theme: bangachain
+region: content
+weight: -20
+provider: null
+plugin: local_actions_block
+settings:
+  id: local_actions_block
+  label: 'Primary admin actions'
+  provider: core
+  label_display: '0'
+visibility: {  }

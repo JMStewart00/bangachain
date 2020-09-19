@@ -1,0 +1,16 @@
+$box-spacings: (
+  xs: 1,
+  sm: 1.5,
+  md: 2,
+  lg: 2.5,
+  xl: 3,
+);
+
+.l-box {
+  @each $key, $size in $box-spacings {
+    // Layout styles
+    &--#{$key} {
+      padding: spacer($size);
+    }
+  }
+}

@@ -1,0 +1,12 @@
+.o-list {
+  &-inline {
+    &__item {
+      display: inline-block;
+    }
+  }
+
+  &--disc {
+    list-style-type: disc;
+    margin-left: 1rem;
+  }
+}

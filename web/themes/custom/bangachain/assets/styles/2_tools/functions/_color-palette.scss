@@ -1,0 +1,26 @@
+/// color-pallete() =
+/// Used for easier access of background color map
+/// @author jcaldwell
+/// @param $color Named color key present in $background-color-map
+/// @param $value A property present in $background-color-map
+///
+/// @example scss - Usage
+///   .class {
+///     background-color: color-palette(white, bg);
+///   }
+///
+/// @example css - Output
+///   .class {
+///     background-color: #ffffff;
+///   }
+///
+
+
+@function color-palette($color, $value: 'bg') {
+
+  @if map-has-key(map-get($background-color-map, $color), $value) {
+    @return map-get(map-get($background-color-map, $color), $value);
+  } @else {
+    @return null;
+  }
+}

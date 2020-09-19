@@ -1,0 +1,48 @@
+// Font weight
+.u-fw {
+  &__medium {
+    font-weight: $fw-medium;
+  }
+
+  &__semi-bold {
+    font-weight: $fw-semi-bold;
+  }
+
+  &__bold {
+    font-weight: $fw-bold;
+  }
+}
+
+// Font sizes
+.u-fs {
+  &__small {
+    font-size: rem(13);
+  }
+
+  &__base {
+    font-size: rem(16);
+  }
+
+  &__17 {
+    font-size: rem(17);
+  }
+}
+
+// Colors
+.u-color {
+  &__teal {
+    color: $teal;
+  }
+
+  &__blue {
+    color: $brand-blue;
+  }
+
+  &__black {
+    color: $black;
+  }
+
+  &__white {
+    color: $white;
+  }
+}

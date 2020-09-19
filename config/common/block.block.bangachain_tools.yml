@@ -1,0 +1,27 @@
+uuid: 053ee987-566d-4689-b713-25a25efb3b85
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.tools
+  module:
+    - system
+  theme:
+    - bangachain
+_core:
+  default_config_hash: '-I3rxpG8zcOdmwQXwHpzcbXZIJ1Jg6iR9UtCefonmzY'
+id: bangachain_tools
+theme: bangachain
+region: sidebar_first
+weight: -5
+provider: null
+plugin: 'system_menu_block:tools'
+settings:
+  id: 'system_menu_block:tools'
+  label: Tools
+  provider: system
+  label_display: visible
+  level: 1
+  depth: 0
+  expand_all_items: false
+visibility: {  }

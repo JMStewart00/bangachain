@@ -1,0 +1,33 @@
+uuid: 31eafd59-bfa6-417b-a14c-50e69884d8f3
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.discs
+  module:
+    - commerce_product
+id: commerce_product.discs.default
+targetEntityType: commerce_product
+bundle: discs
+mode: default
+content:
+  title:
+    label: hidden
+    type: string
+    weight: -5
+    region: content
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  variations:
+    type: commerce_add_to_cart
+    weight: 10
+    region: content
+    label: above
+    settings:
+      combine: true
+    third_party_settings: {  }
+hidden:
+  created: true
+  stores: true
+  uid: true

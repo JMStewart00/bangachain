@@ -1,0 +1,444 @@
+<?php
+
+/**
+ * @file
+ * Bang-A-Chain Layout.
+ */
+
+declare(strict_types = 1);
+
+use Drupal\bangachain_layout\BangAChainLayout;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\block\Entity\Block;
+use Drupal\block\BlockInterface;
+use Drupal\Core\Url;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Element\EntityAutocomplete;
+
+/**
+ * Implements hook_plugin_filter_TYPE__CONSUMER_alter().
+ */
+function bangachain_layout_plugin_filter_layout__layout_builder_alter(array &$definitions): void {
+  // Remove all non-bangachain layouts from the Layout Builder.
+  foreach ($definitions as $id => $definition) {
+    if (!preg_match('/^bangachain_layout__/', $id)) {
+      unset($definitions[$id]);
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function bangachain_layout_preprocess_block__bangachain_layout(array &$variables): void {
+  // Wrap the output of the block in a container.
+  $variables['content']['#type'] = 'container';
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave().
+ */
+function bangachain_layout_block_presave(BlockInterface $entity) {
+  $settings = [
+    'vertical_spacing_top',
+    'vertical_spacing_bottom',
+  ];
+
+  // Removes unused thirdPartySettings.
+  foreach ($settings as $setting) {
+    if (empty($entity->getThirdPartySetting('bangachain_layout', $setting))) {
+      $entity->unsetThirdPartySetting('bangachain_layout', $setting);
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function bangachain_layout_preprocess_block(&$variables) {
+  // Add our bangachain layout classes to blocks not placed with Layout Builder.
+  // See bangachain_layout_preprocess_layout for Layout Builder blocks.
+
+  // Blocks coming from page manager widget does not have id.
+  if (!empty($variables['elements']['#id'])) {
+    $block = Block::load($variables['elements']['#id']);
+
+    if ($block && $class = $block->getThirdPartySetting('bangachain_layout', 'vertical_spacing_top')) {
+      if ($class != 'none') {
+        $variables['attributes']['class'][] = $class;
+      }
+    }
+
+    if ($block && $class = $block->getThirdPartySetting('bangachain_layout', 'vertical_spacing_bottom')) {
+      if ($class != 'none') {
+        $variables['attributes']['class'][] = $class;
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function bangachain_layout_form_block_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // This alter only acts on blocks inside the block library.
+  // See bangachain_layout_form_layout_builder_configure_block_alter for LB inline blocks.
+
+  if (\Drupal::currentUser()->hasPermission('administer bangachain layout')) {
+
+    /** @var \Drupal\block\BlockInterface $block */
+    $block = $form_state->getFormObject()->getEntity();
+
+    // Get the possible spacing options for each direction.
+    $top_spacing_options = _get_top_spacing_options();
+    $bottom_spacing_options = _get_bottom_spacing_options();
+
+    // Get third party settings.
+    $vertical_settings = $block->getThirdPartySettings('bangachain_layout');
+
+    // Set default value for each direction.
+    $top_default_value = BangAChainLayout::VERTICAL_SPACING_NONE;
+    if(isset($vertical_settings['vertical_spacing']['top']) && $vertical_settings['vertical_spacing']['top'] !== 'none') {
+      $top_default_value = $vertical_settings['vertical_spacing']['top'];
+    }
+
+    $bottom_default_value = BangAChainLayout::VERTICAL_SPACING_NONE;
+    if(isset($vertical_settings['vertical_spacing']['bottom']) && $vertical_settings['vertical_spacing']['bottom'] !== 'none') {
+      $bottom_default_value = $vertical_settings['vertical_spacing']['bottom'];
+    }
+
+    // This will automatically be saved in the third party settings.
+    $form['third_party_settings']['#tree'] = TRUE;
+
+    $form['third_party_settings']['bangachain_layout']['vertical_spacing'] = [
+      '#type' => 'details',
+      '#title' => t('Vertical Spacing'),
+      '#open' => FALSE,
+      '#weight' => 30,
+    ];
+
+    $form['third_party_settings']['bangachain_layout']['vertical_spacing']['top'] = [
+      '#type' => 'select',
+      '#title' => t('Spacing Top'),
+      '#options' => $top_spacing_options,
+      '#default_value' => $top_default_value,
+      '#description' => t('Set the margin top value for this block.'),
+      '#size' => 0
+    ];
+
+    $form['third_party_settings']['bangachain_layout']['vertical_spacing']['bottom'] = [
+      '#type' => 'select',
+      '#title' => t('Spacing Bottom'),
+      '#options' => $bottom_spacing_options,
+      '#default_value' => $bottom_default_value,
+      '#description' => t('Set the margin bottom value for this block.'),
+    ];
+  }
+}
+
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function bangachain_layout_preprocess_layout(&$variables) {
+  // Calls our helper function to add classes before rendering inline blocks.
+  // See bangachain_layout_preprocess_layout for standard blocks.
+  $layout = $variables['layout'] ?? NULL;
+  if (!empty($layout->getRegionNames())) {
+    foreach ($layout->getRegionNames() as $region_name) {
+      if (isset($variables['content'][$region_name])) {
+        _bangachain_layout_layout_builder_add_settings($variables, $region_name);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function bangachain_layout_form_layout_builder_configure_block_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // This alter only acts on inline blocks placed with Layout Builder.
+  // See bangachain_layout_form_block_form_alter for standard blocks.
+
+  if (\Drupal::currentUser()->hasPermission('administer bangachain layout')) {
+    /** @var \Drupal\layout_builder\SectionComponent $section_component */
+    $section_component = $form_state->getFormObject()->getCurrentComponent();
+
+    // We need to add the submit before save to ensure form values are saved.
+    array_unshift($form['#submit'], 'bangachain_layout_form_layout_builder_configure_block_submit');
+
+    // Get the possible spacing options for each direction.
+    $top_spacing_options = _get_top_spacing_options();
+    $bottom_spacing_options = _get_bottom_spacing_options();
+
+    // Set default value for each direction.
+    $top_default_value = BangAChainLayout::VERTICAL_SPACING_NONE;
+    if($section_component->getThirdPartySetting('bangachain_layout', 'vertical_spacing_top')) {
+      $top_default_value = $section_component->getThirdPartySetting('bangachain_layout', 'vertical_spacing_top');
+    }
+
+    $bottom_default_value = BangAChainLayout::VERTICAL_SPACING_BOTTOM_2;
+    if($section_component->getThirdPartySetting('bangachain_layout', 'vertical_spacing_bottom')) {
+      $bottom_default_value = $section_component->getThirdPartySetting('bangachain_layout', 'vertical_spacing_bottom');
+    }
+
+    // Do not add Heading and CTA to blocks in sidebar region.
+    if ($section_component->getRegion() !== 'sidebar') {
+
+      // Set default value for headings & cta
+      if($section_component->getThirdPartySetting('bangachain_layout', 'primary_heading')) {
+        $heading_default_value = $section_component->getThirdPartySetting('bangachain_layout', 'primary_heading');
+      }
+
+      if($section_component->getThirdPartySetting('bangachain_layout', 'primary_subheading')) {
+        $subheading_default_value = $section_component->getThirdPartySetting('bangachain_layout', 'primary_subheading');
+      }
+
+      if($section_component->getThirdPartySetting('bangachain_layout', 'primary_cta_title')) {
+        $link_title_default_value = $section_component->getThirdPartySetting('bangachain_layout', 'primary_cta_title');
+      }
+
+      if($section_component->getThirdPartySetting('bangachain_layout', 'primary_cta_url')) {
+        $link_url_default_value = _get_displayable_string_from_entity_id($section_component->getThirdPartySetting('bangachain_layout', 'primary_cta_url'));
+      }
+
+      // Heading and CTA form elements.
+      $form['settings']['headings_cta'] = [
+        '#type' => 'details',
+        '#title' => t('Block General Fields'),
+        '#open' => TRUE,
+        '#weight' => 1,
+      ];
+
+      $form['settings']['headings_cta']['heading'] = [
+        '#type' => 'textfield',
+        '#title' => t('Heading'),
+        '#default_value' => $heading_default_value,
+        '#size' => 60,
+        '#description' => t('The main heading value for the block. This diplays as the main block title to users.'),
+      ];
+
+      $form['settings']['headings_cta']['subheading'] = [
+        '#type' => 'textfield',
+        '#title' => t('Subheading'),
+        '#default_value' => $subheading_default_value,
+        '#size' => 60,
+        '#description' => t('The subheading value for the block. This diplays as under the block title.'),
+      ];
+
+      $form['settings']['headings_cta']['cta'] = [
+        '#type' => 'details',
+        '#title' => t('Block CTA'),
+        '#open' => TRUE,
+        '#weight' => 30,
+      ];
+
+      $form['settings']['headings_cta']['cta']['title'] = [
+        '#type' => 'textfield',
+        '#title' => t('Link Title'),
+        '#default_value' => $link_title_default_value,
+        '#description' => t("The title of the button link at the bottom of the block."),
+        '#maxlength' => 255
+      ];
+
+      $form['settings']['headings_cta']['cta']['url'] = [
+        '#type' => 'entity_autocomplete',
+        '#target_type' => 'node',
+        '#title' => t('Link URL'),
+        '#attributes' => ['data-autocomplete-first-character-blacklist' => ['/#?']],
+        '#element_validate' => ['_bangachain_layout_validate_block_link'],
+        '#process_default_value' => FALSE,
+        '#field_prefix' => rtrim(Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString(), '/'),
+        '#default_value' => $link_url_default_value,
+        '#description' => t("The path of the button link at the bottom of the block."),
+      ];
+    }
+
+    // Vertical Spacing form elements.
+    $form['settings']['vertical_spacing'] = [
+      '#type' => 'details',
+      '#title' => t('Vertical Spacing'),
+      '#open' => FALSE,
+      '#weight' => 30,
+    ];
+
+    $form['settings']['vertical_spacing']['top'] = [
+      '#type' => 'select',
+      '#title' => t('Spacing Top'),
+      '#options' => $top_spacing_options,
+      '#default_value' => $top_default_value,
+      '#description' => t('Set the margin top value for this block.'),
+    ];
+
+    $form['settings']['vertical_spacing']['bottom'] = [
+      '#type' => 'select',
+      '#title' => t('Spacing Bottom'),
+      '#options' => $bottom_spacing_options,
+      '#default_value' => $bottom_default_value,
+      '#description' => t('Set the margin bottom value for this block.'),
+    ];
+  }
+}
+
+/**
+ * Helper function for adding settings via layout builder.
+ */
+function _bangachain_layout_layout_builder_add_settings(&$variables, $region_name) {
+  foreach ($variables['content'][$region_name] as &$section_component) {
+    // Vertical spacing classes.
+    if (isset($section_component['#bangachain_layout']['vertical_spacing_top']) && $section_component['#bangachain_layout']['vertical_spacing_top'] != "none" ) {
+      $section_component['#attributes']['class'][] = $section_component['#bangachain_layout']['vertical_spacing_top'];
+    }
+
+    if (isset($section_component['#bangachain_layout']['vertical_spacing_bottom']) && $section_component['#bangachain_layout']['vertical_spacing_bottom'] != "none") {
+      $section_component['#attributes']['class'][] = $section_component['#bangachain_layout']['vertical_spacing_bottom'];
+    }
+
+    // Headings and CTA classes.
+    if (isset($section_component['#bangachain_layout']['primary_heading']) ) {
+      $section_component['#primary_heading'] = $section_component['#bangachain_layout']['primary_heading'];
+    }
+
+    if (isset($section_component['#bangachain_layout']['primary_subheading'])) {
+      $section_component['#primary_subheading'] = $section_component['#bangachain_layout']['primary_subheading'];
+    }
+
+    if (isset($section_component['#bangachain_layout']['primary_cta_title'])) {
+      $section_component['#primary_cta_title'] = $section_component['#bangachain_layout']['primary_cta_title'];
+    }
+
+    if (isset($section_component['#bangachain_layout']['primary_cta_url'])) {
+      if (is_numeric($section_component['#bangachain_layout']['primary_cta_url'])) {
+        $section_component['#primary_cta_url'] = Url::fromRoute('entity.node.canonical', ['node' => $section_component['#bangachain_layout']['primary_cta_url']])->toString();
+      } else {
+        $section_component['#primary_cta_url'] = $section_component['#bangachain_layout']['primary_cta_url'];
+      }
+    }
+
+    // Designate block as a Layout Builer block
+    $section_component['#lb-block'] = TRUE;
+  }
+}
+
+/**
+ * Layout builder configure block submit.
+ */
+function bangachain_layout_form_layout_builder_configure_block_submit($form, FormStateInterface $form_state) {
+  /** @var \Drupal\layout_builder\SectionComponent $section_component */
+  $section_component = $form_state->getFormObject()->getCurrentComponent();
+
+  // Vertical spacing.
+  if ($vertical_classes = $form_state->getValue(['settings', 'vertical_spacing'])) {
+    $section_component->setThirdPartySetting('bangachain_layout', 'vertical_spacing_top', $vertical_classes['top']);
+    $section_component->setThirdPartySetting('bangachain_layout', 'vertical_spacing_bottom', $vertical_classes['bottom']);
+  }
+  else {
+    $section_component->unsetThirdPartySetting('bangachain_layout', 'vertical_spacing_top');
+    $section_component->unsetThirdPartySetting('bangachain_layout', 'vertical_spacing_bottom');
+  }
+
+  // Headings and CTA.
+  if ($headings_cta_classes = $form_state->getValue(['settings', 'headings_cta'])) {
+    $section_component->setThirdPartySetting('bangachain_layout', 'primary_heading', $headings_cta_classes['heading']);
+    $section_component->setThirdPartySetting('bangachain_layout', 'primary_subheading', $headings_cta_classes['subheading']);
+    $section_component->setThirdPartySetting('bangachain_layout', 'primary_cta_title', $headings_cta_classes['cta']['title']);
+    $section_component->setThirdPartySetting('bangachain_layout', 'primary_cta_url', $headings_cta_classes['cta']['url']);
+  }
+  else {
+    $section_component->unsetThirdPartySetting('bangachain_layout', 'primary_heading');
+    $section_component->unsetThirdPartySetting('bangachain_layout', 'primary_subheading');
+    $section_component->unsetThirdPartySetting('bangachain_layout', 'primary_cta_title');
+    $section_component->unsetThirdPartySetting('bangachain_layout', 'primary_cta_url');
+  }
+}
+
+/**
+ * Get the top spacing options.
+ *
+ * @return array
+ *   The top spacing options.
+ */
+function _get_top_spacing_options(): array {
+  return [
+    BangAChainLayout::VERTICAL_SPACING_NONE => t('None'),
+    BangAChainLayout::VERTICAL_SPACING_TOP_1 => t('1 vertical unit'),
+    BangAChainLayout::VERTICAL_SPACING_TOP_2 => t('2 vertical units'),
+    BangAChainLayout::VERTICAL_SPACING_TOP_3 => t('3 vertical units'),
+    BangAChainLayout::VERTICAL_SPACING_TOP_4 => t('4 vertical units'),
+    BangAChainLayout::VERTICAL_SPACING_TOP_5 => t('5 vertical units'),
+  ];
+}
+
+/**
+ * Get the bottom spacing options.
+ *
+ * @return array
+ *   The bottom spacing options.
+ */
+function _get_bottom_spacing_options(): array {
+  return [
+    BangAChainLayout::VERTICAL_SPACING_NONE => t('None'),
+    BangAChainLayout::VERTICAL_SPACING_BOTTOM_1 => t('1 vertical unit'),
+    BangAChainLayout::VERTICAL_SPACING_BOTTOM_2 => t('2 vertical units'),
+    BangAChainLayout::VERTICAL_SPACING_BOTTOM_3 => t('3 vertical units'),
+    BangAChainLayout::VERTICAL_SPACING_BOTTOM_4 => t('4 vertical units'),
+    BangAChainLayout::VERTICAL_SPACING_BOTTOM_5 => t('5 vertical units'),
+  ];
+}
+
+/**
+ * Implements hook_entity_operation().
+ */
+function bangachain_layout_entity_operation(EntityInterface $entity) {
+  $account = \Drupal::currentUser();
+  $entity_type_id = $entity->getEntityTypeId();
+
+  $route_name = "layout_builder.overrides.$entity_type_id.view";
+  $route_parameters = [
+    $entity_type_id => $entity->id(),
+  ];
+
+  // If current user has access to route, then add the operation link. The
+  // access check will only return TRUE if the bundle is Layout Builder-
+  // enabled, overrides are allowed, and user has necessary permissions.
+  $access_manager = \Drupal::service('access_manager');
+  if (!$access_manager->checkNamedRoute($route_name, $route_parameters, $account)) {
+    return;
+  }
+
+  return [
+    'Layout' => [
+      'title' => t('Layout'),
+      'weight' => 50,
+      'url' => Url::fromRoute($route_name, $route_parameters),
+    ],
+  ];
+}
+
+/**
+ * Helper function to return entity id as displayable string.
+ */
+function _get_displayable_string_from_entity_id($id) {
+  // Handle case where URL is a string.
+  $displayable_string = $id;
+  if (is_numeric($id)) {
+    $entity = \Drupal::entityTypeManager()->getStorage('node')->load($id);
+    $displayable_string = EntityAutocomplete::getEntityLabels([$entity]);
+  }
+
+  return $displayable_string;
+}
+
+/**
+ * Helper function to validate a block link.
+ */
+function _bangachain_layout_validate_block_link(&$element, &$form_state, &$form) {
+
+  if (strpos(trim($element['#value']), "/") === 0
+     || strpos(trim($element['#value']), "http") === 0
+  ) {
+    return true;
+  }
+
+  EntityAutocomplete::validateEntityAutocomplete($element, $form_state, $form);
+}

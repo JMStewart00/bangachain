@@ -1,0 +1,6 @@
+services:
+  bangachain_layout.section_component_render:
+    class: Drupal\bangachain_layout\EventSubscriber\SectionComponentRender
+    arguments: []
+    tags:
+      - { name: event_subscriber }

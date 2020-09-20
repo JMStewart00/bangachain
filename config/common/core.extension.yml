@@ -3,6 +3,7 @@ module:
   admin_toolbar: 0
   admin_toolbar_tools: 0
   automated_cron: 0
+  bangachain_layout: 0
   big_pipe: 0
   block: 0
   block_class: 0

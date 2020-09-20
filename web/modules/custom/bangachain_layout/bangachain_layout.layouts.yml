@@ -1,0 +1,43 @@
+bangachain_layout__one_column:
+  label: 'One Column'
+  path: layouts/one-column
+  template: layout--one-column
+  class: Drupal\bangachain_layout\Plugin\Layout\OneColumnLayout
+  category: 'Columns: 1'
+  default_region: first
+  icon_map:
+    - [first]
+  regions:
+    first:
+      label: First
+
+bangachain_layout__left_sidebar:
+  label: 'Left Sidebar'
+  path: layouts/sidebars
+  template: layout--left-sidebar
+  class: Drupal\bangachain_layout\Plugin\Layout\LeftSidebarLayout
+  category: 'Sidebars'
+  default_region: main
+  icon_map:
+    - [sidebar, main, main]
+  regions:
+    sidebar:
+      label: sidebar
+    main:
+      label: main
+
+bangachain_layout__right_sidebar:
+  label: 'Right Sidebar'
+  path: layouts/sidebars
+  template: layout--right-sidebar
+  class: Drupal\bangachain_layout\Plugin\Layout\RightSidebarLayout
+  category: 'Sidebars'
+  default_region: main
+  icon_map:
+    - [main, main, sidebar]
+  regions:
+    sidebar:
+      label: main
+    main:
+      label: sidebar
+

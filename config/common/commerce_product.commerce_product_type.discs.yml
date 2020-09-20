@@ -1,0 +1,12 @@
+uuid: b54bf20d-76f5-4bfe-8de1-40e3864e9d41
+langcode: en
+status: true
+dependencies: {  }
+id: discs
+label: Discs
+description: ''
+variationType: discs
+multipleVariations: true
+injectVariationFields: true
+traits: {  }
+locked: false

@@ -1,0 +1,8 @@
+name: Bang-A-Chain Layout
+description: Custom layout functionality for Bang-A-Chain.
+type: module
+core: 8.x
+package: Bang-A-Chain
+
+dependencies:
+  - drupal:layout_builder

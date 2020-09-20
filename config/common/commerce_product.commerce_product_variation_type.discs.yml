@@ -1,0 +1,10 @@
+uuid: 0b82a48b-dd10-4eba-aba8-e6a5eb8aeaea
+langcode: en
+status: true
+dependencies: {  }
+id: discs
+label: Discs
+orderItemType: default
+generateTitle: null
+traits: {  }
+locked: false

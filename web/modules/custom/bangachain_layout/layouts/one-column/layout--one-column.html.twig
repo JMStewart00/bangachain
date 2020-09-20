@@ -1,0 +1,41 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a one-column layout.
+ *
+ * Available variables:
+ * - content: The content for this layout.
+ * - attributes: HTML attributes for the layout <div>.
+ *
+ * @ingroup themeable
+ */
+#}
+
+{% set background_class = 't-background--' ~ settings.background_color %}
+
+{% if content %}
+
+  {% if background_class %}
+    <div class="{{ background_class }}">
+  {% endif %}
+
+    {% if settings.hero %}
+    {# If the hero mode is enabled remove container. #}
+      <div{{ attributes }}>
+        {{ content.first }}
+      </div>
+    {% else %}
+      <div class="l-container">
+        <div{{ attributes.addClass('l-row', 'l-row--one-column') }}>
+          <div {{ region_attributes.first.addClass('l-col', 'l-col--' ~ settings.column_width )}}>
+            {{ content.first }}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+  {% if background_class %}
+    </div>
+  {% endif %}
+
+{% endif %}

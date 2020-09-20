@@ -85,3 +85,4 @@ if (defined('PANTHEON_ENVIRONMENT')) {
   }
 }
 
+$settings['install_profile'] = 'standard';

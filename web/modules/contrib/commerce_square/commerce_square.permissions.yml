@@ -1,0 +1,4 @@
+administer commerce square:
+  title: 'Administer Commerce Square'
+  description: 'Allow to access the administration form to configure Commerce Square settings.'
+  restrict access: true

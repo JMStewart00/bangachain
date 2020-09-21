@@ -1,0 +1,4 @@
+services:
+  commerce_square.connect:
+    class: Drupal\commerce_square\Connect
+    arguments: ['@config.factory', '@state']

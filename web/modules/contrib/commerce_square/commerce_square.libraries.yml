@@ -1,0 +1,11 @@
+form:
+  version: VERSION
+  css:
+    theme:
+      css/commerce_square.form.css: {}
+  js:
+    js/commerce_square.form.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery

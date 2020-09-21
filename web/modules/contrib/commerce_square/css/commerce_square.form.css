@@ -1,0 +1,42 @@
+#edit-commerce-payment-payment-details-square-number {
+  width: 16em;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+#edit-commerce-payment-payment-details-square-cvv {
+  margin-top: 10px;
+  width: 82px;
+}
+
+.credit-card-form__expiration {
+  margin-top: 10px;
+  margin-bottom: 1em;
+}
+
+.sq-input {
+  height: 2.2em;
+  border: 1px solid #d6d2c4;
+  padding: 4px;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.square-form .credit-card-form__expiration .form-item {
+  margin-right: 5px;
+}
+.square-form .credit-card-form__expiration .form-item:last-child {
+  margin-right: 0;
+}
+
+.sq-input--focus {
+  border-color: #777;
+}
+
+.sq-input--error {
+  border-color: red;
+}
+
+#square-postal-code {
+  display: none;
+}

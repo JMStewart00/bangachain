@@ -113,6 +113,7 @@ class ComposerStaticInit3d80e700841ab59d16fa8cf88fa4b442
             'Symfony\\Cmf\\Component\\Routing\\' => 30,
             'Symfony\\Bridge\\PsrHttpMessage\\' => 30,
             'Symfony\\Bridge\\PhpUnit\\' => 23,
+            'SquareConnect\\' => 14,
             'SensioLabs\\Security\\' => 20,
             'SelfUpdate\\' => 11,
         ),
@@ -383,6 +384,10 @@ class ComposerStaticInit3d80e700841ab59d16fa8cf88fa4b442
         'Symfony\\Bridge\\PhpUnit\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/phpunit-bridge',
+        ),
+        'SquareConnect\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/square/connect/lib',
         ),
         'SensioLabs\\Security\\' => 
         array (

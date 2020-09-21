@@ -1,0 +1,29 @@
+commerce_payment.commerce_payment_gateway.plugin.square:
+  type: commerce_payment_gateway_configuration
+  mapping:
+    test_location_id:
+      type: string
+      label: 'Test Location ID'
+    live_location_id:
+      type: string
+      label: 'Live Location ID'
+
+commerce_square.settings:
+  type: config_object
+  label: 'Commerce Square settings'
+  mapping:
+    app_name:
+      type: string
+      label: 'Application Name'
+    app_secret:
+      type: string
+      label: 'Application Secret'
+    sandbox_app_id:
+      type: string
+      label: 'Sandbox Application ID'
+    sandbox_access_token:
+      type: string
+      label: 'Sandbox Access Token'
+    production_app_id:
+      type: string
+      label: 'Production Application ID'

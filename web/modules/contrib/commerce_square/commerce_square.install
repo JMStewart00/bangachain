@@ -1,0 +1,119 @@
+<?php
+
+/**
+ * @file
+ * Provides install and update hooks for Commerce Square.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function commerce_square_requirements($phase) {
+  $requirements = [];
+  if ($phase == 'install') {
+    if (!class_exists('\SquareConnect\ApiClient')) {
+      $requirements['commerce_square_library'] = [
+        'description' => t('Commerce Square requires the square/connect library.'),
+        'severity' => REQUIREMENT_ERROR,
+      ];
+    }
+  }
+  elseif ($phase === 'update') {
+    $state = \Drupal::state();
+    if ($state->get('commerce_square.production_refresh_token') === NULL) {
+      $request = \Drupal::request();
+      $try_again_url = \Drupal\Core\Url::fromUri($request->getUriForPath(''))->setOptions(['query' => ['continue' => 1]])->toString(TRUE)->getGeneratedUrl();
+      $requirements['commerce_square_authentication'] = [
+        'title' => t('Commerce Square Connect'),
+        'description' => t('<p>In the <a href="https://connect.squareup.com/apps">Square Developer Portal</a> make sure your application is on Connect API version 2019-03-13 or later.</p><p>Once you have updated your application, you may <a href=":url">click here to continue.</a></p>', [
+          ':url' => $try_again_url,
+        ]),
+        'severity' => REQUIREMENT_WARNING,
+      ];
+    }
+  }
+  elseif ($phase === 'runtime') {
+    $connect = \Drupal::getContainer()->get('commerce_square.connect');
+    $client = $connect->getClient('production');
+    $locations_api = new \SquareConnect\Api\LocationsApi($client);
+    try {
+      $locations_api->listLocations();
+      $requirements['commerce_square_authentication'] = [
+        'title' => t('Commerce Square Connect'),
+        'description' => t('Square Connect OAuth is connected.'),
+        'severity' => REQUIREMENT_OK,
+      ];
+    }
+    catch (\SquareConnect\ApiException $e) {
+      $requirements['commerce_square_authentication'] = [
+        'title' => t('Commerce Square Connect'),
+        'description' => t('Square Connect OAuth access token is not valid. Please reconnect by submitting the <a href=":url">Square settings form</a>.', [
+          ':url' => \Drupal\Core\Url::fromRoute('commerce_square.settings'),
+        ]),
+        'severity' => REQUIREMENT_ERROR,
+      ];
+    }
+  }
+
+  return $requirements;
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function commerce_square_uninstall() {
+  $state = \Drupal::state();
+  $state->deleteMultiple([
+    'commerce_square.production_access_token',
+    'commerce_square.production_access_token_expiry',
+    'commerce_square.production_refresh_token',
+  ]);
+
+}
+
+/**
+ * Migrates gateway settings into new configuration object.
+ */
+function commerce_square_update_8001() {
+  $config_factory = \Drupal::configFactory();
+  $gateway_storage = \Drupal::entityTypeManager()->getStorage('commerce_payment_gateway');
+  /** @var \Drupal\commerce_payment\Entity\PaymentGatewayInterface[] $gateways */
+  $gateways = $gateway_storage->loadByProperties(['plugin' => 'square']);
+  foreach ($gateways as $gateway) {
+    $configuration = $gateway->getPlugin()->getConfiguration();
+
+    $config = $config_factory->getEditable('commerce_square.settings');
+    $config
+      ->set('app_name', $configuration['app_name'])
+      ->set('app_secret', $configuration['app_secret'])
+      ->set('sandbox_app_id', $configuration['test_app_id'])
+      ->set('sandbox_access_token', $configuration['test_access_token'])
+      ->set('production_app_id', $configuration['live_app_id'])
+      ->set('production_access_token', $configuration['live_access_token'])
+      ->set('production_access_token_expiry', $configuration['live_access_token_expiry']);
+    $config->save();
+
+    unset($configuration['app_name']);
+    unset($configuration['app_secret']);
+    unset($configuration['test_app_id']);
+    unset($configuration['test_access_token']);
+    unset($configuration['live_app_id']);
+    unset($configuration['live_access_token']);
+    unset($configuration['live_access_token_expiry']);
+  }
+
+}
+
+/**
+ * Use site state for production access token and expiration time.
+ */
+function commerce_square_update_8002() {
+  $config_factory = \Drupal::configFactory();
+  $state = \Drupal::state();
+  $config = $config_factory->getEditable('commerce_square.settings');
+  $state->set('commerce_square.production_access_token', $config->get('production_access_token'));
+  $state->set('commerce_square.production_access_token_expiry', $config->get('production_access_token_expiry'));
+  $config->clear('production_access_token');
+  $config->clear('production_access_token_expiry');
+  $config->save();
+}

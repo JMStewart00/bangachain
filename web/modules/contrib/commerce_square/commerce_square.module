@@ -1,0 +1,50 @@
+<?php
+
+/**
+ * @file
+ * commerce_square module file.
+ */
+
+use SquareConnect\Api\OAuthApi;
+use SquareConnect\ApiException;
+use SquareConnect\Model\ObtainTokenRequest;
+
+/**
+ * Implements hook_cron().
+ */
+function commerce_square_cron() {
+  $logger = \Drupal::logger('commerce_square');
+  /** @var \Drupal\commerce_square\Connect $connect */
+  $connect = \Drupal::service('commerce_square.connect');
+
+  if (empty($connect->getAccessToken('production'))) {
+    $logger->debug('No access token, skipping');
+    return;
+  }
+
+  $access_token_expiry = $connect->getAccessTokenExpiration('production');
+  if (!empty($access_token_expiry)) {
+    try {
+      $client = $connect->getClient('production');
+      $oauth_api = new OAuthApi($client);
+      $obtain_token_request = new ObtainTokenRequest();
+      $obtain_token_request
+        ->setClientId($connect->getAppId('production'))
+        ->setClientSecret($connect->getAppSecret())
+        ->setGrantType('refresh_token')
+        ->setRefreshToken($connect->getRefreshToken('production'));
+
+      $token_response = $oauth_api->obtainToken($obtain_token_request);
+
+      $state = \Drupal::state();
+      $state->setMultiple([
+        'commerce_square.production_access_token' => $token_response->getAccessToken(),
+        'commerce_square.production_access_token_expiry' => strtotime($token_response->getExpiresAt()),
+        'commerce_square.production_refresh_token' => $token_response->getRefreshToken(),
+      ]);
+    }
+    catch (ApiException $e) {
+      $logger->error(t('Error when renewing access token: :s', [':s' => $e->getMessage()]));
+    }
+  }
+}

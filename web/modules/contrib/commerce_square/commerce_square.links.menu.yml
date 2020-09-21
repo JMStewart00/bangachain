@@ -1,0 +1,6 @@
+commerce_square.settings:
+  title: 'Square settings'
+  route_name: 'commerce_square.settings'
+  parent: 'commerce_payment.configuration'
+  description: 'Configure your Square settings.'
+  weight: 20

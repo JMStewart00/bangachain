@@ -1,0 +1,8 @@
+{
+    "require": {
+        "square/connect": {
+            "version" : "v2.20190925.0",
+            "url": "https://github.com/square/connect-php-sdk/archive/release/2.20190925.0.zip"
+        }
+    }
+}

@@ -1,0 +1,47 @@
+uuid: 13b42eed-929d-4c50-a4a8-6bdfd94ebad1
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_variation_type.discs
+    - field.field.commerce_product_variation.discs.attribute_disc_color
+    - field.field.commerce_product_variation.discs.field_product_image
+  module:
+    - commerce_price
+id: commerce_product_variation.discs.default
+targetEntityType: commerce_product_variation
+bundle: discs
+mode: default
+content:
+  field_product_image:
+    type: entity_reference_entity_view
+    weight: 1
+    label: above
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    region: content
+  list_price:
+    label: above
+    type: commerce_price_default
+    weight: -1
+    region: content
+    settings:
+      strip_trailing_zeroes: false
+      currency_display: symbol
+    third_party_settings: {  }
+  price:
+    label: above
+    type: commerce_price_default
+    weight: 0
+    region: content
+    settings:
+      strip_trailing_zeroes: false
+      currency_display: symbol
+    third_party_settings: {  }
+hidden:
+  attribute_disc_color: true
+  product_id: true
+  sku: true
+  title: true

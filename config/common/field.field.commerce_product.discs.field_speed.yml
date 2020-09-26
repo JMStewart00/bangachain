@@ -1,0 +1,23 @@
+uuid: b3c10a3a-0dbd-45f9-a8a8-3a027620ae6b
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.discs
+    - field.storage.commerce_product.field_speed
+id: commerce_product.discs.field_speed
+field_name: field_speed
+entity_type: commerce_product
+bundle: discs
+label: Speed
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 1
+  max: 14
+  prefix: ''
+  suffix: ''
+field_type: integer

@@ -1,0 +1,20 @@
+uuid: 22bfd8ee-57f3-49ad-9cda-15d26f65fa67
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_product
+id: commerce_product.field_glide
+field_name: field_glide
+entity_type: commerce_product
+type: decimal
+settings:
+  precision: 10
+  scale: 1
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

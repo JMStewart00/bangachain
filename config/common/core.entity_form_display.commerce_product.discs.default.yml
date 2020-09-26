@@ -4,6 +4,11 @@ status: true
 dependencies:
   config:
     - commerce_product.commerce_product_type.discs
+    - field.field.commerce_product.discs.field_brand
+    - field.field.commerce_product.discs.field_fade
+    - field.field.commerce_product.discs.field_glide
+    - field.field.commerce_product.discs.field_speed
+    - field.field.commerce_product.discs.field_turn
   module:
     - commerce
     - path
@@ -18,6 +23,44 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_brand:
+    weight: 91
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_fade:
+    weight: 95
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_glide:
+    weight: 93
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_speed:
+    weight: 92
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_turn:
+    weight: 94
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
   path:
     type: path
     weight: 30

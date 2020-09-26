@@ -1,0 +1,20 @@
+uuid: 91a5beb3-578f-4bd2-9024-9c9aed835e5a
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_product
+id: commerce_product.field_turn
+field_name: field_turn
+entity_type: commerce_product
+type: decimal
+settings:
+  precision: 10
+  scale: 1
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

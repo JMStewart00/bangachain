@@ -1,0 +1,25 @@
+uuid: fbe82ffa-c8c7-4678-9639-0c4c1cb36581
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.discs
+    - field.storage.commerce_product.field_turn
+id: commerce_product.discs.field_turn
+field_name: field_turn
+entity_type: commerce_product
+bundle: discs
+label: Turn
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: !!float 0
+default_value_callback: ''
+settings:
+  min: !!float -5
+  max: !!float 1
+  prefix: ''
+  suffix: ''
+field_type: decimal

@@ -1,0 +1,67 @@
+uuid: 1d73e482-5b32-4f01-b57e-e684e4d89a18
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_variation_type.discs
+    - field.field.commerce_product_variation.discs.attribute_disc_color
+    - field.field.commerce_product_variation.discs.field_product_image
+  module:
+    - commerce_price
+    - media_library
+id: commerce_product_variation.discs.default
+targetEntityType: commerce_product_variation
+bundle: discs
+mode: default
+content:
+  attribute_disc_color:
+    type: options_select
+    weight: 1
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_product_image:
+    type: media_library_widget
+    weight: 91
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+    region: content
+  list_price:
+    type: commerce_list_price
+    weight: -1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  price:
+    type: commerce_price_default
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  sku:
+    type: string_textfield
+    weight: -4
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 90
+    region: content
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  uid: true

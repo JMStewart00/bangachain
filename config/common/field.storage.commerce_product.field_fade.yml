@@ -1,0 +1,20 @@
+uuid: 0985733b-b313-45b0-ba4d-7812b155d4ce
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_product
+id: commerce_product.field_fade
+field_name: field_fade
+entity_type: commerce_product
+type: decimal
+settings:
+  precision: 10
+  scale: 1
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

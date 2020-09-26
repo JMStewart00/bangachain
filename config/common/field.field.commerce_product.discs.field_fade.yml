@@ -1,0 +1,23 @@
+uuid: a7135cf7-f350-4af1-801a-241bbbd11ac9
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.discs
+    - field.storage.commerce_product.field_fade
+id: commerce_product.discs.field_fade
+field_name: field_fade
+entity_type: commerce_product
+bundle: discs
+label: Fade
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: !!float 0
+  max: !!float 5
+  prefix: ''
+  suffix: ''
+field_type: decimal

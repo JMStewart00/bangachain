@@ -1,0 +1,23 @@
+uuid: 46ab7049-5aaf-4cf5-a1b7-1129429c41b2
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.discs
+    - field.storage.commerce_product.field_glide
+id: commerce_product.discs.field_glide
+field_name: field_glide
+entity_type: commerce_product
+bundle: discs
+label: Glide
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: !!float 1
+  max: !!float 7
+  prefix: ''
+  suffix: ''
+field_type: decimal

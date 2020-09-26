@@ -1,0 +1,8 @@
+uuid: e4c56ea1-bf48-4889-a3d6-b62d0e86a5bf
+langcode: en
+status: true
+dependencies: {  }
+name: Brand
+vid: brand
+description: 'Innova, Discraft, etc.'
+weight: 0

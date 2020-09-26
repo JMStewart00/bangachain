@@ -1,0 +1,10 @@
+.c-secondary-menu {
+  .region-primary-menu {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .o-menu__item {
+    margin-left: rem(16);
+  }
+}

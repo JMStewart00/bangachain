@@ -10,7 +10,7 @@
 /// @example css - Output
 ///  Same as listed below.
 ///
-@mixin animate-underline($size: 8px, $color: $brand-amber, $fixed: false ) {
+@mixin animate-underline($size: 8px, $color: $brand-green, $fixed: false ) {
   position: relative;
 
   &::after {
@@ -31,66 +31,5 @@
 
   &:hover::after {
     width: 100%;
-  }
-}
-
-/// amber-bottom-border() =
-/// creates short amber border
-/// @author jcaldwell
-///
-/// @example scss - Usage
-///  h2 {
-///    @include amber-bottom-border();
-///  }
-///
-/// @example css - Output
-///  Same as listed below.
-///
-@mixin amber-bottom-border($center: true) {
-  &::after {
-    content: '';
-    display: block;
-    height: 4px;
-    width: 44px;
-    background: $brand-amber;
-    margin: vr(0.75) if($center, auto, 0);
-  }
-}
-
-/// lifespan-living-frame() =
-/// creates a branded image frame
-/// @author jcaldwell
-///
-/// @example scss - Usage
-///  div {
-///    @include lifespan-living-frame();
-///  }
-///
-/// Params:
-/// $small: Size of the amber border
-/// $style: 'both', 'frame' (only), 'line' (only)
-///
-/// @example css - Output
-///  Same as listed below.
-///
-@mixin lifespan-living-frame($style: 'both', $small: false) {
-  @if $style == 'both' or $style == 'frame' {
-    border: 12px solid $gray-500;
-    position: relative;
-  }
-
-  @if $style == 'both' or $style == 'line' {
-    &::after {
-      background: $brand-amber;
-      bottom: 0;
-      content: '';
-      display: block;
-      height: if($small, 9px, 14px);
-      left: 50%;
-      margin-left: -30%;
-      position: absolute;
-      transition: $transition-base;
-      width: 60%;
-    }
   }
 }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3af5476893141a188c88c7c80906c23c",
+    "content-hash": "2e53fe649b0d07aac6cc3a39972ced84",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -63,7 +63,7 @@
             "version": "v4.5.2",
             "source": {
                 "type": "git",
-                "url": "git@github.com:twbs/bootstrap.git",
+                "url": "https://github.com/twbs/bootstrap.git",
                 "reference": "5f2480a90ab911babc53039835fe78c6fc12646d"
             },
             "dist": {
@@ -96,7 +96,7 @@
             "version": "1.12.4",
             "source": {
                 "type": "git",
-                "url": "git@github.com:jquery/jquery-dist.git",
+                "url": "https://github.com/jquery/jquery-dist.git",
                 "reference": "5e89585e0121e72ff47de177c5ef604f3089a53d"
             },
             "dist": {
@@ -2289,7 +2289,7 @@
                 "GPL-2.0-or-later"
             ],
             "description": "Composer Plugin for updating the Drupal scaffold files when using drupal/core",
-            "abandoned": "drupal / core-composer-scaffold",
+            "abandoned": "drupal/core-composer-scaffold",
             "time": "2019-03-30T10:41:38+00:00"
         },
         {
@@ -4487,6 +4487,67 @@
             "homepage": "https://www.drupal.org/project/flexi_cart",
             "support": {
                 "source": "https://git.drupalcode.org/project/flexi_cart"
+            }
+        },
+        {
+            "name": "drupal/fontawesome",
+            "version": "2.17.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/fontawesome.git",
+                "reference": "8.x-2.17"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/fontawesome-8.x-2.17.zip",
+                "reference": "8.x-2.17",
+                "shasum": "ee077ae8295a36d76e85131e975a3626e199c404"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-2.17",
+                    "datestamp": "1593708087",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                },
+                "drush": {
+                    "services": {
+                        "drush.services.yml": "^9"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Daniel.Moberly",
+                    "homepage": "https://www.drupal.org/user/1160788"
+                },
+                {
+                    "name": "RobLoach",
+                    "homepage": "https://www.drupal.org/user/61114"
+                },
+                {
+                    "name": "inders",
+                    "homepage": "https://www.drupal.org/user/127640"
+                },
+                {
+                    "name": "truls1502",
+                    "homepage": "https://www.drupal.org/user/325866"
+                }
+            ],
+            "description": "The web's most popular icon set and toolkit.",
+            "homepage": "https://www.drupal.org/project/fontawesome",
+            "support": {
+                "source": "https://git.drupalcode.org/project/fontawesome"
             }
         },
         {

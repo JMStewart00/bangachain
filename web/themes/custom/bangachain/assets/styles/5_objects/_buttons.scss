@@ -11,7 +11,7 @@
     background-color: $white;
     border: 2px solid $button-border;
     border-radius: $border-radius * 2;
-    color: $brand-blue;
+    color: $brand-green;
     font-weight: $fw-bold;
     font-size: rem(17);
     max-width: 380px;
@@ -20,13 +20,13 @@
 
     @include hover-focus() {
       color: $white;
-      background-color: $brand-blue;
+      background-color: $brand-green;
     }
   }
 
   &--secondary {
     padding: spacer(0.5) spacer(2.5);
-    background-color: $brand-blue;
+    background-color: $brand-green;
     border: 0;
     border-radius: $border-radius;
     color: $white;
@@ -36,16 +36,16 @@
 
     @include hover-focus() {
       color: $white;
-      background-color: $teal;
+      background-color: $dark-green;
     }
   }
 
   &--input-addon {
-    background-color: $brand-blue;
+    background-color: $brand-green;
     border: $border;
     border-left: 0;
     border-radius: 0 $border-radius $border-radius 0;
-    color: $gray-200;
+    color: $gray-medium;
 
     @include media-breakpoint-down(sm) {
       width: 30%;
@@ -59,7 +59,7 @@
 
   &--icon {
     svg {
-      color: $brand-amber;
+      color: $orange;
       float: right;
       position: relative;
       top: 2px;
@@ -80,7 +80,7 @@
     text-align: center;
 
     @include hover-focus() {
-      background-color: $brand-blue;
+      background-color: $brand-green;
 
       a {
         color: $white !important;
@@ -89,7 +89,7 @@
     }
 
     a {
-      color: $gray-800 !important;
+      color: $gray-medium !important;
       display: inline-block;
       font-weight: $fw-medium;
       font-size: rem(15);
@@ -99,7 +99,7 @@
   }
 
   &--active {
-    background-color: $brand-blue;
+    background-color: $brand-green;
 
     a {
       color: $white !important;

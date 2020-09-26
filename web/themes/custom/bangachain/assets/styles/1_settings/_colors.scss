@@ -3,23 +3,22 @@
  */
 
 // Brand colors
-$brand-blue: #587b85;
-$brand-amber: #edaf3f;
+$dark-green: #248232;
+$brand-green: #2ba84a;
+$orange: #F26D40;
+$gray-dark: #2d3a3a;
 
 // Supporting colors
-$teal: #18535c;
-
-$gray-200: #f5f5f5;
-$gray-500: #dbdbdb;
-$gray-700: #999;
-$gray-800: #525252;
-$gray-900: #303030;
+$white: #fcfffc;
+$black: #040f0f;
+$gray-medium: #999;
+$gray-light: #ddd;
 
 // Development colors
 // Font
-$body-color: $gray-800;
-$link-color: $brand-blue;
-$link-hover-color: darken($brand-blue, 20%);
+$body-color: $black;
+$link-color: $brand-green;
+$link-hover-color: darken($brand-green, 20%);
 
 // Border
 $button-border: #26464f;

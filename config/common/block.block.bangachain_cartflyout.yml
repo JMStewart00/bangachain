@@ -10,8 +10,8 @@ _core:
   default_config_hash: 5t2YYYeg2W9t8Sy-oKeQEbxeimNur4HAqSxEbfdlQH4
 id: bangachain_cartflyout
 theme: bangachain
-region: sidebar_first
-weight: 0
+region: header
+weight: -3
 provider: null
 plugin: commerce_cart_flyout
 settings:

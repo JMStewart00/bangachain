@@ -1,0 +1,110 @@
+{#
+/**
+ * @file
+ * Theme override to display a menu.
+ *
+ * Available variables:
+ * - menu_name: The machine name of the menu.
+ * - items: A nested list of menu items. Each menu item contains:
+ *   - attributes: HTML attributes for the menu item.
+ *   - below: The menu item child items.
+ *   - title: The menu link title.
+ *   - url: The menu link url, instance of \Drupal\Core\Url
+ *   - localized_options: Menu link localized options.
+ *   - is_expanded: TRUE if the link has visible children within the current
+ *     menu tree.
+ *   - is_collapsed: TRUE if the link has children within the current menu tree
+ *     that are not currently visible.
+ *   - in_active_trail: TRUE if the link is in the active trail.
+ */
+#}
+
+{{ attach_library('bangachain/bootstrap-dropdown') }}
+
+{% import _self as menus %}
+
+{#
+  We call a macro which calls itself to render the full tree.
+  @see https://twig.symfony.com/doc/1.x/tags/macro.html
+#}
+{{ menus.menu_links(items, attributes, 0, menu_name) }}
+
+{% macro menu_links(items, attributes, menu_level, menu_name) %}
+  {% import _self as menus %}
+
+  {# Top level menu classes #}
+  {%
+    set menu_classes = [
+      'o-menu',
+      'o-list-inline',
+      'c-menu-' ~ menu_name|clean_class,
+    ]
+  %}
+
+  {#
+    Dropdown menu classes
+    Bootstrap requires .dropdown-menu
+  #}
+  {%
+    set dropdown_menu_classes = [
+      'o-menu',
+      'o-menu-dropdown',
+      'c-menu-' ~ menu_name|clean_class ~ '__menu-dropdown',
+      'js-dropdown',
+      'dropdown-menu',
+    ]
+  %}
+  {% if items %}
+    {% if menu_level == 0 %}
+      <ul{{ attributes.addClass(menu_classes) }}>
+    {% else %}
+      <ul{{ attributes.removeClass(menu_classes).addClass(dropdown_menu_classes) }}>
+    {% endif %}
+    {% for item in items %}
+      {%
+        set item_classes = [
+          'o-menu__item',
+          'o-list-inline__item',
+          'c-menu-' ~ menu_name|clean_class ~ '__item',
+          'c-menu-' ~ menu_name|clean_class ~ '__item--level-' ~ menu_level,
+          item.is_expanded ? 'c-menu-' ~ menu_name|clean_class ~ '__item--expanded',
+          item.is_collapsed ? 'c-menu-' ~ menu_name|clean_class ~ '__item--collapsed',
+          item.in_active_trail ? 'c-menu-' ~ menu_name|clean_class ~ '__item--active-trail',
+        ]
+      %}
+      {%
+        set link_classes = [
+          'o-link',
+          'c-menu-' ~ menu_name|clean_class ~ '__link',
+          'c-menu-' ~ menu_name|clean_class ~ '__link--level-' ~ menu_level,
+        ]
+      %}
+      {% if (item.is_expanded and item.below) %}
+        {% set link_id = item.below|first.title|replace(' ', '_') %}
+        <li{{ item.attributes.addClass(item_classes) }}>
+          <button id="{{ link_id ~ 1 }}" class="o-menu-dropdown__toggle dropdown-toggle" data-toggle="dropdown" data-display='static' aria-haspopup="false" aria-expanded="false">
+            {{ item.title }}
+            <i class="fas fa-chevron-down fa-xs"></i>
+          </button>
+          {% if item.below %}
+            {{ menus.menu_links(item.below, attributes, menu_level + 1, menu_name) }}
+          {% endif %}
+        </li>
+      {% else %}
+        <li{{ item.attributes.addClass(item_classes) }}>
+          {{
+            link(
+              item.title,
+              item.url,
+              item.attributes.removeClass(item_classes).addClass(link_classes)
+            )
+          }}
+          {% if item.below %}
+            {{ menus.menu_links(item.below, attributes, menu_level + 1, menu_name) }}
+          {% endif %}
+        </li>
+      {% endif %}
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endmacro %}

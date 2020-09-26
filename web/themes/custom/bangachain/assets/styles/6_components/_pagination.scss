@@ -1,0 +1,27 @@
+.c-pagination {
+  height: 3rem;
+
+  &__link {
+    display: block;
+    font-weight: $fw-medium;
+    padding: spacer(0.33) spacer(0.5);
+
+    @include media-breakpoint-up('md') {
+      padding: spacer(0.5) spacer(1);
+    }
+
+    &--selected {
+      background-color: $dark-green;
+      color: $gray-medium !important;
+
+      &:hover {
+        color: $gray-medium !important;
+      }
+    }
+
+    &--disabled {
+      color: $gray-light;
+    }
+
+  }
+}

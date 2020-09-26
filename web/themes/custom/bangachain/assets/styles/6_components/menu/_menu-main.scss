@@ -1,0 +1,27 @@
+.c-menu-main {
+  &__item {
+    display: inline-block;
+    margin-right: spacer(3);
+  }
+
+  &__link {
+    @include animate-underline();
+    display: block;
+    font-size: rem(24);
+    line-height: 1;
+    padding: px(38) 0 px(33); // Fill min header height
+
+    @include hover-focus() {
+      text-decoration: none;
+    }
+
+    @include media-breakpoint-down(lg) {
+      padding-top: px(23);
+    }
+
+    // Overwrite animate-underline styles for active links
+    &.is-active::after {
+      width: 100%;
+    }
+  }
+}

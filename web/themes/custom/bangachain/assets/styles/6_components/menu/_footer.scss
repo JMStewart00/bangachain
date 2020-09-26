@@ -1,0 +1,47 @@
+.c-footer {
+  font-size: rem(15);
+
+  @include media-breakpoint-down(xs) {
+    text-align: center;
+  }
+
+  &__separator {
+    width: 100%;
+    height: 1px;
+    border-top: 1px solid $border-color;
+  }
+
+  &__subfooter {
+    p {
+      margin-bottom: 0;
+    }
+
+    a {
+      display: block;
+    }
+  }
+
+  &__social {
+    display: flex;
+    flex-wrap: nowrap;
+    position: relative;
+    top: rem(-3);
+
+    @include media-breakpoint-down(xs) {
+      justify-content: center;
+    }
+
+    &-icon {
+      font-size: rem(14);
+      margin-left: spacer(0.5);
+
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+
+    svg.ext {
+      display: none;
+    }
+  }
+}

@@ -12,8 +12,8 @@ _core:
   default_config_hash: 2dZQ2FBxus_k8njQHVj1HQ-KpUFKHHvNv0KlI5aCfXo
 id: bangachain_main_menu
 theme: bangachain
-region: sidebar_first
-weight: -7
+region: header
+weight: -4
 provider: null
 plugin: 'system_menu_block:main'
 settings:

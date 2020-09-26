@@ -1,0 +1,70 @@
+{#
+/**
+ * @file
+ *
+ * Default product template for discs.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the wrapper.
+ * - product: The rendered product fields.
+ *   Use 'product' to print them all, or print a subset such as
+ *   'product.title'. Use the following code to exclude the
+ *   printing of a given field:
+ *   @code
+ *   {{ product|without('title') }}
+ *   @endcode
+ * - product_entity: The product entity.
+ * - product_url: The product URL.
+ *
+ * @ingroup themeable
+ */
+#}
+
+{%
+  set classes = [
+    'c-product',
+  ]
+%}
+
+<article{{attributes.addClass(classes)}}>
+  <div class="l-container">
+    <div class="l-grid l-grid--sidebar-right u-vr__mt--2">
+
+      <div class="l-grid__main l-main">
+
+        <div class="c-product__image u-vr__mb--1">
+          {{ product.field_default_image }}
+        </div>
+
+      </div>
+
+      <div class="l-grid__sidebar l-sidebar">
+
+        <div class="c-product__title u-vr__mb--1">
+          <h1 class="u-color__dark-green">{{ product.title }}</h1>
+          <h2 class="u-color__green">{{ product.field_brand }}</h2>
+        </div>
+
+        <div class="c-product__description u-vr__mb--1">
+          {{- product.field_description -}}
+        </div>
+
+        <div class="c-product__flight-numbers u-vr__mb--1">
+          <h3>{{'Flight Numbers'|t}}</h3>
+          <ul class="o-list-inline">
+            <li class="c-product__speed o-list-inline__item">{{ product.field_speed }}</li>
+            <li class="c-product__glide o-list-inline__item">{{ product.field_glide }}</li>
+            <li class="c-product__turn o-list-inline__item">{{ product.field_turn }}</li>
+            <li class="c-product__fade o-list-inline__item">{{ product.field_fade }}</li>
+          </ul>
+        </div>
+
+        <div class="c-product__add-to-cart">
+          {{ product.variations }}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</article>
+

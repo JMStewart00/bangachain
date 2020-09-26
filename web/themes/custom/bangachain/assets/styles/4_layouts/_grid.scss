@@ -1,4 +1,4 @@
-$sidebar-size: 326px;
+$sidebar-size: 50%;
 
 .l-grid {
   display: grid;
@@ -41,10 +41,6 @@ $sidebar-size: 326px;
       grid-template-areas: 'main sidebar';
       grid-template-columns: minmax(0, 1fr) #{$sidebar-size};
       grid-gap: 40px;
-    }
-
-    @include media-breakpoint-up(xl) {
-      grid-gap: 140px;
     }
   }
 

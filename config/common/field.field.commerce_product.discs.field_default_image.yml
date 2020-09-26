@@ -1,0 +1,28 @@
+uuid: e65c1fc9-e439-4bf0-bbd9-4e6a7f801e30
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.discs
+    - field.storage.commerce_product.field_default_image
+    - media.type.image
+id: commerce_product.discs.field_default_image
+field_name: field_default_image
+entity_type: commerce_product
+bundle: discs
+label: 'Default Image'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

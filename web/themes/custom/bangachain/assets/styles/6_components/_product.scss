@@ -1,0 +1,28 @@
+.c-product {
+  @include media-breakpoint-up(md) {
+    max-width: 75%;
+    margin: auto;
+  }
+
+  &__speed,
+  &__glide,
+  &__turn,
+  &__fade {
+    border: 1px solid $brand-green;
+    border-radius: 30px;
+    width: rem(50);
+    height: rem(50);
+    margin: rem(10);
+    padding: rem(8);
+    line-height: rem(35);
+    text-align: center;
+    font-size: rem(16);
+    font-weight: 700;
+  }
+
+  &__image {
+    .field--name-field-media-image {
+      margin: auto;
+    }
+  }
+}

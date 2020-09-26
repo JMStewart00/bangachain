@@ -5,12 +5,15 @@ dependencies:
   config:
     - commerce_product.commerce_product_type.discs
     - field.field.commerce_product.discs.field_brand
+    - field.field.commerce_product.discs.field_default_image
+    - field.field.commerce_product.discs.field_description
     - field.field.commerce_product.discs.field_fade
     - field.field.commerce_product.discs.field_glide
     - field.field.commerce_product.discs.field_speed
     - field.field.commerce_product.discs.field_turn
   module:
     - commerce_product
+    - text
 id: commerce_product.discs.default
 targetEntityType: commerce_product
 bundle: discs
@@ -18,51 +21,67 @@ mode: default
 content:
   field_brand:
     weight: 11
-    label: above
+    label: hidden
     settings:
-      link: true
+      link: false
     third_party_settings: {  }
     type: entity_reference_label
     region: content
+  field_default_image:
+    type: entity_reference_entity_view
+    weight: 17
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    region: content
+  field_description:
+    weight: 16
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
   field_fade:
     weight: 15
-    label: above
+    label: hidden
     settings:
       thousand_separator: ''
       decimal_separator: .
-      scale: 2
-      prefix_suffix: true
+      scale: 1
+      prefix_suffix: false
     third_party_settings: {  }
     type: number_decimal
     region: content
   field_glide:
     weight: 13
-    label: above
+    label: hidden
     settings:
       thousand_separator: ''
       decimal_separator: .
-      scale: 2
-      prefix_suffix: true
+      scale: 1
+      prefix_suffix: false
     third_party_settings: {  }
     type: number_decimal
     region: content
   field_speed:
     weight: 12
-    label: above
+    label: hidden
     settings:
       thousand_separator: ''
-      prefix_suffix: true
+      prefix_suffix: false
     third_party_settings: {  }
     type: number_integer
     region: content
   field_turn:
     weight: 14
-    label: above
+    label: hidden
     settings:
       thousand_separator: ''
       decimal_separator: .
-      scale: 2
-      prefix_suffix: true
+      scale: 1
+      prefix_suffix: false
     third_party_settings: {  }
     type: number_decimal
     region: content
@@ -78,7 +97,7 @@ content:
     type: commerce_add_to_cart
     weight: 10
     region: content
-    label: above
+    label: hidden
     settings:
       combine: true
     third_party_settings: {  }

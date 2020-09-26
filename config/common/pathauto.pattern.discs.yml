@@ -1,0 +1,23 @@
+uuid: 2527157d-8d42-41a6-96ba-b18ba8f91f7b
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_product
+    - ctools
+id: discs
+label: Discs
+type: 'canonical_entities:commerce_product'
+pattern: '[commerce_product:field_brand:entity:name]/[commerce_product:title]'
+selection_criteria:
+  7f84d82e-54c4-41b6-8846-cd33fd89ff65:
+    id: 'entity_bundle:commerce_product'
+    bundles:
+      discs: discs
+    negate: false
+    context_mapping:
+      commerce_product: commerce_product
+    uuid: 7f84d82e-54c4-41b6-8846-cd33fd89ff65
+selection_logic: and
+weight: -5
+relationships: {  }

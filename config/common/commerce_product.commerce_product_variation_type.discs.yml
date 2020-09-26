@@ -5,6 +5,6 @@ dependencies: {  }
 id: discs
 label: Discs
 orderItemType: default
-generateTitle: null
+generateTitle: true
 traits: {  }
 locked: false

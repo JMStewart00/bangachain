@@ -91,6 +91,7 @@
         "drupal/easy_breadcrumb": "^1.12",
         "drupal/eu_cookie_compliance": "^1.8",
         "drupal/extlink": "^1.2",
+        "drupal/field_group": "^3.1",
         "drupal/flexi_cart": "^1.2",
         "drupal/fontawesome": "^2.17",
         "drupal/google_tag": "^1.3",

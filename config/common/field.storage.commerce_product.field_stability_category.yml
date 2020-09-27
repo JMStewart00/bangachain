@@ -1,21 +1,19 @@
-uuid: 52a58bd2-8bfb-4fb0-b581-be8ef946dc5d
+uuid: 3b143461-9146-4871-81d1-0709f7f2ad54
 langcode: en
 status: true
 dependencies:
   module:
-    - node
+    - commerce_product
     - taxonomy
-_core:
-  default_config_hash: WpOE_bs8Bs_HY2ns7n2r__de-xno0-Bxkqep5-MsHAs
-id: node.field_tags
-field_name: field_tags
-entity_type: node
+id: commerce_product.field_stability_category
+field_name: field_stability_category
+entity_type: commerce_product
 type: entity_reference
 settings:
   target_type: taxonomy_term
 module: core
 locked: false
-cardinality: -1
+cardinality: 1
 translatable: true
 indexes: {  }
 persist_with_no_fields: false

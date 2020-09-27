@@ -1,6 +1,6 @@
 uuid: a328fdb0-9c31-4a0a-abdc-303519a271de
 langcode: en
-status: false
+status: true
 dependencies:
   config:
     - system.menu.footer
@@ -12,8 +12,8 @@ _core:
   default_config_hash: 9jkAidYcWsm23jaLFPbF4L9P3cv7Nrrcio6OoZ6gb8A
 id: bangachain_footer
 theme: bangachain
-region: sidebar_first
-weight: -7
+region: footer
+weight: -4
 provider: null
 plugin: 'system_menu_block:footer'
 settings:

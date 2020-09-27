@@ -1,0 +1,29 @@
+uuid: b0363706-b0a9-4d29-a9eb-ad927440ed22
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.discs
+    - field.storage.commerce_product.field_stability_category
+    - taxonomy.vocabulary.stability
+id: commerce_product.discs.field_stability_category
+field_name: field_stability_category
+entity_type: commerce_product
+bundle: discs
+label: 'Stability Category'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      stability: stability
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

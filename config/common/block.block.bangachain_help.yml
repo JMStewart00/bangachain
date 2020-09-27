@@ -10,8 +10,8 @@ _core:
   default_config_hash: C3u9Snt6lZo8WcW5vsLW6x9hZvIc0x_XC4P7p8m4wro
 id: bangachain_help
 theme: bangachain
-region: content
-weight: -30
+region: help
+weight: -4
 provider: null
 plugin: help_block
 settings:

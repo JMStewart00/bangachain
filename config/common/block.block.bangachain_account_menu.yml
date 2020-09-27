@@ -1,6 +1,6 @@
 uuid: 5f3904a4-81cc-4745-9f07-da623c119669
 langcode: en
-status: false
+status: true
 dependencies:
   config:
     - system.menu.account
@@ -12,7 +12,7 @@ _core:
   default_config_hash: bqa_zUJcVrUq3EGaqAFiFWZSABlYoWAkJnOKAe4MLNg
 id: bangachain_account_menu
 theme: bangachain
-region: sidebar_first
+region: primary_menu
 weight: -4
 provider: null
 plugin: 'system_menu_block:account'

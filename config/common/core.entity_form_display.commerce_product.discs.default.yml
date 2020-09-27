@@ -10,6 +10,7 @@ dependencies:
     - field.field.commerce_product.discs.field_fade
     - field.field.commerce_product.discs.field_glide
     - field.field.commerce_product.discs.field_speed
+    - field.field.commerce_product.discs.field_stability_category
     - field.field.commerce_product.discs.field_turn
   module:
     - commerce
@@ -21,6 +22,7 @@ third_party_settings:
   field_group:
     group_flight_numbers:
       children:
+        - field_stability_category
         - field_speed
         - field_glide
         - field_turn
@@ -74,28 +76,34 @@ content:
     type: text_textarea_with_summary
     region: content
   field_fade:
-    weight: 11
+    weight: 16
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
     region: content
   field_glide:
-    weight: 9
+    weight: 14
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
     region: content
   field_speed:
-    weight: 8
+    weight: 13
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
     region: content
+  field_stability_category:
+    weight: 12
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
   field_turn:
-    weight: 10
+    weight: 15
     settings:
       placeholder: ''
     third_party_settings: {  }

@@ -1,0 +1,157 @@
+uuid: c5ec4d61-1b11-4f64-84dc-c28c07a14040
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.discs
+    - field.field.commerce_product.discs.field_brand
+    - field.field.commerce_product.discs.field_disc_category
+    - field.field.commerce_product.discs.field_fade
+    - field.field.commerce_product.discs.field_glide
+    - field.field.commerce_product.discs.field_speed
+    - field.field.commerce_product.discs.field_stability_category
+    - field.field.commerce_product.discs.field_turn
+  module:
+    - commerce_feeds
+    - commerce_product
+id: disc_spreadsheet
+label: 'Disc Spreadsheet'
+description: ''
+help: ''
+import_period: -1
+fetcher: upload
+fetcher_configuration:
+  allowed_extensions: 'txt csv tsv xml opml'
+  directory: 'private://feeds'
+parser: csv
+parser_configuration:
+  delimiter: ','
+  no_headers: false
+  line_limit: 100
+processor: 'entity:commerce_product'
+processor_configuration:
+  langcode: en
+  update_existing: 2
+  update_non_existent: _keep
+  expire: -1
+  owner_feed_author: false
+  owner_id: 0
+  authorize: true
+  skip_hash_check: false
+  values:
+    type: discs
+custom_sources:
+  brand:
+    label: Brand
+    value: Brand
+    machine_name: brand
+  turn:
+    label: Turn
+    value: Turn
+    machine_name: turn
+  title:
+    label: Title
+    value: Title
+    machine_name: title
+  disc_type:
+    label: 'Disc Type'
+    value: 'Disc Type'
+    machine_name: disc_type
+  speed:
+    label: Speed
+    value: Speed
+    machine_name: speed
+  glide:
+    label: Glide
+    value: Glide
+    machine_name: glide
+  fade:
+    label: Fade
+    value: Fade
+    machine_name: fade
+  stability_category:
+    label: 'Stability Category'
+    value: 'Stability Category'
+    machine_name: stability_category
+  stores:
+    label: Stores
+    value: Stores
+    machine_name: stores
+  variations:
+    label: Variations
+    value: Variations
+    machine_name: variations
+mappings:
+  -
+    target: field_brand
+    map:
+      target_id: brand
+    settings:
+      language: ''
+      reference_by: name
+      autocreate: '1'
+  -
+    target: field_turn
+    map:
+      value: turn
+    unique: {  }
+    settings:
+      language: null
+  -
+    target: title
+    map:
+      value: title
+    unique: {  }
+    settings:
+      language: null
+  -
+    target: field_disc_category
+    map:
+      target_id: disc_type
+    settings:
+      language: ''
+      reference_by: name
+      autocreate: '1'
+  -
+    target: field_speed
+    map:
+      value: speed
+    unique: {  }
+    settings:
+      language: null
+  -
+    target: field_glide
+    map:
+      value: glide
+    unique: {  }
+    settings:
+      language: null
+  -
+    target: field_fade
+    map:
+      value: fade
+    unique: {  }
+    settings:
+      language: null
+  -
+    target: field_stability_category
+    map:
+      target_id: stability_category
+    settings:
+      language: ''
+      reference_by: name
+      autocreate: '1'
+  -
+    target: stores
+    map:
+      target_id: stores
+    settings:
+      reference_by: store_id
+      autocreate: 0
+  -
+    target: variations
+    map:
+      target_id: variations
+    settings:
+      reference_by: variation_id
+      autocreate: 0

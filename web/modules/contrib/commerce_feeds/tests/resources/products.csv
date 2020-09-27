@@ -1,0 +1,3 @@
+guid,title,sku,store
+1,"Lorem ipsum",A001,"Store A"
+2,"Dolor sit amet",B001|B002,"Store B"

@@ -1,0 +1,19 @@
+{
+    "name": "drupal/commerce_feeds",
+    "type": "drupal-module",
+    "description": "Feeds integration for Commerce products.",
+    "keywords": ["Drupal", "feeds", "commerce"],
+    "homepage": "https://www.drupal.org/project/commerce_feeds",
+    "license": "GPL-2.0+",
+    "support": {
+      "issues": "https://www.drupal.org/project/issues/commerce_feeds",
+      "source": "https://git.drupalcode.org/project/commerce_feeds"
+    },
+    "require": {
+        "drupal/feeds": "~3.0",
+        "drupal/commerce": "~2.0"
+    },
+    "require-dev": {
+        "drupal/feeds": "3.x-dev"
+    }
+}

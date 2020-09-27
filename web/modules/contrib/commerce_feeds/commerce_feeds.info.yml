@@ -1,0 +1,16 @@
+name: Commerce Feeds
+type: module
+description: 'Feeds integration for Commerce products.'
+package: Commerce
+core: 8.x
+core_version_requirement: ^8 || ^9
+php: 7.0
+dependencies:
+  - feeds:feeds
+  - commerce:commerce
+  - commerce:commerce_product
+
+# Information added by Drupal.org packaging script on 2020-06-04
+version: '8.x-1.0-alpha3'
+project: 'commerce_feeds'
+datestamp: 1591295289

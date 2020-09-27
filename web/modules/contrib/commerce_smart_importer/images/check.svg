@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="17px" height="17px" viewBox="0 0 17 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.1 (57501) - http://www.bohemiancoding.com/sketch -->
+    <title>checkmark--glyph</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="After-CSV-is-uploaded" transform="translate(-317.000000, -671.000000)" fill="#5AA700">
+            <g id="checkmark--glyph" transform="translate(317.487237, 671.365346)">
+                <path d="M8,0 C3.6,0 0,3.6 0,8 C0,12.4 3.6,16 8,16 C12.4,16 16,12.4 16,8 C16,3.6 12.4,0 8,0 L8,0 Z M6.7,11.5 L3.4,8.1 L4.8,6.7 L6.7,8.6 L10.8,4.5 L12.2,5.9 L6.7,11.5 L6.7,11.5 Z" id="Shape"></path>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,57 @@
+commerce_smart_importer.csv_introduction:
+  path: '/admin/commerce-csv-introduction'
+  defaults:
+    _title: 'Commerce Smart Importer'
+    _form: '\Drupal\commerce_smart_importer\Form\CSVIntroductionForm'
+  requirements:
+    _permission: 'access commerce smart importer'
+
+commerce_smart_importer.csv_importer:
+  path: '/admin/commerce-csv-import'
+  defaults:
+    _title: 'Commerce Smart Importer'
+    _form: '\Drupal\commerce_smart_importer\Form\CSVImportForm'
+  requirements:
+    _permission: 'access commerce smart importer'
+
+commerce_smart_importer.csv_updater:
+  path: '/admin/commerce-csv-update'
+  defaults:
+    _title: 'Commerce Smart Importer'
+    _form: '\Drupal\commerce_smart_importer\Form\CSVUpdateForm'
+  requirements:
+    _permission: 'access commerce smart importer'
+
+commerce_smart_importer.exporter:
+  path: '/admin/commerce-csv-export'
+  defaults:
+    _title: 'Commerce Smart Importer'
+    _form: '\Drupal\commerce_smart_importer\Form\CSVExportForm'
+  requirements:
+    _permission: 'access commerce smart importer'
+
+commerce_smart_importer.override:
+  path: '/admin/commerce-smart-override'
+  defaults:
+    _controller: '\Drupal\commerce_smart_importer\Controller\OverrideController::overrideValue'
+    _title: 'Commerce Smart Importer Override'
+  requirements:
+    _permission: 'access commerce smart importer'
+  methods: [POST]
+
+commerce_smart_importer.file_upload:
+  path: '/admin/commerce-smart-upload'
+  defaults:
+    _controller: '\Drupal\commerce_smart_importer\Controller\SmartImporterFileUploadController::uploadFile'
+    _title: 'Commerce Smart Importer Override'
+  requirements:
+    _permission: 'access commerce smart importer'
+  methods: [POST, GET]
+
+commerce_smart_importer.configure_smart_importer:
+  path: '/admin/config/commerce-smart-importer-configuraton'
+  defaults:
+    _form: '\Drupal\commerce_smart_importer\Form\SmartImporterConfigurationForm'
+    _title: 'Commerce Smart importer configuration'
+  requirements:
+    _permission: 'access commerce smart importer configuration'

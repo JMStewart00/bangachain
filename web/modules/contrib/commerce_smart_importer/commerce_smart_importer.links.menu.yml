@@ -1,0 +1,6 @@
+commerce_smart_importer.csv:
+  title: 'Smart Importer'
+  route_name: 'commerce_smart_importer.csv_introduction'
+  parent: 'commerce.admin_commerce'
+  description: ''
+  weight: 30

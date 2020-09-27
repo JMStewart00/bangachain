@@ -1,0 +1,11 @@
+store: '1'
+sku_prefix: si_
+sku_method: '1'
+sku_random_digits: '6'
+batch_products: '25'
+increment_saver: '1'
+commerce_product_bundle: 'default'
+commerce_product_variation_bundle: 'default'
+external_folders: []
+flush_image_cache: '0'
+expose_store: false

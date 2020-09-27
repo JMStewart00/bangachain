@@ -1,0 +1,197 @@
+<?php
+
+/**
+ * @file
+ * Commerce Smart Importer module file.
+ */
+
+use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\commerce_smart_importer\CommerceSmartImporterConstants;
+
+/**
+ * Implements hook_theme().
+ */
+function commerce_smart_importer_theme($existing, $type, $theme, $path) {
+  return [
+    'commerce_smart_importer_error_logger' => [
+      'variables' => [
+        'error_log' => [],
+        'field_definitions' => [],
+        'log_type' => 'import',
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_cron().
+ */
+function commerce_smart_importer_cron() {
+  if (!is_dir(CommerceSmartImporterConstants::TEMP_DIR)) {
+    return;
+  }
+  $current_timestamp = new DrupalDateTime();
+  $current_timestamp = $current_timestamp->getTimestamp();
+
+  $dir_data = scandir(CommerceSmartImporterConstants::TEMP_DIR);
+  foreach ($dir_data as $data) {
+    if (is_file(CommerceSmartImporterConstants::TEMP_DIR . '/' . $data)) {
+      $last_modification = filemtime(CommerceSmartImporterConstants::TEMP_DIR . '/' . $data);
+      if (($current_timestamp - $last_modification) > 86400) {
+        unlink(CommerceSmartImporterConstants::TEMP_DIR . '/' . $data);
+      }
+    }
+    elseif (is_dir(CommerceSmartImporterConstants::TEMP_DIR . '/' . $data)) {
+      $last_modification = stat(CommerceSmartImporterConstants::TEMP_DIR . '/' . $data);
+      $last_modification = $last_modification['mtime'];
+      if (($current_timestamp - $last_modification) > 86400) {
+        $dir = CommerceSmartImporterConstants::TEMP_DIR . '/' . $data;
+        $import_content = scandir($dir);
+        foreach ($import_content as $files) {
+          if (is_file($dir . '/' . $files)) {
+            unlink($dir . '/' . $files);
+          }
+        }
+      }
+      if (count(scandir(CommerceSmartImporterConstants::TEMP_DIR . '/' . $data)) == 2) {
+        rmdir(CommerceSmartImporterConstants::TEMP_DIR . '/' . $data);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_help().
+ */
+function commerce_smart_importer_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.commerce_smart_importer':
+      return '<h2 id="contentsofthisfile">CONTENTS OF THIS FILE</h2>
+
+<ul>
+<li>Introduction and Features</li>
+
+<li>CSV format</li>
+
+<li>CSV Import</li>
+
+<li>CSV Export</li>
+
+<li>CSV Update</li>
+
+<li>Maintainers</li>
+
+<li>Plans for future</li>
+</ul>
+
+<h2 id="introductionandfeatures">INTRODUCTION AND FEATURES</h2>
+
+<p>Commerce Smart Importer is created primarily for massive import of products because it’s almost impossible to import a massive amount manually.</p>
+
+<p>To most users it’s much simpler to edit products in table format because they already have data like this from ERP software.</p>
+
+<p>The module has the ability to add products from a CSV file. A template CSV can be downloaded directly from the module, and then users only need to populate the data.</p>
+
+<p>If some mistakes are made when populating data, Commerce Smart Importer will recognize them and will try to correct them.</p>
+
+<p>When some mistakes are recognized you don\'t need to change the values in the CSV file, you can change them directly in Commerce Smart Importer.</p>
+
+<p>All products that are valid will be created in Drupal Commerce. Biggest advantage of this importer is that it will work on any Drupal Commerce website. All fields will be automatically recognized from the Drupal configuration.</p>
+
+<p>The module also has the ability to export products in a CSV file based on selected categories and fields.</p>
+
+<p>It is also possible to update existing products, which is useful for massive updates of certain fields.</p>
+
+<p>Big benefit is that beside textual fields, you can import and update even images!</p>
+
+<h2 id="csvformat">CSV FORMAT</h2>
+
+<ul>
+<li>Before we jump into exporter, updater and importer, first we need to clear how you should format your CSV file.</li>
+
+<li>Values you want in each field should be in same position(column) like in header.</li>
+
+<li>If your field allows more than one value on field you shuld delimit values with | ex. value1|value2|value3. This applies to all fields.</li>
+
+<li>When you download template first labels will be from product, and after it will be variation fields leading with SKU</li>
+
+<li>It is possible to add more than one variation to one product, all you have to do is to leave product fields empty, and variation will be added to last product populated.</li>
+
+<li>Always leave second row empty or populate it with some junk text because it will be ignored.</li>
+</ul>
+
+<h2 id="csvimport">CSV IMPORT</h2>
+
+<ul>
+<li>First download your CSV template.</li>
+
+<li>Than populate that CSV file in format explained in this readme. </li>
+
+<li>To upload images first you need to write full image name(with extension) to image field. And when you are uploading CSV file upload those image also. Commerce Smart Importer will try to find them based on names you have entered. You can also just enter link to images.</li>
+
+<li>Second step is to read Notices and Errors carefully.</li>
+
+<li>Difference between notice and error is that notice will notify about certain action that Commerce Smart Importer will do. While error will affect wheter or not product will be created and there is nothing Commerce Smart importer can do about it, so Importer product will just skip this product or variation.</li>
+
+<li>If you are not happy with action that will be taken, you can always override that value.</li>
+
+<li>Check options that you want to ignore and proceed.</li>
+</ul>
+
+<h2 id="csvexport">CSV EXPORT</h2>
+
+<ul>
+<li>This is simplest part of importer. </li>
+
+<li>If you have some field that references taxonomy term you can export only products that are referenced with chosen term. </li>
+
+<li>Check all fields you want to export. You need at least one Identifier.</li>
+
+<li>After export finishes, click download last export.</li>
+</ul>
+
+<h2 id="csvupdate">CSV UPDATE</h2>
+
+<ul>
+<li>This is very similar to importing part.</li>
+
+<li>In CSV you need to have at least one identifier so Commerce Smart Importer can identify which product you are trying to update</li>
+
+<li>Product have only one identifier ID(product) and variation have 2 identifiers ID(variation) and SKU, you need at least one for each of these entities. Products can be identified by sku, but it is not recomended because of obvious reasons.</li>
+
+<li>It is recomended to use file from export, you can delete products that you don\'t want to update, or you can just leave them.</li>
+
+<li>For now there is no override function</li>
+</ul>
+
+<h2 id="plansforfuture">PLANS FOR FUTURE</h2>
+
+<ul>
+<li>I am not  not sure if this will be added and when, but i have it in plan, also if you have some suggestion on how we can improve this Commerce Smart Importer, contact me on drupal.org or mail address given in maintainers.</li>
+
+<li>If you can help me with coding, you can post patch in some issues and I will consider merging. In case you have something bigger in mind contact me first.</li>
+
+<li>Plans:
+
+
+<ol>
+<li>URL-alias, importing url aliases.</li>
+
+<li>Foler on in public folder for images.</li>
+
+<li>Saving import, and later loading it.</li>
+
+<li>Excel support.</li>
+
+<li>JSON support with RESTful API that you can enable and disable.</li></ol>
+</li>
+</ul>
+
+<h2 id="maintainers">MAINTAINERS</h2>
+
+<ul>
+<li>Davor Horvacki (DavorHorvacki) - https://www.drupal.org/u/davorhorvacki davor@studiopresent.com</li>
+</ul>';
+  }
+}

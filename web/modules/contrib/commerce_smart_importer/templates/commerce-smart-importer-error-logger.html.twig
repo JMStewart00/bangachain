@@ -1,0 +1,96 @@
+{% macro printNumberOrder(number) %}
+    {% import _self as numberMacro %}
+    {% if number == 1 %}
+        1st
+    {% elseif number == 2 %}
+        2nd
+    {% elseif number == 3 %}
+        3rd
+    {% else %}
+        {{ number }}th
+    {% endif %}
+{% endmacro %}
+{% macro  printFieldLog(field_log, field_definition, row, key, type, log_type) %}
+    {% import _self as print %}
+    {% if  (field_log.not_valid|length > 0)
+    or (field_log.duplicates == false)
+    or (field_log.cardinality == false)
+    or (field_log.default_value == false)
+    or (field_log.required == false) %}
+        <div class="log">
+            {% if field_log.required == false %}
+                {% if log_type == 'import' %}
+                <p class="log__message">
+                    <span class="log__label error">Error: </span>
+                    <strong>{{ field_definition['label'] }}</strong>
+                    <span>{% trans %}this field is required. None of values are valid and there is no default value to be used.{% endtrans %}</span>
+                    {% if field_log.not_valid|length > 0 %}
+                        <span>{% trans %}Rejected values:{% endtrans %}</span>
+                        {% for not_valid in field_log.not_valid %}
+                            <span>{{ print.printNumberOrder(not_valid.order) }} {% trans %}value rejected because:{% endtrans %} {{ not_valid.log }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </p>
+                {% endif %}
+            {% else %}
+                <p class="log__message">
+                        <span class="log__label notice">{% trans %}Notice: {% endtrans %}
+                        </span>
+                    <strong>{{ field_definition['label']}}</strong>
+                    {% if field_log.default_value == false %}
+                        <span class="log__message">{% trans %}default value will be used.{% endtrans %}</span>
+                    {% endif %}
+                    {% if field_log.duplicates == false %}
+                        <span>{% trans %}There are some duplicate values they will be eliminated.{% endtrans %}</span>
+                    {% endif %}
+                    {% if field_log.cardinality == false %}
+                        <span>{% trans %}Allowed number of values are exceeded and only part will be used.{% endtrans %}</span>
+                    {% endif %}
+                    {% if field_log.not_valid|length > 0 %}
+                        <span>{% trans %}Rejected values:{% endtrans %}</span>
+                        {% for not_valid in field_log.not_valid %}
+                            <span>{{ print.printNumberOrder(not_valid.order) }} {% trans %}value rejected because:{% endtrans %} {{ not_valid.log }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </p>
+
+            {% endif %}
+            {% if log_type == 'import' %}
+            <div class="overrider">
+                <div class="overrider-item">
+                    <p class="overrider-label">{% trans %}Override value with{% endtrans %}</p>
+                    <input type="text" class="override-value">
+                    <span class="override-status"></span>
+                </div>
+                <button type="button" class="override-button" data-row="{{ row }}" data-field="{{ key }}" data-type="{{ type }}">{% trans %}Apply{% endtrans %}</button>
+            </div>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endmacro %}
+
+{% import _self as macro %}
+{% for row, product_log in error_log %}
+    {% if product_log['product']['has_log'] %}
+        <fieldset>
+            <legend>{% trans %}Product at row{% endtrans %} {{ row }}</legend>
+            {% for key_product, field_log in product_log.product %}
+                {% if key_product is not same as('has_log') %}
+                    {{ macro.printFieldLog(field_log, field_definitions['product'][key_product], row, key_product, "product", log_type) }}
+                {% endif %}
+            {% endfor %}
+            {% for variation_order, variations in product_log.variations %}
+                {% if  variations['has_log'] %}
+                    <fieldset>
+                        <legend>{% trans %}Variation at row{% endtrans %} {{ row +  variation_order }}</legend>
+                        {% for key_variation, field_log_var in variations %}
+                            {% if (key_variation is not same as('creatable')) and  (key_variation is not same as('currency')) and (key_variation is not same as('has_log')) %}
+                                {{ macro.printFieldLog(field_log_var, field_definitions['variation'][key_variation], row + variation_order, key_variation, "variation", log_type) }}
+                            {% endif %}
+                        {% endfor %}
+                    </fieldset>
+                {% endif %}
+            {% endfor %}
+        </fieldset>
+    {% endif %}
+{% endfor %}

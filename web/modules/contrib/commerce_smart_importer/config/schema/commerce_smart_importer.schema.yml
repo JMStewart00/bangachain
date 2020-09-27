@@ -1,0 +1,37 @@
+commerce_smart_importer.settings:
+  type: config_object
+  label: 'Commerce smart importer settings'
+  mapping:
+    store:
+      type: string
+      label: 'Store in which products will be created'
+    sku_prefix:
+      type: string
+      label: 'If the SKU is automatically generated, this will be in front of the auto-generated SKU'
+    sku_method:
+      type: string
+      label: 'SKU generate method, 0 = auto-increment | 1 = random'
+    sku_random_digits:
+      type: string
+      label: 'If SKU generate method is random, this is number of random digits'
+    increment_saver:
+      type: string
+      label: 'If SKU generate method is auto-increment, this saves last stop'
+    batch_products:
+      type: string
+      label: 'Number of products that will be imported per one batch operation'
+    commerce_product_bundle:
+      type: string
+      label: 'Product bundle that will be used'
+    commerce_product_variation_bundle:
+      type: string
+      label: 'Product variation bundle that will be used'
+    external_folders:
+      type: array
+      label: 'You can add external folders, which will be scanned'
+    flush_image_cache:
+      type: string
+      label: 'Flush image styles when adding new image'
+    expose_store:
+      type: boolean
+      label: 'Exposes store in CSV file'

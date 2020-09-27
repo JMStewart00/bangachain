@@ -1,0 +1,11 @@
+commerce_smart_importer.tab_1:
+  route_name : commerce_smart_importer.csv_introduction
+  title: Importer/Exporter/Update
+  base_route: commerce_smart_importer.csv_introduction
+  weight: 0
+
+commerce_smart_importer.tab_2:
+  route_name : commerce_smart_importer.configure_smart_importer
+  title: Configure
+  base_route: commerce_smart_importer.csv_introduction
+  weight: 1

@@ -1,0 +1,15 @@
+name: Commerce Smart Importer
+description: Import and export Commerce Products and Variations in CSV format
+package: Commerce (contrib)
+configure: commerce_smart_importer.configure_smart_importer
+type: module
+core_version_requirement: ^8.7.7 || ^9
+dependencies:
+  - commerce:commerce_price
+  - commerce:commerce_store
+  - commerce:commerce_product
+
+# Information added by Drupal.org packaging script on 2020-06-09
+version: '8.x-1.0-alpha1'
+project: 'commerce_smart_importer'
+datestamp: 1591705291

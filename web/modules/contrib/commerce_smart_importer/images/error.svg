@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="17px" height="17px" viewBox="0 0 17 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.1 (57501) - http://www.bohemiancoding.com/sketch -->
+    <title>error--glyph</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="After-CSV-is-uploaded" transform="translate(-60.000000, -1260.000000)" fill="#E71D32" fill-rule="nonzero">
+            <g id="Notification/Error" transform="translate(60.242651, 1258.420177)">
+                <g id="error--glyph" transform="translate(0.000000, 2.000000)">
+                    <path d="M8,0 C3.6,0 0,3.6 0,8 C0,12.4 3.6,16 8,16 C12.4,16 16,12.4 16,8 C16,3.6 12.4,0 8,0 Z M5.1,13.3 L3.5,12 L11,2.6 L12.5,3.8 L5.1,13.3 Z" id="Shape"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,4 @@
+services:
+  commerce_smart_importer.service:
+    class: 'Drupal\commerce_smart_importer\Plugin\CommerceSmartImporerService'
+    arguments: ['@database', '@token', '@entity_field.manager', '@config.factory', '@entity_type.bundle.info']

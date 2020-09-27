@@ -1,0 +1,50 @@
+commerce-smart-importer-importer-load-library:
+  version: 1.x
+  js:
+    js/import.js: {}
+  css:
+    theme:
+      css/import.css: {}
+  header: true
+  dependencies:
+    - core/drupalSettings
+    - core/jquery
+
+commerce-smart-importer-import-library:
+  version: 1.x
+  css:
+    theme:
+      css/import.css: {}
+  header: true
+  dependencies:
+    - core/drupalSettings
+    - core/jquery
+
+commerce-smart-importer-update:
+  version: 1.x
+  css:
+    theme:
+      css/update.css: {}
+  header: true
+
+commerce-smart-importer-introduction-library:
+  version: 1.x
+  css:
+    theme:
+      css/introduction.css: {}
+  header: true
+  dependencies:
+    - core/drupalSettings
+    - core/jquery
+
+commerce-smart-importer-dropzone-library:
+  version: 1.x
+  js:
+    js/dropzone.js: {}
+    js/dropzoneImporter.js: {}
+  css:
+    theme:
+      css/dropzone.css: {}
+  dependencies:
+      - core/drupal
+      - core/jquery

@@ -26,6 +26,7 @@ module:
   commerce_payment_example: 0
   commerce_price: 0
   commerce_product: 0
+  commerce_smart_importer: 0
   commerce_square: 0
   commerce_store: 0
   commerce_tax: 0

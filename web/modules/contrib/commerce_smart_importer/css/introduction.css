@@ -1,0 +1,34 @@
+#instructions {
+  font-size: 30px;
+}
+
+.li-element {
+  margin: 3px;
+}
+
+ul {
+  margin: 0;
+}
+
+#product-header {
+  border: solid 2px #ff0000;
+}
+
+.red {
+  color: #ff0000;
+}
+
+#variation-header {
+  border: solid 2px #00a651;
+}
+.green {
+  color: #00a651;
+}
+
+.purple {
+  color: #ec008c;
+}
+
+.blue {
+  color: #0072bc;
+}

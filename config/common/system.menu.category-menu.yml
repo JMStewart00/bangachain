@@ -1,0 +1,10 @@
+uuid: bdcdcf61-1402-4163-a6b2-e4162bf2fb6a
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: yzPQ0z6rhCuwZ9x1c5br7YHw20sgsdCdp9LgNG-bBVg
+id: category-menu
+label: 'Category menu'
+description: ''
+locked: true

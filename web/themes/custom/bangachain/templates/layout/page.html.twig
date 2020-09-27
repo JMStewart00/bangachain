@@ -47,6 +47,10 @@
     <div class="l-container">
       <div class="c-header__row l-row--no-columns">
 
+        <div class="c-header__menu-container">
+          {{ page.header }}
+        </div>
+
         <div class="c-header__logo-container">
           <a href="/">
             <picture>
@@ -57,16 +61,12 @@
           </a>
         </div>
 
-        <div class="c-header__menu-container">
-          {{ page.header }}
+        <div class="c-secondary-menu">
+          {{ page.primary_menu }}
+          {{ page.secondary_menu }}
         </div>
-
       </div>
 
-      <div class="c-secondary-menu">
-        {{ page.primary_menu }}
-        {{ page.secondary_menu }}
-      </div>
 
     </div>
   </header>

@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_product
+    - ctools
+id: product_default
+label: 'Product Default'
+type: 'canonical_entities:commerce_product'
+pattern: '/products/[commerce_product:title]'
+selection_criteria:
+  8652aeca-80b6-4e34-a655-05b683b1a393:
+    id: 'entity_bundle:commerce_product'
+    bundles:
+      default: default
+    negate: false
+    context_mapping:
+      commerce_product: commerce_product
+    uuid: 8652aeca-80b6-4e34-a655-05b683b1a393
+selection_logic: and
+weight: -5
+relationships: {  }

@@ -1,0 +1,43 @@
+{#
+/**
+ * @file
+ *
+ * Default product template.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the wrapper.
+ * - product: The rendered product fields.
+ *   Use 'product' to print them all, or print a subset such as
+ *   'product.title'. Use the following code to exclude the
+ *   printing of a given field:
+ *   @code
+ *   {{ product|without('title') }}
+ *   @endcode
+ * - product_entity: The product entity.
+ * - product_url: The product URL.
+ *
+ * @ingroup themeable
+ */
+#}
+
+<article{{ attributes.addClass('commerce-product', 'teaser') }}>
+  <div class="product-image">
+    {{ product.field_images[0] }}
+    <div class="products-hover-wrapper"></div>
+  </div>
+
+  <h3 class="product-title">
+    <a href="{{ product_url }}">{{ product.title }}</a>
+  </h3>
+
+  {% if product.field_sale[0]['#markup'] == 1 %}
+    <div class="sales-tag">{{ 'Sale!'|t }}</div>
+  {% endif %}
+
+  {{- product|without(
+    'variation_attributes',
+    'field_images',
+    'title',
+    'field_sale'
+  ) -}}
+</article>

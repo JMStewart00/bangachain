@@ -1,0 +1,30 @@
+@mixin menu-style1() {
+  ul.menu {
+    li {
+      line-height: 24px;
+      margin: 0 0 10px;
+      padding: 0 0 5px 25px;
+      position: relative;
+      a {
+        @include link-color($gray-base, $brand-primary);
+        position: static;
+        padding: 0;
+        &:hover {
+          &:before {
+            color: inherit;
+          }
+        }
+        &:before {
+          color: #888888;
+          content: "\f1db";
+          font-family: "FontAwesome";
+          font-size: 14px;
+          position: absolute;
+          left: 0;
+          top: 0;
+          transition: color 0.3s ease-in-out;
+        }
+      }
+    }
+  }
+}

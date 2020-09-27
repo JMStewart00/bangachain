@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.footer-second
+  module:
+    - system
+  theme:
+    - estore
+id: footersecond
+theme: estore
+region: footer_second
+weight: 0
+provider: null
+plugin: 'system_menu_block:footer-second'
+settings:
+  id: 'system_menu_block:footer-second'
+  label: 'Footer second'
+  provider: system
+  label_display: visible
+  level: 1
+  depth: 0
+visibility: {  }

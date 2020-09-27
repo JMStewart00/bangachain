@@ -1,0 +1,41 @@
+ul.nav-tabs {
+  padding-left: 16px;
+  margin-bottom: 15px;
+  &.tabs--primary {
+    padding-left: 26px;
+  }
+  li {
+    border: 1px solid $gray-lighter;
+    background-color: $body-bg-secondary;
+    display: inline-block;
+    position: relative;
+    z-index: 0;
+    border-radius: 0;
+    margin: 5px -1px -1px;
+    padding: 0 1em;
+    &.active {
+      background-color: $nav-tabs-active-link-hover-bg;
+      border-bottom-color: transparent;
+    }
+    a {
+      display: inline-block;
+      padding: .5em 0;
+      font-weight: 700;
+      color: #515151;
+      text-decoration: none;
+      &:hover {
+        color: $gray-light;
+        border-color: transparent;
+      }
+    }
+  }
+}
+
+.dropdown-menu > .active {
+  a,
+  a:hover,
+  a:focus {
+    background-color: transparent;
+    color: $text-color;
+  }
+}

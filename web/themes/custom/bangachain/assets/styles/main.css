@@ -7715,7 +7715,7 @@ body.no-scroll {
   border-radius: 50%;
   position: absolute;
   top: 0;
-  left: 18px;
+  left: 23px;
   text-align: center;
   color: #fcfffc;
   font-size: 0.875rem;
@@ -7811,27 +7811,20 @@ body.no-scroll {
 .c-header {
   -webkit-box-shadow: 0 0.75rem 1.5rem -1.5rem #2d3a3a;
   box-shadow: 0 0.75rem 1.5rem -1.5rem #2d3a3a;
-  padding-bottom: calc(var(--lh__base) * 1 * var(--rvr-multiplier)); }
+  border-bottom: 5px solid #248232; }
 
 @media (min-width: 992px) {
   .c-header .l-container {
-    max-width: 66%; } }
-
-@media (max-width: 991.98px) {
-  .c-header {
-    display: none; } }
+    max-width: 90%; } }
 
 .c-header__row {
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
   padding: calc(var(--lh__base) * 1 * var(--rvr-multiplier)) 0; }
-
-@media (max-width: 1439.98px) {
-  .c-header__row {
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    justify-content: center; } }
 
 @media (max-width: 1439.98px) {
   .c-header__logo-container {
@@ -7839,22 +7832,17 @@ body.no-scroll {
     width: 100%; } }
 
 .c-header__logo-container img {
-  width: 7.8125rem; }
+  width: 5.625rem; }
 
 @media (max-width: 1439.98px) {
   .c-header__logo-container img {
     display: block;
-    margin: 0 auto;
-    width: 7.8125rem; } }
+    margin: 0 auto; } }
 
 .c-header__menu-container {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex; }
-
-@media (min-width: 768px) {
-  .c-header__menu-container {
-    margin-left: auto; } }
 
 .c-header__menu-container .region-header {
   display: -webkit-box;
@@ -7870,30 +7858,17 @@ body.no-scroll {
 .c-header__search .o-icon {
   color: #2ba84a; }
 
+.c-menu-main {
+  margin-right: 2rem; }
+
 .c-menu-main__item {
   display: inline-block;
-  margin-right: 3rem; }
+  margin: 0 1rem; }
 
 .c-menu-main__link {
-  position: relative;
   display: block;
-  font-size: 1.5rem;
   line-height: 1;
   padding: 38px 0 33px; }
-
-.c-menu-main__link::after {
-  content: '';
-  display: block;
-  position: absolute;
-  bottom: 0;
-  height: 8px;
-  background: #2ba84a;
-  -webkit-transition: width 0.3s;
-  transition: width 0.3s;
-  width: 0; }
-
-.c-menu-main__link:hover::after {
-  width: 100%; }
 
 .c-menu-main__link:hover, .c-menu-main__link:focus {
   text-decoration: none; }
@@ -7905,7 +7880,16 @@ body.no-scroll {
 .c-menu-main__link.is-active::after {
   width: 100%; }
 
-.c-secondary-menu .region-primary-menu {
+.c-secondary-menu {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  margin-left: 2rem; }
+
+.c-secondary-menu .region-secondary-menu {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -7914,7 +7898,7 @@ body.no-scroll {
   justify-content: flex-end; }
 
 .c-secondary-menu .o-menu__item {
-  margin-left: 1rem; }
+  margin: 0 1rem; }
 
 /*
   Utilities - are for one purpose and one purpose only. Ex: .u-text-center

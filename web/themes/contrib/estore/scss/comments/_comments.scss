@@ -1,0 +1,35 @@
+.comment-item {
+  position: relative;
+  &.with-picture {
+    .right-sidebar {
+      padding-top: 10px;
+      border: 1px solid $gray-lighter;
+    }
+    .left-sidebar {
+      img {
+        margin: 0 auto;
+      }
+    }
+    .field--name-user-picture {
+      margin-bottom: 5px;
+    }
+  }
+  mark {
+    position: absolute;
+    z-index: 99;
+    top: 14px;
+    right: 0;
+  }
+  footer > p {
+    display: inline;
+  }
+  .premalink a .text {
+    @include hide-text();
+  }
+  margin-bottom: 20px;
+}
+.comment-form {
+  .filter-wrapper {
+    display: none;
+  }
+}

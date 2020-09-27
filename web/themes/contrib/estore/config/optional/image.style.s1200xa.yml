@@ -1,0 +1,14 @@
+langcode: en
+status: true
+dependencies: {  }
+name: s1200xa
+label: s1200xA
+effects:
+  1c87150f-da50-4256-a9ba-0e4bd83633cd:
+    uuid: 1c87150f-da50-4256-a9ba-0e4bd83633cd
+    id: image_scale
+    weight: 1
+    data:
+      width: 1200
+      height: null
+      upscale: false

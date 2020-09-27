@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies: {  }
+name: sc800x800
+label: sc800x800
+effects:
+  155a77b9-32a7-4c31-87fc-660f967b6e26:
+    uuid: 155a77b9-32a7-4c31-87fc-660f967b6e26
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 800
+      height: 800

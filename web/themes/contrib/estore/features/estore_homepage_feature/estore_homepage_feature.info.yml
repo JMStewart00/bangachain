@@ -1,0 +1,22 @@
+name: 'eStore Homepage Feature'
+description: 'Contains page and panel variant for the homepage.'
+type: module
+core: 8.x
+core_version_requirement: ^8 || ^9
+
+dependencies:
+  - drupal:block
+  - drupal:block_class
+  - drupal:commerce_product
+  - drupal:commerce_wishlist
+  - drupal:page_manager
+  - drupal:panels
+  - drupal:pathauto
+  - drupal:system
+  - drupal:views
+  - drupal:views_bootstrap
+
+# Information added by Drupal.org packaging script on 2020-06-29
+version: '8.x-1.14'
+project: 'estore'
+datestamp: 1593422727

@@ -1,0 +1,38 @@
+.footer {
+  background-color: $body-bg-secondary;
+  padding: 50px 0 0 0;
+  .block {
+    @include block-title();
+  }
+  .footer-top {
+    padding-bottom: 50px;
+    nav {
+      @include menu-style1();
+    }
+  }
+  .footer-bottom {
+    background-color: #e9ebeb;
+    padding: 10px 0;
+    font-size: 12px;
+    .footer-bottom-left,
+    .footer-bottom-right {
+      float: left;
+      & > div {
+        display: inline-block;
+        margin: 0 10px;
+      }
+    }
+    .footer-bottom-right {
+      float: right;
+    }
+
+    @include media-breakpoint-down(xs) {
+      text-align: center;
+      .footer-bottom-left,
+      .footer-bottom-right {
+        float: none;
+        margin-bottom: 5px;
+      }
+    }
+  }
+}

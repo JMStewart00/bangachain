@@ -1,0 +1,41 @@
+homepage_first:
+  label: 'Homepage (first)'
+  path: templates/layouts/homepage/first
+  template: homepage--first
+  category: 'eStore'
+  default_region: main
+  regions:
+    # Top blocks.
+    top_slideshow:
+      label: 'Top Slideshow'
+    top_categories:
+      label: 'Top Categories'
+    # First collection regions.
+    first_collection_title:
+      label: 'First collection title'
+    first_collection_banner:
+      label: 'First collection banner'
+    first_collection_hot:
+      label: 'First collection hot product'
+    first_collection_products:
+      label: 'First collection products'
+
+    product_categories:
+      label: 'Product Categories'
+
+    # Second collection regions.
+    second_collection_title:
+      label: 'Second collection title'
+    second_collection_products:
+      label: 'Second collection products'
+    second_collection_hot:
+      label: 'Second collection hot product'
+    second_collection_banner:
+      label: 'Second collection banner'
+
+    featured_products:
+      label: 'Featured Products'
+    blog_news:
+      label: 'Blog and latest news'
+    featured_products_bottom:
+      label: 'Featured Products Botton'

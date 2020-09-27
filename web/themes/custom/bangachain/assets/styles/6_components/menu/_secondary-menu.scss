@@ -1,10 +1,14 @@
 .c-secondary-menu {
-  .region-primary-menu {
+  display: flex;
+  align-items: center;
+  margin-left: 2rem;
+
+  .region-secondary-menu {
     display: flex;
     justify-content: flex-end;
   }
 
   .o-menu__item {
-    margin-left: rem(16);
+    margin: 0 rem(16);
   }
 }

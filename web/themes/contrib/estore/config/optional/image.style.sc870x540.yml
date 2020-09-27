@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies: {  }
+name: sc870x540
+label: sc870x540
+effects:
+  3a6beae5-807d-4ad5-a7a0-2fb8ae17eaf3:
+    uuid: 3a6beae5-807d-4ad5-a7a0-2fb8ae17eaf3
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 870
+      height: 540

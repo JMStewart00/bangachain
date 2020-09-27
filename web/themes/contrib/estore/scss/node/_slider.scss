@@ -1,0 +1,36 @@
+.slider {
+  &.teaser {
+    position: relative;
+    .slider-title,
+    .field--name-field-teaser-text {
+      position: absolute;
+      top: 40%;
+      width: 100%;
+      text-align: center;
+      text-shadow: 1px 1px 5px #333;
+    }
+    .slider-title {
+      transition: all .3s ease-in-out;
+      @include link-color(#ffffff, $brand-primary);
+      font-size: 32px;
+      line-height: 40px;
+      margin: 10px 0;
+      text-transform: uppercase;
+    }
+    .field--name-field-teaser-text {
+      top: 50%;
+      color: #ffffff;
+      font-size: 16px;
+      margin: 10px 0 20px;
+    }
+    @include media-breakpoint-down(xs) {
+      .slider-title {
+        top: 10%;
+      }
+      .field--name-field-teaser-text {
+        top: auto;
+        bottom: 10%;
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+uuid: c1efe76b-d94a-4baa-ac7e-19a1b479acdc
+langcode: en
+status: false
+dependencies:
+  config:
+    - system.menu.category-menu
+  module:
+    - bangachain_layout
+    - system
+  theme:
+    - bangachain
+third_party_settings:
+  bangachain_layout:
+    vertical_spacing:
+      top: none
+      bottom: none
+id: categorymenu_2
+theme: bangachain
+region: sidebar_first
+weight: 0
+provider: null
+plugin: 'system_menu_block:category-menu'
+settings:
+  id: 'system_menu_block:category-menu'
+  label: 'Category menu'
+  provider: system
+  label_display: '0'
+  level: 1
+  depth: 0
+  expand_all_items: false
+visibility: {  }

@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies: {  }
+name: sc400x400
+label: sc400x400
+effects:
+  469406d8-e0bf-43a7-bb1c-7be5e7451371:
+    uuid: 469406d8-e0bf-43a7-bb1c-7be5e7451371
+    id: image_scale_and_crop
+    weight: 2
+    data:
+      width: 400
+      height: 400

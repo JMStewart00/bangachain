@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {  }
+id: reviews
+label: Reviews
+target_entity_type_id: commerce_product
+description: ''

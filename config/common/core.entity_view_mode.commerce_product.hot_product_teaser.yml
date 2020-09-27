@@ -1,0 +1,12 @@
+uuid: 3181e95f-47d3-4d9d-bad3-09677073979c
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_product
+_core:
+  default_config_hash: id469J0fIkqYOhws5vR1Debv6A0u4uduaHeWEkjCTPM
+id: commerce_product.hot_product_teaser
+label: 'Hot product teaser'
+targetEntityType: commerce_product
+cache: true

@@ -1,0 +1,31 @@
+global-styling:
+  css:
+    theme:
+      css/styles.css: {}
+  js:
+    js/estore.header.js: {}
+    js/estore.anchor_scroll.js: {}
+    js/estore.stacktable.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+
+bootstrap-scripts:
+  remote: https://getbootstrap.com/docs/3.3/
+  license:
+    name: MIT
+    url: https://github.com/twbs/bootstrap/blob/v3-dev/LICENSE
+    gpl-compatible: false
+  js:
+    /libraries/bootstrap/js/bootstrap.js: {}
+
+stacktable:
+  remote: https://github.com/johnpolacek/stacktable.js/
+  license:
+    name: MIT
+    url: https://github.com/johnpolacek/stacktable.js/blob/master/License.txt
+    gpl-compatible: false
+  js:
+    /libraries/stacktable.js/stacktable.js: {}
+  dependencies:
+    - core/jquery

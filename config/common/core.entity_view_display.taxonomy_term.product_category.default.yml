@@ -1,0 +1,25 @@
+uuid: 418ab4b5-e570-4ce9-8f36-66e7f9afa0ed
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.product_category.field_image
+    - taxonomy.vocabulary.product_category
+  module:
+    - text
+_core:
+  default_config_hash: zuLLsZYVnNKbV0r5IrZZkb_XwBugUHpNalabPDabdf8
+id: taxonomy_term.product_category.default
+targetEntityType: taxonomy_term
+bundle: product_category
+mode: default
+content:
+  description:
+    label: hidden
+    type: text_default
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_image: true

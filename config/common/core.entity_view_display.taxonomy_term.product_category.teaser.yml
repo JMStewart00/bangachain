@@ -1,0 +1,29 @@
+uuid: af1b72fe-c0e8-4284-b9c2-20990b8e59fa
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.taxonomy_term.teaser
+    - field.field.taxonomy_term.product_category.field_image
+    - image.style.sc400x400
+    - taxonomy.vocabulary.product_category
+  module:
+    - image
+_core:
+  default_config_hash: Qxg4NothPhAU1tKrqKUX6rub4YTeE4p6_H5Bb4Kk7fI
+id: taxonomy_term.product_category.teaser
+targetEntityType: taxonomy_term
+bundle: product_category
+mode: teaser
+content:
+  field_image:
+    type: image
+    weight: 0
+    region: content
+    label: hidden
+    settings:
+      image_style: sc400x400
+      image_link: ''
+    third_party_settings: {  }
+hidden:
+  description: true

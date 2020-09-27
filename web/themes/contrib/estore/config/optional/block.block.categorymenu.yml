@@ -1,0 +1,27 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.category-menu
+  module:
+    - block_class
+    - system
+  theme:
+    - estore
+third_party_settings:
+  block_class:
+    classes: ''
+id: categorymenu
+theme: estore
+region: navigation
+weight: -11
+provider: null
+plugin: 'system_menu_block:category-menu'
+settings:
+  id: 'system_menu_block:category-menu'
+  label: Category
+  provider: system
+  label_display: visible
+  level: 1
+  depth: 0
+visibility: {  }

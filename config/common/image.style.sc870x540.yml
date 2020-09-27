@@ -1,0 +1,17 @@
+uuid: 09107e0a-2cef-4c75-8545-e56a57c57500
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: e8bJDWJYN0c9r6xrEAiUhhuYFGhTdkXTQIq-KuToaRo
+name: sc870x540
+label: sc870x540
+effects:
+  3a6beae5-807d-4ad5-a7a0-2fb8ae17eaf3:
+    uuid: 3a6beae5-807d-4ad5-a7a0-2fb8ae17eaf3
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 870
+      height: 540
+      anchor: center-center

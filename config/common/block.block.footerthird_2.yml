@@ -1,0 +1,31 @@
+uuid: 76cc5ad3-c474-4727-b93b-c8f94fcb66b5
+langcode: en
+status: false
+dependencies:
+  config:
+    - system.menu.footer-third
+  module:
+    - bangachain_layout
+    - system
+  theme:
+    - bangachain
+third_party_settings:
+  bangachain_layout:
+    vertical_spacing:
+      top: none
+      bottom: none
+id: footerthird_2
+theme: bangachain
+region: sidebar_first
+weight: 0
+provider: null
+plugin: 'system_menu_block:footer-third'
+settings:
+  id: 'system_menu_block:footer-third'
+  label: 'Footer third'
+  provider: system
+  label_display: '0'
+  level: 1
+  depth: 0
+  expand_all_items: false
+visibility: {  }

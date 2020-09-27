@@ -1,0 +1,53 @@
+name: eStore
+description: eStore is responsive mobile optimized, based on Bootstrap. For full experience please check our <a href="https://www.drupal.org/docs/8/themes/estore-user-guide">Documentation</a> page and install all required modules if you're not installing the theme using the composer dependencies manager. Made by <a href="https://optasy.com" target="_blank">OPTASY</a> team.
+type: theme
+core: 8.x
+core_version_requirement: ^8 || ^9
+base theme: bootstrap
+
+# Libraries.
+libraries:
+  - 'estore/global-styling'
+  - 'estore/bootstrap-scripts'
+  - 'estore/stacktable'
+
+# Regions.
+regions:
+  top_header_right: 'Top Header Right'
+  left_middle_header: 'Left Middle Header'
+  middle_header: 'Middle Header'
+  right_middle_header: 'Right Middle Header'
+  navigation: 'Navigation'
+  navigation_collapsible: 'Navigation (Collapsible)'
+  highlighted: 'Highlighted'
+  help: 'Help'
+  header: 'Header'
+  content: 'Content'
+  sidebar_first: 'Left Sidebar'
+  sidebar_second: 'Right Sidebar'
+  footer_first: 'Footer First Widget'
+  footer_second: 'Footer Second Widget'
+  footer_third: 'Footer Third Widget'
+  footer_fourth: 'Footer Fourth Widget'
+  footer_bottom_left: 'Footer Bottom Left'
+  footer_bottom_right: 'Footer Bottom Right'
+
+# Dependencies, does not properly now.
+# Follow the updates to get it fully work:
+# https://www.drupal.org/project/drupal/issues/474684
+# As Bootstrap is declared as base theme, this only checked as dependency.
+dependencies:
+  - drupal:bootstrap
+  # - drupal:fontawesome
+  # - drupal:commerce
+  # - drupal:commerce_wishlist
+  # - drupal:pathauto
+  # - drupal:views_bootstrap
+  # - drupal:block_class
+  # - drupal:panels
+  # - drupal:page_manager
+
+# Information added by Drupal.org packaging script on 2020-06-29
+version: '8.x-1.14'
+project: 'estore'
+datestamp: 1593422727

@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies: {  }
+name: sc180x180
+label: sc180x180
+effects:
+  0fb6e008-0ce9-4ee2-bd63-ccfb9bbd7ff7:
+    uuid: 0fb6e008-0ce9-4ee2-bd63-ccfb9bbd7ff7
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 180
+      height: 180

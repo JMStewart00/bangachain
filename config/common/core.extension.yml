@@ -114,9 +114,9 @@ theme:
   classy: 0
   bartik: 0
   seven: 0
-  flexi_cart: 0
   claro: 0
   bangachain: 0
+  bootstrap: 0
 profile: standard
 _core:
   default_config_hash: R4IF-ClDHXxblLcG0L7MgsLvfBIMAvi_skumNFQwkDc

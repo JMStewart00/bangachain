@@ -1,13 +1,13 @@
 .c-menu-main {
+  margin-right: 2rem;
+
   &__item {
     display: inline-block;
-    margin-right: spacer(3);
+    margin: 0 rem(16);
   }
 
   &__link {
-    @include animate-underline();
     display: block;
-    font-size: rem(24);
     line-height: 1;
     padding: px(38) 0 px(33); // Fill min header height
 

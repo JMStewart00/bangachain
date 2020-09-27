@@ -1,0 +1,69 @@
+features:
+  comment_user_picture: 1
+  comment_user_verification: 1
+  favicon: 1
+  node_user_picture: 1
+logo:
+  path: themes/custom/bangachain/assets/images/logo.png
+  url: ''
+  use_default: 0
+face_book: 'https://www.facebook.com/bang.a.chain'
+twitter: 'https://www.youtube.com/channel/UCnAJQ5zso9HsGMpjUt3oi9w'
+linkedin: 'https://www.instagram.com/bang_a_chain/'
+instagram: ''
+copyrights: 'Bang-A-Chain 2020'
+email: anchormansam@gmail.com
+slideshow_display: 0
+slide_title_1: 'What We Do'
+slide_desc_1: ''
+slide_image_1: {  }
+slide_url_1: /node
+slide_title_2: 'Who We Are'
+slide_desc_2: ''
+slide_image_2: {  }
+slide_url_2: /node
+slide_title_3: 'Our Service'
+slide_desc_3: ''
+slide_image_3: {  }
+slide_url_3: /node
+slide_title_4: 'Our Mission'
+slide_desc_4: ''
+slide_image_4: {  }
+slide_url_4: /node
+slide_title_5: 'Our Vision'
+slide_desc_5: ''
+slide_image_5: {  }
+slide_url_5: /node
+schemas:
+  bootstrap: 8000
+  estore: 8000
+  bangachain: 8000
+favicon:
+  mimetype: image/vnd.microsoft.icon
+  path: ''
+  url: ''
+  use_default: 1
+region_wells:
+  sidebar_first: ''
+  sidebar_second: ''
+  content: ''
+  header: ''
+  primary_menu: ''
+  secondary_menu: ''
+  footer: ''
+  highlighted: ''
+  help: ''
+  breadcrumb: ''
+cdn_theme: ''
+cdn_cache_ttl_versions: 0
+cdn_cache_ttl_themes: 0
+cdn_cache_ttl_assets: 0
+cdn_cache_ttl_library: 0
+reset_http_request_cache: ''
+table: ''
+header_email: ''
+header_phone: ''
+header_location: ''
+header_shop_opens: ''
+copyright_text: 'Bang-A-Chain 2020'
+display_theme_credits: 0

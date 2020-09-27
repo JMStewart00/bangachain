@@ -1,0 +1,27 @@
+.header-region {
+  background-color: $body-bg-secondary;
+  margin-bottom: 70px;
+  padding: 20px 0 10px;
+  h1 {
+    text-transform: uppercase;
+    color: $brand-primary;
+    margin: 0;
+  }
+  .breadcrumb {
+    background-color: transparent;
+    margin-bottom: 0;
+    & > li {
+      a,
+      & + li:before {
+        color: $gray-base;
+        font-weight: 600;
+      }
+      a:hover {
+        color: $brand-primary;
+      }
+      &.active {
+        color: $gray-dark;
+      }
+    }
+  }
+}

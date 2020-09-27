@@ -1,0 +1,177 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - page_manager.page.homepage
+    - views.view.blog
+    - views.view.product_category
+    - views.view.products
+    - views.view.slider
+  module:
+    - panels
+    - views
+id: homepage-panels_variant-0
+label: Panels
+variant: panels_variant
+variant_settings:
+  blocks:
+    ba7d1983-aa81-462a-abb3-373d844072f6:
+      id: 'views_block:blog-block_recent_posts_2'
+      label: ''
+      provider: views
+      label_display: visible
+      views_label: ''
+      items_per_page: none
+      region: blog_news
+      weight: 0
+      uuid: ba7d1983-aa81-462a-abb3-373d844072f6
+      context_mapping: {  }
+    4840a59a-b176-4a8d-ba62-91701fb29af7:
+      id: 'views_block:products-block_featured'
+      label: ''
+      provider: views
+      label_display: '0'
+      views_label: ''
+      items_per_page: none
+      region: main
+      weight: 0
+      uuid: 4840a59a-b176-4a8d-ba62-91701fb29af7
+      context_mapping: {  }
+    92bcfc29-1e79-41bb-b22b-10275a511786:
+      id: 'views_block:products-block_by_category'
+      label: ''
+      provider: views
+      label_display: '0'
+      views_label: ''
+      items_per_page: none
+      region: first_collection_products
+      weight: 0
+      uuid: 92bcfc29-1e79-41bb-b22b-10275a511786
+      context_mapping:
+        tid: collection_1_category
+    aee47cc8-9321-4c1c-99a7-24c407253486:
+      id: 'views_block:products-block_hot_product'
+      label: ''
+      provider: views
+      label_display: visible
+      views_label: ''
+      items_per_page: none
+      region: first_collection_hot
+      weight: 0
+      uuid: aee47cc8-9321-4c1c-99a7-24c407253486
+      context_mapping:
+        product_id: collection_1_hot_product
+    c7229cdf-57a1-4694-84f1-5b61d889e4b4:
+      id: 'views_block:products-block_by_category'
+      label: ''
+      provider: views
+      label_display: '0'
+      views_label: ''
+      items_per_page: none
+      region: second_collection_products
+      weight: 0
+      uuid: c7229cdf-57a1-4694-84f1-5b61d889e4b4
+      context_mapping:
+        tid: collection_2_category
+    5e4d4e5f-4bdb-4c15-a589-1bd989af44d3:
+      id: 'views_block:products-block_hot_product'
+      label: ''
+      provider: views
+      label_display: visible
+      views_label: ''
+      items_per_page: none
+      region: second_collection_hot
+      weight: 0
+      uuid: 5e4d4e5f-4bdb-4c15-a589-1bd989af44d3
+      context_mapping:
+        product_id: collection_2_hot_product
+    8fe12b4b-d73d-439f-b783-a458de6b5436:
+      id: 'views_block:product_category-block_1'
+      label: ''
+      provider: views
+      label_display: '0'
+      views_label: ''
+      items_per_page: none
+      region: product_categories
+      weight: 0
+      uuid: 8fe12b4b-d73d-439f-b783-a458de6b5436
+      context_mapping: {  }
+    937712fe-9209-495c-8365-b075e7dff49b:
+      id: 'views_block:product_category-block_2'
+      label: ''
+      provider: views
+      label_display: '0'
+      views_label: ''
+      items_per_page: none
+      region: top_categories
+      weight: 0
+      uuid: 937712fe-9209-495c-8365-b075e7dff49b
+      context_mapping: {  }
+    14a99e6d-4a4d-46d7-a51e-6edf2e8e6020:
+      id: 'views_block:slider-block_homepage'
+      label: ''
+      provider: views
+      label_display: '0'
+      views_label: ''
+      items_per_page: none
+      region: top_slideshow
+      weight: 0
+      uuid: 14a99e6d-4a4d-46d7-a51e-6edf2e8e6020
+      context_mapping: {  }
+    414bb09e-9c60-4980-a726-8c9fc392c8ad:
+      id: 'views_block:products-block_featured'
+      label: ''
+      provider: views
+      label_display: '0'
+      views_label: ''
+      items_per_page: none
+      region: featured_products
+      weight: 0
+      uuid: 414bb09e-9c60-4980-a726-8c9fc392c8ad
+      context_mapping: {  }
+    803285c5-1648-4e96-ad2c-1e94e1f1ec9e:
+      id: 'views_block:products-block_hand_picked_items'
+      label: ''
+      provider: views
+      label_display: '0'
+      views_label: ''
+      items_per_page: none
+      region: featured_products_bottom
+      weight: 0
+      uuid: 803285c5-1648-4e96-ad2c-1e94e1f1ec9e
+      context_mapping: {  }
+  id: panels_variant
+  uuid: 53145031-ddb8-411f-ba24-a3a746f94b3f
+  label: null
+  weight: 0
+  layout: homepage_first
+  layout_settings: {  }
+  page_title: Homepage
+  storage_type: page_manager
+  storage_id: homepage-panels_variant-0
+  builder: standard
+page: homepage
+weight: 0
+selection_criteria: {  }
+selection_logic: and
+static_context:
+  collection_1_category:
+    label: 'Collection 1 Category tid'
+    type: integer
+    description: ''
+    value: '4'
+  collection_1_hot_product:
+    label: 'Collection 1 Hot Product id'
+    type: integer
+    description: ''
+    value: '6'
+  collection_2_category:
+    label: 'Collection 2 Category'
+    type: integer
+    description: ''
+    value: '5'
+  collection_2_hot_product:
+    label: 'Collection 2 Hot Product id'
+    type: integer
+    description: ''
+    value: '6'

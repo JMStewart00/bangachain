@@ -1,0 +1,47 @@
+schemas:
+  bootstrap: 8000
+  estore: 8000
+favicon:
+  mimetype: image/vnd.microsoft.icon
+  path: ''
+  url: ''
+  use_default: 1
+features:
+  comment_user_picture: true
+  comment_user_verification: true
+  favicon: true
+  node_user_picture: true
+logo:
+  path: ''
+  url: ''
+  use_default: true
+region_wells:
+  top_header_right: ''
+  left_middle_header: ''
+  middle_header: ''
+  right_middle_header: ''
+  navigation: ''
+  navigation_collapsible: ''
+  highlighted: ''
+  help: ''
+  header: ''
+  content: ''
+  sidebar_first: ''
+  sidebar_second: ''
+  footer_first: ''
+  footer_second: ''
+  footer_third: ''
+  footer_fourth: ''
+  footer_bottom_left: ''
+  footer_bottom_right: ''
+fluid_container: 1
+table_responsive: '-1'
+table: ''
+copyright_text: 'Copyright © @year · All rights reserved'
+display_theme_credits: 1
+header_email: yourmail@domain.com
+header_phone: '+1234567890'
+header_location: '242 West Main street, Ohio'
+header_shop_opens: 'Shop opens: 08:00-18:00 (weekdays)'
+breadcrumb_home: 1
+cdn_provider: ''

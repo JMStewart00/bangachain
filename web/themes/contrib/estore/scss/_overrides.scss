@@ -1,0 +1,150 @@
+// Mixins.
+@import "mixins/breakpoints";
+@import "mixins/row_eq_height";
+@import "mixins/link_color";
+@import "mixins/block_title";
+@import "mixins/menu_style1";
+@import "mixins/block_views_item_list";
+
+// Fonts.
+@import "fonts/open_sans";
+
+// Specific Drupal libraries are used.
+@import "component/alert";
+@import "component/ajax";
+@import "component/field";
+@import "component/file";
+@import "component/filter";
+@import "component/form";
+@import "component/icon";
+@import "component/navbar";
+@import "component/navs";
+@import "component/node";
+@import "component/panel";
+@import "component/progress-bar";
+@import "component/table-drag";
+@import "component/tabs";
+@import "component/toolbar";
+@import "component/block";
+@import "component/stacktable";
+
+// Regions.
+@import "regions/header";
+@import "regions/content_header";
+@import "regions/sidebar";
+@import "regions/footer";
+
+// Layouts.
+@import "layouts/homepage_first";
+
+// Node.
+@import "node/blog";
+@import "node/slider";
+
+// Comments.
+@import "comments/comments";
+
+// Taxonomy.
+@import "taxonomy/taxonomy_term";
+
+// Commerce.
+@import "commerce/product";
+
+// jQuery UI style overrides.
+@import "jquery-ui/autocomplete";
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  clear: both;
+  font-weight: 700;
+}
+
+@include media-breakpoint-down(xs) {
+  .page-header {
+    margin-top: 10px;
+  }
+}
+
+ol, ul {
+  padding-left: 1.5em;
+  .popover &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// Paragraphs.
+p:last-child,
+.form-group:last-child,
+.panel:last-child {
+  margin-bottom: 0;
+}
+
+// Help region.
+.region-help {
+  > .glyphicon {
+    font-size: $font-size-large;
+    float: left;
+    margin: -0.05em 0.5em 0 0;
+  }
+  .block {
+    overflow: hidden;
+  }
+}
+
+.help-block, .control-group .help-inline {
+  color: $gray-light;
+  font-size: 12px;
+  margin: 5px 0 10px;
+  padding: 0;
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  .container-fluid {
+    width: 1350px;
+    max-width: 100%;
+  }
+}
+@include media-breakpoint-down(md) {
+  .container-fluid {
+    margin: 0 2%;
+  }
+}
+
+@include media-breakpoint-down(xs) {
+  .container > .navbar-header,
+  .container > .navbar-collapse,
+  .container-fluid > .navbar-header,
+  .container-fluid > .navbar-collapse {
+    margin: 0;
+  }
+}
+
+.alert {
+  margin-top: 20px;
+}
+
+a {
+  transition: all 0.3s ease-in-out;
+}
+
+.btn {
+  font-size: 13px;
+  padding: 7px 12px;
+  transition: all 0.3s ease-in-out;
+}
+
+label,
+.field--label {
+  color: $gray-base;
+}
+
+img {
+  max-width: 100%;
+}

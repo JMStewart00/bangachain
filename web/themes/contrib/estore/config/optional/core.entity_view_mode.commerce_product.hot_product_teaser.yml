@@ -1,0 +1,9 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_product
+id: commerce_product.hot_product_teaser
+label: 'Hot product teaser'
+targetEntityType: commerce_product
+cache: true

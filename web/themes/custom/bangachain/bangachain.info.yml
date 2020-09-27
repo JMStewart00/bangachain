@@ -1,7 +1,7 @@
 name: 'Bang-A-Chain'
 type: theme
-base theme: flexi_cart
-description: 'A custom responsive theme for Band-A-Chain.'
+base theme: classy
+description: 'A custom responsive theme for Bang-A-Chain.'
 core: 8.x
 
 # Libraries

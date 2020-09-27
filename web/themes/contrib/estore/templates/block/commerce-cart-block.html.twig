@@ -1,0 +1,35 @@
+{%
+  set classes = [
+    'block',
+    'cart-block-wrapper',
+    'has-dropdown',
+    'clearfix'
+  ]
+%}
+<div {{ attributes.addClass(classes) }}>
+  <a href="{{ url('commerce_cart.page') }}" class="cart-icon">
+    <i class="fa fa-shopping-cart"></i>
+    <span class="cart-value">{{ count }}</span>
+  </a>
+
+  <div class="my-cart-wrap">
+    <div class="my-cart">Total</div>
+    <div class="cart-total">{{ total|commerce_price_format }}</div>
+  </div>
+
+  <div class="cart-contents">
+    {% if content %}
+      <div class="cart-block-content">
+        {{ content }}
+      </div>
+
+      <div class="cart-block-links">
+        {{ links }}
+      </div>
+    {% else %}
+      <div class="cart-block-empty">
+        {{ 'Cart is empty.'|t }}
+      </div>
+    {% endif %}
+  </div>
+</div>

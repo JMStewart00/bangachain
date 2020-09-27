@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - ctools
+    - taxonomy
+id: product_category
+label: 'Product Category'
+type: 'canonical_entities:taxonomy_term'
+pattern: '/product-category/[term:name]'
+selection_criteria:
+  a3235434-e214-49e2-9f07-a43ae38a7a97:
+    id: 'entity_bundle:taxonomy_term'
+    bundles:
+      product_category: product_category
+    negate: false
+    context_mapping:
+      taxonomy_term: taxonomy_term
+    uuid: a3235434-e214-49e2-9f07-a43ae38a7a97
+selection_logic: and
+weight: -5
+relationships: {  }

@@ -1,0 +1,53 @@
+.taxonomy-term {
+  &.teaser {
+    position: relative;
+    overflow: hidden;
+    img {
+      transition: all 0.3s ease-in-out;
+    }
+    .taxonomy-term-hover {
+      position: absolute;
+      background: rgba(0, 0, 0, 0.7) none repeat scroll 0 0;
+      height: 100%;
+      left: 0;
+      top: 0;
+      width: 100%;
+      .taxonomy-term-title {
+        position: absolute;
+        bottom: 40px;
+        text-align: center;
+        width: 100%;
+        transition: all 0.3s ease-in-out;
+        font-size: 26px;
+        font-weight: bold;
+        text-transform: uppercase;
+        color: #ffffff;
+        padding: 0 20px;
+      }
+      &:after {
+        position: absolute;
+        border: 2px solid rgba(255, 255, 255, 0.7);
+        content: '';
+        height: 90%;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+      }
+    }
+    &:hover {
+      img {
+        transform: scale(1.1) rotate(-2deg);
+      }
+      .taxonomy-term-hover {
+        .taxonomy-term-title {
+          bottom: 50px;
+        }
+      }
+    }
+    @include media-breakpoint-down(xs) {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+  }
+}

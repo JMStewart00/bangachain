@@ -1,0 +1,152 @@
+{#
+/**
+ * @file
+ * SShop layouts: "Homepage (first)" template.
+ *
+ * Available region variables:
+ * - top
+ * - main
+ * - services
+ * - bottom
+ *
+ */
+#}
+{% if content %}
+  <div{{ attributes .addClass('estore-homepage-first')}}>
+    {% if content.top_slideshow or content.top_categories %}
+      <div class="top-region container-fluid">
+        <div class="top-region-inner">
+          <div class="row">
+            <div {{ region_attributes.top_slideshow.addClass(
+              'layout__region',
+              'layout__region--top-slideshow',
+              'col-lg-8',
+              'col-md-12'
+            ) }}>
+
+              {{ content.top_slideshow }}
+            </div>
+
+            <div {{ region_attributes.top_categories.addClass(
+              'layout__region',
+              'layout__region--top-categories',
+              'col-lg-4',
+              'col-md-12'
+            ) }}>
+
+              {{ content.top_categories }}
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if content.first_collection_title or content.first_collection_banner or
+          content.first_collection_hot or content.first_collection_products  %}
+
+      <div class="collection-region first-collection-region">
+        <div class="layout__region--first-collection--inner container-fluid">
+          <div class="collection-title clearfix">
+            {{ content.first_collection_title }}
+          </div>
+
+          <div class="row">
+            <div class="col-md-3 col-md-offset-0 col-sm-offset-2 col-sm-4
+                 collection-banner">
+              {{ content.first_collection_banner }}
+            </div>
+
+            <div class="col-md-3 col-sm-4 collection-hot-product">
+              {{ content.first_collection_hot }}
+            </div>
+
+            <div class="col-md-6 col-md-offset-0 col-sm-offset-2 col-sm-8
+                 collection-products">
+              {{ content.first_collection_products }}
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if content.product_categories %}
+      <div {{ region_attributes.product_categories.addClass(
+        'layout__region',
+        'layout__region--product-categories',
+        'row'
+      ) }}>
+
+        <div class="layout__region--product-categories--inner container-fluid">
+          {{ content.product_categories }}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if content.second_collection_title or
+          content.second_collection_products or content.second_collection_hot or
+          content.second_collection_banner  %}
+
+      <div class="collection-region second-collection-region">
+        <div class="layout__region--second-collection--inner container-fluid">
+          <div class="collection-title clearfix">
+            {{ content.second_collection_title }}
+          </div>
+          <div class="row">
+            <div class="col-md-6 col-md-offset-0 col-sm-offset-2 col-sm-8
+                 collection-products">
+
+              {{ content.second_collection_products }}
+            </div>
+
+            <div class="col-md-3 col-md-offset-0 col-sm-offset-2 col-sm-4
+                 collection-hot-product">
+
+              {{ content.second_collection_hot }}
+            </div>
+
+            <div class="col-md-3 col-sm-4 collection-banner">
+              {{ content.second_collection_banner }}
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if content.featured_products %}
+      <div {{ region_attributes.featured_products.addClass(
+        'layout__region',
+        'layout__region--featured-products'
+      ) }}>
+
+        <div class="layout__region--featured-bottom--inner container-fluid">
+          {{ content.featured_products }}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if content.blog_news %}
+      <div {{ region_attributes.blog_news.addClass(
+        'layout__region',
+        'layout__region--blog-news',
+        'row'
+      ) }}>
+
+        <div class="layout__region--blog-news--inner container-fluid">
+          {{ content.blog_news }}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if content.featured_products_bottom %}
+      <div {{ region_attributes.featured_products_bottom.addClass(
+        'layout__region',
+        'layout__region--featured-products-bottom'
+      ) }}>
+
+        <div class="layout__region--featured-bottom--inner container-fluid">
+          {{ content.featured_products_bottom }}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+{% endif %}

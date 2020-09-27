@@ -1,24 +1,17 @@
 .c-header {
   box-shadow: 0 rem(12) rem(24) rem(-24) $gray-dark;
-  padding-bottom: rvr(1);
+  border-bottom: 5px solid $dark-green;
 
   .l-container {
     @include media-breakpoint-up(lg) {
-      max-width: 66%;
+      max-width: 90%;
     }
-  }
-
-  @include media-breakpoint-down(md) {
-    display: none;
   }
 
   &__row {
     align-items: center;
+    justify-content: center;
     padding: rvr(1) 0;
-
-    @include media-breakpoint-down(xl) {
-      justify-content: center;
-    }
   }
 
   // Logo
@@ -29,12 +22,11 @@
     }
 
     img {
-      width: rem(125);
+      width: rem(90);
 
       @include media-breakpoint-down(xl) {
         display: block;
         margin: 0 auto;
-        width: rem(125);
       }
     };
   }
@@ -42,9 +34,6 @@
   // Menu
   &__menu-container {
     display: flex;
-    @include media-breakpoint-up(md) {
-      margin-left: auto;
-    }
 
     .region-header {
       display: flex;

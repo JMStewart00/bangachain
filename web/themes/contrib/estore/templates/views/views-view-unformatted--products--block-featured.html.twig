@@ -1,0 +1,65 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a view of unformatted rows.
+ *
+ * Available variables:
+ * - title: The title of this group of rows. May be empty.
+ * - rows: A list of the view's row items.
+ *   - attributes: The row's HTML attributes.
+ *   - content: The row's content.
+ * - view: The view object.
+ * - default_row_class: A flag indicating whether default classes should be
+ *   used on rows.
+ *
+ * @see template_preprocess_views_view_unformatted()
+ *
+ * @ingroup themeable
+ */
+#}
+<div id="estore-featured-products-carousel"
+     class="features-products-carousel carousel slide"
+     data-ride="carousel">
+  <div class="featured-top">
+    <div class="featured-title">
+      <h3 class="title">{{ 'Featured'|t }}</h3>
+
+      {% if view.display_handler.options['title'] != '' %}
+        <h4 class="sub-title">{{ view.display_handler.options['title']|t }}</h4>
+      {% endif %}
+    </div>
+
+    <div class="carousel-controls">
+      <a class="left" href="#estore-featured-products-carousel"
+         role="button" data-slide="prev">
+
+        <i class="fa fa-angle-left"></i>
+      </a>
+      <a class="right" href="#estore-featured-products-carousel"
+         role="button" data-slide="next">
+
+        <i class="fa fa-angle-right"></i>
+      </a>
+    </div>
+  </div>
+
+  <div class="carousel-inner" role="listbox">
+    {% for row in rows|batch(4) %}
+      {% set item_attributes = create_attribute() %}
+      {%
+        set item_classes = [
+          'item',
+          loop.index == 1 ? 'active',
+        ]
+      %}
+
+      <div{{ item_attributes.addClass(item_classes) }}>
+        {% for product in row %}
+          <div class="product-item col-sm-6 col-md-3">
+            {{ product.content }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endfor %}
+  </div>
+</div>

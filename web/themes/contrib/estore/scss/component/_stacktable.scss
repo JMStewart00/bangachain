@@ -1,0 +1,20 @@
+.cardtable-in {
+  table.small-only {
+    margin-bottom: 10px !important;
+    &:last-child {
+      margin-bottom: 0 !important;
+    }
+  }
+
+}
+@include media-breakpoint-down(xs) {
+  table.large-only {
+    display: none;
+  }
+}
+
+@include media-breakpoint-up(sm) {
+  table.small-only {
+    display: none;
+  }
+}

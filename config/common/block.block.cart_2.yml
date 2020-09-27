@@ -1,0 +1,35 @@
+uuid: d57477b8-5583-4ee5-8d54-d30beac3d054
+langcode: en
+status: false
+dependencies:
+  module:
+    - bangachain_layout
+    - commerce_cart_flyout
+    - ctools
+  theme:
+    - bangachain
+third_party_settings:
+  bangachain_layout:
+    vertical_spacing:
+      top: none
+      bottom: none
+id: cart_2
+theme: bangachain
+region: sidebar_first
+weight: 0
+provider: null
+plugin: commerce_cart
+settings:
+  id: commerce_cart
+  label: Cart
+  provider: commerce_cart_flyout
+  label_display: '0'
+  use_quantity_count: 0
+visibility:
+  'entity_bundle:commerce_product':
+    id: 'entity_bundle:commerce_product'
+    bundles:
+      discs: discs
+    negate: false
+    context_mapping:
+      commerce_product: '@commerce_product.product_route_context:commerce_product'

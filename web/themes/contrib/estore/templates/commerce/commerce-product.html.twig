@@ -1,0 +1,103 @@
+{#
+/**
+ * @file
+ *
+ * Default product template.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the wrapper.
+ * - product: The rendered product fields.
+ *   Use 'product' to print them all, or print a subset such as
+ *   'product.title'. Use the following code to exclude the
+ *   printing of a given field:
+ *   @code
+ *   {{ product|without('title') }}
+ *   @endcode
+ * - product_entity: The product entity.
+ * - product_url: The product URL.
+ *
+ * @ingroup themeable
+ */
+#}
+<article {{ attributes.addClass('commerce-product', 'full') }}>
+  <div class="row">
+    <div class="product-left col-sm-6">
+      {{ product.field_images }}
+    </div>
+
+    <div class="product-right col-sm-6">
+      <h3 class="product-title">{{ product.title }}</h3>
+      {{ product|without('variation_attributes', 'field_images', 'field_reviews', 'field_related_products', 'body', 'field_sale') }}
+    </div>
+
+    {% if product.field_sale[0]['#markup'] == 1 %}
+      <div class="sales-tag">{{ 'Sale!'|t }}</div>
+    {% endif %}
+
+    <div class="product-bottom col-sm-12">
+      <ul class="nav nav-tabs">
+        <li class="active">
+          <a data-toggle="tab" href="#description">{{ 'Description'|t }}</a>
+        </li>
+
+        {% if reviews_count %}
+          <li>
+            <a data-toggle="tab" href="#reviews">
+              {{ 'Reviews'|t }}
+
+              {% if reviews_count > 0 %}
+                <span class="reviews-count">({{ reviews_count }})</span>
+              {% endif %}
+            </a>
+          </li>
+        {% endif %}
+      </ul>
+
+      <div class="tab-content">
+        <div id="description"
+             name="description"
+             class="tab-pane fade in active">
+          <h4 class="tab-title">{{ 'Description'|t }}</h4>
+
+          <div class="description-content">
+            {{ product.body }}
+          </div>
+        </div>
+
+        {% if reviews_count %}
+          <div id="reviews" name="reviews" class="tab-pane fade">
+            <h3 class="tab-title">
+              {% if reviews_count > 0 %}
+                {% if reviews_count == 1 %}
+                  {% trans with {'context': 'product reviews title' } %}
+                    {{ reviews_count }} review for {{ title }}
+                  {% endtrans %}
+                {% else %}
+                  {% trans with {'context': 'product reviews title' } %}
+                    {{ reviews_count }} reviews for {{ title }}
+                  {% endtrans %}
+                {% endif %}
+              {% endif %}
+            </h3>
+
+            <div class="reviews-content">
+              {{ product.field_reviews }}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</article>
+
+{% if product.field_related_products|render != '' %}
+  <div class="row">
+    <div class="related-products col-sm-12">
+      <h3 class="block-title"><span>{{ 'Related products'|t }}</span></h3>
+
+      <div class="related-products-items row">
+        {{ product.field_related_products }}
+      </div>
+    </div>
+  </div>
+{% endif %}

@@ -7761,6 +7761,9 @@ body.no-scroll {
   font-size: 1rem;
   font-weight: 700; }
 
+.c-product__speed span, .c-product__glide span, .c-product__turn span, .c-product__fade span {
+  display: block; }
+
 .c-product__image .field--name-field-media-image {
   margin: auto; }
 

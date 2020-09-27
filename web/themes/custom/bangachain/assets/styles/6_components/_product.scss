@@ -18,6 +18,10 @@
     text-align: center;
     font-size: rem(16);
     font-weight: 700;
+
+    span {
+      display: block;
+    }
   }
 
   &__image {

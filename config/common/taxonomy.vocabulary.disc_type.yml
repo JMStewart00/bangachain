@@ -1,0 +1,8 @@
+uuid: 52b0bfb6-2440-4793-8647-1cc0719b57a0
+langcode: en
+status: true
+dependencies: {  }
+name: 'Disc Type'
+vid: disc_type
+description: ''
+weight: 0

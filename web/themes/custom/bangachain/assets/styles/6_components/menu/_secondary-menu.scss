@@ -1,11 +1,9 @@
 .c-secondary-menu {
   display: flex;
   align-items: center;
-  margin-left: 2rem;
 
   .region-secondary-menu {
-    display: flex;
-    justify-content: flex-end;
+    margin: 0 1rem
   }
 
   .o-menu__item {

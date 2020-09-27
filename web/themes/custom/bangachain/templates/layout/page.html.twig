@@ -46,11 +46,6 @@
   <header class="c-header t-background--black" role="banner">
     <div class="l-container">
       <div class="c-header__row l-row--no-columns">
-
-        <div class="c-header__menu-container">
-          {{ page.header }}
-        </div>
-
         <div class="c-header__logo-container">
           <a href="/">
             <picture>
@@ -60,6 +55,11 @@
             </picture>
           </a>
         </div>
+
+        <div class="c-header__menu-container">
+          {{ page.header }}
+        </div>
+
 
         <div class="c-secondary-menu">
           {{ page.primary_menu }}

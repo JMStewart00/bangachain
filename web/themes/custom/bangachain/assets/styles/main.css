@@ -7709,7 +7709,7 @@ body.no-scroll {
   border: 0; }
 
 .c-cart-block--summary__count {
-  background: #F26D40;
+  background: #ddd;
   height: 1.25rem;
   width: 1.25rem;
   border-radius: 50%;
@@ -7717,7 +7717,7 @@ body.no-scroll {
   top: 0;
   left: 23px;
   text-align: center;
-  color: #fcfffc;
+  color: #2d3a3a;
   font-size: 0.875rem;
   font-weight: 700;
   line-height: 1.125rem; }
@@ -7845,7 +7845,8 @@ body.no-scroll {
 .c-header__menu-container {
   display: -webkit-box;
   display: -ms-flexbox;
-  display: flex; }
+  display: flex;
+  margin-left: auto; }
 
 .c-header__menu-container .region-header {
   display: -webkit-box;
@@ -7862,7 +7863,7 @@ body.no-scroll {
   color: #2ba84a; }
 
 .c-menu-main {
-  margin-right: 2rem; }
+  margin-left: 2rem; }
 
 .c-menu-main__item {
   display: inline-block;
@@ -7870,8 +7871,7 @@ body.no-scroll {
 
 .c-menu-main__link {
   display: block;
-  line-height: 1;
-  padding: 38px 0 33px; }
+  line-height: 1; }
 
 .c-menu-main__link:hover, .c-menu-main__link:focus {
   text-decoration: none; }
@@ -7889,16 +7889,10 @@ body.no-scroll {
   display: flex;
   -webkit-box-align: center;
   -ms-flex-align: center;
-  align-items: center;
-  margin-left: 2rem; }
+  align-items: center; }
 
 .c-secondary-menu .region-secondary-menu {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: end;
-  -ms-flex-pack: end;
-  justify-content: flex-end; }
+  margin: 0 1rem; }
 
 .c-secondary-menu .o-menu__item {
   margin: 0 1rem; }

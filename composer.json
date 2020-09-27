@@ -74,6 +74,7 @@
         "drupal-composer/drupal-scaffold": "^2.4",
         "drupal-composer/preserve-paths": "^0.1.4",
         "drupal/admin_toolbar": "^2.0",
+        "drupal/better_exposed_filters": "^5.0@beta",
         "drupal/block_class": "^1.1",
         "drupal/ckeditor_font": "^1.0",
         "drupal/coder": "^8.3",

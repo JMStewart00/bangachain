@@ -1,5 +1,5 @@
 .c-menu-main {
-  margin-right: 2rem;
+  margin-left: 2rem;
 
   &__item {
     display: inline-block;
@@ -9,7 +9,6 @@
   &__link {
     display: block;
     line-height: 1;
-    padding: px(38) 0 px(33); // Fill min header height
 
     @include hover-focus() {
       text-decoration: none;

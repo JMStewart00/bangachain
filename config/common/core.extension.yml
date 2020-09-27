@@ -4,6 +4,7 @@ module:
   admin_toolbar_tools: 0
   automated_cron: 0
   bangachain_layout: 0
+  better_exposed_filters: 0
   big_pipe: 0
   block: 0
   block_class: 0
@@ -57,7 +58,10 @@ module:
   inline_entity_form: 0
   jquery_ui: 0
   jquery_ui_accordion: 0
+  jquery_ui_datepicker: 0
+  jquery_ui_slider: 0
   jquery_ui_tooltip: 0
+  jquery_ui_touch_punch: 0
   layout_builder: 0
   layout_builder_modal: 0
   layout_builder_restrictions: 0

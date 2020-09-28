@@ -6,14 +6,15 @@
 // Container widths controlled in bs4-overrides
 .l-container {
   @include make-container();
+  max-width: 1440px;
 
-  @include media-breakpoint-up(xxl) {
-    @include make-container-max-widths();
+  &--fluid {
+    max-width: none;
   }
 }
 
 .l-row {
-  @include make-row();
+  // @include make-row();
 
   // Removes bootrap left/right negative margin
   &--no-columns {

@@ -1,0 +1,123 @@
+// jQuery Select2
+.select2-container {
+  .select2-selection {
+
+    // Single value dropdown
+    &--single {
+      height: rem(48);
+      border: $border;
+      border-radius: rem(20);
+
+      .select2-selection__rendered {
+        line-height: rem(48);
+        color: $body-color;
+        padding: 0 $spacer;
+      }
+
+      .select2-selection__arrow {
+        height: rem(48);
+        right: rem(16);
+
+        b {
+          border-color: $dark-green transparent transparent transparent;
+          border-width: rem(6) rem(5) 0 rem(5);
+        }
+      }
+    }
+
+    // Multiple value dropdown
+    &--multiple {
+      min-height: rem(48);
+      border-radius: rem(20);
+      border: $border;
+
+      .select2-selection__rendered {
+        padding: rem(4) $spacer;
+      }
+
+      // Multiple does not have an arrow by default - we add it with a pseduo element
+      &::after {
+        content: '';
+        position: absolute;
+        right: 16px;
+        top: 42%;
+        border-color: $dark-green transparent transparent transparent;
+        border-width: rem(6) rem(5) 0 rem(5);
+        border-style: solid;
+      }
+    }
+  }
+
+  // Dropdown open
+  &--open {
+
+    // Flip the triangle
+    .select2-selection__arrow {
+      b {
+        border-color: transparent transparent $dark-green transparent !important;
+        border-width: 0 rem(5) rem(6) rem(5) !important;
+      }
+    }
+
+    // Multiple does not have an arrow by default - we add it with a pseduo element
+    .select2-selection--multiple::after {
+      border-color: transparent transparent $dark-green transparent !important;
+      border-width: 0 rem(5) rem(6) rem(5) !important;
+    }
+
+    // Outer dropdown styles when open
+    .select2-dropdown {
+      border: $border;
+      border-radius: rem(20);
+
+      &--below {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+      }
+
+      &--above {
+        border-radius: 0;
+      }
+    }
+
+    // Individual option styling
+    .select2-results {
+      &__option {
+        padding: rem(6) $spacer;
+
+        &--highlighted {
+          background-color: $white !important;
+          color: $dark-green !important;
+          font-weight: $fw-bold;
+        }
+
+        &[aria-selected='true'] {
+          background-color: $gray-200 !important;
+          color: $dark-green !important;
+          font-weight: $fw-bold;
+        }
+
+        &:last-child {
+          border-bottom-left-radius: rem(20);
+          border-bottom-right-radius: rem(20);
+        }
+      }
+    }
+  }
+
+  // Focus styling
+  &--focus {
+    * {
+      outline: none;
+    }
+
+    .select2-selection {
+      border-color: $dark-green !important;
+    }
+  }
+
+  // Hide select2 option search
+  .select2-search {
+    display: none;
+  }
+}

@@ -1,6 +1,13 @@
 @import 'cart-block';
 @import 'pagination';
 @import 'product';
+@import 'table';
+
+/* forms components subfolder */
+@import 'forms/index';
 
 /* Menu components subfolder */
 @import 'menu/index';
+
+/* views components subfolder */
+@import 'views/index';

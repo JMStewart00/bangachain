@@ -1,0 +1,17 @@
+<div class="cart--cart-offcanvas">
+  <div class="cart--cart-offcanvas__close d-flex justify-content-end">
+    <button class="button btn"><i class="fas fa-times-circle fa-2x"></i><span class="visually-hidden"> {{ 'Close cart'|t }}</span> </button>
+  </div>
+<% if (count > 0) { %>
+  <div class="cart-block--offcanvas-contents">
+    <div class="cart-block--offcanvas-contents__inner">
+      <div class="cart-block--offcanvas-contents__items"></div>
+      <div class="cart-block--offcanvas-contents__links d-flex justify-content-end px-5">
+        <%= links %>
+      </div>
+    </div>
+  </div>
+<% } else { %>
+  <div>{{ 'Your cart is empty'|t }}</div>
+<% } %>
+</div>

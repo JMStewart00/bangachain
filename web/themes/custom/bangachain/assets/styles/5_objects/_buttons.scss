@@ -10,11 +10,11 @@
   &--primary {
     background-color: $white;
     border: 2px solid $button-border;
-    border-radius: $border-radius * 2;
+    border-radius: 0px;
     color: $brand-green;
     font-weight: $fw-bold;
     font-size: rem(17);
-    max-width: 380px;
+    max-width: 250px;
     width: 100%;
     transition: $transition-base;
 

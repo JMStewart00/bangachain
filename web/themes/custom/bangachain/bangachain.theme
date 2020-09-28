@@ -85,42 +85,44 @@ function bangachain_preprocess_form_element(&$variables) {
 function bangachain_preprocess_input(&$variables) {
   $type_html = $variables['attributes']['type'];
 
-  // Do not add classes for Layout Builder inputs.
-  if (strpos($variables['element']['#name'], 'layout_settings') !== false) {
-    return;
-  }
+  if (isset($variables['element']['#name'])) {
+    // Do not add classes for Layout Builder inputs.
+    if (strpos($variables['element']['#name'], 'layout_settings') !== false) {
+      return;
+    }
 
-  // run through all types and set custom classes on the elements
-  switch ($type_html) {
-    case 'text':
-    case 'password':
-    case 'email':
-    case 'tel':
-    case 'number':
-      $variables['attributes']['class'][] = 'c-form__text';
+    // run through all types and set custom classes on the elements
+    switch ($type_html) {
+      case 'text':
+      case 'password':
+      case 'email':
+      case 'tel':
+      case 'number':
+        $variables['attributes']['class'][] = 'c-form__text';
 
-      // Remove a 'form-text' class. https://www.drupal.org/node/2315471
-      $classes = $variables['attributes']['class'];
-      $variables['attributes']['class'] = array_diff($classes, ['form-text']);
-      break;
-    case 'checkbox':
-      $variables['attributes']['class'][] = 'c-form__checkbox';
-      break;
-    case 'radio':
-      $variables['attributes']['class'][] = 'c-form__radio';
-      break;
-    case 'date':
-      $variables['attributes']['class'][] = 'c-form__date';
-      break;
-    case 'time':
-      $variables['attributes']['class'][] = 'c-form__time';
-      break;
-    case 'datetime':
-      $variables['attributes']['class'][] = 'c-form__datetime';
-      break;
-    case 'submit':
-      $variables['attributes']['class'][] = 'o-btn o-btn--secondary';
-      break;
+        // Remove a 'form-text' class. https://www.drupal.org/node/2315471
+        $classes = $variables['attributes']['class'];
+        $variables['attributes']['class'] = array_diff($classes, ['form-text']);
+        break;
+      case 'checkbox':
+        $variables['attributes']['class'][] = 'c-form__checkbox';
+        break;
+      case 'radio':
+        $variables['attributes']['class'][] = 'c-form__radio';
+        break;
+      case 'date':
+        $variables['attributes']['class'][] = 'c-form__date';
+        break;
+      case 'time':
+        $variables['attributes']['class'][] = 'c-form__time';
+        break;
+      case 'datetime':
+        $variables['attributes']['class'][] = 'c-form__datetime';
+        break;
+      case 'submit':
+        $variables['attributes']['class'][] = 'o-btn o-btn--secondary';
+        break;
+    }
   }
 }
 
@@ -270,18 +272,6 @@ function bangachain_theme_suggestions_block_alter(array &$suggestions, array $va
       $suggestions[] = 'block__' . $block->bundle() . '__' . $view_mode;
     }
   }
-}
-
-/*
- * Implements hook_theme_suggestions_HOOK_alter().
- */
-function bangachain_theme_suggestions_input_alter(array &$suggestions, array $variables) {
-  // Do not add suggestion for Layout Builder inputs.
-  if (strpos($variables['element']['#name'], 'layout_settings') !== false) {
-    return;
-  }
-
-  $suggestions[] = 'input__' . $variables['element']['#type'] . '__custom';
 }
 
 /*

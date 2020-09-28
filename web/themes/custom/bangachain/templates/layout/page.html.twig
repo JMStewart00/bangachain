@@ -44,7 +44,7 @@
 #}
 <div class="layout-container" id="layout-container">
   <header class="c-header" role="banner">
-    <div class="l-container">
+    <div class="l-container--fluid">
       <div class="c-header__row l-row--no-columns t-background--white">
         <div class="c-header__logo-container">
           <a href="/">
@@ -61,7 +61,7 @@
         </div>
       </div>
 
-      <div class="c-secondary-menu l-row--no-columns t-background--gray-dark">
+      <div class="c-secondary-menu l-row l-row--no-columns t-background--gray-dark">
         {{ page.primary_menu }}
       </div>
 
@@ -84,18 +84,6 @@
         </div>
         {# /.layout-content #}
       {% endblock %}
-
-      {% if page.sidebar_first %}
-        <aside class="layout-sidebar-first" role="complementary">
-          {{ page.sidebar_first }}
-        </aside>
-      {% endif %}
-
-      {% if page.sidebar_second %}
-        <aside class="layout-sidebar-second" role="complementary">
-          {{ page.sidebar_second }}
-        </aside>
-      {% endif %}
     </main>
   {% endblock %}
 
@@ -106,7 +94,7 @@
   {% endif %}
 
   <footer role="contentinfo" class="c-footer t-background--gray-light">
-    <div class="l-container">
+    <div class="l-container--fluid">
       <div class="l-row l-footer__bottom">
         <div class="c-footer__subfooter l-footer__subfooter">
           <h3>Follow us on social media!</h3>

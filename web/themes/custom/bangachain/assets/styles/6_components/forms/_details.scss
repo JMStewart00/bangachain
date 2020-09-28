@@ -1,0 +1,54 @@
+// Details widget
+.c-form-details {
+  border: $border;
+  margin-top: rvr(3);
+
+  &__summary {
+    list-style: none;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+    background-color: $gray-200;
+    padding: 0 0 0 spacer(2);
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    .h3 {
+      margin-bottom: 0;
+      color: $dark-green;
+    }
+  }
+
+  &__trigger {
+    height: rem(78);
+    width: rem(64);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: $dark-green;
+    background-color: $white;
+    border-left: 1px solid $border-color;
+    margin-left: $spacer;
+
+    .fa-minus {
+      display: none;
+    }
+  }
+
+  &[open] {
+    .fa-minus {
+      display: block;
+    }
+
+    .fa-plus {
+      display: none;
+    }
+
+    > summary {
+      border-bottom: 1px solid $border-color;
+    }
+  }
+}

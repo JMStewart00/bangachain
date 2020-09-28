@@ -3,7 +3,7 @@
   border-left: 1px solid $gray-medium;
 }
 
-.c-cart-block {
+.cart-block {
   &--summary {
     position: relative;
   }
@@ -21,5 +21,6 @@
     font-size: rem(14);
     font-weight: 700;
     line-height: rem(18);
+    overflow: hidden;
   }
 }

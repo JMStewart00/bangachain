@@ -1,0 +1,12 @@
+.c-view-filters {
+  .form--inline {
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+
+    @include media-breakpoint-up(md) {
+      max-width: 75%;
+      margin: auto;
+    }
+  }
+}

@@ -1,0 +1,39 @@
+// Likert
+.webform-likert-table {
+  // Table-like styles only appear on larger screens
+  @media (min-width: 768px) {
+    border: $border;
+
+    thead {
+      background-color: $brand-green;
+
+      th {
+        color: $white;
+        font-size: rem(15);
+        font-weight: $fw-medium;
+        padding: spacer(0.75) rem(4);
+      }
+    }
+
+    tbody {
+      // Zebra stripe
+      tr.odd {
+        background-color: $gray-200;
+      }
+
+      td {
+        padding: spacer(0.6) 0 spacer(0.25);
+
+        &:first-child {
+          padding-left: spacer(2);
+        }
+      }
+    }
+
+    // Place the radio button in the center
+    .c-form__radio--fake {
+      top: rem(6);
+      left: calc(50% - 12px);
+    }
+  }
+}

@@ -21,7 +21,7 @@ $link-color: $brand-green;
 $link-hover-color: darken($brand-green, 20%);
 
 // Border
-$button-border: #26464f;
+$button-border: $gray-dark;
 
 // Alpha
 $white-alpha-1: rgba(255, 255, 255, 0.1);

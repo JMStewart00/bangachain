@@ -12,9 +12,11 @@ dependencies:
     - taxonomy.vocabulary.disc_type
     - taxonomy.vocabulary.stability
   module:
+    - better_exposed_filters
     - commerce
     - commerce_product
     - taxonomy
+    - user
 id: discs
 label: Discs
 module: views
@@ -30,8 +32,9 @@ display:
     position: 0
     display_options:
       access:
-        type: none
-        options: {  }
+        type: perm
+        options:
+          perm: 'access content'
       cache:
         type: tag
         options: {  }
@@ -44,7 +47,7 @@ display:
           query_comment: ''
           query_tags: {  }
       exposed_form:
-        type: basic
+        type: bef
         options:
           submit_button: Apply
           reset_button: false
@@ -53,6 +56,40 @@ display:
           expose_sort_order: true
           sort_asc_label: Asc
           sort_desc_label: Desc
+          text_input_required: 'Select any filter and click on Apply to see results'
+          text_input_required_format: basic_html
+          bef:
+            general:
+              autosubmit: false
+              autosubmit_exclude_textfield: true
+              autosubmit_textfield_delay: 500
+              autosubmit_hide: true
+              input_required: false
+              allow_secondary: false
+              secondary_label: 'Advanced options'
+              secondary_open: false
+            filter:
+              field_brand_target_id:
+                plugin_id: default
+                advanced:
+                  rewrite:
+                    filter_rewrite_values: ''
+                  collapsible: false
+                  is_secondary: false
+              field_stability_category_target_id:
+                plugin_id: default
+                advanced:
+                  rewrite:
+                    filter_rewrite_values: ''
+                  collapsible: false
+                  is_secondary: false
+              field_disc_category_target_id:
+                plugin_id: default
+                advanced:
+                  rewrite:
+                    filter_rewrite_values: ''
+                  collapsible: false
+                  is_secondary: false
       pager:
         type: some
         options:
@@ -63,7 +100,7 @@ display:
         options:
           grouping: {  }
           row_class: ''
-          default_row_class: true
+          default_row_class: false
           override: true
           sticky: false
           caption: ''
@@ -109,12 +146,9 @@ display:
         type: fields
       fields:
         title:
+          id: title
           table: commerce_product_field_data
           field: title
-          id: title
-          entity_type: null
-          entity_field: title
-          plugin_id: field
           relationship: none
           group_type: group
           admin_label: ''
@@ -161,7 +195,8 @@ display:
           hide_alter_empty: true
           click_sort_column: value
           type: string
-          settings: {  }
+          settings:
+            link_to_entity: true
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -172,6 +207,9 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+          entity_type: null
+          entity_field: title
+          plugin_id: field
         field_brand:
           id: field_brand
           table: commerce_product__field_brand
@@ -388,6 +426,7 @@ display:
           expose:
             operator_limit_selection: false
             operator_list: {  }
+          group: 1
         field_brand_target_id:
           id: field_brand_target_id
           table: commerce_product__field_brand
@@ -418,22 +457,25 @@ display:
             reduce: false
           is_grouped: false
           group_info:
-            label: ''
-            description: ''
-            identifier: ''
+            label: 'Brand (field_brand)'
+            description: null
+            identifier: field_brand_target_id
             optional: true
             widget: select
             multiple: false
             remember: false
             default_group: All
             default_group_multiple: {  }
-            group_items: {  }
+            group_items:
+              1: {  }
+              2: {  }
+              3: {  }
           reduce_duplicates: false
           type: select
           limit: true
           vid: brand
           hierarchy: false
-          error_message: true
+          error_message: false
           plugin_id: taxonomy_index_tid
         field_stability_category_target_id:
           id: field_stability_category_target_id
@@ -523,58 +565,12 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           reduce_duplicates: false
-          type: textfield
+          type: select
           limit: true
           vid: disc_type
           hierarchy: false
           error_message: true
           plugin_id: taxonomy_index_tid
-        field_speed_value:
-          id: field_speed_value
-          table: commerce_product__field_speed
-          field: field_speed_value
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: '='
-          value:
-            min: ''
-            max: ''
-            value: ''
-          group: 1
-          exposed: true
-          expose:
-            operator_id: field_speed_value_op
-            label: Speed
-            description: ''
-            use_operator: false
-            operator: field_speed_value_op
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: field_speed_value
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-            placeholder: 'Enter a number, 1 through 14'
-            min_placeholder: ''
-            max_placeholder: ''
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          plugin_id: numeric
       sorts: {  }
       title: Discs
       header:
@@ -586,7 +582,7 @@ display:
           group_type: group
           admin_label: ''
           empty: true
-          view_to_insert: 'discs:block_1'
+          view_to_insert: 'discs:links_bar'
           inherit_arguments: false
           plugin_id: view
       footer: {  }
@@ -629,6 +625,11 @@ display:
           not: false
           plugin_id: numeric
       display_extenders: {  }
+      use_ajax: true
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
     cache_metadata:
       max-age: -1
       contexts:
@@ -637,6 +638,7 @@ display:
         - url
         - url.query_args
         - user
+        - user.permissions
       tags:
         - 'config:field.storage.commerce_product.field_brand'
         - 'config:field.storage.commerce_product.field_speed'
@@ -648,7 +650,8 @@ display:
     position: 1
     display_options:
       display_extenders:
-        ajax_history: {  }
+        ajax_history:
+          enable_history: false
       path: discs
       display_description: ''
       menu:
@@ -668,13 +671,14 @@ display:
         - url
         - url.query_args
         - user
+        - user.permissions
       tags:
         - 'config:field.storage.commerce_product.field_brand'
         - 'config:field.storage.commerce_product.field_speed'
         - 'config:field.storage.commerce_product.field_stability_category'
-  block_1:
+  links_bar:
     display_plugin: block
-    id: block_1
+    id: links_bar
     display_title: 'Links to filtered pages'
     position: 2
     display_options:
@@ -702,7 +706,7 @@ display:
             trim_whitespace: true
             alt: ''
             rel: ''
-            link_class: ''
+            link_class: 'o-btn o-btn--primary'
             prefix: ''
             suffix: ''
             target: ''
@@ -724,7 +728,7 @@ display:
           element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: true
+          element_default_classes: false
           empty: ''
           hide_empty: false
           empty_zero: false
@@ -753,6 +757,7 @@ display:
         pager: false
         arguments: false
         header: false
+        title: false
       filters:
         status:
           value: '1'
@@ -785,14 +790,11 @@ display:
         groups:
           1: AND
       style:
-        type: html_list
+        type: default
         options:
           grouping: {  }
-          row_class: o-list-inline__item
+          row_class: ''
           default_row_class: false
-          type: ul
-          wrapper_class: ''
-          class: o-list-inline
       row:
         type: fields
         options:
@@ -807,10 +809,12 @@ display:
       arguments: {  }
       header: {  }
       display_description: ''
+      title: 'Filter Discs by Brand'
     cache_metadata:
       max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - user.permissions
       tags:
         - 'config:field.storage.commerce_product.field_brand'

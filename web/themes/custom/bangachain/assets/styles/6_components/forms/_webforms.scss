@@ -1,0 +1,80 @@
+// Webform specific form styling
+.webform-elements {
+  // Basic form item vertical rhythm
+  .form-item {
+    margin: rvr(1) 0;
+
+    &.form-type-radio,
+    &.form-type-checkbox,
+    &.form-type-select {
+      margin: 0;
+    }
+  }
+
+  .description {
+    margin-bottom: rem(8);
+  }
+
+  // Layout Flexbox styles
+  @media (min-width: 768px) {
+    .webform-flexbox {
+      margin: rvr(1) -1.5em;
+
+      .webform-flex--container {
+        margin: 0 1.5em;
+
+        .form-item {
+          margin: 0;
+        }
+      }
+    }
+  }
+
+  // jQuery UI pickers
+  .form-item-datepicker,
+  .form-item-timepicker,
+  .form-item-date-time-picker {
+
+    // Hide the default datepicker icon
+    .ui-datepicker-trigger {
+      display: none;
+    }
+
+    svg {
+      color: $brand-green;
+      margin-left: spacer(0.5);
+      position: relative;
+      top: 4px;
+    }
+  }
+
+  .form-type-datetime {
+    .form-type-date {
+      margin-right: spacer(1);
+    }
+  }
+
+  // Horizontal rule
+  .webform-horizontal-rule {
+    margin: rvr(3) 0 rvr(2);
+  }
+
+  // Typography
+  h1,
+  .h1 {
+    color: $dark-green;
+    display: block;
+    margin-bottom: rvr(1.5);
+  }
+
+  h2,
+  .h2 {
+    display: block;
+    margin-bottom: rvr(1.5);
+  }
+
+  // Long text
+  .form-type-processed-text {
+    margin-bottom: rvr(2);
+  }
+}

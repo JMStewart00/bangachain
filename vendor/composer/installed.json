@@ -116,7 +116,7 @@
         "version_normalized": "3.1.4.0",
         "source": {
             "type": "git",
-            "url": "git@github.com:needim/noty.git",
+            "url": "https://github.com/needim/noty.git",
             "reference": "77268c46b6db6a1eb7a920ed7c859fbc8de17993"
         },
         "dist": {
@@ -3783,6 +3783,79 @@
         "homepage": "http://drupal.org/project/commerce_square",
         "support": {
             "source": "https://git.drupalcode.org/project/commerce_square"
+        }
+    },
+    {
+        "name": "drupal/commerce_stock",
+        "version": "1.0.0-alpha4",
+        "version_normalized": "1.0.0.0-alpha4",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupalcode.org/project/commerce_stock.git",
+            "reference": "8.x-1.0-alpha4"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/commerce_stock-8.x-1.0-alpha4.zip",
+            "reference": "8.x-1.0-alpha4",
+            "shasum": "3489af207b38658b25ddc0331b4fc0854d27ba76"
+        },
+        "require": {
+            "drupal/commerce": "~2.0",
+            "drupal/commerce_order": "*",
+            "drupal/commerce_product": "*",
+            "drupal/core": "~8.0"
+        },
+        "require-dev": {
+            "drupal/commerce_product": "*",
+            "drupal/commerce_stock_local": "*"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "drupal": {
+                "version": "8.x-1.0-alpha4",
+                "datestamp": "1583491928",
+                "security-coverage": {
+                    "status": "not-covered",
+                    "message": "Alpha releases are not covered by Drupal security advisories."
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0+"
+        ],
+        "authors": [
+            {
+                "name": "guy_schneerson",
+                "homepage": "https://www.drupal.org/user/755184"
+            },
+            {
+                "name": "iAugur",
+                "homepage": "https://www.drupal.org/user/750068"
+            },
+            {
+                "name": "olafkarsten",
+                "homepage": "https://www.drupal.org/user/352745"
+            },
+            {
+                "name": "rfay",
+                "homepage": "https://www.drupal.org/user/30906"
+            },
+            {
+                "name": "rszrama",
+                "homepage": "https://www.drupal.org/user/49344"
+            }
+        ],
+        "description": "Provides a stock management framework based on rules to manage stock levels of commerce products",
+        "homepage": "https://www.drupal.org/project/commerce_stock",
+        "keywords": [
+            "Drupal"
+        ],
+        "support": {
+            "source": "http://cgit.drupalcode.org/commerce_stock",
+            "issues": "http://drupal.org/project/issues/commerce_stock"
         }
     },
     {

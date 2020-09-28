@@ -1,0 +1,6 @@
+default_service_id: local_stock
+_core:
+  default_config_hash: z4CtmoUxBut4Mcj1tjlQENFUSkRGQUNtX6e1z1xDhYU
+commerce_product_variation_default_service_id: local_stock
+commerce_product_variation_discs_service_id: local_stock
+stock_events_plugin_id: core_stock_events

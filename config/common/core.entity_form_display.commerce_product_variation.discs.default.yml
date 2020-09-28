@@ -7,8 +7,10 @@ dependencies:
     - field.field.commerce_product_variation.discs.attribute_disc_color
     - field.field.commerce_product_variation.discs.attribute_disc_plastic
     - field.field.commerce_product_variation.discs.field_product_image
+    - field.field.commerce_product_variation.discs.field_stock
   module:
     - commerce_price
+    - commerce_stock_field
     - media_library
 id: commerce_product_variation.discs.default
 targetEntityType: commerce_product_variation
@@ -27,12 +29,28 @@ content:
     settings: {  }
     third_party_settings: {  }
     region: content
+  commerce_stock_always_in_stock:
+    type: boolean_checkbox
+    weight: 5
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
   field_product_image:
     type: media_library_widget
     weight: 91
     settings:
       media_types: {  }
     third_party_settings: {  }
+    region: content
+  field_stock:
+    weight: 92
+    settings:
+      default_transaction_note: 'Transaction issued by stock level field.'
+      step: '1'
+      custom_transaction_note: false
+    third_party_settings: {  }
+    type: commerce_stock_level_simple_transaction
     region: content
   list_price:
     type: commerce_list_price

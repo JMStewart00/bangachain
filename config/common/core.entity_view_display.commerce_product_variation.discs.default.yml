@@ -7,8 +7,10 @@ dependencies:
     - field.field.commerce_product_variation.discs.attribute_disc_color
     - field.field.commerce_product_variation.discs.attribute_disc_plastic
     - field.field.commerce_product_variation.discs.field_product_image
+    - field.field.commerce_product_variation.discs.field_stock
   module:
     - commerce_price
+    - commerce_stock_field
 id: commerce_product_variation.discs.default
 targetEntityType: commerce_product_variation
 bundle: discs
@@ -22,6 +24,13 @@ content:
       view_mode: default
       link: false
     third_party_settings: {  }
+    region: content
+  field_stock:
+    weight: 2
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: commerce_stock_level_simple
     region: content
   list_price:
     label: above

@@ -1,0 +1,12 @@
+name: 'Commerce Stock UI'
+description: 'Provides forms, admin views and other user interface elements for the commerce stock module.'
+package: 'Commerce Stock'
+core: 8.x
+type: module
+dependencies:
+  - commerce:commerce_stock
+
+# Information added by Drupal.org packaging script on 2020-03-06
+version: '8.x-1.0-alpha4'
+project: 'commerce_stock'
+datestamp: 1583491930

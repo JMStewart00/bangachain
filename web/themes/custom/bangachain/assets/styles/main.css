@@ -7802,6 +7802,9 @@ body.no-scroll {
   -ms-flex-wrap: nowrap;
   flex-wrap: nowrap;
   position: relative;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
   margin-top: calc(var(--lh__base) * 1 * var(--rvr-multiplier)); }
 
 .c-footer__social-icon {

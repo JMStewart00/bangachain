@@ -25,11 +25,7 @@
     display: flex;
     flex-wrap: nowrap;
     position: relative;
-    top: rem(-3);
-
-    @include media-breakpoint-down(xs) {
-      justify-content: center;
-    }
+    margin-top: rvr(1);
 
     &-icon {
       font-size: rem(14);

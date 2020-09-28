@@ -7505,7 +7505,8 @@ body.no-scroll {
   margin: 0 15px 2rem; }
 
 .l-footer__bottom {
-  padding-bottom: 4rem; }
+  padding-top: calc(var(--lh__base) * 3 * var(--rvr-multiplier));
+  padding-bottom: calc(var(--lh__base) * 3 * var(--rvr-multiplier)); }
 
 @media (max-width: 1199.98px) {
   .l-footer__bottom {
@@ -7523,26 +7524,23 @@ body.no-scroll {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  margin-bottom: 2rem; }
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center; }
 
 @media (max-width: 575.98px) {
   .l-footer__subfooter {
     display: block; }
   .l-footer__subfooter > div:first-child {
     margin-bottom: 2rem; } }
-
-.l-footer__legal {
-  position: relative;
-  width: 100%;
-  padding-right: 15px;
-  padding-left: 15px;
-  -webkit-box-flex: 0;
-  -ms-flex: 0 0 100%;
-  flex: 0 0 100%;
-  max-width: 100%; }
 
 /*
   Objects - are building blocks of a site.
@@ -7804,13 +7802,7 @@ body.no-scroll {
   -ms-flex-wrap: nowrap;
   flex-wrap: nowrap;
   position: relative;
-  top: -0.1875rem; }
-
-@media (max-width: 575.98px) {
-  .c-footer__social {
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    justify-content: center; } }
+  margin-top: calc(var(--lh__base) * 1 * var(--rvr-multiplier)); }
 
 .c-footer__social-icon {
   font-size: 0.875rem;

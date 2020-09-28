@@ -7712,6 +7712,10 @@ body.no-scroll {
 .o-menu-dropdown__toggle::after {
   border: 0; }
 
+.block-commerce-cart-flyout {
+  padding-left: 3rem;
+  border-left: 1px solid #999; }
+
 .c-cart-block--summary {
   position: relative; }
 
@@ -7869,6 +7873,9 @@ body.no-scroll {
 
 .c-header__search .o-icon {
   color: #2ba84a; }
+
+.c-header .menu--account {
+  margin-right: 2rem; }
 
 .c-menu-main {
   margin-left: 2rem; }

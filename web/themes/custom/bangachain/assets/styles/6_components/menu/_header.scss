@@ -15,9 +15,10 @@
 
   // Logo
   &__logo-container {
-    @include media-breakpoint-down(xl) {
-      margin-top: spacer(1);
-      width: 100%;
+    width: 100%;
+
+    @include media-breakpoint-up(md) {
+      width: auto;
     }
 
     img {
@@ -33,7 +34,11 @@
   // Menu
   &__menu-container {
     display: flex;
-    margin-left: auto;
+    margin: auto;
+
+    @include media-breakpoint-up(md) {
+      margin: 0 0 0 auto;
+    }
 
     .region-header {
       display: flex;

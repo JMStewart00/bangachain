@@ -7841,10 +7841,12 @@ body.no-scroll {
     max-width: 75%;
     margin: auto; } }
 
-@media (max-width: 1439.98px) {
+.c-header__logo-container {
+  width: 100%; }
+
+@media (min-width: 768px) {
   .c-header__logo-container {
-    margin-top: 1rem;
-    width: 100%; } }
+    width: auto; } }
 
 .c-header__logo-container img {
   width: 5.625rem; }
@@ -7858,7 +7860,11 @@ body.no-scroll {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  margin-left: auto; }
+  margin: auto; }
+
+@media (min-width: 768px) {
+  .c-header__menu-container {
+    margin: 0 0 0 auto; } }
 
 .c-header__menu-container .region-header {
   display: -webkit-box;
@@ -7890,10 +7896,6 @@ body.no-scroll {
 
 .c-menu-main__link:hover, .c-menu-main__link:focus {
   text-decoration: none; }
-
-@media (max-width: 1199.98px) {
-  .c-menu-main__link {
-    padding-top: 23px; } }
 
 .c-menu-main__link.is-active::after {
   width: 100%; }

@@ -14,10 +14,6 @@
       text-decoration: none;
     }
 
-    @include media-breakpoint-down(lg) {
-      padding-top: px(23);
-    }
-
     // Overwrite animate-underline styles for active links
     &.is-active::after {
       width: 100%;

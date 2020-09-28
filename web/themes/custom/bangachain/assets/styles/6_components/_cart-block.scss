@@ -1,6 +1,10 @@
 .c-cart-block {
+  &--summary {
+    position: relative;
+  }
+
   &--summary__count {
-    background: $gray-light;
+    background: $brand-green;
     height: rem(20);
     width: rem(20);
     border-radius: 50%;
@@ -8,7 +12,7 @@
     top: 0;
     left: 23px;
     text-align: center;
-    color: $gray-dark;
+    color: $gray-light;
     font-size: rem(14);
     font-weight: 700;
     line-height: rem(18);

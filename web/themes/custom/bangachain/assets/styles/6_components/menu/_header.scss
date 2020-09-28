@@ -1,17 +1,16 @@
 .c-header {
   box-shadow: 0 rem(12) rem(24) rem(-24) $gray-dark;
-  border-bottom: 5px solid $dark-green;
-
-  .l-container {
-    @include media-breakpoint-up(lg) {
-      max-width: 90%;
-    }
-  }
+  border-top: 10px solid $gray-dark;
 
   &__row {
     align-items: center;
     justify-content: center;
     padding: rvr(1) 0;
+
+    @include media-breakpoint-up(lg) {
+      max-width: 75%;
+      margin: auto;
+    }
   }
 
   // Logo

@@ -43,15 +43,15 @@
  */
 #}
 <div class="layout-container" id="layout-container">
-  <header class="c-header t-background--black" role="banner">
+  <header class="c-header" role="banner">
     <div class="l-container">
-      <div class="c-header__row l-row--no-columns">
+      <div class="c-header__row l-row--no-columns t-background--white">
         <div class="c-header__logo-container">
           <a href="/">
             <picture>
-              <source srcset="{{ base_path ~ directory }}/assets/images/logo-white.png" media="(max-width: 639px)">
-              <source srcset="{{ base_path ~ directory }}/assets/images/logo-white.png" media="(min-width: 640px)">
-              <img src="{{ base_path ~ directory }}/assets/images/logo-white.png" alt="Bang-A-Chain logo">
+              <source srcset="{{ base_path ~ directory }}/assets/images/logo.png" media="(max-width: 639px)">
+              <source srcset="{{ base_path ~ directory }}/assets/images/logo.png" media="(min-width: 640px)">
+              <img src="{{ base_path ~ directory }}/assets/images/logo.png" alt="Bang-A-Chain logo">
             </picture>
           </a>
         </div>
@@ -59,14 +59,11 @@
         <div class="c-header__menu-container">
           {{ page.header }}
         </div>
-
-
-        <div class="c-secondary-menu">
-          {{ page.primary_menu }}
-          {{ page.secondary_menu }}
-        </div>
       </div>
 
+      <div class="c-secondary-menu l-row--no-columns t-background--gray-dark">
+        {{ page.primary_menu }}
+      </div>
 
     </div>
   </header>

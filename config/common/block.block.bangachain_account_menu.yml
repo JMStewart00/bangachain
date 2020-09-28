@@ -12,8 +12,8 @@ _core:
   default_config_hash: bqa_zUJcVrUq3EGaqAFiFWZSABlYoWAkJnOKAe4MLNg
 id: bangachain_account_menu
 theme: bangachain
-region: primary_menu
-weight: -4
+region: header
+weight: -5
 provider: null
 plugin: 'system_menu_block:account'
 settings:

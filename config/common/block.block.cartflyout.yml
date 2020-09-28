@@ -14,7 +14,7 @@ third_party_settings:
       bottom: none
 id: cartflyout
 theme: bangachain
-region: secondary_menu
+region: header
 weight: -4
 provider: null
 plugin: commerce_cart_flyout

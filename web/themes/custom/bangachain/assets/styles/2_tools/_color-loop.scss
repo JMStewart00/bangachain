@@ -35,11 +35,11 @@ $background-color-map: (
     slider-pagination: $gray-medium,
   ),
 
-  gray-medium: (
-    bg: $gray-medium,
+  gray-dark: (
+    bg: $gray-dark,
     fg: $white,
-    link: $link-color,
-    link-hover: $link-hover-color,
+    link: $white,
+    link-hover: $gray-medium,
     slider-button-background: $black-alpha-1,
     slider-button-background-hover: $brand-green,
     slider-button-icon: $white,

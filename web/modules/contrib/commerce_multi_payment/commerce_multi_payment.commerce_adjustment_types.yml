@@ -1,0 +1,4 @@
+staged_multi_payment:
+  label: Staged Multiple Payments
+  has_ui: false
+  weight: 100

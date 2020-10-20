@@ -1,0 +1,43 @@
+commerce_staged_multi_payment:
+  id: commerce_staged_multi_payment
+  group: commerce_staged_multi_payment
+  label: 'Staged Multiple Payments'
+  states:
+    new:
+      label: 'New'
+    authorization:
+      label: 'Authorization'
+    authorization_voided:
+      label: 'Authorization (Voided)'
+    authorization_expired:
+      label: 'Authorization (Expired)'
+    completed:
+      label: 'Completed'
+    refunded:
+      label: 'Refunded'
+  transitions:
+    authorize:
+      label: 'Authorize payment'
+      from: [new]
+      to: authorization
+    authorize_capture:
+      label: 'Authorize and capture payment'
+      from: [new]
+      to: completed
+    void:
+      label: 'Void payment'
+      from: [authorization]
+      to: authorization_voided
+    expire:
+      label: 'Expire payment'
+      from: [authorization]
+      to: authorization_expired
+    capture:
+      label: 'Capture payment'
+      from: [authorization]
+      to: completed
+    refund:
+      label: 'Refund payment'
+      from: [completed]
+      to: refunded
+      

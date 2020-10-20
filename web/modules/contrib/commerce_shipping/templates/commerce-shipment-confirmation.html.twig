@@ -1,0 +1,113 @@
+{#
+/**
+ * @file
+ * Template for the shipment confirmation.
+ *
+ * Available variables:
+ * - order_entity: The order entity.
+ * - shipment_entity: The shipment entity.
+ * - shipping_profile: The profile associated with a shipment.
+ * - tracking_code: The tracking code associated with the shipment.
+ *
+ * @ingroup themeable
+ */
+#}
+{% set shipmentItemCount = shipment_entity.getItems|length %}
+<table style="margin: 15px auto 0 auto; max-width: 768px; font-family: arial,sans-serif">
+  <tbody>
+  <tr>
+    <td>
+      <table style="margin-left: auto; margin-right: auto; max-width: 768px; text-align: center;">
+        <tbody>
+        <tr>
+          <td>
+            <a href="{{ url('<front>') }}" style="color: #0e69be; text-decoration: none; font-weight: bold; margin-top: 15px;">{{ order_entity.getStore.label }}</a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <table style="margin-left: auto; margin-right: auto; min-width: 450px; margin: 5px auto 0 auto; border: 1px solid #cccccc; border-radius: 5px; padding: 40px 30px 30px 30px;">
+        <tbody>
+        <tr>
+          <td style="text-align: center; font-weight: bold; padding-top:15px; padding-bottom: 15px; border-top: 1px solid #cccccc; border-bottom: 1px solid #cccccc">
+            {% trans %}
+              An item in your order #{{ order_entity.getOrderNumber }} has shipped!
+            {% plural shipmentItemCount %}
+              Items in your order #{{ order_entity.getOrderNumber }} have shipped!
+            {% endtrans %}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <table style="width: 100%; padding-top:15px; padding-bottom: 15px; text-align: left; border-bottom: 1px solid #cccccc">
+              <tbody>
+              <tr>
+                <td style="font-weight: bold; padding-bottom: 15px; text-align: left; vertical-align: top;">
+                  {{ 'Shipped to:'|t }}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  {% block shipping_profile %}
+                    {{ shipping_profile }}
+                  {% endblock %}
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            {% block shipment_items %}
+              <table style="padding-top: 15px; padding-bottom:15px; width: 100%">
+                <tbody style="text-align: left;">
+                <tr>
+                  <td colspan="2" style="font-weight: bold; padding-bottom: 15px; text-align: left; vertical-align: top;">
+                    {% trans %}
+                      Item in shipment
+                    {% plural shipmentItemCount %}
+                      Items in shipment
+                    {% endtrans %}
+                  </td>
+                </tr>
+                {% for shipment_item in shipment_entity.getItems() %}
+                  <tr>
+                    <td>
+                      {{ shipment_item.quantity|number_format }} x
+                    </td>
+                    <td>
+                      <span>{{ shipment_item.title }}</span>
+                    </td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+            {% endblock %}
+          </td>
+        </tr>
+        {% if (tracking_code) %}
+          {% block tracking_info %}
+            <tr>
+              <td style="font-weight: bold; padding-top:15px; padding-bottom: 15px; text-align: left; vertical-align: top; border-top: 1px solid #cccccc">
+                {{ 'Tracking information:'|t }}
+              </td>
+            </tr>
+            <tr>
+              <td style="padding-bottom: 15px;">
+                {{ tracking_code }}
+              </td>
+            </tr>
+            <tr>
+              <td style="padding-top:15px; padding-bottom: 15px; text-align: center; border-top: 1px solid #cccccc">
+                {{ 'Thank you for your order!'|t }}
+              </td>
+            </tr>
+          {% endblock %}
+        {% endif %}
+        </tbody>
+      </table>
+    </td>
+  </tr>
+  </tbody>
+</table>

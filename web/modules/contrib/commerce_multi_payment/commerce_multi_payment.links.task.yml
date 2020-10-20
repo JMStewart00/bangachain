@@ -1,0 +1,17 @@
+# Staged payment routing definition
+commerce_staged_multi_payment.settings_tab:
+  route_name: commerce_staged_multi_payment.settings
+  title: 'Settings'
+  base_route: commerce_staged_multi_payment.settings
+
+entity.commerce_staged_multi_payment.canonical:
+  route_name: entity.commerce_staged_multi_payment.canonical
+  base_route: entity.commerce_staged_multi_payment.canonical
+  title: 'View'
+
+entity.commerce_staged_multi_payment.collection:
+  route_name: entity.commerce_staged_multi_payment.collection
+  base_route: entity.commerce_order.canonical
+  title: Staged Payments
+  weight: 5
+

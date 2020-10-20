@@ -1,0 +1,13 @@
+commerce_payment.commerce_payment_gateway.plugin.commerce_multi_payment_example_giftcard:
+  type: commerce_payment_gateway_configuration
+  mapping:
+    multi_payment:
+      type: boolean
+      label: 'Status for the multiple payments pane'
+      
+commerce_payment.commerce_payment_gateway.plugin.commerce_multi_payment_example_storecredit:
+  type: commerce_payment_gateway_configuration
+  mapping:
+    multi_payment:
+      type: boolean
+      label: 'Status for the multiple payments pane'

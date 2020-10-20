@@ -21,12 +21,14 @@ module:
   commerce_checkout: 0
   commerce_feeds: 0
   commerce_log: 0
+  commerce_multi_payment: 0
   commerce_number_pattern: 0
   commerce_order: 0
   commerce_payment: 0
   commerce_payment_example: 0
   commerce_price: 0
   commerce_product: 0
+  commerce_shipping: 0
   commerce_smart_importer: 0
   commerce_square: 0
   commerce_stock: 0
@@ -86,6 +88,7 @@ module:
   page_cache: 0
   path: 0
   path_alias: 0
+  physical: 0
   profile: 0
   quick_node_clone: 0
   quickedit: 0

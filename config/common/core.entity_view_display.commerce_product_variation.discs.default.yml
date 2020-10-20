@@ -6,6 +6,7 @@ dependencies:
     - commerce_product.commerce_product_variation_type.discs
     - field.field.commerce_product_variation.discs.attribute_disc_color
     - field.field.commerce_product_variation.discs.attribute_disc_plastic
+    - field.field.commerce_product_variation.discs.attribute_disc_weight
     - field.field.commerce_product_variation.discs.field_product_image
     - field.field.commerce_product_variation.discs.field_stock
   module:
@@ -53,6 +54,7 @@ content:
 hidden:
   attribute_disc_color: true
   attribute_disc_plastic: true
+  attribute_disc_weight: true
   product_id: true
   sku: true
   title: true

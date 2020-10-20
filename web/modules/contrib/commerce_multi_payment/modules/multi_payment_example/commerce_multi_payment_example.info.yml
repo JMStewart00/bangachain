@@ -1,0 +1,14 @@
+name: 'Commerce Multiple Payments: Example Payment Gateways'
+type: module
+description: Example payment gateways that support Drupal Commerce multiple payments.
+# core: 8.x
+package: Commerce
+
+dependencies:
+  - commerce_multi_payment
+
+# Information added by Drupal.org packaging script on 2019-02-14
+version: '8.x-1.0'
+core: '8.x'
+project: 'commerce_multi_payment'
+datestamp: 1550157187

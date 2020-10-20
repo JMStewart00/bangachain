@@ -1,0 +1,6 @@
+
+commerce_staged_multi_payment.admin.structure.settings:
+  title: Staged payment settings
+  description: 'Configure Staged payment entities'
+  route_name: commerce_staged_multi_payment.settings
+  parent: system.admin_structure

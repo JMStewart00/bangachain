@@ -1,0 +1,12 @@
+entity.commerce_staged_multi_payment.collection:
+  path: '/admin/commerce/orders/{commerce_order}/staged-payments'
+  defaults:
+    _entity_list: 'commerce_staged_multi_payment'
+    _title: 'Staged Payments'
+  options:
+    _admin_route: TRUE
+    parameters:
+      commerce_order:
+        type: 'entity:commerce_order'
+  requirements:
+    _staged_payment_access: 'TRUE'

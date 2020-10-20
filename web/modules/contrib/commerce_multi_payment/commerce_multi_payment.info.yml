@@ -1,0 +1,16 @@
+name: Commerce Multiple Payments
+type: module
+description: Allows multiple payments at checkout for supported payment gateways.
+# core: 8.x
+package: Commerce
+
+dependencies:
+  - commerce:commerce_payment
+  - commerce:commerce_checkout
+  - commerce:commerce_order
+
+# Information added by Drupal.org packaging script on 2019-02-14
+version: '8.x-1.0'
+core: '8.x'
+project: 'commerce_multi_payment'
+datestamp: 1550157187

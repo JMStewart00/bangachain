@@ -1,0 +1,84 @@
+<?php
+
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Render\Element;
+
+/**
+ * Implements hook_help().
+ */
+function commerce_multi_payment_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the commerce_multi_payment module.
+    case 'help.page.commerce_multi_payment':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Allows multiple payments at checkout for supported payment gateways.') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_entity_type_build().
+ */
+function commerce_multi_payment_entity_type_build(array &$entity_types) {
+  /** @var \Drupal\Core\Entity\ContentEntityType $commerce_payment */
+  $entity_types['commerce_payment']->setListBuilderClass('Drupal\commerce_multi_payment\PaymentListBuilder');
+}
+
+function commerce_multi_payment_commerce_checkout_pane_info_alter(&$info) {
+  $info['payment_process']['class'] = 'Drupal\commerce_multi_payment\Plugin\Commerce\CheckoutPane\MultiplePaymentProcess';
+  $info['payment_process']['provider'] = 'commerce_multi_payment';
+  $info['payment_process']['label'] = t('Payment process (with multiple payments support)');
+}
+
+/**
+ * Implements hook_entity_base_field_info().
+ */
+function commerce_multi_payment_entity_base_field_info(EntityTypeInterface $entity_type) {
+  if ($entity_type->id() == 'commerce_order') {
+    $fields['staged_multi_payment'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Staged Payments'))
+      ->setDescription(t('Multiple payments which are staged to be processed on the order.'))
+      ->setCardinality(BaseFieldDefinition::CARDINALITY_UNLIMITED)
+      ->setRequired(FALSE)
+      ->setSetting('target_type', 'commerce_staged_multi_payment')
+      ->setSetting('handler', 'default')
+      ->setTranslatable(FALSE);
+
+    return $fields;
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function commerce_multi_payment_theme() {
+  return [
+    'commerce_staged_multi_payment' => [
+      'render element' => 'elements',
+    ],
+  ];
+}
+
+
+function template_preprocess_commerce_staged_multi_payment(&$variables) {
+  /** @var \Drupal\commerce_multi_payment\Entity\StagedPaymentInterface $staged_payment */
+  $staged_payment = $variables['elements']['#commerce_staged_multi_payment'];
+
+  $variables['staged_payment_entity'] = $staged_payment;
+  $payment_gateway_plugin = $staged_payment->getPaymentGateway()->getPlugin();
+  $variables['staged_payment'] = [
+    // The label is generated dynamically, so it's not present in 'elements'.
+    'label' => [
+      '#markup' => $payment_gateway_plugin->multiPaymentAdjustmentLabel($staged_payment),
+    ],
+    'amount' => $staged_payment->getAmount(),
+  ];
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['staged_payment'][$key] = $variables['elements'][$key];
+  }
+}

@@ -6,6 +6,7 @@ dependencies:
     - commerce_product.commerce_product_variation_type.discs
     - field.field.commerce_product_variation.discs.attribute_disc_color
     - field.field.commerce_product_variation.discs.attribute_disc_plastic
+    - field.field.commerce_product_variation.discs.attribute_disc_weight
     - field.field.commerce_product_variation.discs.field_product_image
     - field.field.commerce_product_variation.discs.field_stock
   module:
@@ -19,13 +20,19 @@ mode: default
 content:
   attribute_disc_color:
     type: options_select
-    weight: 1
+    weight: 3
     settings: {  }
     third_party_settings: {  }
     region: content
   attribute_disc_plastic:
     type: options_select
     weight: 2
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  attribute_disc_weight:
+    type: options_select
+    weight: 4
     settings: {  }
     third_party_settings: {  }
     region: content

@@ -1,7 +1,10 @@
 uuid: be6f3c6a-4fe1-40d1-ac43-835c05bb3147
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - commerce_multi_payment
+    - commerce_payment
 _core:
   default_config_hash: D34BCgbJ5zXYuNz6x0XsDBSL22XQjtHLbjJU2mlBvoA
 id: default
@@ -12,16 +15,13 @@ configuration:
   panes:
     login:
       allow_guest_checkout: true
-      allow_registration: false
+      allow_registration: true
       step: login
       weight: 0
     contact_information:
       double_entry: true
       step: order_information
       weight: 1
-    billing_information:
-      step: order_information
-      weight: 2
     review:
       step: review
       weight: 3
@@ -32,3 +32,18 @@ configuration:
       view: null
       step: _sidebar
       weight: 5
+    completion_register:
+      step: complete
+      weight: 10
+    multi_payment_apply:
+      display_label: 'Apply Multiple Payments'
+      wrapper_element: fieldset
+      step: order_information
+      weight: 10
+    payment_information:
+      step: order_information
+      weight: 10
+    payment_process:
+      capture: true
+      step: payment
+      weight: 10

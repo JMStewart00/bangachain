@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Contains commerce_multi_payment_example.module.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function commerce_multi_payment_example_theme() {
+  return [
+    'commerce_multi_payment_example_giftcard_form' => [
+      'render element' => 'form',
+    ],
+    'commerce_multi_payment_example_storecredit_form' => [
+      'render element' => 'form',
+    ],
+  ];
+}

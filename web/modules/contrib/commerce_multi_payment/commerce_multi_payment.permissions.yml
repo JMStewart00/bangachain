@@ -1,0 +1,22 @@
+add staged payment entities:
+  title: 'Create new Staged payment entities'
+
+administer staged payment entities:
+  title: 'Administer Staged payment entities'
+  description: 'Allow to access the administration form to configure Staged payment entities.'
+  restrict access: true
+
+delete staged payment entities:
+  title: 'Delete Staged payment entities'
+
+edit staged payment entities:
+  title: 'Edit Staged payment entities'
+
+access staged payment overview:
+  title: 'Access the Staged payment overview page'
+
+view published staged payment entities:
+  title: 'View published Staged payment entities'
+
+view unpublished staged payment entities:
+  title: 'View unpublished Staged payment entities'

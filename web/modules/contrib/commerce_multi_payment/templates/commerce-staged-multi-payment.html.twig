@@ -1,0 +1,20 @@
+{#
+/**
+ * @file commerce_staged_multi_payment.html.twig
+ * Default theme implementation to present Staged payment data.
+ *
+ * This template is used when viewing Staged payment pages.
+ *
+ *
+ * Available variables:
+ * - content: A list of content items. Use 'content' to print all content, or
+ * - attributes: HTML attributes for the container element.
+ *
+ * @see template_preprocess_commerce_staged_multi_payment()
+ *
+ * @ingroup themeable
+ */
+#}
+<div{{ attributes.addClass('commerce-staged-multi-payment') }}>
+  <span class="staged-payment-label">{{ staged_payment.label }}:</span> <span class="amount">{{ staged_payment.amount | commerce_price_format }}</span>
+</div>

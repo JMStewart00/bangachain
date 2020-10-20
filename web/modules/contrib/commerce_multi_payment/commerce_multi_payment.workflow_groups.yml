@@ -1,0 +1,3 @@
+commerce_staged_multi_payment:
+  label: Multiple Staged Payments
+  entity_type: commerce_staged_multi_payment

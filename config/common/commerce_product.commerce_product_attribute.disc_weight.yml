@@ -1,0 +1,7 @@
+uuid: 8ecb1143-d026-4670-a2a1-32100e7e22b8
+langcode: en
+status: true
+dependencies: {  }
+id: disc_weight
+label: 'Disc Weight'
+elementType: select

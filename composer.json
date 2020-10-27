@@ -199,6 +199,9 @@
             },
             "drupal/metatag": {
                 "Add a TypedData plugin to support Search API": "https://www.drupal.org/files/issues/2019-06-14/2901039-32.patch"
+            },
+            "drupal/commerce_smart_importer": {
+                "Blank URL parameter import_name after uploading csv": "https://www.drupal.org/files/issues/2020-04-29/3115808.patch"
             }
         },
         "enable-patching": true,

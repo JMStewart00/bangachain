@@ -55,6 +55,7 @@ use Drupal\profile\Entity\ProfileInterface;
  *       "default" = "Drupal\commerce_order\OrderRouteProvider",
  *       "delete-multiple" = "Drupal\entity\Routing\DeleteMultipleRouteProvider",
  *     },
+ *     "entity_print" = "Drupal\commerce_order\EntityPrint\OrderRenderer"
  *   },
  *   base_table = "commerce_order",
  *   admin_permission = "administer commerce_order",
@@ -769,7 +770,7 @@ class Order extends CommerceContentEntityBase implements OrderInterface {
       ->setDescription(t('Billing profile'))
       ->setSetting('target_type', 'profile')
       ->setSetting('handler', 'default')
-      ->setSetting('handler_settings', ['target_bundles' => ['customer']])
+      ->setSetting('handler_settings', ['target_bundles' => ['customer' => 'customer']])
       ->setTranslatable(TRUE)
       ->setDisplayOptions('form', [
         'type' => 'commerce_billing_profile',

@@ -273,8 +273,17 @@ final class DeprecationAnalyzer {
     exec($this->binPath . '/phpstan analyse --error-format=json -c ' . $this->phpstanNeonPath . ' ' . $project_dir, $output);
     $json = json_decode(implode('', $output), TRUE);
     if (!isset($json['files']) || !is_array($json['files'])) {
-       $this->logger->error('PHPStan failed: %results', ['%results' => print_r($result, TRUE)]);
-       $json = ['files' => [], 'totals' => ['file_errors' => 0]];
+       $this->logger->error('PHPStan failed: %results', ['%results' => print_r($output, TRUE)]);
+       $json = [
+          'files' => [
+            'PHPStan failed' => 'PHP API deprecations cannot be checked. Reason: ' . print_r($output, TRUE),
+            'line' => 0,
+           ],
+           'totals' => [
+             'errors' => 1,
+             'file_errors' => 1,
+           ],
+        ];
     }
     $result = [
       'date' => $this->time->getRequestTime(),

@@ -20,14 +20,6 @@ function upgrade_status_requirements($phase) {
         ]
       ];
     }
-    if (version_compare('9.0.0', \Drupal::VERSION) <= 0) {
-      return [
-        'upgrade_status' => [
-          'description' => t('Upgrade Status should be used on a Drupal 8 site to detect deprecated APIs present. It does not in itself know about deprecated APIs and Drupal 9 does not have Drupal 8\'s deprecated APIs anymore.'),
-          'severity' => REQUIREMENT_ERROR,
-        ]
-      ];
-    }
   }
   return [];
 }

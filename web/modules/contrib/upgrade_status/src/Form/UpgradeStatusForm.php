@@ -566,7 +566,8 @@ class UpgradeStatusForm extends FormBase {
     if (isset($core_update_info['releases']) && is_array($core_update_info['releases'])) {
       // Find the latest release that are higher than our current and is not beta/alpha/rc.
       foreach ($core_update_info['releases'] as $version => $release) {
-        if ((version_compare($version, \Drupal::VERSION) > 0) && empty($release['version_extra'])) {
+        $major_version = explode('.', $version)[0];
+        if ((version_compare($version, \Drupal::VERSION) > 0) && empty($release['version_extra']) && $major_version === '8') {
           $link = $core_update_info['link'] . '/releases/' . $version;
           $core_version_info = [
             '#type' => 'link',

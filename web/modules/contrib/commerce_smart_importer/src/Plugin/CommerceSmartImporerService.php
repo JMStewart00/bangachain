@@ -1200,7 +1200,7 @@ class CommerceSmartImporerService extends ControllerBase {
     fclose($handle);
 
     return [
-      'product_count' => $productCount - 2,
+      'product_count' => $productCount - 1,
       'variation_count' => $linecount - 2,
     ];
   }

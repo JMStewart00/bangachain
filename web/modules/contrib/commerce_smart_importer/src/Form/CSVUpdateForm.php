@@ -272,7 +272,7 @@ class CSVUpdateForm extends FormBase {
 
     $count = $this->smartImporterService->countProductsAndVariations($uri);
     $products_per_batch = 25;
-    $number_of_batches = ceil($count['variation_count'] / $products_per_batch);
+    $number_of_batches = ceil($count['product_count'] / $products_per_batch);
 
     if ($action == 'check') {
       $upload_name = uniqid('Smart_Importer_temp_');

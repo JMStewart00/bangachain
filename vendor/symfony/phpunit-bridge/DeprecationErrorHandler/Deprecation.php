@@ -143,6 +143,10 @@ class Deprecation
     public function isLegacy()
     {
         $class = $this->originatingClass();
+        if ((new \ReflectionClass($class))->isInternal()) {
+            return false;
+        }
+
         $method = $this->originatingMethod();
 
         return 0 === strpos($method, 'testLegacy')
@@ -266,7 +270,10 @@ class Deprecation
                     if (file_exists($v.'/composer/installed.json')) {
                         self::$vendors[] = $v;
                         $loader = require $v.'/autoload.php';
-                        $paths = self::getSourcePathsFromPrefixes(array_merge($loader->getPrefixes(), $loader->getPrefixesPsr4()));
+                        $paths = self::addSourcePathsFromPrefixes(
+                            array_merge($loader->getPrefixes(), $loader->getPrefixesPsr4()),
+                            $paths
+                        );
                     }
                 }
             }
@@ -282,15 +289,17 @@ class Deprecation
         return self::$vendors;
     }
 
-    private static function getSourcePathsFromPrefixes(array $prefixesByNamespace)
+    private static function addSourcePathsFromPrefixes(array $prefixesByNamespace, array $paths)
     {
         foreach ($prefixesByNamespace as $prefixes) {
             foreach ($prefixes as $prefix) {
                 if (false !== realpath($prefix)) {
-                    yield realpath($prefix);
+                    $paths[] = realpath($prefix);
                 }
             }
         }
+
+        return $paths;
     }
 
     /**

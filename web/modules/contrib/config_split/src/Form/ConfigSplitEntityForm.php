@@ -10,9 +10,7 @@ use Drupal\Core\State\StateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class ConfigSplitEntityForm.
- *
- * @package Drupal\config_split\Form
+ * The entity form.
  */
 class ConfigSplitEntityForm extends EntityForm {
 
@@ -383,4 +381,5 @@ class ConfigSplitEntityForm extends EntityForm {
   protected static function isConflicting($folder) {
     return strpos(rtrim($folder, '/') . '/', rtrim(Settings::get('config_sync_directory'), '/') . '/') !== FALSE;
   }
+
 }

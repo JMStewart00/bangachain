@@ -21,47 +21,12 @@ directory is the configuration files that are common to all environments.
 It is recommended to use [Drush][] for importing and exporting configuration in
 Drupal.
 
-## Configuration splits
-
-This project has the following configuration splits via [`config_split`][]:
-
-- Production (`/config/prod`)
-- Test (`/config/test`)
-- Development (`/config/dev`)
-- Local (`/config/local`)
-
-## Switching configuration splits
-
-When working on a feature that requires different configuration per
-environment, you'll need to switch to that environment's configuration split and
-configure it locally.
-
-You can override the active configuration split by adding a directive in
-`settings.local.php`:
-
-```php
-// Disable the local split.
-$config['config_split.config_split.local']['status'] = FALSE;
-
-// Enable split.
-$config['config_split.config_split.SPLIT']['status'] = TRUE;
-```
-
-You will need to replace `SPLIT` with the intended environment to set the
-active configuration (`prod`, `test`, `dev`). Next, you **MUST** rebuild the
-Drupal cache, e.g.
-
-```bash
-lando drush cache-rebuild
-```
-
-Now you can run `lando drush config-import` to import the environments
-configuration into Drupal. This will overwrite any configuration changes you
-currently have unsaved.
-
 ## Exporting configuration
 
 Configuration is exported using the `config-export` Drush command, e.g.
+
+Any changes made to settings in the site will need to be exported and then
+committed to code.
 
 ```bash
 lando drush config-export

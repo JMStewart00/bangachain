@@ -30,26 +30,6 @@ assets on the site. This project requires environment variables for third party
 services such as Algolia and SendGrid. To enable these locally, you must add a
 `.lando.local.yml` file which includes the following (at a minimum):
 
-```yml
-name: lifespan-d8
-env_file:
-  - .env
-```
-
-Then add the .env file to the project root with the necessary keys as follows:
-```bash
-ALGOLIA_API_KEY=[enter-api-key-here]
-ALGOLIA_APP_ID=[enter-app-id-here]
-GA_CLIENT_SECRET=[enter-client-id-here]
-GA_CLIENT_ID=[enter-key-here]
-MANDRILL_API_KEY=[enter-key-here]
-RECAPTCHA_V2_SECRET=[enter-key-here]
-RECAPTCHA_V2_SITE_KEY=[enter-key-here]
-RECAPTCHA_V3_SECRET=[enter-key-here]
-RECAPTCHA_V3_SITE_KEY=[enter-key-here]
-```
-For more information on Algolia see the [Algolia Search Readme](algolia-search.md).
-
 Now go ahead and start lando:
 ```bash
 $ lando start

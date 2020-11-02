@@ -20,6 +20,7 @@ module:
   commerce_cart_flyout: 0
   commerce_checkout: 0
   commerce_feeds: 0
+  commerce_giftcard: 0
   commerce_log: 0
   commerce_multi_payment: 0
   commerce_number_pattern: 0
@@ -28,6 +29,7 @@ module:
   commerce_payment_example: 0
   commerce_price: 0
   commerce_product: 0
+  commerce_promotion: 0
   commerce_shipping: 0
   commerce_smart_importer: 0
   commerce_square: 0

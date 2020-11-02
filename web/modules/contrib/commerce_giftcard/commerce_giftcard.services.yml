@@ -1,0 +1,19 @@
+services:
+  commerce_giftcard.giftcard_order_processor:
+    class: Drupal\commerce_giftcard\GiftcardOrderProcessor
+    arguments: [ '@token']
+    tags:
+    # Very low priority to ensure that giftcards are applied last and
+    # include other adjustments.
+      - { name: commerce_order.order_processor, priority: -1000, adjustment_type: commerce_giftcard }
+  commerce_giftcard.code_generator:
+    class: Drupal\commerce_giftcard\GiftcardCodeGenerator
+    arguments: ['@database']
+  commerce_giftcard.order_subscriber:
+    class: Drupal\commerce_giftcard\EventSubscriber\OrderEventSubscriber
+    arguments: [ '@entity_type.manager', '@commerce_giftcard.code_generator', '@event_dispatcher']
+    tags:
+      - { name: event_subscriber }
+  commerce_giftcard.order_manager:
+    class: Drupal\commerce_giftcard\GiftcardOrderManager
+    arguments: ['@entity_type.manager']

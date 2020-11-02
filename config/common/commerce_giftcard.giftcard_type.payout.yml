@@ -1,0 +1,9 @@
+uuid: 702abf11-a246-4df8-8bd3-04fb8e557642
+langcode: en
+status: true
+dependencies: {  }
+id: payout
+label: Payout
+display_label: 'BangAChain Payout'
+generate:
+  length: 8

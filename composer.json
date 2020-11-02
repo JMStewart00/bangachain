@@ -83,6 +83,7 @@
         "drupal/commerce": "^2.20",
         "drupal/commerce_cart_flyout": "^1.8",
         "drupal/commerce_feeds": "^1.0@alpha",
+        "drupal/commerce_giftcard": "1.0.x-dev",
         "drupal/commerce_multi_payment": "^1.0",
         "drupal/commerce_shipping": "^2.0@RC",
         "drupal/commerce_smart_importer": "^1.0@alpha",

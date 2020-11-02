@@ -1,0 +1,24 @@
+commerce_giftcard.type_add:
+  route_name: entity.commerce_giftcard_type.add_form
+  title: 'Add gift card type'
+  appears_on:
+    - entity.commerce_giftcard_type.collection
+
+commerce_giftcard.add_page:
+  route_name: entity.commerce_giftcard.add_page
+  title: 'Add gift card'
+  appears_on:
+    - entity.commerce_giftcard.collection
+
+commerce_giftcard.transaction_add:
+  route_name: entity.commerce_giftcard_transaction.add_form
+  title: 'Add transaction'
+  appears_on:
+    - entity.commerce_giftcard_transaction.collection
+
+
+entity.commerce_giftcard.generate_form:
+  route_name: entity.commerce_giftcard.generate_form
+  title: 'Generate gift cards'
+  appears_on:
+    - entity.commerce_giftcard.collection

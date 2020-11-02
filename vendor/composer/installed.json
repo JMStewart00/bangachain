@@ -59,7 +59,7 @@
         "version_normalized": "4.5.3.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/twbs/bootstrap.git",
+            "url": "git@github.com:twbs/bootstrap.git",
             "reference": "a716fb03f965dc0846df479e14388b1b4b93d7ce"
         },
         "dist": {
@@ -116,7 +116,7 @@
         "version_normalized": "3.1.4.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/needim/noty.git",
+            "url": "git@github.com:needim/noty.git",
             "reference": "77268c46b6db6a1eb7a920ed7c859fbc8de17993"
         },
         "dist": {
@@ -3496,6 +3496,55 @@
         "support": {
             "source": "https://git.drupalcode.org/project/commerce_feeds",
             "issues": "https://www.drupal.org/project/issues/commerce_feeds"
+        }
+    },
+    {
+        "name": "drupal/commerce_giftcard",
+        "version": "dev-1.0.x",
+        "version_normalized": "dev-1.0.x",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupalcode.org/project/commerce_giftcard.git",
+            "reference": "35dd9bb9d03486db44ba05d0884ea460b2b8675b"
+        },
+        "require": {
+            "drupal/commerce": "^2",
+            "drupal/commerce_price": "*",
+            "drupal/core": "^8.8 || ^9"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "branch-alias": {
+                "dev-1.0.x": "1.0.x-dev"
+            },
+            "drupal": {
+                "version": "1.0.x-dev",
+                "datestamp": "1602250331",
+                "security-coverage": {
+                    "status": "not-covered",
+                    "message": "Project has not opted into security advisory coverage!"
+                }
+            }
+        },
+        "installation-source": "source",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0+"
+        ],
+        "authors": [
+            {
+                "name": "Berdir",
+                "homepage": "https://www.drupal.org/user/214652"
+            },
+            {
+                "name": "mglaman",
+                "homepage": "https://www.drupal.org/user/2416470"
+            }
+        ],
+        "description": "Allows to use and buy gift cards.",
+        "homepage": "http://drupal.org/project/commerce_giftcard",
+        "support": {
+            "source": "https://git.drupalcode.org/project/commerce_giftcard"
         }
     },
     {

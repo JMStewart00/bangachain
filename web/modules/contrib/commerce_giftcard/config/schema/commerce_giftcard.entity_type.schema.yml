@@ -1,0 +1,28 @@
+commerce_giftcard.giftcard_type.*:
+  type: config_entity
+  label: 'Commerce Gift card type config'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    display_label:
+      type: label
+      label: 'Display label'
+    generate:
+      type: mapping
+      label: Generate code settings
+      mapping:
+        length:
+          type: integer
+          label: Code length
+
+
+commerce_checkout.commerce_checkout_pane.commerce_giftcard_redemption:
+  type: commerce_checkout_pane_configuration
+  mapping:
+    allow_multiple:
+      type: boolean
+      label: 'Allow multiple coupons'

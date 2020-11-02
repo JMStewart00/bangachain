@@ -250,6 +250,20 @@ function views_preprocess_node(&$variables) {
 }
 
 /**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function views_theme_suggestions_views_view(array $variables) {
+  $suggestions = [];
+  $view = $variables['view'];
+
+  $suggestions[] = 'views_view__' . $view->id();
+  $suggestions[] = 'views_view__' . $view->current_display;
+  $suggestions[] = 'views_view__' . $view->id() . '__' . $view->current_display;
+
+  return $suggestions;
+}
+
+/**
  * Implements hook_theme_suggestions_HOOK_alter().
  */
 function views_theme_suggestions_node_alter(array &$suggestions, array $variables) {

@@ -54,6 +54,10 @@
     margin-bottom: rem(8);
   }
 
+  .fieldset-legend {
+    font-weight: $fw-bold !important;
+  }
+
   textarea {
     border: $border;
     border-radius: $border-radius;

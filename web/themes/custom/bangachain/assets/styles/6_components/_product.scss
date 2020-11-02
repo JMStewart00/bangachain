@@ -1,7 +1,13 @@
 .c-product {
-  @include media-breakpoint-up(md) {
-    max-width: 75%;
-    margin: auto;
+  &:not(.c-product--teaser) {
+    @include media-breakpoint-up(md) {
+      max-width: 75%;
+      margin: auto;
+    }
+  }
+
+  &--teaser {
+    border: 1px solid $gray-medium;
   }
 
   &__speed,
@@ -21,6 +27,19 @@
 
     span {
       display: block;
+    }
+
+    &--small {
+      border: 1px solid $brand-green;
+      border-radius: 30px;
+      width: rem(35);
+      height: rem(35);
+      margin: rem(2);
+      padding: rem(2);
+      line-height: rem(28);
+      text-align: center;
+      font-size: rem(12);
+      font-weight: 700;
     }
   }
 

@@ -36,11 +36,10 @@
     'c-view-' ~ id|clean_class,
     'c-view-' ~ id|clean_class ~ '--' ~ display_id,
     dom_id ? 'js-view-dom-id-' ~ dom_id,
-    'l-container'
   ]
 %}
 
-<div{{attributes}}>
+<div{{attributes.addClass('l-container')}}>
   {{ title_prefix }}
   {% if title %}
     {{ title }}
@@ -57,18 +56,26 @@
     </div>
   {% endif %}
 
-  {% if exposed %}
-    <div class="c-view-filters">
-      {{ exposed }}
+  <div class="l-grid l-grid--sidebar-left u-vr__mt--2">
+
+    <div class="l-grid__main l-main">
+      <div{{create_attribute().addClass(classes)}}>
+        {{ rows }}
+      </div>
+
+      {% if pager %}
+        {{ pager }}
+      {% endif %}
+
     </div>
-  {% endif %}
 
-  <div{{create_attribute().addClass(classes)}}>
-    {{ rows }}
+    <div class="l-grid__sidebar l-sidebar">
+      {% if exposed %}
+        <div class="c-view-filters">
+          {{ exposed }}
+        </div>
+      {% endif %}
+    </div>
+
   </div>
-
-  {% if pager %}
-    {{ pager }}
-  {% endif %}
-
 </div>

@@ -41,3 +41,7 @@ Nested Paragraphs create multiple drag handles
 Source: https://www.drupal.org/files/issues/2019-11-13/claro-nested_paragraphs_multiple_drag_handles-3092181-5.patch
 
 
+Views file name suggestions often missing from Twig debugging
+Source: https://www.drupal.org/files/issues/views-template-suggestions-2839945-2.patch
+
+

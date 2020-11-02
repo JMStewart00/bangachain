@@ -40,7 +40,7 @@
   ]
 %}
 
-<div{{attributes}}>
+<div{{attributes.addClass(classes)}}>
   {{ title_prefix }}
   {% if title %}
     {{ title }}
@@ -63,9 +63,7 @@
     </div>
   {% endif %}
 
-  <div{{create_attribute().addClass(classes)}}>
-    {{ rows }}
-  </div>
+  {{ rows }}
 
   {% if pager %}
     {{ pager }}

@@ -2,6 +2,18 @@
   padding: rvr(1);
   width: 100%;
 
+  .eu-cookie-compliance-default-button {
+    text-shadow: none;
+    background-image: none;
+    box-shadow: none;
+    border: 0;
+    font-weight: $fw-semi-bold;
+
+    @include hover-focus() {
+      background-image: none;
+    }
+  }
+
   .eu-cookie-compliance-message {
     max-width: 75%;
   }

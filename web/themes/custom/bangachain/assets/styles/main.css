@@ -8832,6 +8832,17 @@ table td.is-active {
   padding: calc(var(--lh__base) * 1 * var(--rvr-multiplier));
   width: 100%; }
 
+.c-gdpr .eu-cookie-compliance-default-button {
+  text-shadow: none;
+  background-image: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border: 0;
+  font-weight: 500; }
+
+.c-gdpr .eu-cookie-compliance-default-button:hover, .c-gdpr .eu-cookie-compliance-default-button:focus {
+  background-image: none; }
+
 .c-gdpr .eu-cookie-compliance-message {
   max-width: 75%; }
 

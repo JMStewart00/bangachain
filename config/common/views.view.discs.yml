@@ -815,7 +815,18 @@ display:
       title: Discs
       header: {  }
       footer: {  }
-      empty: {  }
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: true
+          tokenize: false
+          content: 'Sorry! No discs currently available! Come back soon!'
+          plugin_id: text_custom
       relationships: {  }
       arguments:
         field_brand_target_id:

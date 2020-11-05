@@ -8,19 +8,18 @@
   }
 
   &--primary {
+    padding: spacer(0.5) spacer(2.5);
     background-color: $white;
-    border: 2px solid $button-border;
-    border-radius: 0px;
-    color: $blue-gray;
-    font-weight: $fw-bold;
-    font-size: rem(17);
-    max-width: 250px;
-    width: 100%;
-    transition: $transition-base;
+    border: 0;
+    border-radius: $border-radius;
+    color: $brand-blue;
+    letter-spacing: rem(0.5);
+    text-transform: uppercase;
+    transition: background-color 0.2s ease-in;
 
     @include hover-focus() {
-      color: $white;
-      background-color: $blue-gray;
+      color: $orange;
+      background-color: $cyan;
     }
   }
 
@@ -28,6 +27,21 @@
     padding: spacer(0.5) spacer(2.5);
     background-color: $brand-blue;
     border: 0;
+    border-radius: $border-radius;
+    color: $white;
+    letter-spacing: rem(0.5);
+    text-transform: uppercase;
+    transition: background-color 0.2s ease-in;
+
+    @include hover-focus() {
+      color: $orange;
+      background-color: darken($brand-blue, 20%);
+    }
+  }
+
+  &--tertiary {
+    padding: spacer(0.5) spacer(2.5);
+    background-color: darken($brand-blue, 10%);
     border-radius: $border-radius;
     color: $white;
     letter-spacing: rem(0.5);

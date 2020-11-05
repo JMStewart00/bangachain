@@ -1,0 +1,21 @@
+.alert {
+  background-color: $orange;
+  color: $white;
+  padding: rvr(1) rvr(2) rvr(0.5);
+  position: relative;
+  display: flex;
+  justify-content: center;
+
+  a {
+    color: $cyan !important;
+  }
+
+  button.close {
+    font-size: rem(25);
+    font-weight: 300;
+    line-height: rem(25);
+    position: absolute;
+    right: spacer(2);
+    top: spacer(1);
+  }
+}

@@ -10,7 +10,7 @@
 /// @example css - Output
 ///  Same as listed below.
 ///
-@mixin animate-underline($size: 8px, $color: $brand-green, $fixed: false ) {
+@mixin animate-underline($size: 8px, $color: $orange, $fixed: false ) {
   position: relative;
 
   &::after {

@@ -1,13 +1,17 @@
 .o-icon {
-  &--amber {
+  &--orange {
     color: $orange;
   }
 
-  &--green {
-    color: $brand-green;
+  &--blue-gray {
+    color: $blue-gray;
   }
 
   &--black {
-    color: $gray-dark;
+    color: $black;
+  }
+
+  &--blue {
+    color: $brand-blue;
   }
 }

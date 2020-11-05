@@ -11,7 +11,7 @@
     background-color: $white;
     border: 2px solid $button-border;
     border-radius: 0px;
-    color: $brand-green;
+    color: $blue-gray;
     font-weight: $fw-bold;
     font-size: rem(17);
     max-width: 250px;
@@ -20,13 +20,13 @@
 
     @include hover-focus() {
       color: $white;
-      background-color: $brand-green;
+      background-color: $blue-gray;
     }
   }
 
   &--secondary {
     padding: spacer(0.5) spacer(2.5);
-    background-color: $brand-green;
+    background-color: $blue-gray;
     border: 0;
     border-radius: $border-radius;
     color: $white;
@@ -36,12 +36,12 @@
 
     @include hover-focus() {
       color: $white;
-      background-color: $dark-green;
+      background-color: $brand-blue;
     }
   }
 
   &--input-addon {
-    background-color: $brand-green;
+    background-color: $blue-gray;
     border: $border;
     border-left: 0;
     border-radius: 0 $border-radius $border-radius 0;
@@ -80,7 +80,7 @@
     text-align: center;
 
     @include hover-focus() {
-      background-color: $brand-green;
+      background-color: $blue-gray;
 
       a {
         color: $white !important;
@@ -99,7 +99,7 @@
   }
 
   &--active {
-    background-color: $brand-green;
+    background-color: $blue-gray;
 
     a {
       color: $white !important;

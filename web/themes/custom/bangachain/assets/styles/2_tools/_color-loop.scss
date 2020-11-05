@@ -19,7 +19,7 @@ $background-color-map: (
     link: $link-color,
     link-hover: $link-hover-color,
     slider-button-background: $gray-medium,
-    slider-button-background-hover: $brand-green,
+    slider-button-background-hover: $blue-gray,
     slider-button-icon: $white,
     slider-pagination: $gray-medium,
   ),
@@ -30,7 +30,7 @@ $background-color-map: (
     link: $link-color,
     link-hover: $link-hover-color,
     slider-button-background: $gray-medium,
-    slider-button-background-hover: $brand-green,
+    slider-button-background-hover: $blue-gray,
     slider-button-icon: $white,
     slider-pagination: $gray-medium,
   ),
@@ -41,7 +41,7 @@ $background-color-map: (
     link: $white,
     link-hover: $gray-medium,
     slider-button-background: $black-alpha-1,
-    slider-button-background-hover: $brand-green,
+    slider-button-background-hover: $blue-gray,
     slider-button-icon: $white,
     slider-pagination: $white
   ),
@@ -52,7 +52,7 @@ $background-color-map: (
     link: $white,
     link-hover: $gray-light,
     slider-button-background: $black-alpha-1,
-    slider-button-background-hover: $brand-green,
+    slider-button-background-hover: $blue-gray,
     slider-button-icon: $white,
     slider-pagination: $white
   ),
@@ -63,31 +63,31 @@ $background-color-map: (
     link: $link-color,
     link-hover: $link-hover-color,
     slider-button-background: $black-alpha-1,
-    slider-button-background-hover: $brand-green,
+    slider-button-background-hover: $blue-gray,
     slider-button-icon: $white,
     slider-pagination: $gray-dark
   ),
 
-  dark-green: (
-    bg: $dark-green,
+  blue: (
+    bg: $brand-blue,
     fg: $white,
     headings: $white,
     link: $white,
-    link-hover: $white,
+    link-hover: $cyan,
     slider-button-background: $white-alpha-1,
     slider-button-background-hover: $white,
-    slider-button-icon: $dark-green,
+    slider-button-icon: $brand-blue,
   ),
 
-  brand-green: (
-    bg: $brand-green,
+  blue-gray: (
+    bg: $blue-gray,
     fg: $white,
     headings: $white,
     link: $white,
     link-hover: $white,
     slider-button-background: $white-alpha-1,
     slider-button-background-hover: $white,
-    slider-button-icon: $brand-green,
+    slider-button-icon: $blue-gray,
   )
 
 );

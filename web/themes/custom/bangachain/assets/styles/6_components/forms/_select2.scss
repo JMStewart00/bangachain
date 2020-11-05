@@ -19,7 +19,7 @@
         right: rem(16);
 
         b {
-          border-color: $dark-green transparent transparent transparent;
+          border-color: $brand-blue transparent transparent transparent;
           border-width: rem(6) rem(5) 0 rem(5);
         }
       }
@@ -41,7 +41,7 @@
         position: absolute;
         right: 16px;
         top: 42%;
-        border-color: $dark-green transparent transparent transparent;
+        border-color: $brand-blue transparent transparent transparent;
         border-width: rem(6) rem(5) 0 rem(5);
         border-style: solid;
       }
@@ -54,14 +54,14 @@
     // Flip the triangle
     .select2-selection__arrow {
       b {
-        border-color: transparent transparent $dark-green transparent !important;
+        border-color: transparent transparent $brand-blue transparent !important;
         border-width: 0 rem(5) rem(6) rem(5) !important;
       }
     }
 
     // Multiple does not have an arrow by default - we add it with a pseduo element
     .select2-selection--multiple::after {
-      border-color: transparent transparent $dark-green transparent !important;
+      border-color: transparent transparent $brand-blue transparent !important;
       border-width: 0 rem(5) rem(6) rem(5) !important;
     }
 
@@ -87,13 +87,13 @@
 
         &--highlighted {
           background-color: $white !important;
-          color: $dark-green !important;
+          color: $brand-blue !important;
           font-weight: $fw-bold;
         }
 
         &[aria-selected='true'] {
           background-color: $gray-200 !important;
-          color: $dark-green !important;
+          color: $brand-blue !important;
           font-weight: $fw-bold;
         }
 
@@ -112,7 +112,7 @@
     }
 
     .select2-selection {
-      border-color: $dark-green !important;
+      border-color: $brand-blue !important;
     }
   }
 

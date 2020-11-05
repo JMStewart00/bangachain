@@ -3,10 +3,12 @@
  */
 
 // Brand colors
-$dark-green: #248232;
-$brand-green: #2ba84a;
-$orange: #F26D40;
-$gray-dark: #2d3a3a;
+$brand-blue: #3D5A80;
+$blue-gray: #98C1D9;
+$cyan: #E0FBFC;
+$gray-dark: #293241;
+$orange: #EE6C4D;
+
 
 // Supporting colors
 $white: #fcfffc;
@@ -17,8 +19,8 @@ $gray-light: #ddd;
 // Development colors
 // Font
 $body-color: $black;
-$link-color: $brand-green;
-$link-hover-color: darken($brand-green, 20%);
+$link-color: $blue-gray;
+$link-hover-color: darken($blue-gray, 40%);
 
 // Border
 $button-border: $gray-dark;

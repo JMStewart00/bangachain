@@ -62,6 +62,9 @@
   @if color-palette($bg-color, link) {
     a:not(.o-btn) {
       color: color-palette($bg-color, link);
+      @include hover-focus() {
+        text-decoration: none;
+      }
     }
   }
 

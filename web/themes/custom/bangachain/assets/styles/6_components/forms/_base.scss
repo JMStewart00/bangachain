@@ -131,7 +131,7 @@
     }
 
     &:checked + label {
-      color: $brand-green;
+      color: $blue-gray;
       font-weight: $fw-bold;
 
       &::after {
@@ -140,8 +140,8 @@
       }
 
       &::before {
-        background-color: $brand-green;
-        border: rem(2) solid $brand-green;
+        background-color: $blue-gray;
+        border: rem(2) solid $blue-gray;
       }
     }
   }
@@ -160,7 +160,7 @@
 
     svg {
       font-size: rem(25);
-      color: $brand-green;
+      color: $blue-gray;
       position: absolute;
       right: rem(50);
       top: rem(45);
@@ -216,11 +216,11 @@
 
     &:checked {
       + .c-form__radio--fake {
-        background-color: $dark-green;
+        background-color: $brand-blue;
       }
 
       ~ label {
-        color: $brand-green;
+        color: $blue-gray;
         font-weight: $fw-bold;
       }
     }
@@ -254,7 +254,7 @@
     @include hover-focus() {
       .o-btn {
         color: $white;
-        background-color: $brand-green;
+        background-color: $blue-gray;
       }
     }
 

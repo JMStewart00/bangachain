@@ -1,16 +1,10 @@
 .c-header {
   box-shadow: 0 rem(12) rem(24) rem(-24) $gray-dark;
-  border-top: 10px solid $gray-dark;
 
   &__row {
     align-items: center;
-    justify-content: center;
-    padding: rvr(1) 0;
-
-    @include media-breakpoint-up(lg) {
-      max-width: 75%;
-      margin: auto;
-    }
+    justify-content: space-between;
+    padding: rvr(0.5) rvr(1);
   }
 
   // Logo
@@ -22,7 +16,7 @@
     }
 
     img {
-      width: rem(90);
+      width: rem(60);
 
       @include media-breakpoint-down(xl) {
         display: block;
@@ -32,7 +26,12 @@
   }
 
   // Menu
-  &__menu-container {
+  &__main-menu {
+    flex: 2;
+    margin-left: rvr(0.5);
+  }
+
+  &__account-menu {
     display: flex;
     margin: auto;
 
@@ -44,18 +43,5 @@
       display: flex;
       align-items: center;
     }
-  }
-
-  // Search icon
-  &__search {
-    font-size: font-size(30);
-
-    .o-icon {
-      color: $brand-green;
-    }
-  }
-
-  .menu--account {
-    margin-right: spacer(2);
   }
 }

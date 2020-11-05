@@ -1,15 +1,22 @@
-.c-menu-main {
+.c-menu-main,
+.c-menu-account {
   &__item {
     display: inline-block;
     margin: 0 rem(16);
   }
 
   &__link {
+    @include animate-underline();
     display: block;
     line-height: 1;
+    padding: px(20) 0; // Fill min header height
 
     @include hover-focus() {
       text-decoration: none;
+    }
+
+    @include media-breakpoint-down(lg) {
+      padding-top: px(23);
     }
 
     // Overwrite animate-underline styles for active links

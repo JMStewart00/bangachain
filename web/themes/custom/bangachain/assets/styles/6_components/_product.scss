@@ -14,7 +14,7 @@
   &__glide,
   &__turn,
   &__fade {
-    border: 1px solid $brand-green;
+    border: 1px solid $blue-gray;
     border-radius: 30px;
     width: rem(50);
     height: rem(50);
@@ -30,7 +30,7 @@
     }
 
     &--small {
-      border: 1px solid $brand-green;
+      border: 1px solid $blue-gray;
       border-radius: 30px;
       width: rem(35);
       height: rem(35);

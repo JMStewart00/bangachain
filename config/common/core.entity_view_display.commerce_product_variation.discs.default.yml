@@ -43,7 +43,7 @@ content:
       currency_display: symbol
     third_party_settings: {  }
   price:
-    label: above
+    label: hidden
     type: commerce_price_default
     weight: 0
     region: content

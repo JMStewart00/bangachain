@@ -1,6 +1,10 @@
 <div class="cart--cart-offcanvas">
-  <div class="cart--cart-offcanvas__close d-flex justify-content-end">
-    <button class="button btn"><i class="fas fa-times-circle fa-2x"></i><span class="visually-hidden"> {{ 'Close cart'|t }}</span> </button>
+  <div class="cart--cart-offcanvas__close d-flex justify-content-center">
+    <picture>
+      <source srcset="{{ base_path ~ directory }}/assets/images/logo.png" media="(max-width: 639px)">
+      <source srcset="{{ base_path ~ directory }}/assets/images/logo.png" media="(min-width: 640px)">
+      <img src="{{ base_path ~ directory }}/assets/images/logo.png" alt="Bang-A-Chain logo">
+    </picture>
   </div>
 <% if (count > 0) { %>
   <div class="cart-block--offcanvas-contents">

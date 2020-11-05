@@ -41,21 +41,22 @@
       <div class="l-grid__sidebar l-sidebar">
 
         <div class="c-product__title u-vr__mb--1">
-          <h1 class="u-color__dark-green">{{ product.title }}</h1>
-          <h2 class="u-color__green">{{ product.field_brand }}</h2>
+          <h1 class="u-color__blue">{{ product.title }}</h1>
+          <h2 class="u-color__blue-gray">{{ product.field_brand }}</h2>
         </div>
 
         <div class="c-product__description u-vr__mb--1">
+          <div class="h3">{{ product.variation_price }}</div>
           {{- product.field_description -}}
         </div>
 
         <div class="c-product__flight-numbers u-vr__mb--1">
-          <h3>{{'Flight Numbers'|t}}</h3>
+          <h3 class="u-color__blue">{{'Flight Numbers'|t}}</h3>
           <ul class="o-list-inline">
-            <li class="c-product__speed o-list-inline__item">{{ product.field_speed }}</li>
-            <li class="c-product__glide o-list-inline__item">{{ product.field_glide }}</li>
-            <li class="c-product__turn o-list-inline__item">{{ product.field_turn }}</li>
-            <li class="c-product__fade o-list-inline__item">{{ product.field_fade }}</li>
+            <li class="c-product__speed o-list-inline__item u-color__blue">{{ product.field_speed }}</li>
+            <li class="c-product__glide o-list-inline__item u-color__blue">{{ product.field_glide }}</li>
+            <li class="c-product__turn o-list-inline__item u-color__blue">{{ product.field_turn }}</li>
+            <li class="c-product__fade o-list-inline__item u-color__blue">{{ product.field_fade }}</li>
           </ul>
         </div>
 

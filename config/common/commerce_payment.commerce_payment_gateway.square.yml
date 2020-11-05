@@ -1,0 +1,20 @@
+uuid: 9868a332-7b87-44c7-9fa4-e04dbd8556af
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_square
+id: square
+label: Square
+weight: null
+plugin: square
+configuration:
+  test_location_id: LW9FKTWWCFSVG
+  live_location_id: DR87B1ECEGK3M
+  display_label: Square
+  mode: test
+  payment_method_types:
+    - credit_card
+  collect_billing_information: true
+conditions: {  }
+conditionOperator: AND

@@ -1,0 +1,29 @@
+.c-checkout-form {
+  display: grid;
+  grid-template-areas:
+    'summary'
+    'main'
+    'footer';
+  grid-template-columns: minmax(300px, auto);
+
+  @include media-breakpoint-up(xl) {
+    grid-template-areas:
+      'main summary'
+      'footer footer';
+    grid-template-columns: 1fr minmax(300px, 40%);
+    column-gap: rvr(2);
+    row-gap: rvr(2);
+  }
+
+  &__main {
+    grid-area: main;
+  }
+
+  &__secondary {
+    grid-area: summary;
+  }
+
+  &__footer {
+    grid-area: footer;
+  }
+}

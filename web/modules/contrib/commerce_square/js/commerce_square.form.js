@@ -21,7 +21,7 @@
   Drupal.behaviors.commerceSquareForm = {
     attach: function (context) {
       var settings = drupalSettings.commerceSquare;
-      if (context === document) {
+      if ((context === document) || $('.square-form').length > 0) {
         var script = document.createElement('script');
         var scriptHostname = settings.apiMode === 'sandbox' ? 'squareupsandbox' : 'squareup';
         script.src = 'https://js.' + scriptHostname + '.com/v2/paymentform';
@@ -170,11 +170,12 @@
       event.preventDefault();
 
       // Grab postal code.
-      if (typeof drupalSettings.commerceSquare.customerPostalCode !== 'undefined') {
-        paymentForm.setPostalCode(drupalSettings.commerceSquare.customerPostalCode);
+      var code = $squareForm.find('input.postal-code').val();
+      if (drupalSettings.commerceSquare.customerPostalCode == null) {
+        paymentForm.setPostalCode(code);
       }
       else {
-        paymentForm.setPostalCode($parentDrupalSelector.parent().find('input.postal-code').val());
+        paymentForm.setPostalCode(drupalSettings.commerceSquare.customerPostalCode);
       }
 
       paymentForm.requestCardNonce();

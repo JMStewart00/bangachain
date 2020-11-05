@@ -26,6 +26,16 @@ $rhythm-intervals: (
       padding-top: rvr($key);
     }
 
+    &__px--#{$key} {
+      padding-right: rvr($key);
+      padding-left: rvr($key);
+    }
+
+    &__mx--#{$key} {
+      margin-right: rvr($key);
+      margin-left: rvr($key);
+    }
+
     &__mt--#{$key} {
       margin-top: rvr($key);
     }

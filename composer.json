@@ -204,6 +204,10 @@
             },
             "drupal/commerce_smart_importer": {
                 "Blank URL parameter import_name after uploading csv": "https://www.drupal.org/files/issues/2020-04-29/3115808.patch"
+            },
+            "drupal/commerce_square": {
+                "Zip Code not valid": "https://www.drupal.org/files/issues/2020-03-30/3123602-2.patch",
+                "Missing Input Fields": "https://www.drupal.org/files/issues/2019-11-08/3093086-1.patch"
             }
         },
         "enable-patching": true,

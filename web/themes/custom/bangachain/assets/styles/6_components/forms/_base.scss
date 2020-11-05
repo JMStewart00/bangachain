@@ -76,11 +76,8 @@
     text-align: left !important; // Prevent number fields from being right aligned
     height: rem(48);
     max-width: 100%;
+    min-width: 0;
     padding: spacer(0.5) spacer(1);
-
-    @include media-breakpoint-up(sm) {
-      max-width: none;
-    }
 
     &--has-addon {
       border-radius: $border-radius 0 0 $border-radius;
@@ -118,7 +115,7 @@
         position: absolute;
         left: rem(7);
         top: rem(8);
-        color: $white;
+        color: $cyan;
         font-family: 'Lucida Sans Unicode', 'Arial Unicode MS', Arial;
         line-height: 0.8;
         transition: all 0.2s;
@@ -131,7 +128,7 @@
     }
 
     &:checked + label {
-      color: $blue-gray;
+      color: $brand-blue;
       font-weight: $fw-bold;
 
       &::after {
@@ -140,8 +137,8 @@
       }
 
       &::before {
-        background-color: $blue-gray;
-        border: rem(2) solid $blue-gray;
+        background-color: $brand-blue;
+        border: rem(2) solid $cyan;
       }
     }
   }
@@ -278,5 +275,12 @@
     ~ input[name=file_upload_remove_button] {
       margin-left: 0;
     }
+  }
+}
+.address-container-inline > .form-item {
+  @include media-breakpoint-down(md) {
+    margin-right: 0;
+    display: flex;
+    flex-direction: column;
   }
 }

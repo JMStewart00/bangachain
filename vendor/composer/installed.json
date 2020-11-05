@@ -3998,6 +3998,10 @@
                     "status": "covered",
                     "message": "Covered by Drupal's security advisory policy"
                 }
+            },
+            "patches_applied": {
+                "Zip Code not valid": "https://www.drupal.org/files/issues/2020-03-30/3123602-2.patch",
+                "Missing Input Fields": "https://www.drupal.org/files/issues/2019-11-08/3093086-1.patch"
             }
         },
         "installation-source": "dist",

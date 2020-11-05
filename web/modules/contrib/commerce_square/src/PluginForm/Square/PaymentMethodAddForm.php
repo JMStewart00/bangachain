@@ -26,7 +26,8 @@ class PaymentMethodAddForm extends BasePaymentMethodAddForm {
       if (!$billing_profile->get('address')->isEmpty()) {
         $address = $billing_profile->get('address')->first();
         assert($address instanceof AddressItem);
-        $form['#attached']['drupalSettings']['commerceSquare']['customerPostalCode'] = $address->getPostalCode();
+        $postalCode = ($address->getPostalCode()) ? $address->getPostalCode() : null;
+        $form['#attached']['drupalSettings']['commerceSquare']['customerPostalCode'] = $postalCode;
       }
     }
     return $form;

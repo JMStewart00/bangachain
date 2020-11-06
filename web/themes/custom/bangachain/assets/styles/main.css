@@ -6933,7 +6933,7 @@ a.text-dark:hover, a.text-dark:focus {
 
 .t-layout-background--blue-gray {
   background-color: #98C1D9;
-  color: #fcfffc; }
+  color: #24364c; }
 
 .t-layout-background--blue-gray h1,
 .t-layout-background--blue-gray .h1,
@@ -6941,10 +6941,10 @@ a.text-dark:hover, a.text-dark:focus {
 .t-layout-background--blue-gray .h2,
 .t-layout-background--blue-gray h3,
 .t-layout-background--blue-gray .h3 {
-  color: #fcfffc; }
+  color: #24364c; }
 
 .t-layout-background--blue-gray a:not(.o-btn) {
-  color: #fcfffc; }
+  color: #EE6C4D; }
 
 .t-layout-background--blue-gray a:not(.o-btn):hover, .t-layout-background--blue-gray a:not(.o-btn):focus {
   text-decoration: none; }
@@ -6959,7 +6959,7 @@ a.text-dark:hover, a.text-dark:focus {
   color: #98C1D9; }
 
 .t-layout-background--blue-gray a:not(.o-btn):hover, .t-layout-background--blue-gray a:not(.o-btn):focus, .t-layout-background--blue-gray a:not(.o-btn):active {
-  color: #fcfffc; }
+  color: #c23413; }
 
 .t-background--none {
   background-color: transparent;
@@ -7118,7 +7118,7 @@ a.text-dark:hover, a.text-dark:focus {
 
 .t-background--blue-gray {
   background-color: #98C1D9;
-  color: #fcfffc; }
+  color: #24364c; }
 
 .t-background--blue-gray h1,
 .t-background--blue-gray .h1,
@@ -7126,10 +7126,10 @@ a.text-dark:hover, a.text-dark:focus {
 .t-background--blue-gray .h2,
 .t-background--blue-gray h3,
 .t-background--blue-gray .h3 {
-  color: #fcfffc; }
+  color: #24364c; }
 
 .t-background--blue-gray a:not(.o-btn) {
-  color: #fcfffc; }
+  color: #EE6C4D; }
 
 .t-background--blue-gray a:not(.o-btn):hover, .t-background--blue-gray a:not(.o-btn):focus {
   text-decoration: none; }
@@ -7144,7 +7144,7 @@ a.text-dark:hover, a.text-dark:focus {
   color: #98C1D9; }
 
 .t-background--blue-gray a:not(.o-btn):hover, .t-background--blue-gray a:not(.o-btn):focus, .t-background--blue-gray a:not(.o-btn):active {
-  color: #fcfffc; }
+  color: #c23413; }
 
 /*
   Elements - HTML Element styling.
@@ -7247,8 +7247,14 @@ body.no-scroll {
   margin-left: auto;
   max-width: 1440px; }
 
-.l-container--fluid {
-  max-width: none; }
+.l-row {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px; }
 
 .l-row--no-columns {
   display: -webkit-box;
@@ -7682,15 +7688,14 @@ body.no-scroll {
   display: none; }
 
 .o-btn--square {
-  border: 1px solid #dee2e6;
   border-radius: 0;
   margin: 0 0.125rem 0.125rem;
-  max-width: 150px;
+  max-width: 250px;
   text-transform: uppercase;
   text-align: center; }
 
 .o-btn--square:hover, .o-btn--square:focus {
-  background-color: #98C1D9; }
+  background-color: #3D5A80; }
 
 .o-btn--square:hover a, .o-btn--square:focus a {
   color: #fcfffc !important;
@@ -7910,6 +7915,93 @@ table td {
 
 table td.is-active {
   background-color: inherit; }
+
+/* forms components subfolder */
+.c-inline-blockcolumns-module .c-block__content {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center; }
+
+.c-inline-blockcolumns-module .c-field-unlimited-pg-reference {
+  width: calc(25% - 2rem);
+  margin: 1rem; }
+
+/* The hero image */
+.c-hero-image {
+  /* Set a specific height */
+  height: 50vh;
+  /* Position and center the image to scale nicely on all screens */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  /* Place text in the middle of the image */ }
+
+.c-hero-image__content {
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  color: white; }
+
+.c-hero-image__heading {
+  font-size: 3rem; }
+
+.c-image-and-text {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  max-width: 550px; }
+
+@media (min-width: 992px) {
+  .c-image-and-text {
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    max-width: none; } }
+
+.c-image-and-text--right {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column; }
+
+@media (min-width: 992px) {
+  .c-image-and-text--right {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row; } }
+
+.c-image-and-text--left {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column; }
+
+@media (min-width: 992px) {
+  .c-image-and-text--left {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: reverse;
+    -ms-flex-direction: row-reverse;
+    flex-direction: row-reverse; } }
+
+.c-image-and-text__text {
+  -ms-flex-item-align: center;
+  align-self: center; }
+
+.c-image-and-text__image {
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto; }
 
 /* forms components subfolder */
 .c-form .form-checkboxes .form-item {
@@ -8603,6 +8695,38 @@ table td.is-active {
 
 .c-secondary-menu .o-menu__item {
   margin: 0 1rem; }
+
+/* Paragraphs components subfolder */
+.c-column-item .c-field-media-image {
+  margin: 0 auto; }
+
+.c-column-item__header {
+  color: #3D5A80;
+  margin: calc(var(--lh__base) * 1 * var(--rvr-multiplier)) 0 calc(var(--lh__base) * 0.5 * var(--rvr-multiplier));
+  font-weight: 900;
+  font-size: 2.5rem; }
+
+.c-column-item .c-link {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  margin-top: calc(var(--lh__base) * 1 * var(--rvr-multiplier)); }
+
+.c-column-item footer {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center; }
+
+.c-column-item footer .c-field-link:hover svg, .c-column-item footer .c-field-link:focus svg {
+  color: #c23413; }
+
+.c-column-item footer svg {
+  margin-left: 0.5rem; }
 
 /* views components subfolder */
 .c-view-commerce-cart-form {

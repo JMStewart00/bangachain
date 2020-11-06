@@ -1,0 +1,24 @@
+uuid: 0028bf25-4cbd-4f35-b523-6249d10c5267
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.columns_module
+    - field.field.block_content.columns_module.field_unlimited_pg_reference
+  module:
+    - entity_reference_revisions
+id: block_content.columns_module.default
+targetEntityType: block_content
+bundle: columns_module
+mode: default
+content:
+  field_unlimited_pg_reference:
+    type: entity_reference_revisions_entity_view
+    weight: 0
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+hidden: {  }

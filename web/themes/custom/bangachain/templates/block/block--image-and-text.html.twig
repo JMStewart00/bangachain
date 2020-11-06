@@ -1,0 +1,32 @@
+{% extends "block--layout-builder.html.twig" %}
+
+{% block content %}
+
+  {# Set order of display #}
+  {% set ordering = content.field_image_position.value == 'right' ? 'c-image-and-text--right' : 'c-image-and-text--left' %}
+
+  {%
+    set classes = [
+      'l-row--no-columns',
+      'c-image-and-text',
+      ordering,
+    ]
+  %}
+
+  <div{{ attributes.addClass(classes) }}>
+    <div class="c-image-and-text__image">
+      <picture>
+        {{ content.field_image }}
+      </picture>
+    </div>
+    <div class="l-box--md c-image-and-text__text">
+      {% if content.field_heading|render %}
+        <h3 class="h2 c-image-and-text__heading u-color__blue u-vr__mb--2">
+          {{ content.field_heading }}
+        </h3>
+      {% endif %}
+      {{ content.body }}
+    </div>
+  </div>
+
+{% endblock %}

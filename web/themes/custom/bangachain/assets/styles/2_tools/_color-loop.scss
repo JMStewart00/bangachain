@@ -81,10 +81,10 @@ $background-color-map: (
 
   blue-gray: (
     bg: $blue-gray,
-    fg: $white,
-    headings: $white,
-    link: $white,
-    link-hover: $white,
+    fg: darken($brand-blue, 15%),
+    headings: darken($brand-blue, 15%),
+    link: $orange,
+    link-hover: $link-hover-color,
     slider-button-background: $white-alpha-1,
     slider-button-background-hover: $white,
     slider-button-icon: $blue-gray,

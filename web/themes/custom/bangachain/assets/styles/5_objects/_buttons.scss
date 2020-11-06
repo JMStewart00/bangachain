@@ -86,15 +86,14 @@
   }
 
   &--square {
-    border: 1px solid $border-color;
     border-radius: 0;
     margin: 0 rem(2) rem(2);
-    max-width: 150px;
+    max-width: 250px;
     text-transform: uppercase;
     text-align: center;
 
     @include hover-focus() {
-      background-color: $blue-gray;
+      background-color: $brand-blue;
 
       a {
         color: $white !important;

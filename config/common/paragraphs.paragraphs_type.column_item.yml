@@ -1,0 +1,10 @@
+uuid: ffdc2557-d2dd-4c6c-ab97-e935223b66f2
+langcode: en
+status: true
+dependencies: {  }
+id: column_item
+label: 'Column Item'
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }

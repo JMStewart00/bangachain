@@ -18,10 +18,10 @@ use Drupal\recurring_events\Entity\EventSeries;
 function bangachain_bangachain_layout_background_colors(): array {
   return [
     'none' => t('None'),
-    'white' => t('White'),
-    'teal' => t('Teal'),
-    'brand-blue' => t('Lifespan Blue'),
-    'gray-light' => t('Light Gray')
+    'blue' => t('Blue'),
+    'blue-gray' => t('Blue Gray'),
+    'cyan' => t('Cyan Blue'),
+    'gray-light' => t('Light Gray'),
   ];
 }
 

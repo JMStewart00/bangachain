@@ -1,0 +1,35 @@
+.c-image-and-text {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 550px; // don't exceed width of photo on smaller screens
+
+  @include media-breakpoint-up(lg) {
+    flex-wrap: nowrap;
+    max-width: none;
+  }
+
+  &--right {
+    flex-direction: column;
+
+    @include media-breakpoint-up(lg) {
+      flex-direction: row;
+    }
+  }
+
+  &--left {
+    flex-direction: column;
+
+    @include media-breakpoint-up(lg) {
+      flex-direction: row-reverse;
+    }
+  }
+
+  &__text {
+    align-self: center;
+  }
+
+  &__image {
+    flex: 0 0 auto;
+  }
+
+}

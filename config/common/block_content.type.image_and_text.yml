@@ -1,0 +1,8 @@
+uuid: 27bcb89b-a5c5-4f9c-b73f-e0d6d18e1460
+langcode: en
+status: true
+dependencies: {  }
+id: image_and_text
+label: 'Image and Text'
+revision: 0
+description: ''

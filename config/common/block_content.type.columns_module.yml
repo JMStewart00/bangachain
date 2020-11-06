@@ -1,0 +1,8 @@
+uuid: 82b6bed5-b571-404c-9266-9afaa3c3d2ce
+langcode: en
+status: true
+dependencies: {  }
+id: columns_module
+label: 'Columns Module'
+revision: 0
+description: ''

@@ -1,0 +1,10 @@
+uuid: b2490efc-cb7b-4c60-95b0-b821aab431a0
+langcode: en
+status: true
+dependencies:
+  module:
+    - media
+id: media.square
+label: Square
+targetEntityType: media
+cache: true

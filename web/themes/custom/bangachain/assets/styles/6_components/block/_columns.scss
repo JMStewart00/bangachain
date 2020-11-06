@@ -1,0 +1,12 @@
+.c-inline-blockcolumns-module {
+  .c-block__content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .c-field-unlimited-pg-reference {
+    width: calc(25% - 2rem);
+    margin: rem(16);
+  }
+}

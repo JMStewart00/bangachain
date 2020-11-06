@@ -7,14 +7,10 @@
 .l-container {
   @include make-container();
   max-width: 1440px;
-
-  &--fluid {
-    max-width: none;
-  }
 }
 
 .l-row {
-  // @include make-row();
+  @include make-row();
 
   // Removes bootrap left/right negative margin
   &--no-columns {

@@ -1,0 +1,35 @@
+.c-column-item {
+  .c-field-media-image {
+    margin: 0 auto;
+  }
+
+  &__header {
+    color: $brand-blue;
+    margin: rvr(1) 0 rvr(0.5);
+    font-weight: 900;
+    font-size: rem(40);
+  }
+
+  .c-link {
+    align-items: center;
+    margin-top: rvr(1);
+  }
+
+  footer {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+
+    .c-field-link {
+      @include hover-focus() {
+        svg {
+          color: $link-hover-color;
+        }
+      }
+    }
+
+    svg {
+      margin-left: rem(8);
+    }
+  }
+}

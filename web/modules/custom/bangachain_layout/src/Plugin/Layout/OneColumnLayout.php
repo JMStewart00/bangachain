@@ -143,8 +143,8 @@ final class OneColumnLayout extends LayoutDefault implements PluginFormInterface
    */
   protected function getColumnWidths(): array {
     return [
-      BangAChainLayout::ROW_WIDTH_50 => $this->t('50%'),
-      BangAChainLayout::ROW_WIDTH_75 => $this->t('75%'),
+      // BangAChainLayout::ROW_WIDTH_50 => $this->t('50%'),
+      // BangAChainLayout::ROW_WIDTH_75 => $this->t('75%'),
       BangAChainLayout::ROW_WIDTH_100 => $this->t('100%'),
     ];
   }

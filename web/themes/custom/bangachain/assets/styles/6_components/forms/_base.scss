@@ -1,4 +1,11 @@
 .c-form {
+  .form-checkboxes {
+    .form-item {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+
   &--news-events {
     flex-basis: 100%;
     align-self: center;

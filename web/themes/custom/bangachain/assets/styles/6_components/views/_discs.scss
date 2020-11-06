@@ -4,20 +4,22 @@
     color: inherit;
     @include hover-focus() {
       text-decoration: none;
+      transform: scale(1.05);
+      box-shadow: 0 rem(12) rem(40) rem(-16) $gray-dark;
     }
   }
 
   &--all_discs_page {
     display: grid;
-    grid-template-columns: repeat(1, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     grid-gap: 24px;
 
     @include media-breakpoint-up(md) {
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(3, 1fr);
     }
 
     @include media-breakpoint-up(lg) {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
     }
   }
 }

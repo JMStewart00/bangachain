@@ -14,8 +14,9 @@
   &__glide,
   &__turn,
   &__fade {
-    border: 1px solid $blue-gray;
+    border: 1px solid $orange;
     border-radius: 30px;
+    color: $brand-blue;
     width: rem(50);
     height: rem(50);
     margin: rem(10);
@@ -30,8 +31,9 @@
     }
 
     &--small {
-      border: 1px solid $blue-gray;
+      border: 1px solid $orange;
       border-radius: 30px;
+      color: $brand-blue;
       width: rem(35);
       height: rem(35);
       margin: rem(2);
@@ -44,6 +46,8 @@
   }
 
   &__image {
+    padding: 1rem;
+
     .field--name-field-media-image {
       margin: auto;
     }

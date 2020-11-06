@@ -146,6 +146,7 @@ class CommerceSmartImporerService extends ControllerBase {
         }
         break;
 
+      case 'commerce_stock_level':
       case 'integer':
         try {
           $create = $this->createInteger($product, $field['field_settings']);

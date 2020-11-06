@@ -28,12 +28,16 @@
 
 <article{{attributes.addClass(classes)}}>
   <div class="l-container">
-    <div class="l-grid l-grid--sidebar-right u-vr__mt--2">
+    <div class="l-grid l-grid--sidebar-right u-vr__mt--2 u-vr__mb--4">
 
       <div class="l-grid__main l-main">
 
         <div class="c-product__image u-vr__mb--1">
-          {{ product.field_default_image }}
+          {% if product.field_default_image|render %}
+            {{ product.field_default_image }}
+          {% else %}
+            <img src="/{{ base_path ~ directory }}/assets/images/placeholder.jpg" alt="Default Disc Photo">
+          {% endif %}
         </div>
 
       </div>

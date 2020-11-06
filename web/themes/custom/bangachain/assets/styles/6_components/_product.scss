@@ -14,17 +14,23 @@
   &__glide,
   &__turn,
   &__fade {
-    border: 1px solid $orange;
-    border-radius: 30px;
-    color: $brand-blue;
-    width: rem(50);
-    height: rem(50);
-    margin: rem(10);
-    padding: rem(8);
-    line-height: rem(35);
-    text-align: center;
-    font-size: rem(16);
-    font-weight: 700;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    span:nth-child(2) {
+      border: 1px solid $orange;
+      border-radius: 30px;
+      color: $brand-blue;
+      width: rem(50);
+      height: rem(50);
+      margin: rem(10) rem(6);
+      padding: rem(8);
+      line-height: rem(35);
+      text-align: center;
+      font-size: rem(16);
+      font-weight: 700;
+    }
 
     span {
       display: block;

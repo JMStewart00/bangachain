@@ -56,11 +56,23 @@
 
         <div class="c-product__flight-numbers u-vr__mb--1">
           <h3 class="u-color__blue">{{'Flight Numbers'|t}}</h3>
-          <ul class="o-list-inline">
-            <li class="c-product__speed o-list-inline__item u-color__blue">{{ product.field_speed }}</li>
-            <li class="c-product__glide o-list-inline__item u-color__blue">{{ product.field_glide }}</li>
-            <li class="c-product__turn o-list-inline__item u-color__blue">{{ product.field_turn }}</li>
-            <li class="c-product__fade o-list-inline__item u-color__blue">{{ product.field_fade }}</li>
+          <ul class="o-list-inline d-flex justify-content-start">
+            <li class="c-product__speed o-list-inline__item u-color__blue" title="Speed">
+              <span>Speed</span>
+              <span>{{ product.field_speed }}</span>
+            </li>
+            <li class="c-product__glide o-list-inline__item u-color__blue" title="Glide">
+              <span>Glide</span>
+              <span>{{ product.field_glide }}</span>
+            </li>
+            <li class="c-product__turn o-list-inline__item u-color__blue" title="Turn">
+              <span>Turn</span>
+              <span>{{ product.field_turn }}</span>
+            </li>
+            <li class="c-product__fade o-list-inline__item u-color__blue" title="Fade">
+              <span>Fade</span>
+              <span>{{ product.field_fade }}</span>
+            </li>
           </ul>
         </div>
 

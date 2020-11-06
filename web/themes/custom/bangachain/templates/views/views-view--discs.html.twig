@@ -39,6 +39,8 @@
   ]
 %}
 
+{{ attach_library('bangachain/view-filters-toggle') }}
+
 <div{{attributes.addClass('l-container')}}>
   {{ title_prefix }}
   {% if title %}
@@ -71,6 +73,9 @@
 
     <div class="l-grid__sidebar l-sidebar">
       {% if exposed %}
+        <div class="c-view-filters__toggle u-vr__mb--1 text-center">
+          <button class="o-btn o-btn--secondary"><i class="fas fa-filter o-icon--cyan fa-1x"></i> FILTERS</button>
+        </div>
         <div class="c-view-filters">
           {{ exposed }}
         </div>

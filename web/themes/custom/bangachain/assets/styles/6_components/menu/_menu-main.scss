@@ -1,8 +1,17 @@
 .c-menu-main,
 .c-menu-account {
+  @include media-breakpoint-down(lg) {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+
   &__item {
     display: inline-block;
     margin: 0 rem(16);
+
   }
 
   &__link {

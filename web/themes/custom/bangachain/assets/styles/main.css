@@ -8524,6 +8524,25 @@ table td.is-active {
   -ms-flex-align: center;
   align-items: center; }
 
+@media (max-width: 1199.98px) {
+  .c-menu-main,
+  .c-menu-account {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    -webkit-box-pack: space-evenly;
+    -ms-flex-pack: space-evenly;
+    justify-content: space-evenly;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center; } }
+
 .c-menu-main__item,
 .c-menu-account__item {
   display: inline-block;
@@ -8601,36 +8620,46 @@ table td.is-active {
 
 .c-view-discs--all_discs_page {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(1, 1fr);
   grid-gap: 24px; }
 
 @media (min-width: 768px) {
   .c-view-discs--all_discs_page {
-    grid-template-columns: repeat(3, 1fr); } }
+    grid-template-columns: repeat(2, 1fr); } }
 
 @media (min-width: 992px) {
   .c-view-discs--all_discs_page {
     grid-template-columns: repeat(4, 1fr); } }
 
+.c-view-filters {
+  -webkit-transition: 1s;
+  transition: 1s;
+  overflow: hidden;
+  height: 0; }
+
+.c-view-filters.open {
+  height: 100%; }
+
+@media (min-width: 992px) {
+  .c-view-filters {
+    height: auto; } }
+
+@media (min-width: 992px) {
+  .c-view-filters__toggle {
+    display: none; } }
+
 .c-view-filters .form--inline {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
+  -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
-  -ms-flex-direction: row;
-  flex-direction: row;
+  -ms-flex-direction: column;
+  flex-direction: column;
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
   width: 100%; }
-
-@media (min-width: 992px) {
-  .c-view-filters .form--inline {
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
-    flex-direction: column; } }
 
 .c-view-discs--links_bar {
   display: -webkit-box;

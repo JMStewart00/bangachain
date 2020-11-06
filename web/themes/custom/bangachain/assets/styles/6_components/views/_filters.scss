@@ -1,12 +1,25 @@
 .c-view-filters {
+  transition: 1s;
+  overflow: hidden;
+  height: 0;
+
+  &.open {
+    height: 100%;
+  }
+
+  @include media-breakpoint-up(lg) {
+    height: auto;
+  }
+
+  &__toggle {
+    @include media-breakpoint-up(lg) {
+      display: none;
+    }
+  }
   .form--inline {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
     width: 100%;
-
-    @include media-breakpoint-up(lg) {
-      flex-direction: column;
-    }
   }
 }

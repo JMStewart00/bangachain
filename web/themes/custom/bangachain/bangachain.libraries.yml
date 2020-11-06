@@ -38,3 +38,11 @@ bootstrap-tab:
     /libraries/bootstrap/js/dist/tab.js: {}
   dependencies:
     - bangachain/bootstrap-js
+
+view-filters-toggle:
+  version: 1.0
+  js:
+    assets/js/view-filters-toggle.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery

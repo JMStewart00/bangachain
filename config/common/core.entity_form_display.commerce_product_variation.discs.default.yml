@@ -7,6 +7,7 @@ dependencies:
     - field.field.commerce_product_variation.discs.attribute_disc_color
     - field.field.commerce_product_variation.discs.attribute_disc_plastic
     - field.field.commerce_product_variation.discs.attribute_disc_weight
+    - field.field.commerce_product_variation.discs.feeds_item
     - field.field.commerce_product_variation.discs.field_product_image
     - field.field.commerce_product_variation.discs.field_stock
     - field.field.commerce_product_variation.discs.weight
@@ -92,10 +93,11 @@ content:
     type: physical_measurement_default
     weight: 10
     settings:
-      default_unit: lb
+      default_unit: g
       allow_unit_change: false
     third_party_settings: {  }
     region: content
 hidden:
   created: true
+  feeds_item: true
   uid: true

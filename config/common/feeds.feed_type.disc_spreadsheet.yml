@@ -3,14 +3,8 @@ langcode: en
 status: true
 dependencies:
   config:
-    - commerce_product.commerce_product_type.discs
-    - field.field.commerce_product.discs.field_brand
-    - field.field.commerce_product.discs.field_disc_category
-    - field.field.commerce_product.discs.field_fade
-    - field.field.commerce_product.discs.field_glide
-    - field.field.commerce_product.discs.field_speed
-    - field.field.commerce_product.discs.field_stability_category
-    - field.field.commerce_product.discs.field_turn
+    - commerce_product.commerce_product_variation_type.discs
+    - field.field.commerce_product_variation.discs.weight
   module:
     - commerce_feeds
     - commerce_product
@@ -28,14 +22,14 @@ parser_configuration:
   delimiter: ','
   no_headers: false
   line_limit: 100
-processor: 'entity:commerce_product'
+processor: 'entity:commerce_product_variation'
 processor_configuration:
   langcode: en
   update_existing: 2
   update_non_existent: _keep
   expire: -1
   owner_feed_author: false
-  owner_id: 0
+  owner_id: 1
   authorize: true
   skip_hash_check: false
   values:
@@ -81,77 +75,25 @@ custom_sources:
     label: Variations
     value: Variations
     machine_name: variations
+  weight:
+    label: Weight
+    value: Weight
+    machine_name: weight
+  sku:
+    label: SKU
+    value: SKU
+    machine_name: sku
 mappings:
   -
-    target: field_brand
+    target: weight
     map:
-      target_id: brand
+      number: weight
     settings:
-      language: ''
-      reference_by: name
-      autocreate: '1'
+      unit: g
   -
-    target: field_turn
+    target: sku
     map:
-      value: turn
-    unique: {  }
-    settings:
-      language: null
-  -
-    target: title
-    map:
-      value: title
-    unique: {  }
-    settings:
-      language: null
-  -
-    target: field_disc_category
-    map:
-      target_id: disc_type
-    settings:
-      language: ''
-      reference_by: name
-      autocreate: '1'
-  -
-    target: field_speed
-    map:
-      value: speed
-    unique: {  }
-    settings:
-      language: null
-  -
-    target: field_glide
-    map:
-      value: glide
-    unique: {  }
-    settings:
-      language: null
-  -
-    target: field_fade
-    map:
-      value: fade
-    unique: {  }
-    settings:
-      language: null
-  -
-    target: field_stability_category
-    map:
-      target_id: stability_category
-    settings:
-      language: ''
-      reference_by: name
-      autocreate: '1'
-  -
-    target: stores
-    map:
-      target_id: stores
-    settings:
-      reference_by: store_id
-      autocreate: 0
-  -
-    target: variations
-    map:
-      target_id: variations
-    settings:
-      reference_by: variation_id
-      autocreate: 0
+      value: sku
+    unique:
+      value: '1'
+    settings: {  }

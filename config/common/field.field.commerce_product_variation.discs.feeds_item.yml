@@ -1,0 +1,23 @@
+uuid: 72affa68-d9fa-443e-a1a2-3aa3edcb8e83
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_variation_type.discs
+    - field.storage.commerce_product_variation.feeds_item
+  module:
+    - feeds
+id: commerce_product_variation.discs.feeds_item
+field_name: feeds_item
+entity_type: commerce_product_variation
+bundle: discs
+label: 'Feeds item'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:feeds_feed'
+  handler_settings: {  }
+field_type: feeds_item

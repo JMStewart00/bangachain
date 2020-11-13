@@ -8,10 +8,11 @@
 
   &__label {
     font-weight: $fw-semi-bold;
+    display: block;
   }
 
   .form-select {
-    width: 50%;
+    width: 70%;
     height: 50px;
     font-size: 100%;
     font-weight: bold;

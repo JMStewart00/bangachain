@@ -7879,6 +7879,10 @@ body.no-scroll {
 .c-product--teaser {
   border: 1px solid #999; }
 
+.c-product__description {
+  padding-top: calc(var(--lh__base) * 2 * var(--rvr-multiplier));
+  border-top: 3px solid #98C1D9; }
+
 .c-product__speed, .c-product__glide, .c-product__turn, .c-product__fade {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -8036,10 +8040,11 @@ table td.is-active {
   margin-bottom: 0; }
 
 .c-form__label {
-  font-weight: 500; }
+  font-weight: 500;
+  display: block; }
 
 .c-form .form-select {
-  width: 50%;
+  width: 70%;
   height: 50px;
   font-size: 100%;
   font-weight: bold;

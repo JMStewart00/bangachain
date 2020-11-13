@@ -10,6 +10,11 @@
     border: 1px solid $gray-medium;
   }
 
+  &__description {
+    padding-top: rvr(2);
+    border-top: 3px solid $blue-gray;
+  }
+
   &__speed,
   &__glide,
   &__turn,

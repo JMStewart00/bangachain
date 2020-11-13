@@ -6,6 +6,10 @@
     }
   }
 
+  &__label {
+    font-weight: $fw-semi-bold;
+  }
+
   .form-select {
     width: 50%;
     height: 50px;
@@ -81,16 +85,23 @@
     }
   }
 
-  label,
-  .fieldset-legend {
-    display: block;
-    font-size: rem(15);
-    font-weight: $fw-medium;
-    margin-bottom: rem(8);
+  .form-wrapper {
+    margin-bottom: rvr(1);
   }
 
-  .fieldset-legend {
-    font-weight: $fw-bold !important;
+  legend .fieldset-legend {
+    font-size: rem(24) !important;
+    font-weight: $fw-bold;
+  }
+
+  .fieldset-wrapper {
+    label,
+    .fieldset-legend {
+      display: block;
+      font-size: rem(15);
+      margin-bottom: rem(8);
+      font-weight: $fw-medium;
+    }
   }
 
   textarea {

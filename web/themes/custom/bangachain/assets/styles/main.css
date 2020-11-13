@@ -8035,6 +8035,9 @@ table td.is-active {
   margin-top: 0;
   margin-bottom: 0; }
 
+.c-form__label {
+  font-weight: 500; }
+
 .c-form .form-select {
   width: 50%;
   height: 50px;
@@ -8114,15 +8117,19 @@ table td.is-active {
     width: 75%;
     margin-left: auto; } }
 
-.c-form label,
-.c-form .fieldset-legend {
+.c-form .form-wrapper {
+  margin-bottom: calc(var(--lh__base) * 1 * var(--rvr-multiplier)); }
+
+.c-form legend .fieldset-legend {
+  font-size: 1.5rem !important;
+  font-weight: 700; }
+
+.c-form .fieldset-wrapper label,
+.c-form .fieldset-wrapper .fieldset-legend {
   display: block;
   font-size: 0.9375rem;
-  font-weight: 400;
-  margin-bottom: 0.5rem; }
-
-.c-form .fieldset-legend {
-  font-weight: 700 !important; }
+  margin-bottom: 0.5rem;
+  font-weight: 400; }
 
 .c-form textarea {
   border: 1px solid #293241;

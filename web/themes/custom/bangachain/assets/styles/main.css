@@ -8123,6 +8123,7 @@ table td.is-active {
     margin-left: auto; } }
 
 .c-form .form-wrapper {
+  margin-top: 0;
   margin-bottom: calc(var(--lh__base) * 1 * var(--rvr-multiplier)); }
 
 .c-form legend .fieldset-legend {

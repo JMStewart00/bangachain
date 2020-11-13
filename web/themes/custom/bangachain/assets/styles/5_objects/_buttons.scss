@@ -119,6 +119,18 @@
       text-decoration: none;
     }
   }
+
+  &.is-disabled {
+    background-color: $gray-light;
+    color: $gray-medium;
+    cursor: not-allowed;
+    pointer-events: all !important;
+
+    @include hover-focus() {
+      background-color: $gray-light;
+      color: $gray-medium;
+    }
+  }
 }
 
 .button {

@@ -7716,6 +7716,16 @@ body.no-scroll {
   color: #fcfffc !important;
   text-decoration: none; }
 
+.o-btn.is-disabled {
+  background-color: #ddd;
+  color: #999;
+  cursor: not-allowed;
+  pointer-events: all !important; }
+
+.o-btn.is-disabled:hover, .o-btn.is-disabled:focus {
+  background-color: #ddd;
+  color: #999; }
+
 .button {
   margin: 0; }
 
@@ -7839,7 +7849,12 @@ body.no-scroll {
 .c-pagination__link {
   display: block;
   font-weight: 400;
-  padding: 0.33rem 0.5rem; }
+  padding: 0.33rem 0.5rem;
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out; }
+
+.c-pagination__link:hover, .c-pagination__link:focus {
+  background-color: #E0FBFC; }
 
 @media (min-width: 768px) {
   .c-pagination__link {
@@ -7847,10 +7862,11 @@ body.no-scroll {
 
 .c-pagination__link--selected {
   background-color: #3D5A80;
-  color: #999 !important; }
+  color: #E0FBFC !important; }
 
-.c-pagination__link--selected:hover {
-  color: #999 !important; }
+.c-pagination__link--selected:hover, .c-pagination__link--selected:focus {
+  background-color: #1c293b !important;
+  color: #E0FBFC !important; }
 
 .c-pagination__link--disabled {
   color: #ddd; }
@@ -7903,6 +7919,17 @@ body.no-scroll {
   text-align: center;
   font-size: 0.75rem;
   font-weight: 700; }
+
+.c-product__price-stock {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center; }
+
+.c-product__price {
+  margin-right: calc(var(--lh__base) * 0.5 * var(--rvr-multiplier)); }
 
 .c-product__image {
   padding: 1rem; }

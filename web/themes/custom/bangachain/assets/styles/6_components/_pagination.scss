@@ -5,6 +5,11 @@
     display: block;
     font-weight: $fw-medium;
     padding: spacer(0.33) spacer(0.5);
+    transition: $transition-base;
+
+    @include hover-focus() {
+      background-color: $cyan;
+    }
 
     @include media-breakpoint-up('md') {
       padding: spacer(0.5) spacer(1);
@@ -12,10 +17,11 @@
 
     &--selected {
       background-color: $brand-blue;
-      color: $gray-medium !important;
+      color: $cyan !important;
 
-      &:hover {
-        color: $gray-medium !important;
+      @include hover-focus() {
+        background-color: darken($brand-blue, 20%) !important;
+        color: $cyan !important;
       }
     }
 

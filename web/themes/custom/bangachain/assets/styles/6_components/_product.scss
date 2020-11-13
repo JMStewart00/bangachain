@@ -51,6 +51,15 @@
     }
   }
 
+  &__price-stock {
+    display: flex;
+    align-items: center;
+  }
+
+  &__price {
+    margin-right: rvr(0.5);
+  }
+
   &__image {
     padding: 1rem;
 

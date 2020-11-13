@@ -50,7 +50,6 @@
         </div>
 
         <div class="c-product__description u-vr__mb--1">
-          <div class="h3">{{ product.variation_price }}</div>
           {{- product.field_description -}}
         </div>
 
@@ -76,6 +75,10 @@
           </ul>
         </div>
 
+        <div class="c-product__price-stock">
+          <div class="c-product__price u-fw__bold">{{ product.variation_price }}</div>
+          <div class="c-product__stock">{{ product.variation_field_stock }}</div>
+        </div>
         <div class="c-product__add-to-cart">
           {{ product.variations }}
         </div>

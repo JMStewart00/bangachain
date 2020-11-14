@@ -1,0 +1,27 @@
+{#
+/**
+ * @file
+ *
+ * Empty cart page template.
+ *
+ * @ingroup themeable
+ */
+#}
+<div class="l-container u-vr__my--4">
+  <div class="l-row l-row--no-columns justify-content-center">
+    <div class="c-cart-empty">
+      <div class="c-cart-empty__logo u-vr__mb--2">
+        <a href="/">
+          <picture>
+            <source srcset="{{ base_path ~ directory }}/assets/images/logo.png" media="(max-width: 639px)">
+            <source srcset="{{ base_path ~ directory }}/assets/images/logo.png" media="(min-width: 640px)">
+            <img src="{{ base_path ~ directory }}/assets/images/logo.png" alt="Bang-A-Chain logo">
+          </picture>
+        </a>
+      </div>
+      <div class="c-cart-empty__text">
+        <div class="h1">{{ 'Your shopping cart is empty.'|t }}</div>
+      </div>
+    </div>
+  </div>
+</div>

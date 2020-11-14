@@ -1,0 +1,14 @@
+.c-cart-empty {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  @include media-breakpoint-up(md) {
+    width: 50%;
+  }
+
+  &__logo{
+    max-width: 500px;
+  }
+}

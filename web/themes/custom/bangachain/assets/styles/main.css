@@ -7838,6 +7838,28 @@ body.no-scroll {
   line-height: 1.125rem;
   overflow: hidden; }
 
+.c-cart-empty {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center; }
+
+@media (min-width: 768px) {
+  .c-cart-empty {
+    width: 50%; } }
+
+.c-cart-empty__logo {
+  max-width: 500px; }
+
 .cart-offcanvas img {
   width: 100px;
   height: 100px;

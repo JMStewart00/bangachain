@@ -67,6 +67,12 @@
     {{ rows }}
   </div>
 
+  {% if footer %}
+    <div class="view-footer">
+      {{ footer }}
+    </div>
+  {% endif %}
+
   {% if pager %}
     {{ pager }}
   {% endif %}

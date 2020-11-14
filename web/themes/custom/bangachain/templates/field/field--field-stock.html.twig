@@ -50,7 +50,7 @@
     {{ item.content['#value']|number_format }}
   {% endset %}
   {% if quantity|striptags > 0 %}
-    <div{{ attributes.addClass(classes) }}>({{ quantity }} in stock)</div>
+    <div{{ attributes.addClass(classes) }}>({{- quantity -}} in stock)</div>
   {% else %}
     <div{{ attributes.addClass(classes) }}>Not in Stock!</div>
   {% endif %}

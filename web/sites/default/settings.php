@@ -84,5 +84,3 @@ if (defined('PANTHEON_ENVIRONMENT')) {
       $config['config_split.config_split.dev']['status'] = TRUE;
   }
 }
-
-$settings['install_profile'] = 'standard';

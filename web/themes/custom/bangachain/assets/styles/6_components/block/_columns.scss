@@ -3,10 +3,18 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    flex-direction: column;
+
+    @include media-breakpoint-up(md) {
+      flex-direction: row;
+    }
   }
 
   .c-field-unlimited-pg-reference {
-    width: calc(25% - 2rem);
     margin: rem(16);
+
+    @include media-breakpoint-up(md) {
+      width: calc(25% - 2rem);
+    }
   }
 }

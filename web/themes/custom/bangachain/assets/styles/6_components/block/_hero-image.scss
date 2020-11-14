@@ -1,7 +1,11 @@
 /* The hero image */
 .c-hero-image {
   /* Set a specific height */
-  height: 50vh;
+  height: 80vh;
+
+  @include media-breakpoint-up(md) {
+    height: 50vh;
+  }
 
   /* Position and center the image to scale nicely on all screens */
   background-position: center;

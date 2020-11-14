@@ -7978,22 +7978,40 @@ table td.is-active {
   flex-wrap: wrap;
   -webkit-box-pack: center;
   -ms-flex-pack: center;
-  justify-content: center; }
+  justify-content: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column; }
+
+@media (min-width: 768px) {
+  .c-inline-blockcolumns-module .c-block__content {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row; } }
 
 .c-inline-blockcolumns-module .c-field-unlimited-pg-reference {
-  width: calc(25% - 2rem);
   margin: 1rem; }
+
+@media (min-width: 768px) {
+  .c-inline-blockcolumns-module .c-field-unlimited-pg-reference {
+    width: calc(25% - 2rem); } }
 
 /* The hero image */
 .c-hero-image {
   /* Set a specific height */
-  height: 50vh;
+  height: 80vh;
   /* Position and center the image to scale nicely on all screens */
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
   position: relative;
   /* Place text in the middle of the image */ }
+
+@media (min-width: 768px) {
+  .c-hero-image {
+    height: 50vh; } }
 
 .c-hero-image__content {
   text-align: center;

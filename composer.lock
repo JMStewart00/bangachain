@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "82f51c83937fa2db08eeac9385b57170",
+    "content-hash": "ad3dd8963c2f4c12efb415addf44b4e0",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -63,7 +63,7 @@
             "version": "v4.5.3",
             "source": {
                 "type": "git",
-                "url": "git@github.com:twbs/bootstrap.git",
+                "url": "https://github.com/twbs/bootstrap.git",
                 "reference": "a716fb03f965dc0846df479e14388b1b4b93d7ce"
             },
             "dist": {
@@ -78,7 +78,7 @@
             "version": "v2.0.6",
             "source": {
                 "type": "git",
-                "url": "git@github.com:zenorocha/clipboard.js.git",
+                "url": "https://github.com/zenorocha/clipboard.js.git",
                 "reference": "fddd2aac5f8772c468b36e8607ab9b0704ee73c6"
             },
             "dist": {
@@ -2246,6 +2246,7 @@
                 "reflection",
                 "static"
             ],
+            "abandoned": "roave/better-reflection",
             "time": "2020-03-27T11:06:43+00:00"
         },
         {
@@ -3370,8 +3371,7 @@
             "homepage": "http://drupal.org/project/commerce_giftcard",
             "support": {
                 "source": "https://git.drupalcode.org/project/commerce_giftcard"
-            },
-            "time": "2020-10-07T12:41:20+00:00"
+            }
         },
         {
             "name": "drupal/commerce_multi_payment",
@@ -3812,6 +3812,10 @@
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
                     }
+                },
+                "patches_applied": {
+                    "Zip Code not valid": "https://www.drupal.org/files/issues/2020-03-30/3123602-2.patch",
+                    "Missing Input Fields": "https://www.drupal.org/files/issues/2019-11-08/3093086-1.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
@@ -4499,7 +4503,8 @@
                     "Conflict with field_group, missing options in sidebar when creating/updating a node": "https://www.drupal.org/files/issues/2019-11-29/claro-fix_node_sidebar_accordion_items-3097407-4--fix-only.patch",
                     "Layout builder incorrectly resolves global contexts values when viewing layouts": "https://www.drupal.org/files/issues/2020-06-19/3099968-35.patch",
                     "Break long text strings in layout edit": "https://www.drupal.org/files/issues/2020-08-10/break-long-text-strings-in-layout-3016507-32.patch",
-                    "Nested Paragraphs create multiple drag handles": "https://www.drupal.org/files/issues/2019-11-13/claro-nested_paragraphs_multiple_drag_handles-3092181-5.patch"
+                    "Nested Paragraphs create multiple drag handles": "https://www.drupal.org/files/issues/2019-11-13/claro-nested_paragraphs_multiple_drag_handles-3092181-5.patch",
+                    "Views file name suggestions often missing from Twig debugging": "https://www.drupal.org/files/issues/views-template-suggestions-2839945-2.patch"
                 }
             },
             "autoload": {
@@ -7185,50 +7190,6 @@
                 "source": "https://git.drupalcode.org/project/search_api",
                 "issues": "https://www.drupal.org/project/issues/search_api",
                 "irc": "irc://irc.freenode.org/drupal-search-api"
-            }
-        },
-        {
-            "name": "drupal/simple_instagram_feed",
-            "version": "3.9.0",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/simple_instagram_feed.git",
-                "reference": "8.x-3.9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/simple_instagram_feed-8.x-3.9.zip",
-                "reference": "8.x-3.9",
-                "shasum": "38bb6b69316c29dc7554af79326b510efec7b458"
-            },
-            "require": {
-                "drupal/core": "^8 || ^9"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "drupal": {
-                    "version": "8.x-3.9",
-                    "datestamp": "1599672217",
-                    "security-coverage": {
-                        "status": "covered",
-                        "message": "Covered by Drupal's security advisory policy"
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "awasson",
-                    "homepage": "https://www.drupal.org/user/127091"
-                }
-            ],
-            "description": "Creates a block with a dynamic Instagram Feed using https://github.com/jsanahuja/jquery.instagramFeed.",
-            "homepage": "https://www.drupal.org/project/simple_instagram_feed",
-            "support": {
-                "source": "https://git.drupalcode.org/project/simple_instagram_feed"
             }
         },
         {

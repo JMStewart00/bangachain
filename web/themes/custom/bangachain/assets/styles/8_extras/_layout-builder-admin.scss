@@ -25,7 +25,8 @@
 // Layout Builder configure block form
 .layout-builder-configure-block {
   // Fix checkbox styling.
-  .c-form__checkbox + label {
+  .c-form__checkbox + label,
+  .c-form__radio {
     padding-left: 40px !important;
     display: block !important;
     line-height: rem(30) !important;
@@ -48,5 +49,6 @@
   // Prevent buttons from being all caps.
   .o-btn--secondary {
     text-transform: capitalize;
+    margin-bottom: rvr(1);
   }
 }

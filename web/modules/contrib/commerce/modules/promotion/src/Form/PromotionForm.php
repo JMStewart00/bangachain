@@ -108,6 +108,16 @@ class PromotionForm extends ContentEntityForm {
       }
     }
 
+    $form['status']['notice'] = [
+      '#type' => 'item',
+      '#markup' => t('If <strong>no limits</strong> are selected, and <strong>no coupons</strong> are associated with this promotion, then this promotion will be applied to <strong>all orders</strong>.'),
+      '#states' => [
+        'visible' => [
+          ':input[name=status]' => ['value' => 1],
+        ],
+      ],
+    ];
+
     return $form;
   }
 

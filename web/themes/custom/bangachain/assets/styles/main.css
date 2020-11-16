@@ -7623,7 +7623,6 @@ body.no-scroll {
   padding: 0.5rem 2.5rem;
   background-color: #fcfffc;
   border: 0;
-  border-radius: 10px;
   color: #3D5A80;
   letter-spacing: 0.03125rem;
   text-transform: uppercase;
@@ -7638,7 +7637,6 @@ body.no-scroll {
   padding: 0.5rem 2.5rem;
   background-color: #3D5A80;
   border: 0;
-  border-radius: 10px;
   color: #fcfffc;
   letter-spacing: 0.03125rem;
   text-transform: uppercase;
@@ -7652,7 +7650,6 @@ body.no-scroll {
 .o-btn--tertiary {
   padding: 0.5rem 2.5rem;
   background-color: #2d425d;
-  border-radius: 10px;
   color: #fcfffc;
   letter-spacing: 0.03125rem;
   text-transform: uppercase;
@@ -8092,7 +8089,7 @@ table td.is-active {
   border-radius: 0;
   background-color: #3D5A80;
   border: none;
-  border-bottom: 2px solid #98C1D9;
+  border-bottom: 2px solid #EE6C4D;
   color: white;
   padding: 10px;
   -webkit-appearance: none;
@@ -8179,7 +8176,6 @@ table td.is-active {
 
 .c-form textarea {
   border: 1px solid #293241;
-  border-radius: 10px;
   color: #343a40;
   font-weight: 400;
   padding: 0.5rem 1rem; }
@@ -8188,7 +8184,6 @@ table td.is-active {
   -webkit-box-sizing: border-box !important;
   box-sizing: border-box !important;
   border: 1px solid #293241;
-  border-radius: 10px;
   font-weight: 400;
   color: #343a40;
   line-height: 1.5;
@@ -8221,7 +8216,6 @@ table td.is-active {
   top: 0.125rem;
   background: #fff;
   border: 1px solid #293241;
-  border-radius: 0.25rem;
   height: 1.5625rem;
   width: 1.5625rem; }
 
@@ -8319,7 +8313,7 @@ table td.is-active {
   background-color: #3D5A80; }
 
 .c-form__radio:checked ~ label {
-  color: #98C1D9;
+  color: #3D5A80;
   font-weight: 700; }
 
 .c-form__date, .c-form__time, .c-form__datetime {
@@ -9095,7 +9089,8 @@ table td.is-active {
   min-height: 2rem;
   background: inherit; }
 
-.layout-builder-configure-block .c-form__checkbox + label {
+.layout-builder-configure-block .c-form__checkbox + label,
+.layout-builder-configure-block .c-form__radio {
   padding-left: 40px !important;
   display: block !important;
   line-height: 1.875rem !important; }
@@ -9111,7 +9106,8 @@ table td.is-active {
   border-radius: 3px; }
 
 .layout-builder-configure-block .o-btn--secondary {
-  text-transform: capitalize; }
+  text-transform: capitalize;
+  margin-bottom: calc(var(--lh__base) * 1 * var(--rvr-multiplier)); }
 
 .c-gdpr {
   padding: calc(var(--lh__base) * 1 * var(--rvr-multiplier));

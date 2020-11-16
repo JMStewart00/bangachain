@@ -207,6 +207,9 @@
             "drupal/commerce_square": {
                 "Zip Code not valid": "https://www.drupal.org/files/issues/2020-03-30/3123602-2.patch",
                 "Missing Input Fields": "https://www.drupal.org/files/issues/2019-11-08/3093086-1.patch"
+            },
+            "drupal/commerce": {
+                "Promotion without coupons is always applied": "https://www.drupal.org/files/issues/promotion_without-2884888-12.patch"
             }
         },
         "enable-patching": true,

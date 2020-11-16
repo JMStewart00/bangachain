@@ -77,6 +77,20 @@ function bangachain_preprocess_form_element(&$variables) {
   $variables['attributes']['class'][] = 'c-form__element';
 }
 
+/*
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function bangachain_theme_suggestions_input_alter(array &$suggestions, array $variables) {
+  // Do not add suggestion for Layout Builder inputs.
+  if (isset($variables['element']['#name'])) {
+    if (strpos($variables['element']['#name'], 'layout_settings') !== false) {
+      return;
+    }
+  }
+
+  $suggestions[] = 'input__' . $variables['element']['#type'] . '__custom';
+}
+
 /**
  * Implements template_preprocess_HOOK() for input.
  *

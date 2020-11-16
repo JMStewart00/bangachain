@@ -11,7 +11,6 @@
     padding: spacer(0.5) spacer(2.5);
     background-color: $white;
     border: 0;
-    border-radius: $border-radius;
     color: $brand-blue;
     letter-spacing: rem(0.5);
     text-transform: uppercase;
@@ -27,7 +26,6 @@
     padding: spacer(0.5) spacer(2.5);
     background-color: $brand-blue;
     border: 0;
-    border-radius: $border-radius;
     color: $white;
     letter-spacing: rem(0.5);
     text-transform: uppercase;
@@ -42,7 +40,6 @@
   &--tertiary {
     padding: spacer(0.5) spacer(2.5);
     background-color: darken($brand-blue, 10%);
-    border-radius: $border-radius;
     color: $white;
     letter-spacing: rem(0.5);
     text-transform: uppercase;

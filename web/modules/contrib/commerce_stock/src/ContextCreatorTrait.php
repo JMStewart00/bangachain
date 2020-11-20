@@ -14,6 +14,8 @@ trait ContextCreatorTrait {
   /**
    * Returns the active commerce context.
    *
+   * This is to support UI calls.
+   *
    * @param \Drupal\commerce\PurchasableEntityInterface $entity
    *   The purchasable entity (most likely a product variation entity).
    *
@@ -27,13 +29,15 @@ trait ContextCreatorTrait {
   }
 
   /**
-   * Whether we deal with a valid commerce context.
+   * Checks that the context returned is valid for $entity.
+   *
+   * This is to support UI calls.
    *
    * @param \Drupal\commerce\PurchasableEntityInterface $entity
    *   The purchasable entity (most likely a product variation entity).
    *
-   * @return \Drupal\commerce\Context
-   *   The context containing the customer & store.
+   * @return bool
+   *   TRUE if valid, FALSE if not.
    */
   public function isValidContext(PurchasableEntityInterface $entity) {
     try {
@@ -71,10 +75,13 @@ trait ContextCreatorTrait {
       throw new \Exception('The given entity is not assigned to any store.');
     }
     else {
+      foreach ($stores as $store) {
+        $store_ids[] = $store->id();
+      }
       /** @var \Drupal\commerce_store\CurrentStore $currentStore */
       $currentStore = \Drupal::service('commerce_store.current_store');
       $store = $currentStore->getStore();
-      if (!in_array($store, $stores)) {
+      if (!in_array($store->id(), $store_ids)) {
         // Indicates that the site listings are not filtered properly.
         throw new \Exception("The given entity can't be purchased from the current store.");
       }
@@ -86,7 +93,7 @@ trait ContextCreatorTrait {
   }
 
   /**
-   * Creates a commerce context objext.
+   * Creates a commerce context object.
    *
    * @param \Drupal\commerce_order\Entity\OrderInterface $order
    *   The commerce order obejct.

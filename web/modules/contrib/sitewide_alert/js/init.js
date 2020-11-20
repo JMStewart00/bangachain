@@ -154,9 +154,11 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         var _this3 = this;
 
         this.getAlerts();
-        this.interval = setInterval(function () {
-          _this3.getAlerts();
-        }, drupalSettings.sitewideAlert.refreshInterval < 1000 ? 1000 : drupalSettings.sitewideAlert.refreshInterval);
+        if (drupalSettings.sitewideAlert.automaticRefresh === true) {
+          this.interval = setInterval(function () {
+            _this3.getAlerts();
+          }, drupalSettings.sitewideAlert.refreshInterval < 1000 ? 1000 : drupalSettings.sitewideAlert.refreshInterval);
+        }
       }
     }, {
       key: 'componentWillUnmount',

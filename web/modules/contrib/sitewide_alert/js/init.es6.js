@@ -118,9 +118,11 @@
 
     componentDidMount() {
       this.getAlerts();
-      this.interval = setInterval(() => {
-        this.getAlerts();
-      }, (drupalSettings.sitewideAlert.refreshInterval < 1000) ? 1000 : drupalSettings.sitewideAlert.refreshInterval);
+      if(drupalSettings.sitewideAlert.automaticRefresh === true) {
+        this.interval = setInterval(() => {
+          this.getAlerts();
+        }, (drupalSettings.sitewideAlert.refreshInterval < 1000) ? 1000 : drupalSettings.sitewideAlert.refreshInterval);
+      }
     }
 
     componentWillUnmount() {

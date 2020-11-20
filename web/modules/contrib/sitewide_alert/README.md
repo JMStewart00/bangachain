@@ -62,3 +62,15 @@ Styling Sidewide Alerts
 Sitewide Alerts receive a wrapping class that can be used to apply specific styles. For each entry added to the Alert 
 Style field a corresponding HTML class is added to the element's wrapper. The class is created by concatenating "alert-"]
 with each key defined under Alert Style. Use these classes to apply different styles to each type of alert needed.
+
+
+Troubleshooting
+---------------------------
+
+### Scheduled alerts not showing/disappearing when they should.
+
+- Make sure the scheduled sitewide alert is marked as "Active". Scheduled alerts still need to be set as active to be
+shown.
+- If using the [Redis module](https://www.drupal.org/project/redis), you may need to apply
+[this patch](https://www.drupal.org/project/redis/issues/2877893#comment-12082921) to allow Drupal's Page Cache to
+actually expire when it should.

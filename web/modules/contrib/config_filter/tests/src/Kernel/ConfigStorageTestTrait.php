@@ -108,6 +108,9 @@ trait ConfigStorageTestTrait {
     // For config filter 1.x we need to trigger the write filters.
     // Set up a filtered storage with the sync storage filters.
     $memory = new MemoryStorage();
+    // Add the sync config so that filters can read from it.
+    $this->copyConfig($this->container->get('config.storage.sync'), $memory);
+    // Create a filtered storage.
     $filtered = $this->container->get('config_filter.storage_factory')->getFilteredStorage($memory, ['config.storage.sync']);
     // Then write the core export storage to this new storage.
     $this->copyConfig($unfiltered, $filtered);

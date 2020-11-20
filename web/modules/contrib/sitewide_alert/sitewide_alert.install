@@ -14,3 +14,11 @@ function sitewide_alert_install() {
   // By default allow anonymous users to view Sitewide Alerts.
   user_role_grant_permissions(AccountInterface::ANONYMOUS_ROLE, ['view published sitewide alert entities']);
 }
+
+/**
+ * Set the new automated refresh config option to keep the current behavior.
+ */
+function sitewide_alert_update_8001(&$sandbox) {
+  $config_factory = \Drupal::configFactory();
+  $config_factory->getEditable('sitewide_alert.settings')->set('automatic_refresh', 1)->save();
+}

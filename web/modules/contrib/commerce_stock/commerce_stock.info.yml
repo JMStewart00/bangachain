@@ -5,10 +5,11 @@ dependencies:
   - commerce:commerce_product
   - commerce:commerce_order
 core: 8.x
+core_version_requirement: ^8 || ^9
 type: module
 configure: commerce_stock.admin_settings
 
-# Information added by Drupal.org packaging script on 2020-03-06
-version: '8.x-1.0-alpha4'
+# Information added by Drupal.org packaging script on 2020-11-17
+version: '8.x-1.0-alpha5'
 project: 'commerce_stock'
-datestamp: 1583491930
+datestamp: 1605624597

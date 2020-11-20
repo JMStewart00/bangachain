@@ -5,7 +5,7 @@ namespace Drupal\sitewide_alert\Controller;
 use Drupal\Core\Cache\CacheableJsonResponse;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Controller\ControllerBase;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Drupal\sitewide_alert\SitewideAlertManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Render\Renderer;
 
@@ -22,13 +22,21 @@ class SitewideAlertsController extends ControllerBase {
   protected $renderer;
 
   /**
+   * @var \Drupal\sitewide_alert\SitewideAlertManager
+   */
+  private $sitewideAlertManager;
+
+  /**
    * Constructs a new SitewideAlertsController.
    *
    * @param \Drupal\Core\Render\Renderer $renderer
    *   The renderer.
+   * @param \Drupal\sitewide_alert\SitewideAlertManager $sitewideAlertManager
+   *   The sitewide alert manager.
    */
-  public function __construct(Renderer $renderer) {
+  public function __construct(Renderer $renderer, SitewideAlertManager $sitewideAlertManager) {
     $this->renderer = $renderer;
+    $this->sitewideAlertManager = $sitewideAlertManager;
   }
 
   /**
@@ -36,7 +44,8 @@ class SitewideAlertsController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('renderer')
+      $container->get('renderer'),
+      $container->get('sitewide_alert.sitewide_alert_manager')
     );
   }
 
@@ -54,7 +63,7 @@ class SitewideAlertsController extends ControllerBase {
 
     $sitewideAlertsJson = ['sitewideAlerts' => []];
 
-    $sitewideAlerts = $this->getSitewideAlerts();
+    $sitewideAlerts = $this->sitewideAlertManager->activeVisibleSitewideAlerts();
 
     $viewBuilder = $this->entityTypeManager()->getViewBuilder('sitewide_alert');
 
@@ -81,35 +90,21 @@ class SitewideAlertsController extends ControllerBase {
     $response->addCacheableDependency($cacheableMetadata);
     $response->setData($sitewideAlertsJson);
 
+    // Set the date this response expires so that Drupal's Page Cache will
+    // expire this response when the next scheduled alert will be removed.
+    // This is needed because Page Cache ignores max age as it does not respect
+    // the cache max age. Note that the cache tags will still invalidate this
+    // response in the case that new sitewide alerts are added or changed.
+    // See Drupal\page_cache\StackMiddleware:storeResponse().
+    if ($expireDate = $this->sitewideAlertManager->nextScheduledChange()) {
+      $response->setExpires($expireDate->getPhpDateTime());
+    }
+
     // Prevent the browser and downstream caches from caching for more than 15 seconds.
     $response->setMaxAge(15);
     $response->setSharedMaxAge(15);
 
     return $response;
-  }
-
-  /**
-   * Returns all active sitewide alerts.
-   *
-   * @return \Drupal\sitewide_alert\Entity\SitewideAlertInterface[]
-   *   Array of active sitewide alerts indexed by their ids.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   */
-  private function getSitewideAlerts() {
-    /** @var \Drupal\sitewide_alert\Entity\SitewideAlertInterface[] $sitewideAlerts */
-    $sitewideAlerts = $this->entityTypeManager()->getStorage('sitewide_alert')->loadByProperties(['status' => 1]);
-
-    // Remove any sitewide alerts that are scheduled and it is not time to show them.
-    foreach ($sitewideAlerts as $id => $sitewideAlert) {
-      if ($sitewideAlert->isScheduled() &&
-        !$sitewideAlert->isScheduledToShowAt(new \DateTime('now'))) {
-        unset($sitewideAlerts[$id]);
-      }
-    }
-
-    return $sitewideAlerts;
   }
 
 }

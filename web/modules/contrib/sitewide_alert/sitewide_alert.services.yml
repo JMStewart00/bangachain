@@ -3,3 +3,6 @@ services:
     class: Drupal\sitewide_alert\Routing\RouteSubscriber
     tags:
       - { name: event_subscriber }
+  sitewide_alert.sitewide_alert_manager:
+    class: Drupal\sitewide_alert\SitewideAlertManager
+    arguments: [ '@entity_type.manager', '@datetime.time' ]

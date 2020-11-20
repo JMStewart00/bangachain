@@ -5,6 +5,7 @@ namespace Drupal\commerce_stock_field\Plugin\Field\FieldType;
 use Drupal\commerce_stock\ContextCreatorTrait;
 use Drupal\commerce_stock\StockTransactionsInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
@@ -119,7 +120,7 @@ class StockLevel extends FieldItemBase {
       $values['value'] = $values['adjustment'];
     }
     else {
-      $values['value'] = 0;
+      $values['value'] = 0.0;
     }
     parent::setValue($values, $notify);
   }
@@ -181,6 +182,23 @@ class StockLevel extends FieldItemBase {
       }
       $stockServiceManager->createTransaction($entity, $location->getId(), $zone, $transaction_qty, (float) $unit_cost, $currency_code, $transaction_type, $metadata);
     }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public static function generateSampleValue(
+    FieldDefinitionInterface $field_definition
+  ) {
+    // Hint: These are our hardcoded values from the schema definitiion.
+    // We could use a decimal with 15 digits, but lets keep it closer to the
+    // 99% use cases. A random float between -999 and +999 should do it.
+    $scale = 4;
+    // (mt_rand() / $r_max) = A number between 0 and 1.
+    $random_decimal = (mt_rand() / mt_getrandmax() * 999 * 2) - 999;
+    // @see Drupal\Core\Field\Plugin\Field\FieldTypeNumericItemBase::truncateDecimal()
+    $values['value'] = floor($random_decimal * pow(10, $scale)) / pow(10, $scale);
+    return $values;
   }
 
 }

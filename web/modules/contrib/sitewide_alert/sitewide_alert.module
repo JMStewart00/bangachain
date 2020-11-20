@@ -43,7 +43,8 @@ function sitewide_alert_page_top(array &$page_top) {
       'drupalSettings' => [
         'sitewideAlert' => [
           'refreshInterval' => (\Drupal::config('sitewide_alert.settings')->get('refresh_interval') ?? 15) * 1000,
-         ],
+          'automaticRefresh' => (\Drupal::config('sitewide_alert.settings')->get('automatic_refresh') == 1),
+        ],
       ],
     ],
   ];

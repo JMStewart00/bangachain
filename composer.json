@@ -58,6 +58,19 @@
                     "type": "zip"
                 }
             }
+        },
+        {
+            "type": "package",
+            "package": {
+              "name": "furf/jquery-ui-touch-punch",
+              "version": "0.0.1",
+              "type": "drupal-library",
+              "source": {
+                "url": "https://github.com/furf/jquery-ui-touch-punch",
+                "type": "git",
+                "reference": "master"
+              }
+            }
         }
     ],
     "require": {
@@ -106,6 +119,7 @@
         "drupal/honeypot": "^1.27",
         "drupal/jquery_ui_accordion": "^1.0",
         "drupal/jquery_ui_tooltip": "^1.0",
+        "drupal/jquery_ui_touch_punch": "^1.0",
         "drupal/layout_builder_modal": "^1.0",
         "drupal/layout_builder_restrictions": "^2.5",
         "drupal/media_library_form_element": "^1.0@alpha",
@@ -115,7 +129,6 @@
         "drupal/pathauto": "^1.6",
         "drupal/quick_node_clone": "^1.12",
         "drupal/rabbit_hole": "^1.0@beta",
-        "drupal/recreate_block_content": "^2.0",
         "drupal/redirect": "^1.5",
         "drupal/responsive_favicons": "^1.5",
         "drupal/search_api": "^1.15",
@@ -127,6 +140,7 @@
         "drupal/views_ajax_history": "^1.2",
         "drupal/viewsreference": "^1.4",
         "drush/drush": "^9.2",
+        "furf/jquery-ui-touch-punch": "^0.0.1",
         "npm-asset/bootstrap": "^4.5",
         "npm-asset/slick-carousel": "^1.8",
         "oomphinc/composer-installers-extender": "^1.1",
@@ -210,6 +224,9 @@
             },
             "drupal/commerce": {
                 "Promotion without coupons is always applied": "https://www.drupal.org/files/issues/promotion_without-2884888-12.patch"
+            },
+            "drupal/jquery_ui_touch_punch": {
+                "Download the library": "https://www.drupal.org/files/issues/2020-11-19/3159222-32.patch"
             }
         },
         "enable-patching": true,

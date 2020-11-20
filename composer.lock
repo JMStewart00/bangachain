@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "de226a634da3685ffd94481b3b37ebe4",
+    "content-hash": "946ad52453a3d985214088b088249ceb",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -8085,16 +8085,6 @@
                 }
             ],
             "time": "2020-11-14T15:56:27+00:00"
-        },
-        {
-            "name": "furf/jquery-ui-touch-punch",
-            "version": "0.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/furf/jquery-ui-touch-punch",
-                "reference": "master"
-            },
-            "type": "drupal-library"
         },
         {
             "name": "grasmash/expander",

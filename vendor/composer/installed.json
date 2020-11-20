@@ -8387,18 +8387,6 @@
         ]
     },
     {
-        "name": "furf/jquery-ui-touch-punch",
-        "version": "0.0.1",
-        "version_normalized": "0.0.1.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/furf/jquery-ui-touch-punch",
-            "reference": "master"
-        },
-        "type": "drupal-library",
-        "installation-source": "source"
-    },
-    {
         "name": "grasmash/expander",
         "version": "1.0.0",
         "version_normalized": "1.0.0.0",

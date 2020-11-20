@@ -140,6 +140,7 @@
         "drupal/views_ajax_history": "^1.2",
         "drupal/viewsreference": "^1.4",
         "drush/drush": "^9.2",
+        "furf/jquery-ui-touch-punch": "^0.0.1",
         "npm-asset/bootstrap": "^4.5",
         "npm-asset/slick-carousel": "^1.8",
         "oomphinc/composer-installers-extender": "^1.1",

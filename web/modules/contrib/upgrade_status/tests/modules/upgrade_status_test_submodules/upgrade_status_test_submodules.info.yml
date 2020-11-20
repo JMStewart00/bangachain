@@ -5,7 +5,7 @@ package: Testing
 # version: VERSION
 core_version_requirement: ^8 || ^9
 
-# Information added by Drupal.org packaging script on 2020-10-09
-version: '8.x-2.11'
+# Information added by Drupal.org packaging script on 2020-11-04
+version: '8.x-3.0'
 project: 'upgrade_status'
-datestamp: 1602256223
+datestamp: 1604508429

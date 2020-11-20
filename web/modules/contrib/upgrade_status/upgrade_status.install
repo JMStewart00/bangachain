@@ -56,3 +56,10 @@ function upgrade_status_update_8101() {
     }
   }
 }
+
+/**
+ * Delete old state information so the changed storage format can be used.
+ */
+function upgrade_status_update_8301() {
+  \Drupal::keyValue('upgrade_status_scan_results')->deleteAll();
+}

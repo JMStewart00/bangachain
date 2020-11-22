@@ -1,0 +1,19 @@
+uuid: 91a2d9c0-f45f-481a-8e53-3aa53fed15c4
+langcode: en
+status: true
+dependencies: {  }
+id: cash_payment
+label: 'Cash Payment'
+weight: null
+plugin: manual
+configuration:
+  instructions:
+    value: ''
+    format: plain_text
+  display_label: 'Offline Cash Payment'
+  mode: n/a
+  payment_method_types:
+    - credit_card
+  collect_billing_information: true
+conditions: {  }
+conditionOperator: AND

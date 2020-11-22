@@ -54,12 +54,23 @@
         ]
     },
     {
+        "name": "bgrins/spectrum",
+        "version": "1.8.1",
+        "version_normalized": "1.8.1.0",
+        "dist": {
+            "type": "zip",
+            "url": "https://github.com/bgrins/spectrum/archive/1.8.0.zip"
+        },
+        "type": "drupal-library",
+        "installation-source": "dist"
+    },
+    {
         "name": "bower-asset/bootstrap",
         "version": "v4.5.3",
         "version_normalized": "4.5.3.0",
         "source": {
             "type": "git",
-            "url": "git@github.com:twbs/bootstrap.git",
+            "url": "https://github.com/twbs/bootstrap.git",
             "reference": "a716fb03f965dc0846df479e14388b1b4b93d7ce"
         },
         "dist": {
@@ -4712,7 +4723,8 @@
                 "Layout builder incorrectly resolves global contexts values when viewing layouts": "https://www.drupal.org/files/issues/2020-06-19/3099968-35.patch",
                 "Break long text strings in layout edit": "https://www.drupal.org/files/issues/2020-08-10/break-long-text-strings-in-layout-3016507-32.patch",
                 "Nested Paragraphs create multiple drag handles": "https://www.drupal.org/files/issues/2019-11-13/claro-nested_paragraphs_multiple_drag_handles-3092181-5.patch",
-                "Views file name suggestions often missing from Twig debugging": "https://www.drupal.org/files/issues/views-template-suggestions-2839945-2.patch"
+                "Views file name suggestions often missing from Twig debugging": "https://www.drupal.org/files/issues/views-template-suggestions-2839945-2.patch",
+                "Do not decode a contact message twice": "https://www.drupal.org/files/issues/2020-10-10/contact-decode-D8.2223967-91.patch"
             }
         },
         "installation-source": "dist",
@@ -6469,6 +6481,72 @@
         }
     },
     {
+        "name": "drupal/mailsystem",
+        "version": "4.3.0",
+        "version_normalized": "4.3.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupalcode.org/project/mailsystem.git",
+            "reference": "8.x-4.3"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/mailsystem-8.x-4.3.zip",
+            "reference": "8.x-4.3",
+            "shasum": "1a74016e268ff207535be5d5e42ac8f72ac89050"
+        },
+        "require": {
+            "drupal/core": "^8.7.7 || ^9"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "drupal": {
+                "version": "8.x-4.3",
+                "datestamp": "1586203024",
+                "security-coverage": {
+                    "status": "covered",
+                    "message": "Covered by Drupal's security advisory policy"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0+"
+        ],
+        "authors": [
+            {
+                "name": "Berdir",
+                "homepage": "https://www.drupal.org/user/214652"
+            },
+            {
+                "name": "Les Lim",
+                "homepage": "https://www.drupal.org/user/84263"
+            },
+            {
+                "name": "Manuel Garcia",
+                "homepage": "https://www.drupal.org/user/213194"
+            },
+            {
+                "name": "Nafes",
+                "homepage": "https://www.drupal.org/user/2489926"
+            },
+            {
+                "name": "miro_dietiker",
+                "homepage": "https://www.drupal.org/user/227761"
+            },
+            {
+                "name": "pillarsdotnet",
+                "homepage": "https://www.drupal.org/user/36148"
+            }
+        ],
+        "description": "Mail System",
+        "homepage": "https://www.drupal.org/project/mailsystem",
+        "support": {
+            "source": "https://git.drupalcode.org/project/mailsystem"
+        }
+    },
+    {
         "name": "drupal/media_library_form_element",
         "version": "1.0.0-beta5",
         "version_normalized": "1.0.0.0-beta5",
@@ -7641,6 +7719,78 @@
         }
     },
     {
+        "name": "drupal/swiftmailer",
+        "version": "2.0.0-beta1",
+        "version_normalized": "2.0.0.0-beta1",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupalcode.org/project/swiftmailer.git",
+            "reference": "8.x-2.0-beta1"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/swiftmailer-8.x-2.0-beta1.zip",
+            "reference": "8.x-2.0-beta1",
+            "shasum": "6df4816d0d57a85cfff0860960da64c5ff77680f"
+        },
+        "require": {
+            "drupal/core": "^8 || ^9",
+            "drupal/mailsystem": "^4.1.0",
+            "egulias/email-validator": "^2.0",
+            "html2text/html2text": "^4.0.1",
+            "php": ">=7.0.0",
+            "swiftmailer/swiftmailer": "^6.1.3",
+            "tijsverkoyen/css-to-inline-styles": "^2.2"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "drupal": {
+                "version": "8.x-2.0-beta1",
+                "datestamp": "1596203348",
+                "security-coverage": {
+                    "status": "not-covered",
+                    "message": "Beta releases are not covered by Drupal security advisories."
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0+"
+        ],
+        "authors": [
+            {
+                "name": "AdamPS",
+                "homepage": "https://www.drupal.org/user/2650563"
+            },
+            {
+                "name": "Anybody",
+                "homepage": "https://www.drupal.org/user/291091"
+            },
+            {
+                "name": "B-Prod",
+                "homepage": "https://www.drupal.org/user/407852"
+            },
+            {
+                "name": "geek-merlin",
+                "homepage": "https://www.drupal.org/user/229048"
+            },
+            {
+                "name": "sbrattla",
+                "homepage": "https://www.drupal.org/user/53422"
+            },
+            {
+                "name": "webflo",
+                "homepage": "https://www.drupal.org/user/254778"
+            }
+        ],
+        "description": "Swiftmailer",
+        "homepage": "https://www.drupal.org/project/swiftmailer",
+        "support": {
+            "source": "https://git.drupalcode.org/project/swiftmailer"
+        }
+    },
+    {
         "name": "drupal/token",
         "version": "1.7.0",
         "version_normalized": "1.7.0.0",
@@ -8691,6 +8841,45 @@
             "uri",
             "url"
         ]
+    },
+    {
+        "name": "html2text/html2text",
+        "version": "4.3.1",
+        "version_normalized": "4.3.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/mtibben/html2text.git",
+            "reference": "61ad68e934066a6f8df29a3d23a6460536d0855c"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/mtibben/html2text/zipball/61ad68e934066a6f8df29a3d23a6460536d0855c",
+            "reference": "61ad68e934066a6f8df29a3d23a6460536d0855c",
+            "shasum": ""
+        },
+        "require-dev": {
+            "phpunit/phpunit": "~4"
+        },
+        "suggest": {
+            "ext-mbstring": "For best performance",
+            "symfony/polyfill-mbstring": "If you can't install ext-mbstring"
+        },
+        "time": "2020-04-16T23:44:31+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Html2Text\\": [
+                    "src/",
+                    "test/"
+                ]
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "GPL-2.0-or-later"
+        ],
+        "description": "Converts HTML to formatted plain text"
     },
     {
         "name": "laminas/laminas-diactoros",
@@ -11081,6 +11270,17 @@
         "description": "A polyfill for getallheaders."
     },
     {
+        "name": "recurser/jquery-simple-color",
+        "version": "1.2.3",
+        "version_normalized": "1.2.3.0",
+        "dist": {
+            "type": "zip",
+            "url": "https://github.com/recurser/jquery-simple-color/archive/v1.2.3.zip"
+        },
+        "type": "drupal-library",
+        "installation-source": "dist"
+    },
+    {
         "name": "sebastian/code-unit-reverse-lookup",
         "version": "1.0.1",
         "version_normalized": "1.0.1.0",
@@ -11920,6 +12120,70 @@
         ]
     },
     {
+        "name": "swiftmailer/swiftmailer",
+        "version": "v6.2.3",
+        "version_normalized": "6.2.3.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/swiftmailer/swiftmailer.git",
+            "reference": "149cfdf118b169f7840bbe3ef0d4bc795d1780c9"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/149cfdf118b169f7840bbe3ef0d4bc795d1780c9",
+            "reference": "149cfdf118b169f7840bbe3ef0d4bc795d1780c9",
+            "shasum": ""
+        },
+        "require": {
+            "egulias/email-validator": "~2.0",
+            "php": ">=7.0.0",
+            "symfony/polyfill-iconv": "^1.0",
+            "symfony/polyfill-intl-idn": "^1.10",
+            "symfony/polyfill-mbstring": "^1.0"
+        },
+        "require-dev": {
+            "mockery/mockery": "~0.9.1",
+            "symfony/phpunit-bridge": "^3.4.19|^4.1.8"
+        },
+        "suggest": {
+            "ext-intl": "Needed to support internationalized email addresses",
+            "true/punycode": "Needed to support internationalized email addresses, if ext-intl is not installed"
+        },
+        "time": "2019-11-12T09:31:26+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "6.2-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "files": [
+                "lib/swift_required.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Chris Corbyn"
+            },
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            }
+        ],
+        "description": "Swiftmailer, free feature-rich PHP mailer",
+        "homepage": "https://swiftmailer.symfony.com",
+        "keywords": [
+            "email",
+            "mail",
+            "mailer"
+        ]
+    },
+    {
         "name": "symfony-cmf/routing",
         "version": "1.4.1",
         "version_normalized": "1.4.1.0",
@@ -12114,6 +12378,70 @@
             }
         ],
         "description": "Symfony Console Component",
+        "homepage": "https://symfony.com",
+        "funding": [
+            {
+                "url": "https://symfony.com/sponsor",
+                "type": "custom"
+            },
+            {
+                "url": "https://github.com/fabpot",
+                "type": "github"
+            },
+            {
+                "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                "type": "tidelift"
+            }
+        ]
+    },
+    {
+        "name": "symfony/css-selector",
+        "version": "v5.1.8",
+        "version_normalized": "5.1.8.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/css-selector.git",
+            "reference": "6cbebda22ffc0d4bb8fea0c1311c2ca54c4c8fa0"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/css-selector/zipball/6cbebda22ffc0d4bb8fea0c1311c2ca54c4c8fa0",
+            "reference": "6cbebda22ffc0d4bb8fea0c1311c2ca54c4c8fa0",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=7.2.5"
+        },
+        "time": "2020-10-24T12:01:57+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Symfony\\Component\\CssSelector\\": ""
+            },
+            "exclude-from-classmap": [
+                "/Tests/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Jean-François Simon",
+                "email": "jeanfrancois.simon@sensiolabs.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony CssSelector Component",
         "homepage": "https://symfony.com",
         "funding": [
             {
@@ -14492,6 +14820,57 @@
                 "type": "github"
             }
         ]
+    },
+    {
+        "name": "tijsverkoyen/css-to-inline-styles",
+        "version": "2.2.3",
+        "version_normalized": "2.2.3.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/tijsverkoyen/CssToInlineStyles.git",
+            "reference": "b43b05cf43c1b6d849478965062b6ef73e223bb5"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/tijsverkoyen/CssToInlineStyles/zipball/b43b05cf43c1b6d849478965062b6ef73e223bb5",
+            "reference": "b43b05cf43c1b6d849478965062b6ef73e223bb5",
+            "shasum": ""
+        },
+        "require": {
+            "ext-dom": "*",
+            "ext-libxml": "*",
+            "php": "^5.5 || ^7.0 || ^8.0",
+            "symfony/css-selector": "^2.7 || ^3.0 || ^4.0 || ^5.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.0 || ^7.5"
+        },
+        "time": "2020-07-13T06:12:54+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.2.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "TijsVerkoyen\\CssToInlineStyles\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Tijs Verkoyen",
+                "email": "css_to_inline_styles@verkoyen.eu",
+                "role": "Developer"
+            }
+        ],
+        "description": "CssToInlineStyles is a class that enables you to convert HTML-pages/files into HTML-pages/files with inline styles. This is very useful when you're sending emails.",
+        "homepage": "https://github.com/tijsverkoyen/CssToInlineStyles"
     },
     {
         "name": "twig/twig",

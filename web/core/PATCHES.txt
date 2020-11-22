@@ -45,3 +45,7 @@ Views file name suggestions often missing from Twig debugging
 Source: https://www.drupal.org/files/issues/views-template-suggestions-2839945-2.patch
 
 
+Do not decode a contact message twice
+Source: https://www.drupal.org/files/issues/2020-10-10/contact-decode-D8.2223967-91.patch
+
+

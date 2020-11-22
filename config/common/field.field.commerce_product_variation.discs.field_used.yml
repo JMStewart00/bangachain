@@ -1,0 +1,23 @@
+uuid: e871ebe8-2570-43b8-a7dd-401192ff7715
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_variation_type.discs
+    - field.storage.commerce_product_variation.field_used
+id: commerce_product_variation.discs.field_used
+field_name: field_used
+entity_type: commerce_product_variation
+bundle: discs
+label: Used
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: Used
+  off_label: New
+field_type: boolean

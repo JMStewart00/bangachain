@@ -17,8 +17,8 @@ configuration:
   display_checkout_progress: true
   panes:
     login:
-      allow_guest_checkout: true
-      allow_registration: false
+      allow_guest_checkout: false
+      allow_registration: true
       step: login
       weight: 0
     contact_information:
@@ -46,7 +46,7 @@ configuration:
       step: complete
       weight: 10
     commerce_giftcard_redemption:
-      allow_multiple: false
+      allow_multiple: true
       step: _sidebar
       weight: 10
     multi_payment_apply:
@@ -62,6 +62,6 @@ configuration:
       step: payment
       weight: 10
     coupon_redemption:
-      allow_multiple: false
+      allow_multiple: true
       step: _sidebar
       weight: 10

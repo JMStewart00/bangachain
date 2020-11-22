@@ -1,0 +1,18 @@
+.checkout-pane-commerce-giftcard-redemption {
+  input[name="apply_giftcard"] {
+    display: block !important;
+    margin-bottom: rvr(1);
+  }
+
+  input[name^="remove_giftcard"] {
+    margin-left: rvr(1);
+    background-color: transparent;
+    color: $orange;
+    padding: 0;
+    font-size: 12px;
+
+    @include hover-focus() {
+      color: darken($orange, 20%);
+    }
+  }
+}

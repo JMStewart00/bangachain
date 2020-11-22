@@ -7862,6 +7862,30 @@ body.no-scroll {
   height: 100px;
   margin-bottom: calc(var(--lh__base) * 1 * var(--rvr-multiplier)); }
 
+.coupon-redemption-form__coupons .o-btn--secondary {
+  margin-left: calc(var(--lh__base) * 1 * var(--rvr-multiplier));
+  background-color: transparent;
+  color: #EE6C4D;
+  padding: 0;
+  font-size: 12px; }
+
+.coupon-redemption-form__coupons .o-btn--secondary:hover, .coupon-redemption-form__coupons .o-btn--secondary:focus {
+  color: #c23413; }
+
+.checkout-pane-commerce-giftcard-redemption input[name="apply_giftcard"] {
+  display: block !important;
+  margin-bottom: calc(var(--lh__base) * 1 * var(--rvr-multiplier)); }
+
+.checkout-pane-commerce-giftcard-redemption input[name^="remove_giftcard"] {
+  margin-left: calc(var(--lh__base) * 1 * var(--rvr-multiplier));
+  background-color: transparent;
+  color: #EE6C4D;
+  padding: 0;
+  font-size: 12px; }
+
+.checkout-pane-commerce-giftcard-redemption input[name^="remove_giftcard"]:hover, .checkout-pane-commerce-giftcard-redemption input[name^="remove_giftcard"]:focus {
+  color: #c23413; }
+
 .c-pagination {
   height: 3rem; }
 

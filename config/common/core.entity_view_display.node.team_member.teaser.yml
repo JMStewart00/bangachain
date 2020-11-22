@@ -1,0 +1,40 @@
+uuid: eda57a9f-1a16-4b38-aa17-89339067464d
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.team_member.body
+    - field.field.node.team_member.field_favorite_discs
+    - field.field.node.team_member.field_handedness
+    - field.field.node.team_member.field_hometown
+    - field.field.node.team_member.field_photo
+    - field.field.node.team_member.field_social_media_links
+    - node.type.team_member
+  module:
+    - text
+    - user
+id: node.team_member.teaser
+targetEntityType: node
+bundle: team_member
+mode: teaser
+content:
+  body:
+    label: hidden
+    type: text_summary_or_trimmed
+    weight: 101
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  field_favorite_discs: true
+  field_handedness: true
+  field_hometown: true
+  field_photo: true
+  field_social_media_links: true

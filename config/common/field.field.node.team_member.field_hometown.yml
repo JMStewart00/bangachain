@@ -1,0 +1,19 @@
+uuid: a8f89807-4bbd-4c91-b17d-b965113f4e41
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_hometown
+    - node.type.team_member
+id: node.team_member.field_hometown
+field_name: field_hometown
+entity_type: node
+bundle: team_member
+label: Hometown
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

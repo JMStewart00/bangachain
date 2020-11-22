@@ -1,0 +1,21 @@
+uuid: 04b964a0-c9cc-420c-bda1-5877611a2924
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_handedness
+    - node.type.team_member
+  module:
+    - options
+id: node.team_member.field_handedness
+field_name: field_handedness
+entity_type: node
+bundle: team_member
+label: Handedness
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

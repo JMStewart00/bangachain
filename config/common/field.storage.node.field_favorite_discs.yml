@@ -1,0 +1,20 @@
+uuid: f0422b54-c82c-4889-96b1-5d3ad9925756
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_product
+    - node
+id: node.field_favorite_discs
+field_name: field_favorite_discs
+entity_type: node
+type: entity_reference
+settings:
+  target_type: commerce_product
+module: core
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

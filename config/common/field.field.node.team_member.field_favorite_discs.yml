@@ -1,0 +1,29 @@
+uuid: 3439ebe7-0110-4ae7-8570-bbfce34d1eed
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.discs
+    - field.storage.node.field_favorite_discs
+    - node.type.team_member
+id: node.team_member.field_favorite_discs
+field_name: field_favorite_discs
+entity_type: node
+bundle: team_member
+label: 'Favorite Discs'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:commerce_product'
+  handler_settings:
+    target_bundles:
+      discs: discs
+    sort:
+      field: title
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

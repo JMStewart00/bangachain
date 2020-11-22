@@ -1,0 +1,30 @@
+uuid: 44cd6a33-21a5-4e5e-869e-93bb1b636a12
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_handedness
+field_name: field_handedness
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: left
+      label: Left
+    -
+      value: right
+      label: Right
+    -
+      value: both
+      label: 'Throws with Both'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

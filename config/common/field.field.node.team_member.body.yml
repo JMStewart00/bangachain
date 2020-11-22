@@ -1,0 +1,23 @@
+uuid: 3e0d4aa9-a6ce-40bb-89ff-0d517f7ebac3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.team_member
+  module:
+    - text
+id: node.team_member.body
+field_name: body
+entity_type: node
+bundle: team_member
+label: Bio
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: false
+  required_summary: false
+field_type: text_with_summary

@@ -23,28 +23,29 @@ content:
   body:
     label: hidden
     type: text_default
-    weight: 101
+    weight: 5
     settings: {  }
     third_party_settings: {  }
     region: content
   field_favorite_discs:
-    weight: 104
+    weight: 6
     label: above
     settings:
-      link: true
+      view_mode: teaser
+      link: false
     third_party_settings: {  }
-    type: entity_reference_label
+    type: entity_reference_entity_view
     region: content
   field_handedness:
-    weight: 103
-    label: above
+    weight: 4
+    label: inline
     settings: {  }
     third_party_settings: {  }
     type: list_default
     region: content
   field_hometown:
-    weight: 102
-    label: above
+    weight: 3
+    label: inline
     settings:
       link_to_entity: false
     third_party_settings: {  }
@@ -52,25 +53,29 @@ content:
     region: content
   field_photo:
     type: entity_reference_entity_view
-    weight: 106
-    label: above
+    weight: 1
+    label: hidden
     settings:
-      view_mode: default
+      view_mode: square
       link: false
     third_party_settings: {  }
     region: content
   field_social_media_links:
-    weight: 105
-    label: above
+    weight: 2
+    label: hidden
     settings:
-      appearance: {  }
-      link_attributes: {  }
+      appearance:
+        orientation: h
+        show_name: 0
+      link_attributes:
+        target: _blank
+        rel: '<none>'
     third_party_settings: {  }
     type: social_media_links_field_default
     region: content
   links:
-    weight: 100
+    weight: 0
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
 hidden: {  }

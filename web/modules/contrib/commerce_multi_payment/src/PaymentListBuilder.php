@@ -35,11 +35,11 @@ class PaymentListBuilder extends \Drupal\commerce_payment\PaymentListBuilder {
     /** @var \Drupal\commerce_payment\Entity\PaymentInterface $entity */
     $amount = $entity->getAmount();
     // @todo Refactor the number formatter to work with just a currency code.
-    $currency = Currency::load($amount->getCurrencyCode());
-    $formatted_amount = $this->numberFormatter->formatCurrency($amount->getNumber(), $currency);
+    $currency = $amount->getCurrencyCode();
+    $formatted_amount = $this->currencyFormatter->format($amount->getNumber(), $currency);
     $refunded_amount = $entity->getRefundedAmount();
     if ($refunded_amount && !$refunded_amount->isZero()) {
-      $formatted_amount .= ' Refunded: ' . $this->numberFormatter->formatCurrency($refunded_amount->getNumber(), $currency);
+      $formatted_amount .= ' Refunded: ' . $this->currencyFormatter->format($refunded_amount->getNumber(), $currency);
     }
 
     $row['label'] = $formatted_amount;

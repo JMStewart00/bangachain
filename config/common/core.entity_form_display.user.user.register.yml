@@ -1,8 +1,9 @@
-uuid: 15b8c1a9-8e01-4ad3-ad1a-dc1dad221bf7
+uuid: 4e31610d-8683-420e-a399-9f47bcbf4b78
 langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_form_mode.user.register
     - field.field.user.user.commerce_remote_id
     - field.field.user.user.user_picture
   module:
@@ -10,18 +11,13 @@ dependencies:
     - user
 _core:
   default_config_hash: K-1rBM8mTIkFp9RqOC2tMRUukOQ1xbRCfSKK8dEddnA
-id: user.user.default
+id: user.user.register
 targetEntityType: user
 bundle: user
-mode: default
+mode: register
 content:
   account:
     weight: 0
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  contact:
-    weight: 2
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -32,16 +28,17 @@ content:
     third_party_settings: {  }
   path:
     type: path
-    weight: 4
+    weight: 3
     region: content
     settings: {  }
     third_party_settings: {  }
   timezone:
-    weight: 3
+    weight: 2
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
   commerce_remote_id: true
+  contact: true
   customer_profiles: true
   user_picture: true

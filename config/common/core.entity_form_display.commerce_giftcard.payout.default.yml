@@ -1,0 +1,58 @@
+uuid: ad98362c-f6c3-4ac4-a8ee-b4509090a671
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_giftcard.giftcard_type.payout
+    - field.field.commerce_giftcard.payout.feeds_item
+  module:
+    - commerce
+    - commerce_price
+id: commerce_giftcard.payout.default
+targetEntityType: commerce_giftcard
+bundle: payout
+mode: default
+content:
+  balance:
+    type: commerce_price_default
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  code:
+    type: string_textfield
+    weight: -10
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    settings:
+      display_label: false
+    weight: 30
+    region: content
+    third_party_settings: {  }
+  stores:
+    type: commerce_entity_select
+    weight: 20
+    region: content
+    settings:
+      hide_single_entity: true
+      autocomplete_threshold: 7
+      autocomplete_size: 60
+      autocomplete_placeholder: ''
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 5
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    region: content
+    third_party_settings: {  }
+hidden:
+  feeds_item: true

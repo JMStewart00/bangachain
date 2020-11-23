@@ -1,0 +1,23 @@
+uuid: cc99647f-5bdc-4ce5-b1dc-216318a7f910
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_giftcard.giftcard_type.payout
+    - field.storage.commerce_giftcard.feeds_item
+  module:
+    - feeds
+id: commerce_giftcard.payout.feeds_item
+field_name: feeds_item
+entity_type: commerce_giftcard
+bundle: payout
+label: 'Feeds item'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:feeds_feed'
+  handler_settings: {  }
+field_type: feeds_item

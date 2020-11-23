@@ -53,6 +53,7 @@ module:
   devel: 0
   dynamic_page_cache: 0
   editor: 0
+  email_registration: 0
   entity: 0
   entity_reference_revisions: 0
   feeds: 0

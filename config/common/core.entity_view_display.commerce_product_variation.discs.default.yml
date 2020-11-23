@@ -8,6 +8,7 @@ dependencies:
     - field.field.commerce_product_variation.discs.attribute_disc_plastic
     - field.field.commerce_product_variation.discs.attribute_disc_weight
     - field.field.commerce_product_variation.discs.feeds_item
+    - field.field.commerce_product_variation.discs.field_bin
     - field.field.commerce_product_variation.discs.field_product_image
     - field.field.commerce_product_variation.discs.field_stock
     - field.field.commerce_product_variation.discs.field_used
@@ -22,7 +23,7 @@ mode: default
 content:
   field_product_image:
     type: entity_reference_entity_view
-    weight: 2
+    weight: 1
     label: above
     settings:
       view_mode: square
@@ -30,25 +31,16 @@ content:
     third_party_settings: {  }
     region: content
   field_stock:
-    weight: 3
+    weight: 2
     label: above
     settings: {  }
     third_party_settings: {  }
     type: commerce_stock_level_simple
     region: content
-  list_price:
-    label: above
-    type: commerce_price_default
-    weight: 0
-    region: content
-    settings:
-      strip_trailing_zeroes: false
-      currency_display: symbol
-    third_party_settings: {  }
   price:
     label: hidden
     type: commerce_price_default
-    weight: 1
+    weight: 0
     region: content
     settings:
       strip_trailing_zeroes: false
@@ -59,7 +51,9 @@ hidden:
   attribute_disc_plastic: true
   attribute_disc_weight: true
   feeds_item: true
+  field_bin: true
   field_used: true
+  list_price: true
   product_id: true
   sku: true
   title: true

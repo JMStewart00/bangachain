@@ -1,0 +1,23 @@
+uuid: b06c7a20-f647-45db-8998-9520457bbda9
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_variation_type.discs
+    - field.storage.commerce_product_variation.field_bin
+id: commerce_product_variation.discs.field_bin
+field_name: field_bin
+entity_type: commerce_product_variation
+bundle: discs
+label: Bin
+description: 'Which bin is the disc in for inventory'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 1
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

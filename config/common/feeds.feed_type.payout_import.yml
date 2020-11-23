@@ -1,0 +1,67 @@
+uuid: d601af88-f0ee-4ff0-94eb-35555c1d73a8
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_giftcard.giftcard_type.payout
+  module:
+    - commerce_feeds
+    - commerce_giftcard
+id: payout_import
+label: 'Payout Import'
+description: 'Importing payout for giftcards.'
+help: ''
+import_period: 3600
+fetcher: upload
+fetcher_configuration:
+  allowed_extensions: 'txt csv tsv xml opml'
+  directory: 'private://feeds'
+parser: csv
+parser_configuration:
+  delimiter: ','
+  no_headers: false
+  line_limit: 100
+processor: 'entity:commerce_giftcard'
+processor_configuration:
+  update_existing: 0
+  update_non_existent: _keep
+  expire: -1
+  owner_feed_author: false
+  owner_id: 0
+  authorize: true
+  skip_hash_check: false
+  values:
+    type: payout
+custom_sources:
+  code:
+    label: Code
+    value: Code
+    machine_name: code
+  balance:
+    label: Balance
+    value: Balance
+    machine_name: balance
+  owner:
+    label: Owner
+    value: Owner
+    machine_name: owner
+mappings:
+  -
+    target: code
+    map:
+      value: code
+    unique: {  }
+    settings: {  }
+  -
+    target: balance
+    map:
+      number: balance
+    settings:
+      currency_code: USD
+  -
+    target: uid
+    map:
+      target_id: owner
+    settings:
+      reference_by: false
+      autocreate: false

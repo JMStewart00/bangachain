@@ -8,6 +8,7 @@ dependencies:
     - field.field.commerce_product_variation.discs.attribute_disc_plastic
     - field.field.commerce_product_variation.discs.attribute_disc_weight
     - field.field.commerce_product_variation.discs.feeds_item
+    - field.field.commerce_product_variation.discs.field_bin
     - field.field.commerce_product_variation.discs.field_product_image
     - field.field.commerce_product_variation.discs.field_stock
     - field.field.commerce_product_variation.discs.field_used
@@ -42,11 +43,18 @@ content:
     region: content
   commerce_stock_always_in_stock:
     type: boolean_checkbox
-    weight: 9
+    weight: 10
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
+  field_bin:
+    weight: 8
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
   field_product_image:
     type: media_library_widget
     weight: 3
@@ -55,7 +63,7 @@ content:
     third_party_settings: {  }
     region: content
   field_stock:
-    weight: 8
+    weight: 9
     settings:
       default_transaction_note: 'Transaction issued by stock level field.'
       step: '1'
@@ -88,7 +96,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 10
+    weight: 11
     region: content
     third_party_settings: {  }
   weight:

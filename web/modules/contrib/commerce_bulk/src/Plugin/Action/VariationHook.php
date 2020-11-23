@@ -50,9 +50,7 @@ class VariationHook extends ConfigurableActionBase {
       $form['data'] = [
         '#type' => 'textarea',
         '#title' => $this->t('Optional JSON or XML data'),
-        '#rows' => 20,
-        '#value' => 'STOCK IN = ADD, STOCK OUT = DECREASE, RESET = 1
-        {"stock_in":INT,"stock_out":INT,"bin":INT,"stock_reset":true}',
+        '#rows' => 20
       ];
       $form['cancel'] = [
         '#type' => 'submit',

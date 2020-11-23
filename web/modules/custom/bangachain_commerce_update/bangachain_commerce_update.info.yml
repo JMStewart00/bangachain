@@ -1,0 +1,8 @@
+name: Bang-A-Chain Commerce Update
+description: Custom commerce functionality for Bang-A-Chain.
+type: module
+core: 8.x
+package: Bang-A-Chain
+
+dependencies:
+  - drupal:commerce_bulk

@@ -1,0 +1,5 @@
+services:
+  bangachain_commerce_update.route_subscriber:
+    class: Drupal\bangachain_commerce_update\Routing\BangachainRouteSubscriber
+    tags:
+      - { name: event_subscriber }

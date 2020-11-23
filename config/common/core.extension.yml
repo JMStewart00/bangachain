@@ -4,6 +4,7 @@ module:
   admin_toolbar: 0
   admin_toolbar_tools: 0
   automated_cron: 0
+  bangachain_commerce_update: 0
   bangachain_layout: 0
   better_exposed_filters: 0
   big_pipe: 0

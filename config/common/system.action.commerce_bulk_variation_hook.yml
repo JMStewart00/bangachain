@@ -7,7 +7,7 @@ dependencies:
 _core:
   default_config_hash: LLRMbjl5uTo6tG3ohdtoA5JJ2B9iXfENB4NZKynijfA
 id: commerce_bulk_variation_hook
-label: 'Pass to hook'
+label: 'Set Field Values (Stock, Bin)'
 type: commerce_product_variation
 plugin: commerce_bulk_variation_hook
 configuration: {  }

@@ -32,8 +32,8 @@
     <div class="u-text-center">
 
         <div class="c-product__image">
-          {% if product.field_default_image|render %}
-            {{ product.field_default_image }}
+          {% if product.variation_field_product_image.0 %}
+            {{ product.variation_field_product_image }}
           {% else %}
             <img src="/{{ base_path ~ directory }}/assets/images/logo.png" alt="Default Disc Photo">
           {% endif %}

@@ -26,7 +26,7 @@ content:
     weight: 1
     label: above
     settings:
-      view_mode: square
+      view_mode: default
       link: false
     third_party_settings: {  }
     region: content

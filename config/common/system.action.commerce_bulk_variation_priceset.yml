@@ -1,0 +1,13 @@
+uuid: a78af2e8-ed44-4b29-8553-3d4592f5fbfe
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_bulk
+_core:
+  default_config_hash: i2zuBYOGmfpTrE-mnn038wkLBX5Zkomta5Z8jsS7-gg
+id: commerce_bulk_variation_priceset
+label: 'Set Price'
+type: commerce_product_variation
+plugin: commerce_bulk_variation_priceset
+configuration: {  }

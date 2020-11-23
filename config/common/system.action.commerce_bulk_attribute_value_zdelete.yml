@@ -1,0 +1,13 @@
+uuid: a529c870-8f50-4d86-88dd-b3b80955e6e4
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_bulk
+_core:
+  default_config_hash: hL7zWiEy-ZKWFiHCuXZFngcoR5yVfuqybExjyJgrBgs
+id: commerce_bulk_attribute_value_zdelete
+label: 'Delete attributes'
+type: commerce_product_attribute_value
+plugin: commerce_bulk_attribute_value_zdelete
+configuration: {  }

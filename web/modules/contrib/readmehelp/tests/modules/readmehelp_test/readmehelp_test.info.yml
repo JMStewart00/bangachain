@@ -1,0 +1,13 @@
+name: 'README Help test'
+type: module
+description: 'Tests markdown to markup conversion.'
+package: Testing
+# core: 8.x
+dependencies:
+  - readmehelp:readmehelp
+
+# Information added by Drupal.org packaging script on 2018-12-22
+version: '8.x-1.0-beta4'
+core: '8.x'
+project: 'readmehelp'
+datestamp: 1545500597

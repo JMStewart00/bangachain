@@ -1,0 +1,13 @@
+uuid: e4ddc614-c45e-4282-9073-d48f1138f5eb
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_bulk
+_core:
+  default_config_hash: 6EwNmdLwiri2AsPQJTtTCL9xo_r0uLA-ivzygQD7zmY
+id: commerce_bulk_variation_top
+label: 'Move to the top'
+type: commerce_product_variation
+plugin: commerce_bulk_variation_top
+configuration: {  }

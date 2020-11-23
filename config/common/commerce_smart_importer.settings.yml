@@ -1,5 +1,5 @@
 store: '1'
-sku_prefix: disc_
+sku_prefix: null
 sku_method: '1'
 sku_random_digits: '6'
 batch_products: '25'

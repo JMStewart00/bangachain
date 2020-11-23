@@ -1,0 +1,14 @@
+name: README Help
+type: module
+description: Renders README file on the admin/help/your_module page.
+# core: 8.x
+package: Help
+dependencies:
+  - drupal:help
+  - drupal:filter
+
+# Information added by Drupal.org packaging script on 2018-12-22
+version: '8.x-1.0-beta4'
+core: '8.x'
+project: 'readmehelp'
+datestamp: 1545500597

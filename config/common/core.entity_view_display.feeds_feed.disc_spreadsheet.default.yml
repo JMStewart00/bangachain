@@ -1,0 +1,42 @@
+uuid: ca414b9a-c099-44e8-825d-c234e1ca2d82
+langcode: en
+status: true
+dependencies:
+  config:
+    - feeds.feed_type.disc_spreadsheet
+  module:
+    - feeds
+    - user
+id: feeds_feed.disc_spreadsheet.default
+targetEntityType: feeds_feed
+bundle: disc_spreadsheet
+mode: default
+content:
+  imported:
+    label: inline
+    type: timestamp_ago
+    weight: 1
+    region: content
+    settings:
+      future_format: '@interval hence'
+      past_format: '@interval ago'
+      granularity: 2
+    third_party_settings: {  }
+  next:
+    label: inline
+    type: timestamp
+    weight: 1
+    region: content
+    settings:
+      date_format: medium
+      custom_date_format: ''
+      timezone: ''
+    third_party_settings: {  }
+  source:
+    label: inline
+    type: feeds_uri_link
+    weight: -3
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden: {  }

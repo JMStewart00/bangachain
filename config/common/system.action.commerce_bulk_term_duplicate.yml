@@ -1,0 +1,13 @@
+uuid: 584cd812-4c9e-4f97-a09b-18cdca3b9d9d
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_bulk
+_core:
+  default_config_hash: BrIiknGaqwDoUi5lk-dCECEKMbT7PiE9s6Zex0QtzBc
+id: commerce_bulk_term_duplicate
+label: 'Duplicate term'
+type: taxonomy_term
+plugin: commerce_bulk_term_duplicate
+configuration: {  }

@@ -14,6 +14,7 @@ dependencies:
     - field.field.commerce_product_variation.discs.field_used
     - field.field.commerce_product_variation.discs.weight
   module:
+    - commerce_bulk
     - commerce_price
     - commerce_stock_field
     - media_library
@@ -85,12 +86,19 @@ content:
     settings: {  }
     third_party_settings: {  }
   sku:
-    type: string_textfield
+    type: commerce_bulk_sku
     weight: 0
     region: content
     settings:
+      custom_label: ''
+      uniqid_enabled: true
+      prefix: ''
+      suffix: ''
       size: 60
       placeholder: ''
+      maximum: 500
+      more_entropy: false
+      hide: false
     third_party_settings: {  }
   status:
     type: boolean_checkbox

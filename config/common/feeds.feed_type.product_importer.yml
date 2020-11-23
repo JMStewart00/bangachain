@@ -1,0 +1,73 @@
+uuid: 62047342-6f35-428d-a697-51e614596a75
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.discs
+  module:
+    - commerce_feeds
+    - commerce_product
+    - feeds_tamper
+third_party_settings:
+  feeds_tamper:
+    tampers:
+      0ac61a3f-e7b4-418f-ae6c-2b34ea6610f8:
+        separator: ','
+        limit: null
+        plugin: explode
+        source: sku
+        weight: 0
+        label: Explode
+        uuid: 0ac61a3f-e7b4-418f-ae6c-2b34ea6610f8
+id: product_importer
+label: 'Disc Product Importer'
+description: 'Base disc product imports to associate the variations with a disc.'
+help: ''
+import_period: -1
+fetcher: upload
+fetcher_configuration:
+  allowed_extensions: 'txt csv tsv xml opml'
+  directory: 'private://feeds'
+parser: csv
+parser_configuration:
+  delimiter: ','
+  no_headers: false
+  line_limit: 100
+processor: 'entity:commerce_product'
+processor_configuration:
+  langcode: en
+  update_existing: 2
+  update_non_existent: _keep
+  expire: -1
+  owner_feed_author: false
+  owner_id: 0
+  authorize: true
+  skip_hash_check: false
+  values:
+    type: discs
+custom_sources:
+  sku:
+    label: SKU
+    value: SKU
+    machine_name: sku
+  title:
+    label: Title
+    value: Title
+    machine_name: title
+mappings:
+  -
+    target: variations
+    map:
+      target_id: sku
+    settings:
+      reference_by: sku
+      feeds_item: guid
+      autocreate: 0
+  -
+    target: title
+    map:
+      value: title
+    unique:
+      value: '1'
+    settings:
+      language: null

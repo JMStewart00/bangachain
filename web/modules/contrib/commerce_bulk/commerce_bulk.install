@@ -1,0 +1,137 @@
+<?php
+
+/**
+ * @file
+ * Install and uninstall functions for the commerce_bulk module.
+ */
+
+use Drupal\Component\Serialization\Yaml;
+
+/**
+ * Implements hook_install().
+ */
+function commerce_bulk_install() {
+  $config = \Drupal::configFactory();
+  $all = $config->listAll('core.entity_form_display.commerce_product_variation.');
+
+  foreach ($all as $name) {
+    $variation = $config->getEditable($name);
+    if (!$variation->get('hidden.sku')) {
+      $sku = $variation->get('content.sku');
+    }
+    else {
+      $hidden = $variation->get('hidden');
+      unset($hidden['sku']);
+      $variation->set('hidden', $hidden);
+      $sku = [
+        'settings' => [
+          'size' => 60,
+          'placeholder' => "",
+        ],
+        'weight' => -4,
+        'region' => 'content',
+        'third_party_settings' => [],
+      ];
+    }
+    $sku['type'] = 'commerce_bulk_sku';
+    $sku['settings'] += [
+      'custom_label' => "",
+      'uniqid_enabled' => TRUE,
+      'more_entropy' => FALSE,
+      'hide' => FALSE,
+      'prefix' => "sku-",
+      'suffix' => "",
+      'maximum' => 500,
+    ];
+    $variation->set('content.sku', $sku);
+    $variation->save();
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function commerce_bulk_uninstall() {
+  $config = \Drupal::configFactory();
+  $all = $config->listAll('core.entity_form_display.commerce_product_variation.');
+
+  foreach ($all as $name) {
+    $variation = $config->getEditable($name);
+    $sku = $variation->get('content.sku');
+    $sku['type'] = 'string_textfield';
+    unset(
+      $sku['settings']['custom_label'],
+      $sku['settings']['uniqid_enabled'],
+      $sku['settings']['more_entropy'],
+      $sku['settings']['hide'],
+      $sku['settings']['prefix'],
+      $sku['settings']['suffix'],
+      $sku['settings']['maximum']
+    );
+    $variation->set('content.sku', $sku);
+    $variation->save();
+  }
+
+  $configurations = [
+    'system.action.commerce_bulk_attribute_value_name',
+    'system.action.commerce_bulk_attribute_value_top',
+    'system.action.commerce_bulk_attribute_value_zdelete',
+    'system.action.commerce_bulk_variation_duplicate',
+    'system.action.commerce_bulk_variation_hook',
+    'system.action.commerce_bulk_variation_priceadjust',
+    'system.action.commerce_bulk_variation_priceset',
+    'system.action.commerce_bulk_variation_sku',
+    'system.action.commerce_bulk_variation_status',
+    'system.action.commerce_bulk_variation_top',
+    'system.action.commerce_bulk_variation_zdelete',
+    'system.action.commerce_bulk_term_duplicate',
+    'system.action.commerce_bulk_term_zdelete',
+    'system.action.commerce_bulk_order_zanonymize',
+    'views.view.commerce_bulk_attributes',
+    'views.view.commerce_bulk_variations_tab',
+    'views.view.commerce_bulk_taxonomy',
+  ];
+
+  foreach ($configurations as $name) {
+    if ($configuration = $config->getEditable($name)) {
+      $configuration->delete();
+    }
+  }
+}
+
+/**
+ * Install Commerce Bulk Attributes view and actions.
+ */
+function commerce_bulk_update_8201() {
+  $config = \Drupal::configFactory();
+  $configurations = [
+    'system.action.commerce_bulk_attribute_value_name',
+    'system.action.commerce_bulk_attribute_value_top',
+    'system.action.commerce_bulk_attribute_value_zdelete',
+    'views.view.commerce_bulk_attributes',
+  ];
+  foreach ($configurations as $name) {
+    if ($configuration = $config->getEditable($name)) {
+      $data = Yaml::decode(file_get_contents(__DIR__ . "/config/install/{$name}.yml"));
+      $configuration->setData($data)->save();
+    }
+  }
+}
+
+/**
+ * Install Commerce Bulk Taxonomy view and actions.
+ */
+function commerce_bulk_update_8202() {
+  $config = \Drupal::configFactory();
+  $configurations = [
+    'system.action.commerce_bulk_term_duplicate',
+    'system.action.commerce_bulk_term_zdelete',
+    'views.view.commerce_bulk_taxonomy',
+  ];
+  foreach ($configurations as $name) {
+    if ($configuration = $config->getEditable($name)) {
+      $data = Yaml::decode(file_get_contents(__DIR__ . "/config/install/{$name}.yml"));
+      $configuration->setData($data)->save();
+    }
+  }
+}

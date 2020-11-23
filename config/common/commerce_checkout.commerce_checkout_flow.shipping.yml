@@ -8,6 +8,7 @@ dependencies:
     - commerce_payment
     - commerce_promotion
     - commerce_shipping
+    - email_registration
 _core:
   default_config_hash: eGgj-Vay13MNDxbtb1YAjNZuUUgbp92Tr9hDQcR7ogo
 id: shipping
@@ -17,7 +18,7 @@ configuration:
   display_checkout_progress: true
   panes:
     login:
-      allow_guest_checkout: false
+      allow_guest_checkout: true
       allow_registration: true
       step: login
       weight: 0
@@ -64,4 +65,12 @@ configuration:
     coupon_redemption:
       allow_multiple: true
       step: _sidebar
+      weight: 10
+    email_registration_login:
+      allow_guest_checkout: true
+      allow_registration: false
+      step: _disabled
+      weight: 10
+    email_registration_completion_registration:
+      step: _disabled
       weight: 10

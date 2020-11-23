@@ -1,0 +1,15 @@
+uuid: c4e8ba8b-a8b3-4d73-9436-3e0483bc4cac
+langcode: en
+status: true
+dependencies: {  }
+id: images
+label: Images
+media_types:
+  image: image
+  audio: 0
+  document: 0
+  remote_video: 0
+  video: 0
+show_alt: null
+show_title: null
+form_mode: media_library

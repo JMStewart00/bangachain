@@ -1,0 +1,13 @@
+uuid: c82ad1be-ad97-4b80-935b-5d6b048f7924
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_bulk
+_core:
+  default_config_hash: ZX2IrlLaZTsPXOHIIzeLwcMXU146lY47fsbgpaJL8TQ
+id: commerce_bulk_variation_sku
+label: 'Change SKUs'
+type: commerce_product_variation
+plugin: commerce_bulk_variation_sku
+configuration: {  }

@@ -1,0 +1,18 @@
+type: module
+name: 'Commerce Generate'
+description: 'Generate dummy products, ...'
+package: Commerce (contrib)
+core: 8.x
+core_version_requirement: ^8 || ^9
+tags:
+ - developer
+dependencies:
+ - drupal:commerce_bulk
+ - drupal:commerce_product
+ - drupal:devel_generate
+ - drupal:readmehelp
+
+# Information added by Drupal.org packaging script on 2020-09-27
+version: '8.x-1.0-beta4'
+project: 'commerce_bulk'
+datestamp: 1601219639

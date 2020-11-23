@@ -1,7 +1,15 @@
 uuid: 0b82a48b-dd10-4eba-aba8-e6a5eb8aeaea
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - commerce_autosku
+third_party_settings:
+  commerce_autosku:
+    mode: optional
+    plugin: token
+    configuration:
+      pattern: '[random:number]'
 id: discs
 label: Discs
 orderItemType: default

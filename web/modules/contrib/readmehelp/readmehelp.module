@@ -1,0 +1,62 @@
+<?php
+
+/**
+ * @file
+ * Contains readmehelp.module.
+ */
+
+use Drupal\Core\Url;
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements the ReadmeHelpMarkdownConverter service.
+ *
+ * If the module name is passed then README* file in the modules root
+ * directory will be rendered. If the file path passed is a valid
+ * directory within Drupal installation then the first README* file found on
+ * the path will be rendered. If the file path is an absolute path to existing
+ * Drupal site's file then this file will be rendered disregarding of the file
+ * name or extension.
+ *
+ * @param string $module_name
+ *   (optional) The module to look for the files.
+ * @param string $file_path
+ *   (optional) The alternative file path.
+ *
+ * @return \Drupal\readmehelp\ReadmeHelpMarkdownConverter|string
+ *   The markdown converter service or markup generated for a file.
+ */
+function readmehelp_converter_service($module_name = NULL, $file_path = NULL) {
+  $converter = \Drupal::service('readmehelp.markdown_converter');
+  if ($module_name) {
+    return $converter->convertMarkdownFile($module_name, $file_path);
+  }
+
+  return $converter;
+}
+
+/**
+ * Implements hook_system_info_alter().
+ */
+function readmehelp_form_system_modules_alter(&$form, FormStateInterface $form_state, $form_id) {
+  foreach ($form['modules'] as $package => $modules) {
+    if (is_array($modules)) {
+      foreach ($modules as $module => $data) {
+        if (is_array($data) && (isset($data['#requires']['readmehelp']) || $module == 'readmehelp')) {
+          $help = t('README Help');
+          $form['modules'][$package][$module]['links']['help'] = [
+            '#type' => 'link',
+            '#title' => $help,
+            '#url' => Url::fromRoute('help.page', ['name' => $module]),
+            '#options' => [
+              'attributes' => [
+                'class' => ['module-link', 'module-link-help'],
+                'title' => $help,
+              ],
+            ],
+          ];
+        }
+      }
+    }
+  }
+}

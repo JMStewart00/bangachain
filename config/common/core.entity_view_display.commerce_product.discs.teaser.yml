@@ -5,6 +5,7 @@ dependencies:
   config:
     - commerce_product.commerce_product_type.discs
     - core.entity_view_mode.commerce_product.teaser
+    - field.field.commerce_product.discs.feeds_item
     - field.field.commerce_product.discs.field_brand
     - field.field.commerce_product.discs.field_default_image
     - field.field.commerce_product.discs.field_description
@@ -127,5 +128,6 @@ content:
     third_party_settings: {  }
 hidden:
   created: true
+  feeds_item: true
   stores: true
   uid: true

@@ -3239,6 +3239,125 @@
         }
     },
     {
+        "name": "drupal/commerce_autosku",
+        "version": "dev-2.x",
+        "version_normalized": "dev-2.x",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupalcode.org/project/commerce_autosku.git",
+            "reference": "72116232ce0c4f9f5ae68df0de6954ffb1622c02"
+        },
+        "require": {
+            "drupal/commerce_product": "*",
+            "drupal/core": "~8.0",
+            "drupal/token": "*"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "branch-alias": {
+                "dev-2.x": "2.x-dev"
+            },
+            "drupal": {
+                "version": "8.x-2.0-beta2+7-dev",
+                "datestamp": "1579278483",
+                "security-coverage": {
+                    "status": "not-covered",
+                    "message": "Dev releases are not covered by Drupal security advisories."
+                }
+            }
+        },
+        "installation-source": "source",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0+"
+        ],
+        "authors": [
+            {
+                "name": "bojanz",
+                "homepage": "https://www.drupal.org/user/86106"
+            },
+            {
+                "name": "jsacksick",
+                "homepage": "https://www.drupal.org/user/972218"
+            },
+            {
+                "name": "mglaman",
+                "homepage": "https://www.drupal.org/user/2416470"
+            },
+            {
+                "name": "niko-",
+                "homepage": "https://www.drupal.org/user/1409266"
+            },
+            {
+                "name": "rbayliss",
+                "homepage": "https://www.drupal.org/user/772738"
+            },
+            {
+                "name": "rszrama",
+                "homepage": "https://www.drupal.org/user/49344"
+            }
+        ],
+        "description": "Allows hiding of entity label fields and automatic label creation.",
+        "homepage": "https://www.drupal.org/project/commerce_autosku",
+        "support": {
+            "source": "https://git.drupalcode.org/project/commerce_autosku"
+        }
+    },
+    {
+        "name": "drupal/commerce_bulk",
+        "version": "1.0.0-beta4",
+        "version_normalized": "1.0.0.0-beta4",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupalcode.org/project/commerce_bulk.git",
+            "reference": "8.x-1.0-beta4"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/commerce_bulk-8.x-1.0-beta4.zip",
+            "reference": "8.x-1.0-beta4",
+            "shasum": "10322d9d290a001a488e0abc8c3c650b0466ff25"
+        },
+        "require": {
+            "drupal/commerce_order": "*",
+            "drupal/core": "^8 || ^9",
+            "drupal/readmehelp": "^1.0"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "drupal": {
+                "version": "8.x-1.0-beta4",
+                "datestamp": "1601219637",
+                "security-coverage": {
+                    "status": "not-covered",
+                    "message": "Project has not opted into security advisory coverage!"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0+"
+        ],
+        "authors": [
+            {
+                "name": "Vladimir Proshin (drugan)",
+                "homepage": "https://www.drupal.org/u/drugan",
+                "role": "Maintainer"
+            }
+        ],
+        "description": "Provides a service for bulk creation of Drupal Commerce entities.",
+        "homepage": "https://www.drupal.org/project/commerce_bulk",
+        "keywords": [
+            "Drupal",
+            "Drupal Commerce"
+        ],
+        "support": {
+            "source": "https://github.com/drugan/commerce_bulk",
+            "issues": "https://github.com/drugan/commerce_bulk/issues"
+        }
+    },
+    {
         "name": "drupal/commerce_cart",
         "version": "2.21.0",
         "version_normalized": "2.21.0.0",
@@ -4982,6 +5101,97 @@
         }
     },
     {
+        "name": "drupal/dropzonejs",
+        "version": "2.3.0",
+        "version_normalized": "2.3.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupalcode.org/project/dropzonejs.git",
+            "reference": "8.x-2.3"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/dropzonejs-8.x-2.3.zip",
+            "reference": "8.x-2.3",
+            "shasum": "c145f2560ed31de32ea8938b0c0378765f70e36a"
+        },
+        "require": {
+            "drupal/core": "^8.8 || ^9"
+        },
+        "require-dev": {
+            "drupal/entity_browser": "^2.5"
+        },
+        "suggest": {
+            "enyo/dropzone": "Required to use drupal/dropzonejs. DropzoneJS is an open source library that provides drag’n’drop file uploads with image previews."
+        },
+        "type": "drupal-module",
+        "extra": {
+            "drupal": {
+                "version": "8.x-2.3",
+                "datestamp": "1600311980",
+                "security-coverage": {
+                    "status": "covered",
+                    "message": "Covered by Drupal's security advisory policy"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0-or-later"
+        ],
+        "authors": [
+            {
+                "name": "Janez Urevc",
+                "homepage": "https://drupal.org/u/slashrsm",
+                "role": "Maintainer"
+            },
+            {
+                "name": "Christian Fritsch",
+                "homepage": "https://drupal.org/u/chrfritsch",
+                "role": "Maintainer"
+            },
+            {
+                "name": "Primoz Hmeljak",
+                "homepage": "https://drupal.org/u/Primsi",
+                "role": "Maintainer"
+            },
+            {
+                "name": "Qiangjun Ran",
+                "homepage": "https://drupal.org/u/jungle",
+                "role": "Maintainer"
+            },
+            {
+                "name": "See other contributors",
+                "homepage": "https://www.drupal.org/node/1998478/committers",
+                "role": "contributor"
+            },
+            {
+                "name": "slashrsm",
+                "homepage": "https://www.drupal.org/user/744628"
+            },
+            {
+                "name": "wouters_f",
+                "homepage": "https://www.drupal.org/user/721548"
+            },
+            {
+                "name": "zkday",
+                "homepage": "https://www.drupal.org/user/888644"
+            }
+        ],
+        "description": "Drupal integration for DropzoneJS - An open source library that provides drag’n’drop file uploads with image previews.",
+        "homepage": "https://www.drupal.org/project/dropzonejs",
+        "keywords": [
+            "DropzoneJS",
+            "Drupal"
+        ],
+        "support": {
+            "source": "https://www.drupal.org/project/dropzonejs",
+            "issues": "https://www.drupal.org/project/issues/dropzonejs",
+            "#media": "http://drupal.slack.com"
+        }
+    },
+    {
         "name": "drupal/easy_breadcrumb",
         "version": "1.13.0",
         "version_normalized": "1.13.0.0",
@@ -5561,6 +5771,79 @@
         "support": {
             "source": "https://git.drupalcode.org/project/feeds",
             "issues": "https://www.drupal.org/project/issues/feeds"
+        }
+    },
+    {
+        "name": "drupal/feeds_tamper",
+        "version": "2.0.0-beta2",
+        "version_normalized": "2.0.0.0-beta2",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupalcode.org/project/feeds_tamper.git",
+            "reference": "8.x-2.0-beta2"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/feeds_tamper-8.x-2.0-beta2.zip",
+            "reference": "8.x-2.0-beta2",
+            "shasum": "969075b8a3fd702dfbfd219fd507d3aa166f919d"
+        },
+        "require": {
+            "drupal/core": "^8 || ^9",
+            "drupal/feeds": "~3.0",
+            "drupal/tamper": "~1.0"
+        },
+        "require-dev": {
+            "drupal/feeds": "3.x-dev"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "drupal": {
+                "version": "8.x-2.0-beta2",
+                "datestamp": "1591295714",
+                "security-coverage": {
+                    "status": "not-covered",
+                    "message": "Beta releases are not covered by Drupal security advisories."
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0-or-later"
+        ],
+        "authors": [
+            {
+                "name": "Bobík",
+                "homepage": "https://www.drupal.org/user/123612"
+            },
+            {
+                "name": "MegaChriz",
+                "homepage": "https://www.drupal.org/user/654114"
+            },
+            {
+                "name": "franz",
+                "homepage": "https://www.drupal.org/user/581844"
+            },
+            {
+                "name": "mausolos",
+                "homepage": "https://www.drupal.org/user/642118"
+            },
+            {
+                "name": "twistor",
+                "homepage": "https://www.drupal.org/user/473738"
+            }
+        ],
+        "description": "Modify feeds data before it gets saved.",
+        "homepage": "http://drupal.org/project/feeds_tamper",
+        "keywords": [
+            "Drupal",
+            "feeds",
+            "tamper"
+        ],
+        "support": {
+            "source": "http://cgit.drupalcode.org/feeds_tamper",
+            "issues": "http://drupal.org/project/issues/feeds_tamper"
         }
     },
     {
@@ -6616,6 +6899,66 @@
         }
     },
     {
+        "name": "drupal/media_bulk_upload",
+        "version": "1.0.0-alpha27",
+        "version_normalized": "1.0.0.0-alpha27",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupalcode.org/project/media_bulk_upload.git",
+            "reference": "8.x-1.0-alpha27"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/media_bulk_upload-8.x-1.0-alpha27.zip",
+            "reference": "8.x-1.0-alpha27",
+            "shasum": "8dbb1d2c45731650d12ae53519913d385ce8497e"
+        },
+        "require": {
+            "drupal/core": "^8 || ^9",
+            "drupal/dropzonejs": "^2.0"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "drupal": {
+                "version": "8.x-1.0-alpha27",
+                "datestamp": "1592297811",
+                "security-coverage": {
+                    "status": "not-covered",
+                    "message": "Alpha releases are not covered by Drupal security advisories."
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0+"
+        ],
+        "authors": [
+            {
+                "name": "Mirnaxvb",
+                "homepage": "https://www.drupal.org/user/3157031"
+            },
+            {
+                "name": "Steven Buteneers",
+                "homepage": "https://www.drupal.org/user/3301055"
+            },
+            {
+                "name": "jefuri",
+                "homepage": "https://www.drupal.org/user/2733365"
+            },
+            {
+                "name": "mycw1991",
+                "homepage": "https://www.drupal.org/user/3523472"
+            }
+        ],
+        "description": "Allows uploading files in bulk and converting them to media entities.",
+        "homepage": "https://www.drupal.org/project/media_bulk_upload",
+        "support": {
+            "source": "git://git.drupal.org/project/media_bulk_upload.git",
+            "issues": "https://www.drupal.org/project/issues/media_bulk_upload"
+        }
+    },
+    {
         "name": "drupal/media_library_form_element",
         "version": "1.0.0-beta5",
         "version_normalized": "1.0.0.0-beta5",
@@ -7397,6 +7740,57 @@
         }
     },
     {
+        "name": "drupal/readmehelp",
+        "version": "1.0.0-beta4",
+        "version_normalized": "1.0.0.0-beta4",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupalcode.org/project/readmehelp.git",
+            "reference": "8.x-1.0-beta4"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/readmehelp-8.x-1.0-beta4.zip",
+            "reference": "8.x-1.0-beta4",
+            "shasum": "eb41b936db945b827e7fc15759df6182ff0b4086"
+        },
+        "require": {
+            "drupal/core": "^8"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "drupal": {
+                "version": "8.x-1.0-beta4",
+                "datestamp": "1545500580",
+                "security-coverage": {
+                    "status": "not-covered",
+                    "message": "Project has not opted into security advisory coverage!"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0+"
+        ],
+        "authors": [
+            {
+                "name": "Vladimir Proshin (drugan)",
+                "homepage": "https://www.drupal.org/u/drugan",
+                "role": "Maintainer"
+            }
+        ],
+        "description": "Renders README file on the admin/help/your_module page",
+        "homepage": "https://www.drupal.org/project/readmehelp",
+        "keywords": [
+            "Drupal"
+        ],
+        "support": {
+            "source": "http://cgit.drupalcode.org/readmehelp",
+            "issues": "https://www.drupal.org/project/issues/readmehelp"
+        }
+    },
+    {
         "name": "drupal/redirect",
         "version": "1.6.0",
         "version_normalized": "1.6.0.0",
@@ -7909,6 +8303,69 @@
         "homepage": "https://www.drupal.org/project/swiftmailer",
         "support": {
             "source": "https://git.drupalcode.org/project/swiftmailer"
+        }
+    },
+    {
+        "name": "drupal/tamper",
+        "version": "1.0.0-alpha2",
+        "version_normalized": "1.0.0.0-alpha2",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupalcode.org/project/tamper.git",
+            "reference": "8.x-1.0-alpha2"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/tamper-8.x-1.0-alpha2.zip",
+            "reference": "8.x-1.0-alpha2",
+            "shasum": "69a7f488e42fa96b098f40c88567176d3a7ae9ef"
+        },
+        "require": {
+            "drupal/core": "^8.8 || ^9"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "drupal": {
+                "version": "8.x-1.0-alpha2",
+                "datestamp": "1591295430",
+                "security-coverage": {
+                    "status": "not-covered",
+                    "message": "Project has not opted into security advisory coverage!"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0+"
+        ],
+        "authors": [
+            {
+                "name": "MegaChriz",
+                "homepage": "https://www.drupal.org/user/654114"
+            },
+            {
+                "name": "ericgsmith",
+                "homepage": "https://www.drupal.org/user/1649952"
+            },
+            {
+                "name": "jamesdixon",
+                "homepage": "https://www.drupal.org/user/762570"
+            },
+            {
+                "name": "twistor",
+                "homepage": "https://www.drupal.org/user/473738"
+            }
+        ],
+        "description": "Generic plugin to modify data.",
+        "homepage": "https://www.drupal.org/project/tamper",
+        "keywords": [
+            "Drupal",
+            "tamper"
+        ],
+        "support": {
+            "source": "http://cgit.drupalcode.org/tamper",
+            "issues": "http://drupal.org/project/issues/tamper"
         }
     },
     {
@@ -8656,6 +9113,17 @@
                 "type": "github"
             }
         ]
+    },
+    {
+        "name": "enyo/dropzone",
+        "version": "5.7.0",
+        "version_normalized": "5.7.0.0",
+        "dist": {
+            "type": "zip",
+            "url": "https://github.com/enyo/dropzone/archive/v5.7.0.zip"
+        },
+        "type": "drupal-library",
+        "installation-source": "dist"
     },
     {
         "name": "furf/jquery-ui-touch-punch",

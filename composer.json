@@ -95,6 +95,18 @@
                 "type": "zip"
               }
             }
+        },
+        {
+            "type": "package",
+            "package": {
+              "name": "enyo/dropzone",
+              "version": "5.7.0",
+              "type": "drupal-library",
+              "dist": {
+                "url": "https://github.com/enyo/dropzone/archive/v5.7.0.zip",
+                "type": "zip"
+              }
+            }
         }
     ],
     "require": {
@@ -119,6 +131,8 @@
         "drupal/coffee": "^1.0",
         "drupal/color_field": "^2.4",
         "drupal/commerce": "^2.20",
+        "drupal/commerce_autosku": "2.x-dev@dev",
+        "drupal/commerce_bulk": "^1.0@beta",
         "drupal/commerce_cart_flyout": "^1.8",
         "drupal/commerce_feeds": "^1.0@alpha",
         "drupal/commerce_giftcard": "1.0.x-dev",
@@ -133,11 +147,13 @@
         "drupal/core": "^8.6",
         "drupal/ctools": "^3.2",
         "drupal/devel": "^4.0",
+        "drupal/dropzonejs": "^2.3",
         "drupal/easy_breadcrumb": "^1.12",
         "drupal/email_registration": "^1.1",
         "drupal/estore": "^1.14",
         "drupal/eu_cookie_compliance": "^1.8",
         "drupal/extlink": "^1.2",
+        "drupal/feeds_tamper": "^2.0@beta",
         "drupal/field_group": "^3.1",
         "drupal/flexi_cart": "^1.2",
         "drupal/fontawesome": "^2.17",
@@ -149,6 +165,7 @@
         "drupal/layout_builder_modal": "^1.0",
         "drupal/layout_builder_restrictions": "^2.5",
         "drupal/mailsystem": "^4.3",
+        "drupal/media_bulk_upload": "^1.0@alpha",
         "drupal/media_library_form_element": "^1.0@alpha",
         "drupal/media_library_theme_reset": "^1.0",
         "drupal/metatag": "^1.13",
@@ -169,6 +186,7 @@
         "drupal/views_ajax_history": "^1.2",
         "drupal/viewsreference": "^1.4",
         "drush/drush": "^9.2",
+        "enyo/dropzone": "^5.7",
         "furf/jquery-ui-touch-punch": "^0.0.1",
         "npm-asset/bootstrap": "^4.5",
         "npm-asset/slick-carousel": "^1.8",

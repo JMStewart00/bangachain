@@ -156,6 +156,7 @@ class CommerceSmartImporerService extends ControllerBase {
         }
         break;
 
+      case 'commerce_stock_level':
       case 'float':
       case 'decimal':
         try {

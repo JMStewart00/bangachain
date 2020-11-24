@@ -1,0 +1,21 @@
+uuid: a7e57118-e8bd-4928-bd29-74aec8e7c88b
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_variation_type.accessories
+    - field.storage.commerce_product_variation.field_stock
+  module:
+    - commerce_stock_field
+id: commerce_product_variation.accessories.field_stock
+field_name: field_stock
+entity_type: commerce_product_variation
+bundle: accessories
+label: Stock
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: commerce_stock_level

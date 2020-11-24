@@ -6,9 +6,11 @@ dependencies:
     - commerce_product.commerce_product_variation_type.accessories
     - field.field.commerce_product_variation.accessories.attribute_disc_color
     - field.field.commerce_product_variation.accessories.field_product_image
+    - field.field.commerce_product_variation.accessories.field_stock
     - field.field.commerce_product_variation.accessories.weight
   module:
     - commerce_price
+    - commerce_stock_field
 id: commerce_product_variation.accessories.default
 targetEntityType: commerce_product_variation
 bundle: accessories
@@ -22,6 +24,13 @@ content:
       link: false
     third_party_settings: {  }
     type: entity_reference_entity_view
+    region: content
+  field_stock:
+    weight: 2
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: commerce_stock_level_simple
     region: content
   list_price:
     label: hidden

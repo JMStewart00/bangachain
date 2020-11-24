@@ -6,9 +6,11 @@ dependencies:
     - commerce_product.commerce_product_variation_type.bags
     - field.field.commerce_product_variation.bags.attribute_disc_color
     - field.field.commerce_product_variation.bags.field_product_image
+    - field.field.commerce_product_variation.bags.field_stock
     - field.field.commerce_product_variation.bags.weight
   module:
     - commerce_price
+    - commerce_stock_field
 id: commerce_product_variation.bags.default
 targetEntityType: commerce_product_variation
 bundle: bags
@@ -21,6 +23,13 @@ content:
       link: true
     third_party_settings: {  }
     type: entity_reference_label
+    region: content
+  field_stock:
+    weight: 2
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: commerce_stock_level_simple
     region: content
   list_price:
     label: above

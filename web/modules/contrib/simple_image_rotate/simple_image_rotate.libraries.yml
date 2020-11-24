@@ -1,0 +1,10 @@
+simple_image_rotate:
+  js:
+    js/simple_image_rotate.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+  css:
+    theme:
+      css/simple_image_rotate.css: {}

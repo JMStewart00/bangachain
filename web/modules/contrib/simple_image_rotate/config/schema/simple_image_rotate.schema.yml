@@ -1,0 +1,7 @@
+field.field_settings.image.*.third_party.simple_image_rotate:
+  type: mapping
+  label: 'Image settings'
+  mapping:
+    enable_rotate:
+      type: boolean
+      label: 'Enable rotate icon'

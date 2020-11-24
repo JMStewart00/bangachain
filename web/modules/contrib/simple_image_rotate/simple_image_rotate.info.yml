@@ -1,0 +1,12 @@
+name: Simple Image Rotate
+description: Simple image rotation
+type: module
+core: 8.x
+package: Media
+dependencies:
+  - drupal:image
+
+# Information added by Drupal.org packaging script on 2020-02-27
+version: '8.x-1.0-alpha1'
+project: 'simple_image_rotate'
+datestamp: 1582787935

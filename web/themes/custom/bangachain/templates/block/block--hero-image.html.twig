@@ -16,7 +16,7 @@
         {{ content.field_heading }}
       </h1>
     {% endif %}
-    {% if content.field_link %}
+    {% if content.field_link.0 %}
       <a href="{{ content.field_link.0['#url'] }}" title="{{ content.field_link.0['#title'] }}" class="o-btn o-btn--primary o-btn--large o-btn--square u-vr__mt--1">
         {{ content.field_link.0['#title'] }}
       </a>

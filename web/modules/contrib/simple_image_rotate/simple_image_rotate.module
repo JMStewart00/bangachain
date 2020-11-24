@@ -1,0 +1,219 @@
+<?php
+
+/**
+ * @file
+ * This is the Simple Image Rotate module for rotating uploaded image files.
+ */
+
+use Drupal\field\Entity\FieldConfig;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Url;
+use Drupal\Core\Render\Element;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\file\Entity\File;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function simple_image_rotate_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.simple_image_rotate':
+      $text = file_get_contents(__DIR__ . '/README.md');
+      if (!\Drupal::moduleHandler()->moduleExists('markdown')) {
+        return '<pre>' . $text . '</pre>';
+      }
+      else {
+        // Use the Markdown filter to render the README.
+        $filter_manager = \Drupal::service('plugin.manager.filter');
+        $settings = \Drupal::configFactory()->get('markdown.settings')->getRawData();
+        $config = ['settings' => $settings];
+        $filter = $filter_manager->createInstance('markdown', $config);
+        return $filter->process($text, 'en');
+      }
+  }
+  return NULL;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function simple_image_rotate_form_field_config_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $image_field = $form_state->getFormObject()->getEntity();
+  $field_type = $image_field->getType();
+  if ($field_type == "image") {
+    $form['enable_rotate'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Enable rotate icon'),
+      '#description' => t('If checked rotate icon will appear near each uploaded image.'),
+      '#default_value' => $image_field->getThirdPartySetting('simple_image_rotate', 'enable_rotate', FALSE),
+      '#weight' => 16,
+    ];
+    $form['#entity_builders'][] = 'simple_image_rotate_image_field_form_builder';
+  }
+
+}
+
+/**
+ * Entity builder for the image field edit form with third party options.
+ *
+ * @see simple_image_rotate_form_field_config_edit_form_alter()
+ */
+function simple_image_rotate_image_field_form_builder($entity_type, FieldConfig $field_form, &$form, FormStateInterface $form_state) {
+  $field_form->setThirdPartySetting('simple_image_rotate', 'enable_rotate', $form_state->getValue('enable_rotate'));
+}
+
+/**
+ * Implements hook_field_widget_multivalue_form_alter().
+ */
+function simple_image_rotate_field_widget_multivalue_form_alter(array &$elements, FormStateInterface $form_state, array $context) {
+  $field_definition = $context['items']->getFieldDefinition();
+  $field_name = $field_definition->getType();
+
+  if ($field_name == 'image' &&
+    \Drupal::currentUser()->hasPermission('rotate images')) {
+
+    if ($field_definition->getThirdPartySetting('simple_image_rotate', 'enable_rotate') == 1) {
+
+      // Attach JS/CSS for rotate icon.
+      $elements['#attached']['library'][] = 'simple_image_rotate/simple_image_rotate';
+
+      // If this is a multivalue field, we want to modify every instance of the field on the form,
+      // so we iterate.
+      foreach (Element::children($elements) as $key => $child) {
+
+        // Skip upload new image button.
+        if (empty($elements[$key]['#default_value']['fids'])) {
+          continue;
+        }
+
+        // Add rotate icon and hidden rotate field.
+        $elements[$key]['rotate'] = [
+          '#type' => 'hidden',
+          '#attributes' => ['class' => 'rotate'],
+          '#value' => 0,
+        ];
+
+        $elements[$key]['#process'][] = 'simple_image_rotate_widget_process';
+      }
+    }
+  }
+
+}
+
+/**
+ * Element #process callback function; process widget type image_image.
+ */
+function simple_image_rotate_widget_process($element, FormStateInterface $form_state) {
+
+  if (isset($element['#files']) && count($element['#files']) > 0) {
+    $options = [
+      'attributes' => [
+        'title' => t('Rotate image clockwise'),
+        'class' => ['rotate-icon'],
+        'data-weight' => $element['#array_parents'][2],
+        'data-rotate' => 0,
+        'rel' => 'nofollow',
+        'data-fid' => $element['fids']['#value'][0],
+      ],
+    ];
+    $element['rotate_link'] = Link::fromTextAndUrl(t('&#8635;'), Url::fromUserInput('#', $options))
+      ->toRenderable();
+  }
+  return $element;
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function simple_image_rotate_entity_presave(EntityInterface $entity) {
+  // Only applies to content entities, not config.
+  if (!is_a($entity, 'Drupal\Core\Config\Entity\ConfigEntityBase')) {
+    simple_image_rotate_rotate_image($entity);
+  }
+
+}
+
+/**
+ * Rotates image.
+ */
+function simple_image_rotate_rotate_image(EntityInterface &$entity) {
+
+  $type = $entity->getEntityType()->id();
+  $bundle = $entity->bundle();
+  $entityManager = \Drupal::service('entity_field.manager');
+  $fields = $entityManager->getFieldDefinitions($type, $bundle);
+
+  foreach ($fields as $field_name => $field) {
+
+    if ($field->getType() == "image") {
+
+      if ($field->getThirdPartySetting('simple_image_rotate', 'enable_rotate') == 1) {
+
+        $instances = $entity->get($field_name);
+
+        foreach ($instances as $delta => $instance) {
+          // If rotate angle is indicated.
+          $values = $instance->getValue();
+          if (isset($values["rotate"]) && $values["rotate"]) {
+            // Load image file.
+            $fid = $values["target_id"];
+            $file = File::load($fid);
+
+            // Get a new filename with '_r[counter]' suffix.
+            if (preg_match('#_r([\d]+)\.[^.]+$#i', $file->getFileUri(), $matches)) {
+              $file_counter = $matches[1];
+              $new_uri = $file->getFileUri();
+            }
+            else {
+              $file_counter = 1;
+              $pos = strrpos($file->getFileUri(), '.');
+              $new_uri = substr_replace($file->getFileUri(), '_r' . $file_counter, $pos, 0);
+            }
+
+            // Increment filename counter if filename is occupied.
+            while (file_exists($new_uri)) {
+              $find = '_r' . $file_counter;
+              $file_counter++;
+              $replace = '_r' . $file_counter;
+              $new_uri = str_replace($find, $replace, $new_uri);
+            }
+
+            // Move image file to a new location.
+            if (file_move($file, $new_uri, 'FILE_EXIST_ERROR')) {
+
+              // Update file object after moving file.
+              $file = File::load($fid);
+
+              // Rotate image and save image object.
+              $image = \Drupal::service('image.factory')
+                ->get($file->getFileUri());
+              try {
+                $image->rotate($values['rotate']);
+                if ($image->save()) {
+
+                  // Reload image to get new width, height and filesize.
+                  $image = \Drupal::service('image.factory')
+                    ->get($file->getFileUri());
+
+                  // Update image width and height in entity.
+                  $instance->set("width", $image->getWidth());
+                  $instance->set("height", $image->getHeight());
+
+                  // Update file.
+                  $file->setSize($image->getFileSize());
+                  $file->save();
+                }
+              }
+              catch (Exception $ex) {
+                \Drupal::logger('simple_image_rotate')
+                  ->notice(t('Problem rotating image: @message', array('@message' => $ex->getMessage())));
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

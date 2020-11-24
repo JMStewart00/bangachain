@@ -1,0 +1,41 @@
+.c-teaser-team-member {
+  &__photo {
+    margin-bottom: rem(12);
+    overflow: hidden;
+
+    .c-field-media-image {
+      width: 100%;
+    }
+
+    img {
+      transition: $transition-base;
+      width: 100%;
+    }
+
+    @include hover-focus() {
+      img {
+        transform: scale(1.1);
+      }
+    }
+  }
+
+  &__title {
+    text-transform: uppercase;
+  }
+}
+
+.c-node-team-member {
+  &__favorite-discs {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    grid-gap: rem(24);
+
+    @include media-breakpoint-up(md) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include media-breakpoint-up(lg) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+}

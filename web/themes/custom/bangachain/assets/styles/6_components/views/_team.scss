@@ -1,0 +1,14 @@
+.c-view-team {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  grid-gap: rem(32);
+  margin-top: rvr(2);
+
+  @include media-breakpoint-up(md) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include media-breakpoint-up(lg) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

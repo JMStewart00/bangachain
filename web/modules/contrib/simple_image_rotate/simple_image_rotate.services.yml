@@ -1,0 +1,4 @@
+services:
+  simple_image_rotate.logger.channel.simple_image_rotate:
+    parent: logger.channel_base
+    arguments: ['simple_image_rotate']

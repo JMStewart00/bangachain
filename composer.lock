@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7e145cb276fbabd03d6a066a23fb814a",
+    "content-hash": "57d2be09b5f5409621b469b7b2f2065d",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3537,6 +3537,9 @@
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
                     }
+                },
+                "patches_applied": {
+                    "Fatal error": "https://www.drupal.org/files/issues/2020-02-09/3112228-2.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
@@ -7682,6 +7685,54 @@
             }
         },
         {
+            "name": "drupal/simple_image_rotate",
+            "version": "1.0.0-alpha1",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/simple_image_rotate.git",
+                "reference": "8.x-1.0-alpha1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/simple_image_rotate-8.x-1.0-alpha1.zip",
+                "reference": "8.x-1.0-alpha1",
+                "shasum": "1847825b22010e5dbe9e89c5fb005e0d17a6964e"
+            },
+            "require": {
+                "drupal/core": "^8"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.0-alpha1",
+                    "datestamp": "1582787933",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Alpha releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "khoomy",
+                    "homepage": "https://www.drupal.org/user/135921"
+                },
+                {
+                    "name": "leevh",
+                    "homepage": "https://www.drupal.org/user/426580"
+                }
+            ],
+            "description": "Simple image rotation",
+            "homepage": "https://www.drupal.org/project/simple_image_rotate",
+            "support": {
+                "source": "https://git.drupalcode.org/project/simple_image_rotate"
+            }
+        },
+        {
             "name": "drupal/simple_sitemap",
             "version": "3.8.0",
             "source": {
@@ -11194,10 +11245,16 @@
         {
             "name": "swiftmailer/swiftmailer",
             "version": "v6.2.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/swiftmailer/swiftmailer.git",
+                "reference": "149cfdf118b169f7840bbe3ef0d4bc795d1780c9"
+            },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/swiftmailer/swiftmailer/archive/v6.2.3.zip",
-                "reference": "149cfdf118b169f7840bbe3ef0d4bc795d1780c9"
+                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/149cfdf118b169f7840bbe3ef0d4bc795d1780c9",
+                "reference": "149cfdf118b169f7840bbe3ef0d4bc795d1780c9",
+                "shasum": ""
             },
             "require": {
                 "egulias/email-validator": "~2.0",
@@ -15618,6 +15675,7 @@
         "drupal/media_bulk_upload": 15,
         "drupal/media_library_form_element": 15,
         "drupal/rabbit_hole": 10,
+        "drupal/simple_image_rotate": 15,
         "drupal/swiftmailer": 10,
         "drupal/view_unpublished": 20
     },

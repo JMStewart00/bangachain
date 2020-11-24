@@ -111,6 +111,7 @@ module:
   search: 0
   serialization: 0
   shortcut: 0
+  simple_image_rotate: 0
   simple_sitemap: 0
   simple_sitemap_engines: 0
   sitewide_alert: 0

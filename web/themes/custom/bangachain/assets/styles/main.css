@@ -7738,6 +7738,10 @@ body.no-scroll {
 .o-icon--blue {
   color: #3D5A80; }
 
+svg.mailto,
+svg.ext {
+  display: none; }
+
 .o-link {
   color: #EE6C4D;
   cursor: pointer;
@@ -7994,7 +7998,75 @@ table td {
 table td.is-active {
   background-color: inherit; }
 
+.c-teaser-team-member__photo {
+  margin-bottom: 0.75rem;
+  overflow: hidden; }
+
+.c-teaser-team-member__photo .c-field-media-image {
+  width: 100%; }
+
+.c-teaser-team-member__photo img {
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+  width: 100%; }
+
+.c-teaser-team-member__photo:hover img, .c-teaser-team-member__photo:focus img {
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1); }
+
+.c-teaser-team-member__title {
+  text-transform: uppercase; }
+
+.c-node-team-member__favorite-discs {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  grid-gap: 1.5rem; }
+
+@media (min-width: 768px) {
+  .c-node-team-member__favorite-discs {
+    grid-template-columns: repeat(2, 1fr); } }
+
+@media (min-width: 992px) {
+  .c-node-team-member__favorite-discs {
+    grid-template-columns: repeat(3, 1fr); } }
+
 /* forms components subfolder */
+.c-block--border::before {
+  content: '';
+  margin-bottom: calc(var(--lh__base) * 3 * 1rem);
+  display: block;
+  height: 1px;
+  width: 100%;
+  background: #adb5bd; }
+
+.c-block--border::after {
+  content: '';
+  margin-top: calc(var(--lh__base) * 3 * 1rem);
+  display: block;
+  height: 1px;
+  width: 100%;
+  background: #adb5bd; }
+
+.c-block__title {
+  color: #3D5A80;
+  text-align: center; }
+
+.c-block__title::after {
+  content: '';
+  display: block;
+  height: 4px;
+  width: 44px;
+  background: #EE6C4D;
+  margin: calc(var(--lh__base) * 0.75 * var(--rvr-multiplier)) auto; }
+
+.c-block__subheading {
+  font-weight: 500;
+  text-align: center; }
+
+.c-block__cta .o-btn {
+  display: block;
+  margin: calc(var(--lh__base) * 1 * var(--rvr-multiplier)) auto; }
+
 .c-inline-blockcolumns-module .c-block__content {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -8895,6 +8967,20 @@ table td.is-active {
   -ms-flex-pack: center;
   justify-content: center;
   padding: calc(var(--lh__base) * 2 * var(--rvr-multiplier)); }
+
+.c-view-team {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  grid-gap: 2rem;
+  margin-top: calc(var(--lh__base) * 2 * var(--rvr-multiplier)); }
+
+@media (min-width: 768px) {
+  .c-view-team {
+    grid-template-columns: repeat(2, 1fr); } }
+
+@media (min-width: 992px) {
+  .c-view-team {
+    grid-template-columns: repeat(4, 1fr); } }
 
 /*
   Utilities - are for one purpose and one purpose only. Ex: .u-text-center

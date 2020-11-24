@@ -11,7 +11,7 @@ dependencies:
     - field.field.node.team_member.field_social_media_links
     - node.type.team_member
   module:
-    - inline_entity_form
+    - media_library
     - path
     - social_media_links_field
     - text
@@ -61,16 +61,10 @@ content:
     type: string_textfield
     region: content
   field_photo:
-    type: inline_entity_form_simple
+    type: media_library_widget
     weight: 5
     settings:
-      form_mode: default
-      revision: false
-      override_labels: false
-      label_singular: ''
-      label_plural: ''
-      collapsible: false
-      collapsed: false
+      media_types: {  }
     third_party_settings: {  }
     region: content
   field_social_media_links:

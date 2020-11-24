@@ -1,0 +1,47 @@
+.c-block {
+  &--border {
+    &::before {
+      content: '';
+      margin-bottom: vr(3);
+      display: block;
+      height: 1px;
+      width: 100%;
+      background: $gray-500;
+    }
+
+    &::after {
+      content: '';
+      margin-top: vr(3);
+      display: block;
+      height: 1px;
+      width: 100%;
+      background: $gray-500;
+    }
+  }
+
+  &__title {
+    color: $brand-blue;
+    text-align: center;
+
+    &::after {
+      content: '';
+      display: block;
+      height: 4px;
+      width: 44px;
+      background: $orange;
+      margin: rvr(0.75) auto;
+    }
+  }
+
+  &__subheading {
+    font-weight: $fw-semi-bold;
+    text-align: center;
+  }
+
+  &__cta {
+    .o-btn {
+      display: block;
+      margin: rvr(1) auto;
+    }
+  }
+}

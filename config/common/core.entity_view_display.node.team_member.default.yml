@@ -21,7 +21,7 @@ bundle: team_member
 mode: default
 content:
   body:
-    label: hidden
+    label: above
     type: text_default
     weight: 5
     settings: {  }

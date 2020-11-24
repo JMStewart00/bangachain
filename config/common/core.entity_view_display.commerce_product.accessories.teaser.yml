@@ -5,6 +5,7 @@ dependencies:
   config:
     - commerce_product.commerce_product_type.accessories
     - core.entity_view_mode.commerce_product.teaser
+    - field.field.commerce_product.accessories.field_brand
     - field.field.commerce_product.accessories.field_category
   module:
     - commerce_product
@@ -44,5 +45,6 @@ content:
     third_party_settings: {  }
 hidden:
   created: true
+  field_brand: true
   stores: true
   uid: true

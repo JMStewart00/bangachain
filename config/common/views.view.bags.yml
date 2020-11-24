@@ -1,9 +1,9 @@
-uuid: 97686554-bd74-470a-97b0-e76bca580308
+uuid: a9ecd061-9d7a-4d68-93c2-7710ad9705f6
 langcode: en
 status: true
 dependencies:
   config:
-    - commerce_product.commerce_product_type.accessories
+    - commerce_product.commerce_product_type.bags
     - core.entity_view_mode.commerce_product.teaser
     - field.storage.commerce_product.field_brand
     - field.storage.commerce_product.field_default_image
@@ -13,7 +13,6 @@ dependencies:
     - field.storage.commerce_product.field_stability_category
     - field.storage.commerce_product.field_turn
     - system.menu.main
-    - taxonomy.vocabulary.accessory_category
     - taxonomy.vocabulary.brand
   module:
     - better_exposed_filters
@@ -21,8 +20,8 @@ dependencies:
     - commerce_product
     - taxonomy
     - user
-id: accessories
-label: Accessories
+id: bags
+label: Bags
 module: views
 description: ''
 tag: ''
@@ -77,16 +76,6 @@ display:
               advanced:
                 is_secondary: false
             filter:
-              field_category_target_id:
-                plugin_id: bef
-                advanced:
-                  rewrite:
-                    filter_rewrite_values: ''
-                  collapsible: false
-                  is_secondary: false
-                select_all_none: false
-                select_all_none_nested: false
-                display_inline: 1
               field_brand_target_id:
                 plugin_id: bef
                 advanced:
@@ -669,7 +658,7 @@ display:
           admin_label: ''
           operator: in
           value:
-            accessories: accessories
+            bags: bags
           group: 1
           exposed: false
           expose:
@@ -747,53 +736,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: numeric
-        field_category_target_id:
-          id: field_category_target_id
-          table: commerce_product__field_category
-          field: field_category_target_id
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: or
-          value: {  }
-          group: 1
-          exposed: true
-          expose:
-            operator_id: field_category_target_id_op
-            label: Category
-            description: ''
-            use_operator: false
-            operator: field_category_target_id_op
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: field_category_target_id
-            required: false
-            remember: false
-            multiple: true
-            remember_roles:
-              authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-            reduce: false
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          reduce_duplicates: false
-          type: textfield
-          limit: true
-          vid: accessory_category
-          hierarchy: false
-          error_message: true
-          plugin_id: taxonomy_index_tid
         field_brand_target_id:
           id: field_brand_target_id
           table: commerce_product__field_brand
@@ -856,7 +798,7 @@ display:
           entity_type: commerce_product
           entity_field: title
           plugin_id: standard
-      title: Accessories
+      title: Bags
       header: {  }
       footer: {  }
       empty:
@@ -869,7 +811,7 @@ display:
           admin_label: ''
           empty: true
           tokenize: false
-          content: 'Sorry! No accessories currently available! Come back soon!'
+          content: 'Sorry! No bags currently available! Come back soon!'
           plugin_id: text_custom
       relationships:
         variations_target_id:
@@ -908,20 +850,20 @@ display:
         - 'config:field.storage.commerce_product.field_speed'
         - 'config:field.storage.commerce_product.field_stability_category'
         - 'config:field.storage.commerce_product.field_turn'
-  all_accessories_page:
+  all_bags_page:
     display_plugin: page
-    id: all_accessories_page
-    display_title: 'All Accessories'
+    id: all_bags_page
+    display_title: 'All Bags'
     position: 1
     display_options:
       display_extenders:
         ajax_history:
           enable_history: false
-      path: accessories
+      path: bags
       display_description: ''
       menu:
         type: normal
-        title: Accessories
+        title: Bags
         description: ''
         expanded: false
         parent: ''

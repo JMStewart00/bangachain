@@ -1,0 +1,12 @@
+uuid: 5c495bc6-94fd-4e06-b834-a14d6bd31c60
+langcode: en
+status: true
+dependencies: {  }
+id: bags
+label: Bags
+description: ''
+variationType: bags
+multipleVariations: true
+injectVariationFields: true
+traits: {  }
+locked: false

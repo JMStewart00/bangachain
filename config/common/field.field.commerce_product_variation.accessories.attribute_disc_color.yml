@@ -1,0 +1,28 @@
+uuid: 76c92bc1-ec0f-4b49-82f4-eac28b34073c
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_attribute.disc_color
+    - commerce_product.commerce_product_variation_type.accessories
+    - field.storage.commerce_product_variation.attribute_disc_color
+id: commerce_product_variation.accessories.attribute_disc_color
+field_name: attribute_disc_color
+entity_type: commerce_product_variation
+bundle: accessories
+label: Color
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:commerce_product_attribute_value'
+  handler_settings:
+    target_bundles:
+      disc_color: disc_color
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

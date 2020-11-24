@@ -1,30 +1,29 @@
-uuid: ca5aef75-f8d5-454e-96dc-c0ca7866ab93
+uuid: 137b39d0-a36b-472b-b954-a82d69785619
 langcode: en
 status: true
 dependencies:
   config:
-    - commerce_product.commerce_product_variation_type.accessories
-    - field.field.commerce_product_variation.accessories.attribute_disc_color
-    - field.field.commerce_product_variation.accessories.field_product_image
-    - field.field.commerce_product_variation.accessories.weight
+    - commerce_product.commerce_product_variation_type.bags
+    - field.field.commerce_product_variation.bags.attribute_disc_color
+    - field.field.commerce_product_variation.bags.field_product_image
+    - field.field.commerce_product_variation.bags.weight
   module:
     - commerce_price
-id: commerce_product_variation.accessories.default
+id: commerce_product_variation.bags.default
 targetEntityType: commerce_product_variation
-bundle: accessories
+bundle: bags
 mode: default
 content:
   field_product_image:
     weight: 1
-    label: hidden
+    label: above
     settings:
-      view_mode: full
-      link: false
+      link: true
     third_party_settings: {  }
-    type: entity_reference_entity_view
+    type: entity_reference_label
     region: content
   list_price:
-    label: hidden
+    label: above
     type: commerce_price_default
     weight: -1
     region: content
@@ -33,7 +32,7 @@ content:
       currency_display: symbol
     third_party_settings: {  }
   price:
-    label: hidden
+    label: above
     type: commerce_price_default
     weight: 0
     region: content

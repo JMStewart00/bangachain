@@ -1,0 +1,11 @@
+uuid: 8d6cdc3b-cf62-44a2-9ee5-3f3af8bdca9f
+langcode: en
+status: true
+dependencies: {  }
+id: bags
+label: Bags
+orderItemType: default
+generateTitle: false
+traits:
+  - purchasable_entity_shippable
+locked: false

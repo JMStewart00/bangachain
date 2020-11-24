@@ -1,0 +1,10 @@
+uuid: 1f3454c8-0fe8-45f3-94fa-dc023daaf229
+langcode: en
+status: true
+dependencies: {  }
+id: bag
+label: Bag
+profileType: customer
+traits: {  }
+sendConfirmation: true
+confirmationBcc: ''

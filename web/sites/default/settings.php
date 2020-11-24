@@ -84,3 +84,7 @@ if (defined('PANTHEON_ENVIRONMENT')) {
       $config['config_split.config_split.dev']['status'] = TRUE;
   }
 }
+
+if (isset($_ENV['AH_SITE_GROUP'], $_ENV['AH_SITE_ENVIRONMENT'])) {
+  $config['system.file']['path']['temporary'] = "/mnt/tmp/{$_ENV['AH_SITE_GROUP']}.{$_ENV['AH_SITE_ENVIRONMENT']}";
+}

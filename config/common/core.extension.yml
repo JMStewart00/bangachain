@@ -54,7 +54,6 @@ module:
   datetime: 0
   datetime_range: 0
   dblog: 0
-  devel: 0
   dropzonejs: 0
   dynamic_page_cache: 0
   editor: 0
@@ -128,7 +127,6 @@ module:
   tour: 0
   twig_tweak: 0
   update: 0
-  upgrade_status: 0
   user: 0
   views_ajax_history: 0
   views_ui: 0

@@ -1,0 +1,15 @@
+uuid: 2cdb8e20-e443-49ab-82e9-62eefdc387bf
+langcode: en
+status: true
+dependencies: {  }
+id: uat
+label: UAT
+description: ''
+folder: ''
+module: {  }
+theme: {  }
+blacklist: {  }
+graylist: {  }
+graylist_dependents: true
+graylist_skip_equal: true
+weight: 0

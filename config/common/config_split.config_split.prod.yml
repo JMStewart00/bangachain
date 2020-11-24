@@ -1,0 +1,15 @@
+uuid: 65de9aba-e417-4095-b6ce-1ceb954c80f4
+langcode: en
+status: true
+dependencies: {  }
+id: prod
+label: Prod
+description: ''
+folder: ''
+module: {  }
+theme: {  }
+blacklist: {  }
+graylist: {  }
+graylist_dependents: true
+graylist_skip_equal: true
+weight: 0

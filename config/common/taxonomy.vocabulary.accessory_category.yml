@@ -1,0 +1,8 @@
+uuid: 780121f2-e050-4fcd-bff9-591997841e3e
+langcode: en
+status: true
+dependencies: {  }
+name: 'Accessory Category'
+vid: accessory_category
+description: ''
+weight: 0

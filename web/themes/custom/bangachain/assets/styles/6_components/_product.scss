@@ -63,6 +63,11 @@
 
   &__price {
     margin-right: rvr(0.5);
+    font-size: rem(24);
+  }
+
+  .c-form legend .fieldset-legend {
+    font-size: rem(16) !important;
   }
 
   &__image {

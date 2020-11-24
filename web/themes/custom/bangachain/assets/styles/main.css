@@ -7976,7 +7976,11 @@ body.no-scroll {
   align-items: center; }
 
 .c-product__price {
-  margin-right: calc(var(--lh__base) * 0.5 * var(--rvr-multiplier)); }
+  margin-right: calc(var(--lh__base) * 0.5 * var(--rvr-multiplier));
+  font-size: 1.5rem; }
+
+.c-product .c-form legend .fieldset-legend {
+  font-size: 1rem !important; }
 
 .c-product__image {
   padding: 1rem; }

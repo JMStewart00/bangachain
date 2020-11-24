@@ -1,0 +1,28 @@
+uuid: 843fe9c1-91c1-4b72-a18a-2c61b6ab1e21
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_variation_type.accessories
+    - field.storage.commerce_product_variation.field_product_image
+    - media.type.image
+id: commerce_product_variation.accessories.field_product_image
+field_name: field_product_image
+entity_type: commerce_product_variation
+bundle: accessories
+label: 'Product Image'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

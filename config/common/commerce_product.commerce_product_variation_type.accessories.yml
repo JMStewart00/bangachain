@@ -1,0 +1,11 @@
+uuid: 0e36fce0-0fd3-4b21-b2af-32cc3f2cf58f
+langcode: en
+status: true
+dependencies: {  }
+id: accessories
+label: Accessories
+orderItemType: default
+generateTitle: false
+traits:
+  - purchasable_entity_shippable
+locked: false

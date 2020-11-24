@@ -1,0 +1,12 @@
+uuid: ec13ade0-9c2c-4a5e-8ee6-081a30aebcdc
+langcode: en
+status: true
+dependencies: {  }
+id: accessories
+label: Accessories
+description: ''
+variationType: accessories
+multipleVariations: true
+injectVariationFields: true
+traits: {  }
+locked: false

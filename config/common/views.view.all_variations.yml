@@ -11,7 +11,7 @@ dependencies:
     - field.storage.commerce_product_variation.field_product_image
     - field.storage.commerce_product_variation.field_stock
     - field.storage.commerce_product_variation.field_used
-    - system.menu.main
+    - system.menu.admin
     - taxonomy.vocabulary.brand
     - user.role.administrator
   module:
@@ -1123,10 +1123,10 @@ display:
         title: 'Inventory Management'
         description: ''
         expanded: false
-        parent: ''
+        parent: system.admin_content
         weight: 0
         context: '0'
-        menu_name: main
+        menu_name: admin
     cache_metadata:
       max-age: 0
       contexts:

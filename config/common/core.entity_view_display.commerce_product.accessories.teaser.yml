@@ -1,16 +1,22 @@
-uuid: 5386569c-327a-4190-9da2-8ce874e97487
+uuid: 63303c43-7ead-47d8-899a-039591e97ec8
 langcode: en
 status: true
 dependencies:
   config:
     - commerce_product.commerce_product_type.accessories
+    - core.entity_view_mode.commerce_product.teaser
     - field.field.commerce_product.accessories.field_category
   module:
     - commerce_product
-id: commerce_product.accessories.default
+    - layout_builder
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
+id: commerce_product.accessories.teaser
 targetEntityType: commerce_product
 bundle: accessories
-mode: default
+mode: teaser
 content:
   field_category:
     type: entity_reference_label

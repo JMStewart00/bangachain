@@ -142,15 +142,13 @@ display:
           columns:
             commerce_product_variation_bulk_form: commerce_product_variation_bulk_form
             product_id: product_id
-            field_brand: field_brand
             title: title
             field_bin: field_bin
             field_stock: field_stock
             field_product_image: field_product_image
             sku: sku
             attribute_disc_color: attribute_disc_color
-            attribute_disc_plastic: attribute_disc_plastic
-            attribute_disc_weight: attribute_disc_weight
+            field_brand: field_brand
             price__number: price__number
             field_used: field_used
             operations: operations
@@ -163,13 +161,6 @@ display:
               responsive: ''
             product_id:
               sortable: true
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            field_brand:
-              sortable: false
               default_sort_order: asc
               align: ''
               separator: ''
@@ -217,14 +208,7 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
-            attribute_disc_plastic:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            attribute_disc_weight:
+            field_brand:
               sortable: false
               default_sort_order: asc
               align: ''
@@ -252,7 +236,7 @@ display:
               responsive: ''
             changed_1:
               sortable: true
-              default_sort_order: asc
+              default_sort_order: desc
               align: ''
               separator: ''
               empty_column: false

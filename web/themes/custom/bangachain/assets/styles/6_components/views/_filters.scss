@@ -5,6 +5,7 @@
 
   &.open {
     height: 100%;
+    margin-top: 70px;
   }
 
   @include media-breakpoint-up(lg) {

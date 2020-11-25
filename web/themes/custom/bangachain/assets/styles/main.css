@@ -7923,8 +7923,20 @@ svg.ext {
     max-width: 75%;
     margin: auto; } }
 
-.c-product--teaser {
-  border: 1px solid #999; }
+.c-product__title .h1 {
+  position: relative; }
+
+.c-product__title .h1::after {
+  content: '';
+  display: block;
+  position: absolute;
+  bottom: -2px;
+  left: 25%;
+  height: 2px;
+  background: #EE6C4D;
+  -webkit-transition: width 0.5s;
+  transition: width 0.5s;
+  width: 0; }
 
 @media (max-width: 991.98px) {
   .c-product--teaser {
@@ -7978,7 +7990,9 @@ svg.ext {
   line-height: 1.75rem;
   text-align: center;
   font-size: 0.75rem;
-  font-weight: 700; }
+  font-weight: 700;
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out; }
 
 .c-product__price-stock {
   display: -webkit-box;
@@ -7996,7 +8010,7 @@ svg.ext {
   font-size: 1rem !important; }
 
 .c-product__image {
-  padding: 1rem; }
+  margin-bottom: calc(var(--lh__base) * 1 * var(--rvr-multiplier)); }
 
 .c-product__image .field--name-field-media-image {
   margin: auto; }
@@ -8317,6 +8331,9 @@ table td.is-active {
   line-height: 2;
   margin-bottom: 0.3125rem;
   padding-left: 2.25rem; }
+
+.c-form__checkbox + label:hover, .c-form__checkbox + label:focus {
+  font-weight: 700; }
 
 .c-form__checkbox + label::before {
   content: '';
@@ -9022,11 +9039,39 @@ table td.is-active {
 .c-view-bags a:focus,
 .c-view-accessories a:hover,
 .c-view-accessories a:focus {
-  text-decoration: none;
-  -webkit-transform: scale(1.05);
-  transform: scale(1.05);
-  -webkit-box-shadow: 0 0.75rem 2.5rem -1rem #293241;
-  box-shadow: 0 0.75rem 2.5rem -1rem #293241; }
+  text-decoration: none; }
+
+.c-view-discs a:hover .h1::after, .c-view-discs a:focus .h1::after,
+.c-view-bags a:hover .h1::after,
+.c-view-bags a:focus .h1::after,
+.c-view-accessories a:hover .h1::after,
+.c-view-accessories a:focus .h1::after {
+  width: 50%; }
+
+.c-view-discs a:hover .c-product__speed--small,
+.c-view-discs a:hover .c-product__glide--small,
+.c-view-discs a:hover .c-product__turn--small,
+.c-view-discs a:hover .c-product__fade--small, .c-view-discs a:focus .c-product__speed--small,
+.c-view-discs a:focus .c-product__glide--small,
+.c-view-discs a:focus .c-product__turn--small,
+.c-view-discs a:focus .c-product__fade--small,
+.c-view-bags a:hover .c-product__speed--small,
+.c-view-bags a:hover .c-product__glide--small,
+.c-view-bags a:hover .c-product__turn--small,
+.c-view-bags a:hover .c-product__fade--small,
+.c-view-bags a:focus .c-product__speed--small,
+.c-view-bags a:focus .c-product__glide--small,
+.c-view-bags a:focus .c-product__turn--small,
+.c-view-bags a:focus .c-product__fade--small,
+.c-view-accessories a:hover .c-product__speed--small,
+.c-view-accessories a:hover .c-product__glide--small,
+.c-view-accessories a:hover .c-product__turn--small,
+.c-view-accessories a:hover .c-product__fade--small,
+.c-view-accessories a:focus .c-product__speed--small,
+.c-view-accessories a:focus .c-product__glide--small,
+.c-view-accessories a:focus .c-product__turn--small,
+.c-view-accessories a:focus .c-product__fade--small {
+  border: 1px solid #3D5A80; }
 
 .c-view-discs--all_discs_page, .c-view-discs--all_accessories_page, .c-view-discs--all_bags_page,
 .c-view-bags--all_discs_page,
@@ -9049,9 +9094,19 @@ table td.is-active {
   .c-view-accessories--all_accessories_page,
   .c-view-accessories--all_bags_page {
     grid-template-columns: repeat(2, 1fr);
-    margin-top: 0; } }
+    margin-top: calc(var(--lh__base) * 2 * var(--rvr-multiplier)); } }
 
 @media (min-width: 992px) {
+  .c-view-discs--all_discs_page, .c-view-discs--all_accessories_page, .c-view-discs--all_bags_page,
+  .c-view-bags--all_discs_page,
+  .c-view-bags--all_accessories_page,
+  .c-view-bags--all_bags_page,
+  .c-view-accessories--all_discs_page,
+  .c-view-accessories--all_accessories_page,
+  .c-view-accessories--all_bags_page {
+    grid-template-columns: repeat(3, 1fr); } }
+
+@media (min-width: 1200px) {
   .c-view-discs--all_discs_page, .c-view-discs--all_accessories_page, .c-view-discs--all_bags_page,
   .c-view-bags--all_discs_page,
   .c-view-bags--all_accessories_page,
@@ -9073,7 +9128,8 @@ table td.is-active {
 
 @media (min-width: 992px) {
   .c-view-filters {
-    height: auto; } }
+    height: auto;
+    margin-top: calc(var(--lh__base) * 2 * var(--rvr-multiplier)); } }
 
 .c-view-filters__toggle {
   width: 100%;

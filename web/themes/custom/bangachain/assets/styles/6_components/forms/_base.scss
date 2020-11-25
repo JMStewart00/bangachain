@@ -144,6 +144,10 @@
       margin-bottom: rem(5);
       padding-left: spacer(2.25);
 
+      @include hover-focus() {
+        font-weight: $fw-bold;
+      }
+
       &::before {
         content: '';
         position: absolute;

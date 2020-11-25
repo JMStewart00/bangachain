@@ -4,10 +4,20 @@
 .c-view-accessories {
   a {
     color: inherit;
+
     @include hover-focus() {
       text-decoration: none;
-      transform: scale(1.05);
-      box-shadow: 0 rem(12) rem(40) rem(-16) $gray-dark;
+
+      .h1::after {
+        width: 50%;
+      }
+
+      .c-product__speed--small,
+      .c-product__glide--small,
+      .c-product__turn--small,
+      .c-product__fade--small {
+        border: 1px solid $brand-blue;
+      }
     }
   }
 
@@ -21,10 +31,14 @@
 
     @include media-breakpoint-up(md) {
       grid-template-columns: repeat(2, 1fr);
-      margin-top: 0;
+      margin-top: rvr(2);
     }
 
     @include media-breakpoint-up(lg) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    @include media-breakpoint-up(xl) {
       grid-template-columns: repeat(4, 1fr);
     }
   }

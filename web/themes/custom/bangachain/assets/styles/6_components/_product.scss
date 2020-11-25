@@ -6,8 +6,25 @@
     }
   }
 
+  &__title {
+    .h1 {
+      position: relative;
+
+      &::after {
+        content: '';
+        display: block;
+        position: absolute;
+        bottom: -2px;
+        left: 25%;
+        height: 2px;
+        background: $orange;
+        transition: width 0.5s;
+        width: 0;
+      }
+    }
+  }
+
   &--teaser {
-    border: 1px solid $gray-medium;
     @include media-breakpoint-down(md) {
       margin: auto;
       width: 75%;
@@ -63,6 +80,7 @@
       text-align: center;
       font-size: rem(12);
       font-weight: 700;
+      transition: $transition-base;
     }
   }
 
@@ -81,7 +99,7 @@
   }
 
   &__image {
-    padding: 1rem;
+    margin-bottom: rvr(1);
 
     .field--name-field-media-image {
       margin: auto;

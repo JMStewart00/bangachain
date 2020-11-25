@@ -6,6 +6,7 @@ module:
   automated_cron: 0
   bangachain_commerce_update: 0
   bangachain_layout: 0
+  bangachain_menu: 0
   better_exposed_filters: 0
   big_pipe: 0
   block: 0
@@ -90,6 +91,7 @@ module:
   media_bulk_upload: 0
   media_library: 0
   media_library_theme_reset: 0
+  menu_block: 0
   menu_link_content: 0
   menu_ui: 0
   metatag: 0

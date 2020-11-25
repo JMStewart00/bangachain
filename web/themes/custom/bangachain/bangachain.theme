@@ -1,9 +1,6 @@
 <?php
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\file\Entity\File;
-use Drupal\media\Entity\Media;
-use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 use Drupal\recurring_events\Entity\EventSeries;
 
@@ -46,25 +43,6 @@ function bangachain_form_alter(&$form, &$form_state) {
   }
 
   $form['#attributes']['class'][] = 'c-form';
-}
-
-/**
- * Implements hook_form_BASE_ID_alter().
- *
- * This is used to change language selector to select2 for theming.
- */
-function bangachain_form_lang_dropdown_form_alter(&$form, &$form_state) {
-  if ($form['lang_dropdown_select']) {
-    $settings = [
-      'allowClear' => FALSE,
-      'width' => '100%',
-      'selectionCssClass' => 'c-language-dropdown',
-    ];
-
-    $form['lang_dropdown_select']['#select2'] = $settings;
-    $form['lang_dropdown_select']['#type'] = 'select2';
-    $form['lang_dropdown_select']['#attached']['library'][] = 'lifespan/select2';
-  };
 }
 
 /**
@@ -154,116 +132,6 @@ function bangachain_preprocess_form_element_label(&$variables) {
   $variables['attributes']['class'][] = 'c-form__label';
 }
 
-/**
- * Implements hook_preprocess_block().
- */
-function bangachain_preprocess_block__bangachain_sidebar_menu_block (&$variables) {
-  // Prepare to load menu tree
-  $menu_tree = \Drupal::menuTree();
-  $parameters = $menu_tree->getCurrentRouteMenuTreeParameters('main');
-
-  // Only load menu items that have a min depth of 2
-  $parameters->setMinDepth(2);
-  $main_menu_subpage_nav = $menu_tree->load('main', $parameters);
-
-  // If there is a menu item in the active trail, pull out title and URL
-  if ($main_menu_subpage_nav) {
-    foreach($main_menu_subpage_nav as $level) {
-      if ( $level->inActiveTrail ) {
-        $variables['secondary_nav']['title'] = $level->link->getTitle();
-        $variables['secondary_nav']['url'] = $level->link->getUrlObject()->toString();
-      }
-    }
-  } else {
-    $variables['secondary_nav'] = false;
-  }
-}
-
-/**
- * Implements hook_preprocess_block().
- */
-function bangachain_preprocess_block__bangachain_mobile_menu_block (&$variables) {
-  // Prepare to load menu tree
-  $menu_tree = \Drupal::menuTree();
-  $parameters = $menu_tree->getCurrentRouteMenuTreeParameters('main');
-
-  // Only load menu items that have a min depth of 2
-  $parameters->setMinDepth(2);
-  $main_menu_subpage_nav = $menu_tree->load('main', $parameters);
-
-  // If there is a menu item in the active trail, pull out title and URL
-  if ($main_menu_subpage_nav) {
-    foreach($main_menu_subpage_nav as $level) {
-      if ( $level->inActiveTrail ) {
-        $variables['secondary_nav']['title'] = $level->link->getTitle();
-        $variables['secondary_nav']['url'] = $level->link->getUrlObject()->toString();
-      }
-    }
-  } else {
-    $variables['secondary_nav'] = false;
-  }
-}
-
-/**
- * Implements hook_preprocess_node().
- */
-function bangachain_preprocess_node(&$variables) {
-  $node = $variables['node'];
-  $node_id = $node->id();
-
-  if ($node->hasField('field_header_image_media') && !$node->field_header_image_media[0]) {
-    // load menu by node_id
-    $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
-    $links = $menu_link_manager->loadLinksByRoute('entity.node.canonical', ['node' => $node_id]);
-
-    if (is_array($links) && count($links)) {
-      $current_link = reset($links);
-
-      // check if it's a lower level link and has a parent
-      if ($current_link->getParent()) {
-        // get a full array of parent links, ordered by level in reverse
-        // i.e parent, grandparent, great
-        $parents = $menu_link_manager->getParentIds($current_link->getParent());
-
-        if (is_array($parents) && count($parents)) {
-          // get just the second level menu item (second to last menu parent)
-          if ($second_level_parent = current(array_slice($parents, count($parents) - 2, 1))) {
-
-            // load menu item to get to the node referenced
-            $menu_content = current(\Drupal::entityTypeManager()->getStorage('menu_link_content')->loadByProperties(['uuid' => explode(':', $second_level_parent)[1]]));
-            $route = $menu_content->getUrlObject()->getRouteParameters();
-
-            if (isset($route['node']) && $parent_node = Node::load($route['node'])) {
-
-              if ($parent_node->hasField('field_header_image_media') && isset($parent_node->field_header_image_media[0])) {
-                $mid = $parent_node->field_header_image_media[0]->getValue()['target_id'];
-                $fid = Media::load($mid)->field_media_image[0]->getValue()['target_id'];
-                $file = File::load($fid);
-                $variables['parent_header_image'] = $file->url();
-              }
-
-              if ($parent_node->hasField('field_sub_header') && isset($parent_node->field_sub_header[0])) {
-                $subhead = $parent_node->get('field_sub_header')[0]->getValue()['value'];
-                $variables['parent_subheader'] = $subhead;
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  // Check to see if node is referenced inside the people paragraph bundle.
-  if ($variables['elements']['#view_mode'] === 'about_author') {
-    $parent = $variables['elements']['#node']->_referringItem->getEntity();
-
-    if ($parent->bundle() == 'people')  {
-      $variables['is_people_paragraph'] = TRUE;
-    }
-  }
-
-  $variables['is_living_blog'] = _bangachain_add_living_blog_boolean();
-}
 
 /*
  * Implements hook_theme_suggestions_HOOK_alter().
@@ -298,39 +166,6 @@ function bangachain_theme_suggestions_details_alter(array &$suggestions, array $
   }
 }
 
-/**
- * Implements hook_preprocess_menu().
- */
-function bangachain_preprocess_menu(&$variables, $hook) {
-  if ($hook === 'menu') {
-    // Get the current path.
-    $current_path = \Drupal::request()->getRequestUri();
-    $items = &$variables['items'];
-
-    _bangachain_add_active_menu_class($items, $current_path);
-  }
-}
-
-/**
- * Custom recursive function to go through each menu link in active trail checking for active state.
- */
-function _bangachain_add_active_menu_class(&$menu_items, $current_path) {
-
-  // Loop over provided menu items.
-  foreach ($menu_items as &$item) {
-
-    // Make sure we are first dealing with active trail.
-    if ($item['in_active_trail']) {
-
-      // If current path matches the item url, set item to active.
-      if ($item['url']->toString() === $current_path) {
-        $item['active'] = true;
-      } else if ($item['below']) { // Otherwise if there are more links continue down tree.
-        _bangachain_add_active_menu_class($item['below'], $current_path);
-      }
-    }
-  }
-}
 
 /**
  * Implements hook_preprocess_hook().
@@ -417,92 +252,4 @@ function bangachain_preprocess_address_plain(&$variables) {
   $variables['google_map_link'] = $link;
 }
 
-/**
- * Implements hook_preprocess_block().
- */
-function bangachain_preprocess_block__locations (&$variables) {
-  $content = $variables['content'];
 
-  // Check what should display in the right column field.
-  $right_column = $content['field_right_column']['#items']->getString();
-
-  foreach ($content['field_locations'] as $key => $location) {
-
-    // Check to see if this is a value in the render array.
-    if (is_numeric($key)) {
-
-      if ($right_column === 'image') {
-        $content['field_locations'][$key]['#node']->set('field_geolocation', NULL);
-      }
-
-      if ($right_column === 'map') {
-        $content['field_locations'][$key]['#node']->set('field_featured_image', NULL);
-      }
-    }
-  }
-}
-
-
-/**
- * Implements hook_preprocess_HOOK() for eventseries.
- *
- * This is used to get the next event in the series for display.
- */
-
-function bangachain_preprocess_eventseries(&$variables) {
-  if ($event_instances = $variables['elements']['event_instances']) {
-    $timestamp = strtotime('tomorrow midnight');
-
-    foreach ($event_instances as $key => $event) {
-      // Check to see if this is a value in the render array.
-      if (is_numeric($key)) {
-        // Get the date array for the eventinstance.
-        if ($date = $event['#eventinstance']->get('date')->getValue()) {
-          // If it's the first event after today, set some variables and get out.
-          if (strtotime($date[0]['value']) > $timestamp) {
-            // Hack to get the timestamps right on the front end.
-            // Needed them to match the timezone for America/New_York.
-            // If we have time we should revisit this.
-            $variables['next_event_start'] = strtotime($date[0]['value']."-4hours");
-            $variables['next_event_end'] = strtotime($date[0]['end_value']."-4hours");
-            return;
-          }
-        }
-      }
-    }
-  }
-}
-
-/**
- * Implements hook_theme_suggestions_taxonomy_term_alter().
- */
-function bangachain_theme_suggestions_taxonomy_term_alter(array &$suggestions, array $variables) {
-  /** @var \Drupal\taxonomy\TermInterface $term */
-  $term = $variables['elements']['#taxonomy_term'];
-  $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
-  // Add view mode theme suggestions.
-  $suggestions[] = 'taxonomy_term__' . $sanitized_view_mode;
-  $suggestions[] = 'taxonomy_term__' . $term->bundle() . '__' . $sanitized_view_mode;
-  $suggestions[] = 'taxonomy_term__' . $term->id() . '__' . $sanitized_view_mode;
-}
-
-/**
- * Implements hook_preprocess_taxonomy_term().
- */
-function bangachain_preprocess_taxonomy_term(&$variables) {
-  $variables['is_living_blog'] = _bangachain_add_living_blog_boolean();
-}
-
-/**
- * Helper function to add living blog variable where needed for templating.
- */
-function _bangachain_add_living_blog_boolean() {
-  $path = \Drupal::service('path.current')->getPath();
-  $alias = \Drupal::service('path.alias_manager')->getAliasByPath($path);
-
-  if (strpos($alias, '/lifespan-living') !== false) {
-    return TRUE;
-  }
-
-  return FALSE;
-}

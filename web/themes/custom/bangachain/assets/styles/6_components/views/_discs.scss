@@ -1,5 +1,7 @@
 // CEO Blog Specific Styling for Blogs
-.c-view-discs {
+.c-view-discs,
+.c-view-bags,
+.c-view-accessories {
   a {
     color: inherit;
     @include hover-focus() {
@@ -9,17 +11,23 @@
     }
   }
 
-  &--all_discs_page {
+  &--all_discs_page,
+  &--all_accessories_page,
+  &--all_bags_page {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
     grid-gap: 24px;
+    margin-top: rvr(5);
 
     @include media-breakpoint-up(md) {
       grid-template-columns: repeat(2, 1fr);
+      margin-top: 0;
     }
 
     @include media-breakpoint-up(lg) {
       grid-template-columns: repeat(4, 1fr);
     }
   }
+
+
 }

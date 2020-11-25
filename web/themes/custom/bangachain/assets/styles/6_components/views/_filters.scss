@@ -12,10 +12,22 @@
   }
 
   &__toggle {
+    width: 100%;
+    position: absolute;
+    left: 0;
+
     @include media-breakpoint-up(lg) {
       display: none;
     }
+
+    button {
+      width: 100%;
+      background-color: $blue-gray;
+      color: $brand-blue;
+      padding: rem(12);
+    }
   }
+
   .form--inline {
     display: flex;
     flex-direction: column;

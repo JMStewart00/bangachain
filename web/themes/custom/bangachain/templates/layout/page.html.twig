@@ -55,6 +55,11 @@
             </picture>
           </a>
         </div>
+        <a href="#mobile-menu" class="c-header__hamburger mburger mburger--collapse">
+          <b></b>
+          <b></b>
+          <b></b>
+        </a>
         <div class="c-header__main-menu">
           {{ page.primary_menu }}
         </div>
@@ -64,6 +69,10 @@
       </div>
     </div>
   </header>
+
+  <nav class="c-mobile-menu" id="mobile-menu">
+    {{ drupal_block('bangachain_mobile_menu_block') }}
+  </nav>
 
   {{ page.breadcrumb }}
 

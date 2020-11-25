@@ -1,0 +1,93 @@
+{#
+/**
+ * @file
+ * Theme override to display a menu.
+ *
+ * Available variables:
+ * - menu_name: The machine name of the menu.
+ * - items: A nested list of menu items. Each menu item contains:
+ *   - attributes: HTML attributes for the menu item.
+ *   - below: The menu item child items.
+ *   - title: The menu link title.
+ *   - url: The menu link url, instance of \Drupal\Core\Url
+ *   - localized_options: Menu link localized options.
+ *   - is_expanded: TRUE if the link has visible children within the current
+ *     menu tree.
+ *   - is_collapsed: TRUE if the link has children within the current menu tree
+ *     that are not currently visible.
+ *   - in_active_trail: TRUE if the link is in the active trail.
+ */
+#}
+
+{% import _self as menus %}
+
+{#
+  We call a macro which calls itself to render the full tree.
+  @see https://twig.symfony.com/doc/1.x/tags/macro.html
+#}
+{{ menus.mobile_menu_links_macro(items, attributes, 0, menu_name, 0 ) }}
+
+{% macro mobile_menu_links_macro(items, attributes, menu_level, menu_name, selected_level) %}
+  {% import _self as menus %}
+
+  {# Top level menu classes #}
+  {%
+    set menu_classes = [
+      'c-mobile-menu__' ~ menu_name|clean_class,
+    ]
+  %}
+
+  {% if items %}
+    <ul{{ attributes.addClass(menu_classes) }}>
+
+    {% for item in items %}
+
+      {#
+        We use selected level to determine which panel should be open.
+        If a page is in active trail but has items below it we render the next panel
+      #}
+      {% if item.in_active_trail and not item.below %}
+        {% set selected_level = menu_level %}
+      {% elseif item.in_active_trail %}
+        {% set selected_level = menu_level + 1 %}
+      {% endif %}
+
+      {%
+        set item_classes = [
+          'o-menu__item',
+          'c-mobile-menu__item',
+          'c-mobile-menu__item--level-' ~ menu_level,
+          item.is_expanded ? 'c-mobile-menu__item-expanded',
+          item.is_collapsed ? 'c-mobile-menu__item--collapsed',
+          item.in_active_trail ? 'c-mobile-menu__item--active-trail',
+          selected_level == menu_level ? 'Selected',
+        ]
+      %}
+      {%
+        set link_classes = [
+          'o-link',
+          'c-mobile-menu__link',
+          'c-mobile-menu__link--level-' ~ menu_level,
+        ]
+      %}
+
+      <li{{ item.attributes.addClass(item_classes) }}>
+
+        {% if item.url %}
+          <a href="{{ item.url }}" {{ link_attributes.addClass(link_classes) }}>
+            {{ item.title }}
+          </a>
+        {% else %}
+          <span>
+            {{ item.title }}
+            <div class="c-mobile-menu__icon-backdrop"></div>
+          </span>
+        {% endif %}
+
+        {{ menus.mobile_menu_links_macro(item.below, attributes, menu_level + 1, menu_name, selected_level) }}
+
+      </li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endmacro %}

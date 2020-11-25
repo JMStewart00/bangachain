@@ -29,6 +29,10 @@
   &__main-menu {
     flex: 2;
     margin-left: rvr(0.5);
+
+    @include media-breakpoint-down(lg) {
+      display: none;
+    }
   }
 
   &__account-menu {
@@ -43,5 +47,25 @@
       display: flex;
       align-items: center;
     }
+  }
+
+  &__hamburger {
+    --mb-bar-height: #{rem(4)};
+    --mb-bar-spacing: #{rem(6)};
+    --mb-bar-width: 0.4;
+    width: rem(40);
+    height: rem(60);
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    @include media-breakpoint-up(lg) {
+      display: none;
+    }
+
+    b {
+      border-radius: 0;
+    }
+
   }
 }

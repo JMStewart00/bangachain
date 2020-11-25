@@ -1,0 +1,105 @@
+@import '../../mixins', '../../includes', '../../variables';
+
+$mm_module: '.mm-iconbar';
+
+:root {
+    --mm-iconbar-size: #{$mm_iconbarSize};
+}
+
+.mm-menu_iconbar {
+    &-left {
+        .mm-panels,
+        .mm-navbars_top,
+        .mm-navbars_bottom {
+            @if ($mm_IE11Fallbacks) {
+                margin-left: $mm_iconbarSize;
+            }
+
+            margin-left: var(--mm-iconbar-size);
+        }
+
+        #{$mm_module} {
+            border-right-width: 1px;
+            display: block;
+            left: 0;
+        }
+    }
+
+    &-right {
+        .mm-panels,
+        .mm-navbars_top,
+        .mm-navbars_bottom {
+            @if ($mm_IE11Fallbacks) {
+                margin-right: $mm_iconbarSize;
+            }
+
+            margin-right: var(--mm-iconbar-size);
+        }
+
+        #{$mm_module} {
+            border-left-width: 1px;
+            display: block;
+            right: 0;
+        }
+    }
+}
+
+#{$mm_module} {
+    @if ($mm_IE11Fallbacks) {
+        width: $mm_iconbarSize;
+        border-color: $mm_borderColor;
+        background: $mm_backgroundColor;
+        color: $mm_dimmedTextColor;
+    }
+
+    display: none;
+    width: var(--mm-iconbar-size);
+    overflow: hidden;
+    box-sizing: border-box;
+
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 2;
+
+    border: 0 solid;
+    border-color: var(--mm-color-border);
+    background: var(--mm-color-background);
+    color: var(--mm-color-text-dimmed);
+    text-align: center;
+}
+
+%mm_iconbar_part {
+    width: inherit;
+    position: absolute;
+
+    > * {
+        box-sizing: border-box;
+        display: block;
+        padding: ($mm_btnSize / 4) 0;
+    }
+
+    a,
+    a:hover {
+        text-decoration: none;
+    }
+}
+#{$mm_module}__top {
+    @extend %mm_iconbar_part;
+    top: 0;
+}
+
+#{$mm_module}__bottom {
+    @extend %mm_iconbar_part;
+    bottom: 0;
+}
+
+@if ($mm_include_iconbar_tabs) {
+    #{$mm_module}__tab_selected {
+        @if ($mm_IE11Fallbacks) {
+            background: $mm_emphasizedBackgroundColor;
+        }
+
+        background: var(--mm-color-background-emphasis);
+    }
+}

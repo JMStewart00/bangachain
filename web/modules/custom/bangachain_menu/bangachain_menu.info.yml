@@ -1,0 +1,8 @@
+name: Bangachain Menu
+description: Custom functionality for Bangachain menus.
+type: module
+core: 8.x
+package: Bangachain
+
+dependencies:
+  - block

@@ -10,7 +10,6 @@
       $(".c-view-filters__toggle > button", context).once("viewFiltersToggle").each(function (i, el) {
         var buttonToggle = $(el);
         buttonToggle.on("click", function () {
-          console.log('click BITCH!');
           var filters = $('.l-grid__sidebar').find(".c-view-filters");
           filters.toggleClass("open");
         });

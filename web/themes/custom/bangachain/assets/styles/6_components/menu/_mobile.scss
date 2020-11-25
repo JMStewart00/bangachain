@@ -1,0 +1,113 @@
+.c-mobile-menu {
+  // mmenu variables
+  --mm-offset-top: #{rem(75)};
+  --mm-color-background: #{$white};
+  --mm-color-border: #{$border-color};
+  --mm-color-text: #{$brand-blue};
+  --mm-color-button: #{$brand-blue};
+  --mm-listitem-size: #{rem(64)};
+
+  $mobile-menu-top-offset: rem(75);
+  top: $mobile-menu-top-offset;
+
+  // Prevent screen from flashing
+  &:not(.mm-menu) {
+    display: none;
+  }
+
+  // Push the menu futher down when logged into admin
+  .toolbar-vertical & {
+    --mm-offset-top: calc(#{$mobile-menu-top-offset} + #{$toolbar-fixed});
+    top: $mobile-menu-top-offset + $toolbar-fixed;
+  }
+
+  // Utility menu specific styles
+  &__utility {
+    --mm-listitem-size: #{rem(56)};
+
+    .c-mobile-menu {
+      &__item {
+        background-color: $gray-200;
+      }
+
+      &__link {
+        font-weight: $fw-semi-bold;
+      }
+    }
+  }
+
+  // General menu link styles
+  &__link {
+    font-weight: $fw-bold;
+  }
+
+  // Add box effect around icons
+  &__icon-backdrop {
+    position: absolute;
+    height: 100%;
+    width: rem(59);
+    top: 0;
+    right: 0;
+    background-color: $white;
+    border-left: 1px solid $border-color;
+  }
+
+  // Secondary Nav
+  &__secondary-nav {
+    color: $teal;
+    margin-top: $spacer * 2;
+    padding: 20px 20px 10px;
+    border-bottom: 3px solid $orange;
+  }
+
+  // Hide the main menu link on utility menus
+  &__utility-navbar {
+    .mm-navbar:first-child {
+      display: none;
+    }
+  }
+
+  // General panel link classes
+  // mmenu strips classes from span so we can't use own classes
+  .mm-btn {
+    width: 64px;
+
+    &::after {
+      right: rem(29);
+      border-width: 3px;
+    }
+
+    &_prev {
+      &::before {
+        border-width: rem(3);
+      }
+    }
+  }
+
+  // Navbars styling
+  // stylelint-disable selector-class-pattern
+  .mm-navbar {
+    &:first-child {
+      height: 64px;
+      background-color: $gray-200;
+      border-bottom: 1px solid $border-color;
+    }
+
+    &__title {
+      color: $orange;
+      background-color: $gray-200;
+      border-top: 3px solid $cyan;
+      justify-content: flex-start;
+      padding-left: $spacer;
+    }
+
+    a {
+      color: $brand-blue;
+    }
+
+    .mm-btn_prev::before {
+      left: 29px;
+    }
+  }
+  // stylelint-enable selector-class-pattern
+}

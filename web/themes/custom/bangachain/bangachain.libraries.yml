@@ -39,6 +39,28 @@ bootstrap-tab:
   dependencies:
     - bangachain/bootstrap-js
 
+mburger-css:
+  version: 1.3
+  css:
+    theme:
+      /libraries/mburger-css/dist/mburger.css: { weight: -1 }
+  js:
+    /libraries/mburger-css/dist/mburger.js: { weight: -1, attributes: { type: "module" } }
+  dependencies:
+    - bangachain/mmenu-js
+
+mmenu-js:
+  version: 8.5
+  css:
+    theme:
+      /libraries/mmenu-js/dist/mmenu.css: { weight: -1 }
+  js:
+    /libraries/mmenu-js/dist/mmenu.polyfills.js: { weight: -1 }
+    /libraries/mmenu-js/dist/mmenu.js: { weight: -1 }
+    assets/js/mmenu-setup.js: {}
+  dependencies:
+    - bangachain/global-styling
+
 view-filters-toggle:
   version: 1.0
   js:

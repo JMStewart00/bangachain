@@ -8,6 +8,8 @@ core: 8.x
 libraries:
   - bangachain/global-styling
   - bangachain/bootstrap-js
+  - bangachain/mmenu-js
+  - bangachain/mburger-css
 
 # CKeditor Style
 ckeditor_stylesheets:

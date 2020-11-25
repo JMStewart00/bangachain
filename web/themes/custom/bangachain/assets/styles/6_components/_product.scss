@@ -8,6 +8,16 @@
 
   &--teaser {
     border: 1px solid $gray-medium;
+    @include media-breakpoint-down(md) {
+      margin: auto;
+      width: 75%;
+    }
+
+    .c-product__flight-numbers {
+      @include media-breakpoint-down(md) {
+        display: none;
+      }
+    }
   }
 
   &__description {

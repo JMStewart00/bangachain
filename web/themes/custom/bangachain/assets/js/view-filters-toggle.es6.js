@@ -11,7 +11,6 @@
         .each((i, el) => {
           const buttonToggle = $(el);
           buttonToggle.on("click", () => {
-            console.log('click BITCH!');
             const filters = $('.l-grid__sidebar')
               .find(".c-view-filters")
             filters.toggleClass("open");

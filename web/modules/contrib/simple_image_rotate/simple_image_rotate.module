@@ -13,6 +13,7 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\file\Entity\File;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
 
 /**
  * Implements hook_help().
@@ -73,6 +74,10 @@ function simple_image_rotate_field_widget_multivalue_form_alter(array &$elements
 
   if ($field_name == 'image' &&
     \Drupal::currentUser()->hasPermission('rotate images')) {
+
+    if (!($field_definition instanceof ThirdPartySettingsInterface)) {
+      return;
+    }
 
     if ($field_definition->getThirdPartySetting('simple_image_rotate', 'enable_rotate') == 1) {
 
@@ -148,6 +153,10 @@ function simple_image_rotate_rotate_image(EntityInterface &$entity) {
   foreach ($fields as $field_name => $field) {
 
     if ($field->getType() == "image") {
+
+      if (!($field instanceof ThirdPartySettingsInterface)) {
+        continue;
+      }
 
       if ($field->getThirdPartySetting('simple_image_rotate', 'enable_rotate') == 1) {
 

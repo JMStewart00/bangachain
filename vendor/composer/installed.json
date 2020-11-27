@@ -8066,6 +8066,9 @@
                     "status": "not-covered",
                     "message": "Alpha releases are not covered by Drupal security advisories."
                 }
+            },
+            "patches_applied": {
+                "Undefined methond getThirdPartySettings()": "https://www.drupal.org/files/issues/2020-08-26/simple-image-rotate-issue-3126067-undefined-getThirdPartySettings-method.patch"
             }
         },
         "installation-source": "dist",

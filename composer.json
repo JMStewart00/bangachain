@@ -285,6 +285,9 @@
             },
             "drupal/commerce_multi_payment": {
                 "Fatal error": "https://www.drupal.org/files/issues/2020-02-09/3112228-2.patch"
+            },
+            "drupal/simple_image_rotate": {
+                "Undefined methond getThirdPartySettings()": "https://www.drupal.org/files/issues/2020-08-26/simple-image-rotate-issue-3126067-undefined-getThirdPartySettings-method.patch"
             }
         },
         "enable-patching": true,

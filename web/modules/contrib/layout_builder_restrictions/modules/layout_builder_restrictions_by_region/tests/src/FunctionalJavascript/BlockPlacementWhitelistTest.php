@@ -117,7 +117,7 @@ class BlockPlacementWhitelistTest extends WebDriverTestBase {
     $element->click();
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->checkboxChecked('Allow all existing & new Content fields blocks.');
-    $assert_session->checkboxNotChecked('Allow specific Content fields blocks (whitelist):');
+    $assert_session->checkboxNotChecked('Allow specific Content fields blocks:');
 
     // Restrict all 'Content' fields from options.
     $element = $page->find('xpath', '//*[starts-with(@id,"edit-allowed-blocks-content-fields-restriction-whitelisted--")]');
@@ -136,7 +136,7 @@ class BlockPlacementWhitelistTest extends WebDriverTestBase {
     $element->click();
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->checkboxNotChecked('Allow all existing & new Content fields blocks.');
-    $assert_session->checkboxChecked('Allow specific Content fields blocks (whitelist):');
+    $assert_session->checkboxChecked('Allow specific Content fields blocks:');
     $page->pressButton('Close');
 
     // Load Second region allowed block form to verify temp storage.
@@ -144,7 +144,7 @@ class BlockPlacementWhitelistTest extends WebDriverTestBase {
     $element->click();
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->checkboxChecked('Allow all existing & new Content fields blocks.');
-    $assert_session->checkboxNotChecked('Allow specific Content fields blocks (whitelist):');
+    $assert_session->checkboxNotChecked('Allow specific Content fields blocks:');
     $page->pressButton('Close');
 
     // Verify All Regions unaffected.
@@ -155,7 +155,7 @@ class BlockPlacementWhitelistTest extends WebDriverTestBase {
     $element->click();
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->checkboxChecked('Allow all existing & new Content fields blocks.');
-    $assert_session->checkboxNotChecked('Allow specific Content fields blocks (whitelist):');
+    $assert_session->checkboxNotChecked('Allow specific Content fields blocks:');
     $page->pressButton('Close');
 
     // Switch back to Per-region restrictions prior to saving.
@@ -273,9 +273,9 @@ class BlockPlacementWhitelistTest extends WebDriverTestBase {
 
     // Impose Custom Block type restrictions.
     $assert_session->checkboxChecked('Allow all existing & new Content fields blocks.');
-    $assert_session->checkboxNotChecked('Allow specific Content fields blocks (whitelist):');
+    $assert_session->checkboxNotChecked('Allow specific Content fields blocks:');
     $assert_session->checkboxChecked('Allow all existing & new Custom block types blocks.');
-    $assert_session->checkboxNotChecked('Allow specific Custom block types blocks (whitelist):');
+    $assert_session->checkboxNotChecked('Allow specific Custom block types blocks:');
 
     // Restrict all 'Content' fields from options.
     $element = $page->find('xpath', '//*[contains(@class, "form-item-allowed-blocks-content-fields-restriction")]/input[@value="whitelisted"]');
@@ -315,10 +315,10 @@ class BlockPlacementWhitelistTest extends WebDriverTestBase {
     $element->click();
     $assert_session->assertWaitOnAjaxRequest();
 
-    $assert_session->checkboxChecked('Allow specific Content fields blocks (whitelist):');
+    $assert_session->checkboxChecked('Allow specific Content fields blocks:');
     $assert_session->checkboxNotChecked('Allow all existing & new Content fields blocks.');
     $assert_session->checkboxChecked('Allow all existing & new Inline blocks blocks.');
-    $assert_session->checkboxNotChecked('Allow specific Inline blocks blocks (whitelist):');
+    $assert_session->checkboxNotChecked('Allow specific Inline blocks blocks:');
 
     // Restrict all Inline blocks from options.
     $element = $page->find('xpath', '//*[starts-with(@id, "edit-allowed-blocks-inline-blocks-restriction-whitelisted--")]');
@@ -352,7 +352,7 @@ class BlockPlacementWhitelistTest extends WebDriverTestBase {
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section-table"]/tbody/tr[@data-region="first"]//a');
     $element->click();
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->checkboxChecked('Allow specific Content fields blocks (whitelist):');
+    $assert_session->checkboxChecked('Allow specific Content fields blocks:');
 
     // Allow only 'body' field as an option.
     $page->checkField('allowed_blocks[Content fields][allowed_blocks][field_block:node:bundle_with_section_field:body]');
@@ -477,15 +477,15 @@ class BlockPlacementWhitelistTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
 
     $assert_session->checkboxChecked('Allow all existing & new Content fields blocks.');
-    $assert_session->checkboxNotChecked('Allow specific Content fields blocks (whitelist):');
+    $assert_session->checkboxNotChecked('Allow specific Content fields blocks:');
     $assert_session->checkboxChecked('Allow all existing & new Custom blocks blocks.');
-    $assert_session->checkboxNotChecked('Allow specific Custom blocks blocks (whitelist):');
+    $assert_session->checkboxNotChecked('Allow specific Custom blocks blocks:');
     $assert_session->checkboxChecked('Allow all existing & new Inline blocks blocks.');
-    $assert_session->checkboxNotChecked('Allow specific Inline blocks blocks (whitelist):');
+    $assert_session->checkboxNotChecked('Allow specific Inline blocks blocks:');
     $assert_session->checkboxChecked('Allow all existing & new System blocks.');
-    $assert_session->checkboxNotChecked('Allow specific System blocks (whitelist):');
+    $assert_session->checkboxNotChecked('Allow specific System blocks:');
     $assert_session->checkboxChecked('Allow all existing & new core blocks.');
-    $assert_session->checkboxNotChecked('Allow specific core blocks (whitelist):');
+    $assert_session->checkboxNotChecked('Allow specific core blocks:');
 
     // Disallow Core blocks.
     $element = $page->find('xpath', '//*[starts-with(@id, "edit-allowed-blocks-core-restriction-whitelisted--")]');
@@ -571,7 +571,7 @@ class BlockPlacementWhitelistTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
 
     $assert_session->checkboxChecked('Allow all existing & new Content fields blocks.');
-    $assert_session->checkboxNotChecked('Allow specific Content fields blocks (whitelist):');
+    $assert_session->checkboxNotChecked('Allow specific Content fields blocks:');
 
     $element = $page->find('xpath', '//*[contains(@class, "form-item-allowed-blocks-content-fields-restriction")]/input[@value="whitelisted"]');
     $element->click();

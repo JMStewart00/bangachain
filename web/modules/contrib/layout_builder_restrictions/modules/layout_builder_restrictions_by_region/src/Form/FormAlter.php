@@ -163,24 +163,24 @@ class FormAlter implements ContainerInjectionInterface {
 
       $entity_view_display_id = $display->get('id');
       $definitions = $this->getLayoutDefinitions();
-      foreach ($definitions as $plugin_id => $definition) {
+      foreach ($definitions as $section => $definition) {
         $enabled = FALSE;
-        if (!empty($allowed_layouts) && in_array($plugin_id, $allowed_layouts)) {
+        if (!empty($allowed_layouts) && in_array($section, $allowed_layouts)) {
           $enabled = TRUE;
         }
-        $layout_form['layouts'][$plugin_id] = [
+        $layout_form['layouts'][$section] = [
           '#type' => 'checkbox',
           '#default_value' => $enabled,
           '#description' => [
             $definition->getIcon(60, 80, 1, 3),
             [
               '#type' => 'container',
-              '#children' => $definition->getLabel() . ' (' . $plugin_id . ')',
+              '#children' => $definition->getLabel() . ' (' . $section . ')',
             ],
           ],
           '#attributes' => [
             'data-layout-plugin' => [
-              $plugin_id,
+              $section,
             ],
           ],
           '#states' => [
@@ -195,44 +195,44 @@ class FormAlter implements ContainerInjectionInterface {
       // Block settings.
       $layout_definitions = $definitions;
 
-      foreach ($layout_definitions as $plugin_id => $definition) {
+      foreach ($layout_definitions as $section => $definition) {
         $regions = $definition->getRegions();
         $regions['all_regions'] = [
           'label' => $this->t('All regions'),
         ];
 
-        $form['layout'][$plugin_id] = [
+        $form['layout'][$section] = [
           '#type' => 'details',
           '#title' => $this->t('Blocks available for the <em>@layout_label</em> layout', ['@layout_label' => $definition->getLabel()]),
           '#parents' => [
             'layout_builder_restrictions',
             'allowed_blocks_by_layout',
-            $plugin_id,
+            $section,
           ],
           '#attributes' => [
-            'data-layout-plugin' => $plugin_id,
+            'data-layout-plugin' => $section,
           ],
           '#states' => [
             'disabled' => [
               [':input[name="layout[enabled]"]' => ['checked' => FALSE]],
               'or',
-              ['#edit-layout-builder-restrictions-allowed-layouts :input[data-layout-plugin="' . $plugin_id . '"]' => ['checked' => FALSE]],
+              ['#edit-layout-builder-restrictions-allowed-layouts :input[data-layout-plugin="' . $section . '"]' => ['checked' => FALSE]],
             ],
             'invisible' => [
               [':input[name="layout[enabled]"]' => ['checked' => FALSE]],
               'or',
-              ['#edit-layout-builder-restrictions-allowed-layouts :input[data-layout-plugin="' . $plugin_id . '"]' => ['checked' => FALSE]],
+              ['#edit-layout-builder-restrictions-allowed-layouts :input[data-layout-plugin="' . $section . '"]' => ['checked' => FALSE]],
             ],
           ],
         ];
         $default_restriction_behavior = 'all';
-        if (isset($third_party_settings['whitelisted_blocks'][$plugin_id]) && !isset($third_party_settings['whitelisted_blocks'][$plugin_id]['all_regions'])) {
+        if (isset($third_party_settings['whitelisted_blocks'][$section]) && !isset($third_party_settings['whitelisted_blocks'][$section]['all_regions'])) {
           $default_restriction_behavior = 'per-region';
         }
-        if (isset($third_party_settings['blacklisted_blocks'][$plugin_id]) && !isset($third_party_settings['blacklisted_blocks'][$plugin_id]['all_regions'])) {
+        if (isset($third_party_settings['blacklisted_blocks'][$section]) && !isset($third_party_settings['blacklisted_blocks'][$section]['all_regions'])) {
           $default_restriction_behavior = 'per-region';
         }
-        $form['layout'][$plugin_id]['restriction_behavior'] = [
+        $form['layout'][$section]['restriction_behavior'] = [
           '#type' => 'radios',
           '#options' => [
             "all" => $this->t('Apply block restrictions to all regions in layout'),
@@ -242,12 +242,12 @@ class FormAlter implements ContainerInjectionInterface {
             'class' => [
               'restriction-type',
             ],
-            'data-layout-plugin' => $plugin_id,
+            'data-layout-plugin' => $section,
           ],
           '#default_value' => $default_restriction_behavior,
         ];
 
-        $form['layout'][$plugin_id]['table'] = [
+        $form['layout'][$section]['table'] = [
           '#type' => 'table',
           '#header' => [
             $this->t('Region'),
@@ -255,12 +255,12 @@ class FormAlter implements ContainerInjectionInterface {
             $this->t('Operations'),
           ],
           '#attributes' => [
-            'data-layout' => $plugin_id,
+            'data-layout' => $section,
           ],
         ];
 
         foreach ($regions as $region_id => $region) {
-          $form['layout'][$plugin_id]['table']['#rows'][$region_id] = [
+          $form['layout'][$section]['table']['#rows'][$region_id] = [
             'data-region' => $region_id,
             'data' => [
               'region_label' => [
@@ -275,9 +275,9 @@ class FormAlter implements ContainerInjectionInterface {
                 'class' => [
                   'restriction-status',
                 ],
-                'id' => 'restriction-status--' . $plugin_id . '--' . $region_id,
+                'id' => 'restriction-status--' . $section . '--' . $region_id,
                 'data' => [
-                  '#markup' => '<span class="data">' . $this->RegionRestrictionStatusString($plugin_id, $region_id, $static_id, $entity_view_display_id) . '</span>',
+                  '#markup' => '<span class="data">' . $this->RegionRestrictionStatusString($section, $region_id, $static_id, $entity_view_display_id) . '</span>',
                 ],
               ],
               'operations' => [
@@ -292,7 +292,7 @@ class FormAlter implements ContainerInjectionInterface {
                       'url' => Url::fromRoute("layout_builder_restrictions_by_region.{$form['#entity_type']}_allowed_blocks", [
                         'static_id' => $static_id,
                         'entity_view_display_id' => $entity_view_display_id,
-                        'layout_plugin' => $plugin_id,
+                        'layout_plugin' => $section,
                         'region_id' => $region_id,
                       ]),
                       'attributes' => [
@@ -323,6 +323,8 @@ class FormAlter implements ContainerInjectionInterface {
    */
   public function entityFormEntityBuild($entity_type_id, LayoutEntityDisplayInterface $display, &$form, FormStateInterface &$form_state) {
     $static_id = $form_state->getTemporaryValue('static_id');
+    // @todo: change naming to avoid color-based metaphor.
+    $restriction_types = ['whitelisted', 'blacklisted'];
 
     // Set allowed layouts.
     $layout_restriction = $form_state->getValue([
@@ -347,11 +349,12 @@ class FormAlter implements ContainerInjectionInterface {
 
     $layout_definitions = $this->getLayoutDefinitions();
 
-    foreach ($allowed_layouts as $plugin_id) {
+    foreach ($allowed_layouts as $section) {
 
-      $layout_definition = $layout_definitions[$plugin_id];
+      $layout_definition = $layout_definitions[$section];
 
       $regions = $layout_definition->getRegions();
+
       $regions['all_regions'] = [
         'label' => $this->t('All regions'),
       ];
@@ -360,54 +363,70 @@ class FormAlter implements ContainerInjectionInterface {
       $layout_behavior = $form_state->getValue([
         'layout_builder_restrictions',
         'allowed_blocks_by_layout',
-        $plugin_id,
+        $section,
       ]);
 
       // Handle scenario where all_regions configuration has not been modified
       // and needs to be preserved.
-      $all_regions_temp = $store->get($static_id . ':' . $plugin_id . ':all_regions');
+      $all_regions_temp = $store->get($static_id . ':' . $section . ':all_regions');
       if ($layout_behavior['restriction_behavior'] == 'all' && is_null($all_regions_temp)) {
-        if (isset($third_party_settings['whitelisted_blocks'][$plugin_id]['all_regions'])) {
-          $all_regions_whitelisted = $third_party_settings['whitelisted_blocks'][$plugin_id]['all_regions'];
+        if (isset($third_party_settings['whitelisted_blocks'][$section]['all_regions'])) {
+          $all_regions_whitelisted = $third_party_settings['whitelisted_blocks'][$section]['all_regions'];
         }
-        if (isset($third_party_settings['blacklisted_blocks'][$plugin_id]['all_regions'])) {
-          $all_regions_blacklisted = $third_party_settings['blacklisted_blocks'][$plugin_id]['all_regions'];
+        if (isset($third_party_settings['blacklisted_blocks'][$section]['all_regions'])) {
+          $all_regions_blacklisted = $third_party_settings['blacklisted_blocks'][$section]['all_regions'];
         }
-        unset($third_party_settings['whitelisted_blocks'][$plugin_id]);
-        unset($third_party_settings['blacklisted_blocks'][$plugin_id]);
+        foreach ($restriction_types as $logic_type) {
+          unset($third_party_settings[$logic_type . '_blocks'][$section]);
+        }
         if (isset($all_regions_whitelisted)) {
-          $third_party_settings['whitelisted_blocks'][$plugin_id]['all_regions'] = $all_regions_whitelisted;
+          $third_party_settings['whitelisted_blocks'][$section]['all_regions'] = $all_regions_whitelisted;
         }
         if (isset($all_regions_blacklisted)) {
-          $third_party_settings['blacklisted_blocks'][$plugin_id]['all_regions'] = $all_regions_blacklisted;
+          $third_party_settings['blacklisted_blocks'][$section]['all_regions'] = $all_regions_blacklisted;
         }
       }
       else {
         // Unset 'all_regions'. This will be readded if there is tempstore data.
-        unset($third_party_settings['whitelisted_blocks'][$plugin_id]['all_regions']);
-        unset($third_party_settings['blacklisted_blocks'][$plugin_id]['all_regions']);
+        foreach ($restriction_types as $logic_type) {
+          unset($third_party_settings[$logic_type . '_blocks'][$section]['all_regions']);
+        }
         foreach ($regions as $region_id => $region) {
-          $categories = $store->get($static_id . ':' . $plugin_id . ':' . $region_id);
+          $categories = $store->get($static_id . ':' . $section . ':' . $region_id);
           if (!is_null($categories)) {
             // Unset any existing config for region.
-            unset($third_party_settings['whitelisted_blocks'][$plugin_id][$region_id]);
-            unset($third_party_settings['blacklisted_blocks'][$plugin_id][$region_id]);
+            foreach ($restriction_types as $logic_type) {
+              unset($third_party_settings[$logic_type . '_blocks'][$section][$region_id]);
+            }
             foreach ($categories as $category => $settings) {
               $restriction_type = $settings['restriction_type'];
               // Category is restricted.
-              if (in_array($restriction_type, ['whitelisted', 'blacklisted'])) {
+              if (in_array($restriction_type, $restriction_types)) {
                 if (empty($settings['restrictions'])) {
-                  $third_party_settings[$restriction_type . '_blocks'][$plugin_id][$region_id][$category] = [];
+                  $third_party_settings[$restriction_type . '_blocks'][$section][$region_id][$category] = [];
                 }
                 else {
                   foreach ($settings['restrictions'] as $block_id => $block_setting) {
-                    $third_party_settings[$restriction_type . '_blocks'][$plugin_id][$region_id][$category][] = $block_id;
+                    $third_party_settings[$restriction_type . '_blocks'][$section][$region_id][$category][] = $block_id;
                   }
                 }
               }
             }
           }
         }
+      }
+    }
+    // Ensure data is saved in consistent alpha order by region.
+    foreach ($restriction_types as $logic_type) {
+      if (isset($third_party_settings[$logic_type . '_blocks'])) {
+        foreach ($third_party_settings[$logic_type . '_blocks'] as $section => $regions) {
+          ksort($regions);
+          $third_party_settings[$logic_type . '_blocks'][$section] = $regions;
+        }
+      }
+      if (isset($third_party_settings[$logic_type . '_blocks'])) {
+        // Ensure data is saved in alpha order by layout.
+        ksort($third_party_settings[$logic_type . '_blocks']);
       }
     }
     $display->setThirdPartySetting('layout_builder_restrictions', 'entity_view_mode_restriction_by_region', $third_party_settings);

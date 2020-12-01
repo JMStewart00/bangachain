@@ -15,35 +15,19 @@ use Symfony\Component\HttpClient\Chunk\DataChunk;
 use Symfony\Component\HttpClient\Chunk\ErrorChunk;
 use Symfony\Component\HttpClient\Chunk\FirstChunk;
 use Symfony\Component\HttpClient\Chunk\LastChunk;
-use Symfony\Component\HttpClient\Exception\ClientException;
-use Symfony\Component\HttpClient\Exception\JsonException;
-use Symfony\Component\HttpClient\Exception\RedirectionException;
-use Symfony\Component\HttpClient\Exception\ServerException;
 use Symfony\Component\HttpClient\Exception\TransportException;
 use Symfony\Component\HttpClient\Internal\ClientState;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 /**
- * Implements the common logic for response classes.
+ * Implements common logic for transport-level response classes.
  *
  * @author Nicolas Grekas <p@tchwork.com>
  *
  * @internal
  */
-trait ResponseTrait
+trait TransportResponseTrait
 {
-    private $logger;
     private $headers = [];
-    private $canary;
-
-    /**
-     * @var callable|null A callback that initializes the two previous properties
-     */
-    private $initializer;
-
     private $info = [
         'response_headers' => [],
         'http_code' => 0,
@@ -56,11 +40,9 @@ trait ResponseTrait
     private $id;
     private $timeout = 0;
     private $inflate;
-    private $shouldBuffer;
-    private $content;
     private $finalInfo;
-    private $offset = 0;
-    private $jsonData;
+    private $canary;
+    private $logger;
 
     /**
      * {@inheritdoc}
@@ -93,81 +75,6 @@ trait ResponseTrait
     /**
      * {@inheritdoc}
      */
-    public function getContent(bool $throw = true): string
-    {
-        if ($this->initializer) {
-            self::initialize($this);
-        }
-
-        if ($throw) {
-            $this->checkStatusCode();
-        }
-
-        if (null === $this->content) {
-            $content = null;
-
-            foreach (self::stream([$this]) as $chunk) {
-                if (!$chunk->isLast()) {
-                    $content .= $chunk->getContent();
-                }
-            }
-
-            if (null !== $content) {
-                return $content;
-            }
-
-            if (null === $this->content) {
-                throw new TransportException('Cannot get the content of the response twice: buffering is disabled.');
-            }
-        } else {
-            foreach (self::stream([$this]) as $chunk) {
-                // Chunks are buffered in $this->content already
-            }
-        }
-
-        rewind($this->content);
-
-        return stream_get_contents($this->content);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function toArray(bool $throw = true): array
-    {
-        if ('' === $content = $this->getContent($throw)) {
-            throw new JsonException('Response body is empty.');
-        }
-
-        if (null !== $this->jsonData) {
-            return $this->jsonData;
-        }
-
-        try {
-            $content = json_decode($content, true, 512, \JSON_BIGINT_AS_STRING | (\PHP_VERSION_ID >= 70300 ? \JSON_THROW_ON_ERROR : 0));
-        } catch (\JsonException $e) {
-            throw new JsonException($e->getMessage().sprintf(' for "%s".', $this->getInfo('url')), $e->getCode());
-        }
-
-        if (\PHP_VERSION_ID < 70300 && \JSON_ERROR_NONE !== json_last_error()) {
-            throw new JsonException(json_last_error_msg().sprintf(' for "%s".', $this->getInfo('url')), json_last_error());
-        }
-
-        if (!\is_array($content)) {
-            throw new JsonException(sprintf('JSON content was expected to decode to an array, "%s" returned for "%s".', get_debug_type($content), $this->getInfo('url')));
-        }
-
-        if (null !== $this->content) {
-            // Option "buffer" is true
-            return $this->jsonData = $content;
-        }
-
-        return $content;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function cancel(): void
     {
         $this->info['canceled'] = true;
@@ -176,33 +83,9 @@ trait ResponseTrait
     }
 
     /**
-     * Casts the response to a PHP stream resource.
-     *
-     * @return resource
-     *
-     * @throws TransportExceptionInterface   When a network error occurs
-     * @throws RedirectionExceptionInterface On a 3xx when $throw is true and the "max_redirects" option has been reached
-     * @throws ClientExceptionInterface      On a 4xx when $throw is true
-     * @throws ServerExceptionInterface      On a 5xx when $throw is true
-     */
-    public function toStream(bool $throw = true)
-    {
-        if ($throw) {
-            // Ensure headers arrived
-            $this->getHeaders($throw);
-        }
-
-        $stream = StreamWrapper::createResource($this);
-        stream_get_meta_data($stream)['wrapper_data']
-            ->bindHandles($this->handle, $this->content);
-
-        return $stream;
-    }
-
-    /**
      * Closes the response and all its network handles.
      */
-    private function close(): void
+    protected function close(): void
     {
         $this->canary->cancel();
         $this->inflate = null;
@@ -222,30 +105,6 @@ trait ResponseTrait
      * Waits for network activity.
      */
     abstract protected static function select(ClientState $multi, float $timeout): int;
-
-    private static function initialize(self $response): void
-    {
-        if (null !== $response->info['error']) {
-            throw new TransportException($response->info['error']);
-        }
-
-        try {
-            if (($response->initializer)($response)) {
-                foreach (self::stream([$response]) as $chunk) {
-                    if ($chunk->isFirst()) {
-                        break;
-                    }
-                }
-            }
-        } catch (\Throwable $e) {
-            // Persist timeouts thrown during initialization
-            $response->info['error'] = $e->getMessage();
-            $response->close();
-            throw $e;
-        }
-
-        $response->initializer = null;
-    }
 
     private static function addResponseHeaders(array $responseHeaders, array &$info, array &$headers, string &$debug = ''): void
     {
@@ -268,21 +127,6 @@ trait ResponseTrait
 
         if (!$info['http_code']) {
             throw new TransportException(sprintf('Invalid or missing HTTP status line for "%s".', implode('', $info['url'])));
-        }
-    }
-
-    private function checkStatusCode()
-    {
-        if (500 <= $this->info['http_code']) {
-            throw new ServerException($this);
-        }
-
-        if (400 <= $this->info['http_code']) {
-            throw new ClientException($this);
-        }
-
-        if (300 <= $this->info['http_code']) {
-            throw new RedirectionException($this);
         }
     }
 

@@ -237,6 +237,10 @@ trait PluginHelperTrait {
   public function getValuefromSectionStorage(array $section_storage, $requested_value) {
     $section_storage = array_shift($section_storage);
     $contexts = $section_storage->getContexts();
+    // Provide a fallback view mode; this will be overridden by specific
+    // contexts, below. We need a fallback since some entity types (such as
+    // Layout entities) do not implement a view mode.
+    $view_mode = 'default';
     if ($requested_value == 'contexts') {
       return $contexts;
     }
@@ -262,8 +266,6 @@ trait PluginHelperTrait {
     }
     elseif (isset($contexts['layout'])) {
       $entity = $contexts['layout']->getContextValue();
-      // Layout entities do not define view_modes.
-      $view_mode = 'default';
       $bundle = $entity->getTargetBundle();
       $entity_type = $entity->getTargetEntityType();
     }

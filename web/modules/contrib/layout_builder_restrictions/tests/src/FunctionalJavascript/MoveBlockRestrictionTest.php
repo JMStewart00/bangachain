@@ -380,7 +380,7 @@ class MoveBlockRestrictionTest extends WebDriverTestBase {
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-custom-block-types-restriction-whitelisted"]');
     $element->click();
     // Whitelist all "Alternate" block types.
-    $page->checkField('layout_builder_restrictions[allowed_blocks][Custom block types][alternate]');
+    $page->checkField('layout_builder_restrictions[allowed_blocks][Custom block types][available_blocks][alternate]');
     $page->pressButton('Save');
     $this->assertSession()->assertWaitOnAjaxRequest();
 

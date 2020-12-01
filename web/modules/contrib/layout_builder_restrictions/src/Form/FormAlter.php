@@ -157,8 +157,8 @@ class FormAlter implements ContainerInjectionInterface {
           '#type' => 'radios',
           '#options' => [
             "all" => $this->t('Allow all existing & new %category blocks.', ['%category' => $data['label']]),
-            "whitelisted" => $this->t('Allow specific %category blocks (whitelist):', ['%category' => $data['label']]),
-            "blacklisted" => $this->t('Restrict specific %category blocks (blacklist):', ['%category' => $data['label']]),
+            "whitelisted" => $this->t('Allow specific %category blocks:', ['%category' => $data['label']]),
+            "blacklisted" => $this->t('Restrict specific %category blocks:', ['%category' => $data['label']]),
           ],
           '#default_value' => $category_setting,
           '#parents' => [
@@ -166,6 +166,14 @@ class FormAlter implements ContainerInjectionInterface {
             'allowed_blocks',
             $category,
             'restriction',
+          ],
+        ];
+        $category_form['available_blocks'] = [
+          '#type' => 'container',
+          '#states' => [
+            'invisible' => [
+              ':input[name="layout_builder_restrictions[allowed_blocks][' . $category . '][restriction]"]' => ['value' => "all"],
+            ],
           ],
         ];
         foreach ($data['definitions'] as $block_id => $block) {
@@ -176,7 +184,7 @@ class FormAlter implements ContainerInjectionInterface {
           elseif ($category_setting == 'blacklisted' && isset($blacklisted_blocks[$category]) && in_array($block_id, $blacklisted_blocks[$category])) {
             $enabled = TRUE;
           }
-          $category_form[$block_id] = [
+          $category_form['available_blocks'][$block_id] = [
             '#type' => 'checkbox',
             '#title' => $block['admin_label'],
             '#default_value' => $enabled,
@@ -184,12 +192,8 @@ class FormAlter implements ContainerInjectionInterface {
               'layout_builder_restrictions',
               'allowed_blocks',
               $category,
+              'available_blocks',
               $block_id,
-            ],
-            '#states' => [
-              'invisible' => [
-                ':input[name="layout_builder_restrictions[allowed_blocks][' . $category . '][restriction]"]' => ['value' => "all"],
-              ],
             ],
           ];
         }
@@ -287,12 +291,11 @@ class FormAlter implements ContainerInjectionInterface {
     ]);
     $block_restrictions = [];
     if (!empty($categories)) {
-      foreach ($categories as $category => $category_setting) {
-        $restriction_type = $category_setting['restriction'];
+      foreach ($categories as $category => $settings) {
+        $restriction_type = $settings['restriction'];
         if (in_array($restriction_type, ['whitelisted', 'blacklisted'])) {
           $block_restrictions[$restriction_type][$category] = [];
-          unset($category_setting['restriction']);
-          foreach ($category_setting as $block_id => $block_setting) {
+          foreach ($settings['available_blocks'] as $block_id => $block_setting) {
             if ($block_setting == '1') {
               // Include only checked blocks.
               $block_restrictions[$restriction_type][$category][] = $block_id;

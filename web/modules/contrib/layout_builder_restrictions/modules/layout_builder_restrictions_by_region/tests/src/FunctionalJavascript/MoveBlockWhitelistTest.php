@@ -159,7 +159,7 @@ class MoveBlockWhitelistTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
 
     $assert_session->checkboxChecked('Allow all existing & new Content fields blocks.');
-    $assert_session->checkboxNotChecked('Allow specific Content fields blocks (whitelist):');
+    $assert_session->checkboxNotChecked('Allow specific Content fields blocks:');
     $element = $page->find('xpath', '//*[starts-with(@id,"edit-allowed-blocks-content-fields-restriction-whitelisted--")]');
     $element->click();
     $element = $page->find('xpath', '//*[starts-with(@id,"edit-submit--")]');
@@ -212,7 +212,7 @@ class MoveBlockWhitelistTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
 
     $assert_session->checkboxChecked('Allow all existing & new Content fields blocks.');
-    $assert_session->checkboxNotChecked('Allow specific Content fields blocks (whitelist):');
+    $assert_session->checkboxNotChecked('Allow specific Content fields blocks:');
     $element = $page->find('xpath', '//*[starts-with(@id, "edit-allowed-blocks-content-fields-restriction-whitelisted--")]');
     $element->click();
     $element = $page->find('xpath', '//*[starts-with(@id,"edit-submit--")]');

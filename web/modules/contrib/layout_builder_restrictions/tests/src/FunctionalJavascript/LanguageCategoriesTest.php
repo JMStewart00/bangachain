@@ -184,7 +184,7 @@ class LanguageCategoriesTest extends WebDriverTestBase {
     // Restrict the Hjelp block.
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-help-restriction-whitelisted"]');
     $element->click();
-    $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-help-help-block"]');
+    $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-help-available-blocks-help-block"]');
     $element->click();
 
     $page->pressButton('Save');

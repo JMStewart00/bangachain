@@ -187,11 +187,11 @@ class BlacklistedRestrictionsTest extends WebDriverTestBase {
     $element->click();
     $assert_session->checkboxChecked('edit-layout-builder-restrictions-allowed-blocks-content-fields-restriction-blacklisted');
     // Blacklist the 'body' field as an option.
-    $page->checkField('layout_builder_restrictions[allowed_blocks][Content fields][field_block:node:bundle_with_section_field:body]');
+    $page->checkField('layout_builder_restrictions[allowed_blocks][Content fields][available_blocks][field_block:node:bundle_with_section_field:body]');
     // Blacklist "basic" Custom block types.
-    $page->checkField('layout_builder_restrictions[allowed_blocks][Custom block types][basic]');
+    $page->checkField('layout_builder_restrictions[allowed_blocks][Custom block types][available_blocks][basic]');
     // Blacklist the "alternate" Inline block type.
-    $page->checkField('layout_builder_restrictions[allowed_blocks][Inline blocks][inline_block:alternate]');
+    $page->checkField('layout_builder_restrictions[allowed_blocks][Inline blocks][available_blocks][inline_block:alternate]');
     $page->pressButton('Save');
 
     $this->drupalGet("$field_ui_prefix/display/default");
@@ -224,9 +224,9 @@ class BlacklistedRestrictionsTest extends WebDriverTestBase {
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-custom-blocks-restriction-blacklisted"]');
     $element->click();
     // Blacklist Basic Block 1.
-    $page->checkField('layout_builder_restrictions[allowed_blocks][Custom blocks][block_content:' . $blocks['Basic Block 1'] . ']');
+    $page->checkField('layout_builder_restrictions[allowed_blocks][Custom blocks][available_blocks][block_content:' . $blocks['Basic Block 1'] . ']');
     // Blacklist Alternate Block 1.
-    $page->checkField('layout_builder_restrictions[allowed_blocks][Custom blocks][block_content:' . $blocks['Alternate Block 1'] . ']');
+    $page->checkField('layout_builder_restrictions[allowed_blocks][Custom blocks][available_blocks][block_content:' . $blocks['Alternate Block 1'] . ']');
     $page->pressButton('Save');
     $this->drupalGet("$field_ui_prefix/display/default");
     $assert_session->linkExists('Manage layout');

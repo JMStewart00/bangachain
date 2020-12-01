@@ -128,13 +128,13 @@ class EntityViewModeRestrictionByRegion extends LayoutBuilderRestrictionBase {
                 $delta = $content_block_types_by_uuid[$uuid];
               }
             }
-            if (in_array($category, array_keys($whitelisted_blocks[$region]))) {
+            if (isset($whitelisted_blocks[$region]) && in_array($category, array_keys($whitelisted_blocks[$region]))) {
               if (!in_array($delta, $whitelisted_blocks[$region][$category])) {
                 // The current block is not whitelisted. Remove it.
                 unset($definitions[$original_delta]);
               }
             }
-            elseif (in_array($category, array_keys($blacklisted_blocks[$region]))) {
+            elseif (isset($blacklisted_blocks[$region]) && in_array($category, array_keys($blacklisted_blocks[$region]))) {
               if (in_array($delta, $blacklisted_blocks[$region][$category])) {
                 // The current block is blacklisted. Remove it.
                 unset($definitions[$original_delta]);

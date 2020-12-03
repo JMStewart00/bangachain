@@ -95,13 +95,19 @@
 
       <div class="l-grid__main l-main">
 
-        <h1 class="u-color__blue">{{ label }}</h1>
+        <h1 class="u-color__blue">{{ label }} </h1>
 
+        {% if content.field_pdga_number.0 %}
+          <div><strong>PDGA#: </strong>{{ content.field_pdga_number.0 }}</div>
+        {% endif %}
+        {% if content.field_rating.0 %}
+          <div><strong>Rating: </strong>{{ content.field_rating.0 }}</div>
+        {% endif %}
         {% if content.field_hometown.0 %}
-          <h2><strong>Hometown: </strong>{{ content.field_hometown.0 }}</h2>
+          <div><strong>Hometown: </strong>{{ content.field_hometown.0 }}</div>
         {% endif %}
         {% if content.field_handedness.0 %}
-          <h3><strong>Throws: </strong>{{ content.field_handedness.0 }}</h3>
+          <div><strong>Throws: </strong>{{ content.field_handedness.0 }}</div>
         {% endif %}
 
         <div class="u-vr__mb--2">

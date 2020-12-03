@@ -1,0 +1,23 @@
+uuid: aaba569e-4afa-4404-a88d-167dbefb64ce
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_pdga_number
+    - node.type.team_member
+id: node.team_member.field_pdga_number
+field_name: field_pdga_number
+entity_type: node
+bundle: team_member
+label: 'PDGA Number'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 0
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

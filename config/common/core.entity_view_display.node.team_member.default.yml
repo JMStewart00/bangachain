@@ -7,7 +7,9 @@ dependencies:
     - field.field.node.team_member.field_favorite_discs
     - field.field.node.team_member.field_handedness
     - field.field.node.team_member.field_hometown
+    - field.field.node.team_member.field_pdga_number
     - field.field.node.team_member.field_photo
+    - field.field.node.team_member.field_rating
     - field.field.node.team_member.field_social_media_links
     - node.type.team_member
   module:
@@ -51,6 +53,15 @@ content:
     third_party_settings: {  }
     type: string
     region: content
+  field_pdga_number:
+    weight: 7
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_integer
+    region: content
   field_photo:
     type: entity_reference_entity_view
     weight: 1
@@ -59,6 +70,15 @@ content:
       view_mode: square
       link: false
     third_party_settings: {  }
+    region: content
+  field_rating:
+    weight: 8
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_integer
     region: content
   field_social_media_links:
     weight: 2

@@ -1,0 +1,23 @@
+uuid: ab5897f7-d6e1-4d16-a478-16d8d18431f0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_rating
+    - node.type.team_member
+id: node.team_member.field_rating
+field_name: field_rating
+entity_type: node
+bundle: team_member
+label: Rating
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 0
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

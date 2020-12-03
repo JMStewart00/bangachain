@@ -7,7 +7,9 @@ dependencies:
     - field.field.node.team_member.field_favorite_discs
     - field.field.node.team_member.field_handedness
     - field.field.node.team_member.field_hometown
+    - field.field.node.team_member.field_pdga_number
     - field.field.node.team_member.field_photo
+    - field.field.node.team_member.field_rating
     - field.field.node.team_member.field_social_media_links
     - node.type.team_member
   module:
@@ -22,7 +24,7 @@ mode: default
 content:
   body:
     type: text_textarea_with_summary
-    weight: 8
+    weight: 10
     settings:
       rows: 9
       summary_rows: 3
@@ -32,12 +34,12 @@ content:
     region: content
   created:
     type: datetime_timestamp
-    weight: 2
+    weight: 4
     region: content
     settings: {  }
     third_party_settings: {  }
   field_favorite_discs:
-    weight: 9
+    weight: 11
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -47,35 +49,49 @@ content:
     type: entity_reference_autocomplete
     region: content
   field_handedness:
-    weight: 7
+    weight: 9
     settings: {  }
     third_party_settings: {  }
     type: options_select
     region: content
   field_hometown:
-    weight: 6
+    weight: 8
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
     region: content
+  field_pdga_number:
+    weight: 1
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
   field_photo:
     type: media_library_widget
-    weight: 5
+    weight: 7
     settings:
       media_types: {  }
     third_party_settings: {  }
     region: content
+  field_rating:
+    weight: 2
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
   field_social_media_links:
-    weight: 10
+    weight: 12
     settings: {  }
     third_party_settings: {  }
     type: social_media_links_field_default
     region: content
   path:
     type: path
-    weight: 3
+    weight: 5
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -83,7 +99,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 4
+    weight: 6
     region: content
     third_party_settings: {  }
   title:
@@ -96,7 +112,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 1
+    weight: 3
     settings:
       match_operator: CONTAINS
       size: 60

@@ -63,9 +63,15 @@
     </div>
   {% endif %}
 
-  <div{{create_attribute().addClass(classes)}}>
-    {{ rows }}
-  </div>
+  {% if rows %}
+    <div{{create_attribute().addClass(classes)}}>
+      {{ rows }}
+    </div>
+  {% elseif empty %}
+    <div class="view-empty">
+      {{ empty }}
+    </div>
+  {% endif %}
 
   {% if footer %}
     <div class="view-footer">

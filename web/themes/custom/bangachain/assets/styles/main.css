@@ -7890,6 +7890,9 @@ svg.ext {
 .checkout-pane-commerce-giftcard-redemption input[name^="remove_giftcard"]:hover, .checkout-pane-commerce-giftcard-redemption input[name^="remove_giftcard"]:focus {
   color: #c23413; }
 
+.block-views-blockgift-card-balances-block-1 {
+  margin: calc(var(--lh__base) * 3 * var(--rvr-multiplier)) 0; }
+
 .c-pagination {
   height: 3rem; }
 

@@ -1,0 +1,37 @@
+uuid: e8a767ff-6f3d-4d07-a6ce-24f277a5c9c1
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.gift_card_balances
+  module:
+    - bangachain_layout
+    - system
+    - views
+  theme:
+    - bangachain
+third_party_settings:
+  bangachain_layout:
+    vertical_spacing:
+      top: u-vr__mt--4
+      bottom: u-vr__mb--4
+id: views_block__gift_card_balances_block_1
+theme: bangachain
+region: content
+weight: -2
+provider: null
+plugin: 'views_block:gift_card_balances-block_1'
+settings:
+  id: 'views_block:gift_card_balances-block_1'
+  label: ''
+  provider: views
+  label_display: visible
+  views_label: ''
+  items_per_page: none
+  context_mapping: {  }
+visibility:
+  request_path:
+    id: request_path
+    pages: '/user/*/payment-methods'
+    negate: false
+    context_mapping: {  }

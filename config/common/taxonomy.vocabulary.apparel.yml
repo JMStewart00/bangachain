@@ -1,0 +1,8 @@
+uuid: b57556ba-cbc1-424c-9fb2-b279d83ab065
+langcode: en
+status: true
+dependencies: {  }
+name: Apparel
+vid: apparel
+description: ''
+weight: 0

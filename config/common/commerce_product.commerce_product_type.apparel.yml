@@ -1,0 +1,12 @@
+uuid: cffacd56-6040-4745-8a28-d0af3b1c8c84
+langcode: en
+status: true
+dependencies: {  }
+id: apparel
+label: Apparel
+description: ''
+variationType: apparel
+multipleVariations: true
+injectVariationFields: true
+traits: {  }
+locked: false

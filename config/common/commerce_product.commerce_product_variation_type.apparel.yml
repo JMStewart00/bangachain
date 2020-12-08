@@ -1,0 +1,11 @@
+uuid: e45058d6-08fc-4cf8-a104-18bae393cbe6
+langcode: en
+status: true
+dependencies: {  }
+id: apparel
+label: Apparel
+orderItemType: default
+generateTitle: true
+traits:
+  - purchasable_entity_shippable
+locked: false

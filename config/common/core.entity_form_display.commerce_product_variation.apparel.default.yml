@@ -7,10 +7,12 @@ dependencies:
     - field.field.commerce_product_variation.apparel.attribute_disc_color
     - field.field.commerce_product_variation.apparel.attribute_size
     - field.field.commerce_product_variation.apparel.field_product_image
+    - field.field.commerce_product_variation.apparel.field_stock
     - field.field.commerce_product_variation.apparel.weight
   module:
     - commerce_bulk
     - commerce_price
+    - commerce_stock_field
     - media_library
     - physical
 id: commerce_product_variation.apparel.default
@@ -36,6 +38,15 @@ content:
       media_types: {  }
     third_party_settings: {  }
     type: media_library_widget
+    region: content
+  field_stock:
+    weight: 7
+    settings:
+      custom_transaction_note: false
+      default_transaction_note: 'Transaction issued by stock level field.'
+      step: '1'
+    third_party_settings: {  }
+    type: commerce_stock_level_simple_transaction
     region: content
   price:
     type: commerce_price_default

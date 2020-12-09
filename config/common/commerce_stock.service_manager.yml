@@ -6,3 +6,4 @@ commerce_product_variation_discs_service_id: local_stock
 stock_events_plugin_id: core_stock_events
 commerce_product_variation_accessories_service_id: local_stock
 commerce_product_variation_bags_service_id: local_stock
+commerce_product_variation_apparel_service_id: local_stock

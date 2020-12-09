@@ -9095,59 +9095,71 @@ table td.is-active {
 .c-view-apparel a:focus .c-product__fade--small {
   border: 1px solid #3D5A80; }
 
-.c-view-discs--all_discs_page, .c-view-discs--all_accessories_page, .c-view-discs--all_bags_page,
+.c-view-discs--all_discs_page, .c-view-discs--all_accessories_page, .c-view-discs--all_bags_page, .c-view-discs--all_apparel_page,
 .c-view-bags--all_discs_page,
 .c-view-bags--all_accessories_page,
 .c-view-bags--all_bags_page,
+.c-view-bags--all_apparel_page,
 .c-view-accessories--all_discs_page,
 .c-view-accessories--all_accessories_page,
 .c-view-accessories--all_bags_page,
+.c-view-accessories--all_apparel_page,
 .c-view-apparel--all_discs_page,
 .c-view-apparel--all_accessories_page,
-.c-view-apparel--all_bags_page {
+.c-view-apparel--all_bags_page,
+.c-view-apparel--all_apparel_page {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
   grid-gap: 24px;
   margin-top: calc(var(--lh__base) * 5 * var(--rvr-multiplier)); }
 
 @media (min-width: 768px) {
-  .c-view-discs--all_discs_page, .c-view-discs--all_accessories_page, .c-view-discs--all_bags_page,
+  .c-view-discs--all_discs_page, .c-view-discs--all_accessories_page, .c-view-discs--all_bags_page, .c-view-discs--all_apparel_page,
   .c-view-bags--all_discs_page,
   .c-view-bags--all_accessories_page,
   .c-view-bags--all_bags_page,
+  .c-view-bags--all_apparel_page,
   .c-view-accessories--all_discs_page,
   .c-view-accessories--all_accessories_page,
   .c-view-accessories--all_bags_page,
+  .c-view-accessories--all_apparel_page,
   .c-view-apparel--all_discs_page,
   .c-view-apparel--all_accessories_page,
-  .c-view-apparel--all_bags_page {
+  .c-view-apparel--all_bags_page,
+  .c-view-apparel--all_apparel_page {
     grid-template-columns: repeat(2, 1fr);
     margin-top: calc(var(--lh__base) * 2 * var(--rvr-multiplier)); } }
 
 @media (min-width: 992px) {
-  .c-view-discs--all_discs_page, .c-view-discs--all_accessories_page, .c-view-discs--all_bags_page,
+  .c-view-discs--all_discs_page, .c-view-discs--all_accessories_page, .c-view-discs--all_bags_page, .c-view-discs--all_apparel_page,
   .c-view-bags--all_discs_page,
   .c-view-bags--all_accessories_page,
   .c-view-bags--all_bags_page,
+  .c-view-bags--all_apparel_page,
   .c-view-accessories--all_discs_page,
   .c-view-accessories--all_accessories_page,
   .c-view-accessories--all_bags_page,
+  .c-view-accessories--all_apparel_page,
   .c-view-apparel--all_discs_page,
   .c-view-apparel--all_accessories_page,
-  .c-view-apparel--all_bags_page {
+  .c-view-apparel--all_bags_page,
+  .c-view-apparel--all_apparel_page {
     grid-template-columns: repeat(3, 1fr); } }
 
 @media (min-width: 1200px) {
-  .c-view-discs--all_discs_page, .c-view-discs--all_accessories_page, .c-view-discs--all_bags_page,
+  .c-view-discs--all_discs_page, .c-view-discs--all_accessories_page, .c-view-discs--all_bags_page, .c-view-discs--all_apparel_page,
   .c-view-bags--all_discs_page,
   .c-view-bags--all_accessories_page,
   .c-view-bags--all_bags_page,
+  .c-view-bags--all_apparel_page,
   .c-view-accessories--all_discs_page,
   .c-view-accessories--all_accessories_page,
   .c-view-accessories--all_bags_page,
+  .c-view-accessories--all_apparel_page,
   .c-view-apparel--all_discs_page,
   .c-view-apparel--all_accessories_page,
-  .c-view-apparel--all_bags_page {
+  .c-view-apparel--all_bags_page,
+  .c-view-apparel--all_apparel_page {
     grid-template-columns: repeat(4, 1fr); } }
 
 .c-view-filters {

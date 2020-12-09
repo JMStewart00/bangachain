@@ -24,7 +24,8 @@
 
   &--all_discs_page,
   &--all_accessories_page,
-  &--all_bags_page {
+  &--all_bags_page,
+  &--all_apparel_page {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
     grid-gap: 24px;

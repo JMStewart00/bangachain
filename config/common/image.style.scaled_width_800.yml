@@ -1,0 +1,15 @@
+uuid: d6c2e85d-363a-4231-9bf4-a37425288f33
+langcode: en
+status: true
+dependencies: {  }
+name: scaled_width_800
+label: 'Scaled Width 800'
+effects:
+  7456084b-e08c-4c80-bfde-307d4dcc3e54:
+    uuid: 7456084b-e08c-4c80-bfde-307d4dcc3e54
+    id: image_scale
+    weight: 1
+    data:
+      width: 800
+      height: null
+      upscale: true

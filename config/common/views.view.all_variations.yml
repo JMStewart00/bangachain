@@ -77,11 +77,9 @@ display:
               advanced:
                 is_secondary: false
             filter:
-              field_brand_target_id:
+              title:
                 plugin_id: default
                 advanced:
-                  rewrite:
-                    filter_rewrite_values: ''
                   collapsible: false
                   is_secondary: false
               type:
@@ -91,22 +89,23 @@ display:
                     filter_rewrite_values: ''
                   collapsible: false
                   is_secondary: false
-              title:
+              field_brand_target_id:
+                plugin_id: default
+                advanced:
+                  rewrite:
+                    filter_rewrite_values: ''
+                  collapsible: false
+                  is_secondary: false
+              field_stock_value:
                 plugin_id: default
                 advanced:
                   collapsible: false
                   is_secondary: false
-              field_stock_value:
-                plugin_id: bef_sliders
+              field_bin_value:
+                plugin_id: default
                 advanced:
                   collapsible: false
                   is_secondary: false
-                min: '0'
-                max: '99999'
-                step: '1'
-                animate: none
-                animate_ms: '0'
-                orientation: horizontal
       pager:
         type: full
         options:
@@ -133,9 +132,9 @@ display:
         options:
           grouping: {  }
           row_class: ''
-          default_row_class: true
+          default_row_class: false
           override: true
-          sticky: false
+          sticky: true
           caption: ''
           summary: ''
           description: ''
@@ -174,7 +173,7 @@ display:
               empty_column: false
               responsive: ''
             field_bin:
-              sortable: false
+              sortable: true
               default_sort_order: asc
               align: ''
               separator: ''
@@ -202,14 +201,14 @@ display:
               empty_column: false
               responsive: ''
             attribute_disc_color:
-              sortable: false
+              sortable: true
               default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false
               responsive: ''
             field_brand:
-              sortable: false
+              sortable: true
               default_sort_order: asc
               align: ''
               separator: ''
@@ -1007,13 +1006,13 @@ display:
           relationship: product_id
           group_type: group
           admin_label: ''
-          operator: '='
+          operator: contains
           value: ''
           group: 1
           exposed: true
           expose:
             operator_id: title_op
-            label: Name
+            label: 'Product Name'
             description: ''
             use_operator: false
             operator: title_op
@@ -1157,6 +1156,52 @@ display:
             operator_limit_selection: false
             operator_list: {  }
             identifier: field_stock_value
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+            placeholder: ''
+            min_placeholder: ''
+            max_placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: numeric
+        field_bin_value:
+          id: field_bin_value
+          table: commerce_product_variation__field_bin
+          field: field_bin_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value:
+            min: ''
+            max: ''
+            value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_bin_value_op
+            label: Bin
+            description: ''
+            use_operator: false
+            operator: field_bin_value_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_bin_value
             required: false
             remember: false
             multiple: false

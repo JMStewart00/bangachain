@@ -1,0 +1,9 @@
+uuid: 13a26f5a-9f67-4d90-8193-fbb06a20449b
+langcode: en
+status: true
+dependencies: {  }
+id: commerce_product
+label: Product
+tags:
+  image_src: /sites/default/files/styles/square/public/2020-11/logo.png
+  title: '[current-page:title] | [site:name]'

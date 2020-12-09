@@ -33,7 +33,7 @@
       <div class="l-grid__main l-main">
 
         <div class="c-product__image u-vr__mb--1">
-            {{ product.variation_field_product_image }}
+            {{ product.variation_field_product_image|image_style('full') }}
         </div>
 
       </div>
@@ -55,6 +55,13 @@
       </div>
 
     </div>
+
+    {% if product.field_description|render %}
+      <div class="c-product__description u-vr__mb--4">
+        <h2 class="h1">About the {{ product.title.0['#context'].value }}</h2>
+        {{- product.field_description -}}
+      </div>
+    {% endif %}
 
   </div>
 </article>

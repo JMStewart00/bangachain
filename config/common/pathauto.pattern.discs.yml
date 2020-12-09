@@ -6,18 +6,21 @@ dependencies:
     - commerce_product
     - ctools
 id: discs
-label: Discs
+label: 'All Products'
 type: 'canonical_entities:commerce_product'
-pattern: '[commerce_product:field_brand:entity:name]/[commerce_product:title]'
+pattern: '[commerce_product:type]/[commerce_product:field_brand:entity:name]/[commerce_product:title]'
 selection_criteria:
-  7f84d82e-54c4-41b6-8846-cd33fd89ff65:
+  20b190c9-2cff-4bd8-9f4c-62654321ed59:
     id: 'entity_bundle:commerce_product'
     bundles:
+      accessories: accessories
+      apparel: apparel
+      bags: bags
       discs: discs
     negate: false
     context_mapping:
       commerce_product: commerce_product
-    uuid: 7f84d82e-54c4-41b6-8846-cd33fd89ff65
+    uuid: 20b190c9-2cff-4bd8-9f4c-62654321ed59
 selection_logic: and
 weight: -5
 relationships: {  }

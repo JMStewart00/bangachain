@@ -5,8 +5,10 @@ dependencies:
   config:
     - commerce_product.commerce_product_type.apparel
     - field.field.commerce_product.apparel.body
+    - field.field.commerce_product.apparel.field_meta_tags
   module:
     - commerce
+    - metatag
     - path
     - text
 id: commerce_product.apparel.default
@@ -30,6 +32,13 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_meta_tags:
+    weight: 91
+    settings:
+      sidebar: true
+    third_party_settings: {  }
+    type: metatag_firehose
+    region: content
   path:
     type: path
     weight: 30

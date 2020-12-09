@@ -8015,8 +8015,14 @@ svg.ext {
 .c-product__image {
   margin-bottom: calc(var(--lh__base) * 1 * var(--rvr-multiplier)); }
 
-.c-product__image .field--name-field-media-image {
-  margin: auto; }
+.c-product__image .c-field-media-image {
+  margin-left: 0;
+  margin-right: auto; }
+
+@media (min-width: 992px) {
+  .c-product__image .c-field-media-image {
+    margin-left: auto;
+    margin-right: 0; } }
 
 table td {
   vertical-align: middle !important; }
@@ -9034,21 +9040,26 @@ table td.is-active {
 
 .c-view-discs a,
 .c-view-bags a,
-.c-view-accessories a {
+.c-view-accessories a,
+.c-view-apparel a {
   color: inherit; }
 
 .c-view-discs a:hover, .c-view-discs a:focus,
 .c-view-bags a:hover,
 .c-view-bags a:focus,
 .c-view-accessories a:hover,
-.c-view-accessories a:focus {
+.c-view-accessories a:focus,
+.c-view-apparel a:hover,
+.c-view-apparel a:focus {
   text-decoration: none; }
 
 .c-view-discs a:hover .h1::after, .c-view-discs a:focus .h1::after,
 .c-view-bags a:hover .h1::after,
 .c-view-bags a:focus .h1::after,
 .c-view-accessories a:hover .h1::after,
-.c-view-accessories a:focus .h1::after {
+.c-view-accessories a:focus .h1::after,
+.c-view-apparel a:hover .h1::after,
+.c-view-apparel a:focus .h1::after {
   width: 50%; }
 
 .c-view-discs a:hover .c-product__speed--small,
@@ -9073,7 +9084,15 @@ table td.is-active {
 .c-view-accessories a:focus .c-product__speed--small,
 .c-view-accessories a:focus .c-product__glide--small,
 .c-view-accessories a:focus .c-product__turn--small,
-.c-view-accessories a:focus .c-product__fade--small {
+.c-view-accessories a:focus .c-product__fade--small,
+.c-view-apparel a:hover .c-product__speed--small,
+.c-view-apparel a:hover .c-product__glide--small,
+.c-view-apparel a:hover .c-product__turn--small,
+.c-view-apparel a:hover .c-product__fade--small,
+.c-view-apparel a:focus .c-product__speed--small,
+.c-view-apparel a:focus .c-product__glide--small,
+.c-view-apparel a:focus .c-product__turn--small,
+.c-view-apparel a:focus .c-product__fade--small {
   border: 1px solid #3D5A80; }
 
 .c-view-discs--all_discs_page, .c-view-discs--all_accessories_page, .c-view-discs--all_bags_page,
@@ -9082,7 +9101,10 @@ table td.is-active {
 .c-view-bags--all_bags_page,
 .c-view-accessories--all_discs_page,
 .c-view-accessories--all_accessories_page,
-.c-view-accessories--all_bags_page {
+.c-view-accessories--all_bags_page,
+.c-view-apparel--all_discs_page,
+.c-view-apparel--all_accessories_page,
+.c-view-apparel--all_bags_page {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
   grid-gap: 24px;
@@ -9095,7 +9117,10 @@ table td.is-active {
   .c-view-bags--all_bags_page,
   .c-view-accessories--all_discs_page,
   .c-view-accessories--all_accessories_page,
-  .c-view-accessories--all_bags_page {
+  .c-view-accessories--all_bags_page,
+  .c-view-apparel--all_discs_page,
+  .c-view-apparel--all_accessories_page,
+  .c-view-apparel--all_bags_page {
     grid-template-columns: repeat(2, 1fr);
     margin-top: calc(var(--lh__base) * 2 * var(--rvr-multiplier)); } }
 
@@ -9106,7 +9131,10 @@ table td.is-active {
   .c-view-bags--all_bags_page,
   .c-view-accessories--all_discs_page,
   .c-view-accessories--all_accessories_page,
-  .c-view-accessories--all_bags_page {
+  .c-view-accessories--all_bags_page,
+  .c-view-apparel--all_discs_page,
+  .c-view-apparel--all_accessories_page,
+  .c-view-apparel--all_bags_page {
     grid-template-columns: repeat(3, 1fr); } }
 
 @media (min-width: 1200px) {
@@ -9116,7 +9144,10 @@ table td.is-active {
   .c-view-bags--all_bags_page,
   .c-view-accessories--all_discs_page,
   .c-view-accessories--all_accessories_page,
-  .c-view-accessories--all_bags_page {
+  .c-view-accessories--all_bags_page,
+  .c-view-apparel--all_discs_page,
+  .c-view-apparel--all_accessories_page,
+  .c-view-apparel--all_bags_page {
     grid-template-columns: repeat(4, 1fr); } }
 
 .c-view-filters {

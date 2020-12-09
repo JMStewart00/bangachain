@@ -1,0 +1,21 @@
+uuid: 9ce468fe-6932-4e07-8755-d0410e3036fc
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.discs
+    - field.storage.commerce_product.field_meta_tags
+  module:
+    - metatag
+id: commerce_product.discs.field_meta_tags
+field_name: field_meta_tags
+entity_type: commerce_product
+bundle: discs
+label: 'Meta Tags'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: metatag

@@ -6,8 +6,10 @@ dependencies:
     - commerce_product.commerce_product_type.bags
     - field.field.commerce_product.bags.field_brand
     - field.field.commerce_product.bags.field_description
+    - field.field.commerce_product.bags.field_meta_tags
   module:
     - commerce
+    - metatag
     - path
     - text
 id: commerce_product.bags.default
@@ -40,6 +42,13 @@ content:
       show_summary: false
     third_party_settings: {  }
     type: text_textarea_with_summary
+    region: content
+  field_meta_tags:
+    weight: 93
+    settings:
+      sidebar: true
+    third_party_settings: {  }
+    type: metatag_firehose
     region: content
   path:
     type: path

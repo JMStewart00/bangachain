@@ -12,6 +12,7 @@ dependencies:
     - field.field.commerce_product.discs.field_disc_category
     - field.field.commerce_product.discs.field_fade
     - field.field.commerce_product.discs.field_glide
+    - field.field.commerce_product.discs.field_meta_tags
     - field.field.commerce_product.discs.field_speed
     - field.field.commerce_product.discs.field_stability_category
     - field.field.commerce_product.discs.field_turn
@@ -129,5 +130,6 @@ content:
 hidden:
   created: true
   feeds_item: true
+  field_meta_tags: true
   stores: true
   uid: true

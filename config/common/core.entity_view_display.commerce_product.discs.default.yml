@@ -11,11 +11,13 @@ dependencies:
     - field.field.commerce_product.discs.field_disc_category
     - field.field.commerce_product.discs.field_fade
     - field.field.commerce_product.discs.field_glide
+    - field.field.commerce_product.discs.field_meta_tags
     - field.field.commerce_product.discs.field_speed
     - field.field.commerce_product.discs.field_stability_category
     - field.field.commerce_product.discs.field_turn
   module:
     - commerce_product
+    - metatag
     - text
 id: commerce_product.discs.default
 targetEntityType: commerce_product
@@ -75,6 +77,13 @@ content:
       prefix_suffix: false
     third_party_settings: {  }
     type: number_decimal
+    region: content
+  field_meta_tags:
+    weight: 20
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: metatag_empty_formatter
     region: content
   field_speed:
     weight: 12

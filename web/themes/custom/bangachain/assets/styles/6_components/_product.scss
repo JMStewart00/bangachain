@@ -101,8 +101,14 @@
   &__image {
     margin-bottom: rvr(1);
 
-    .field--name-field-media-image {
-      margin: auto;
+    .c-field-media-image {
+      margin-left: 0;
+      margin-right: auto;
+
+      @include media-breakpoint-up(lg) {
+        margin-left: auto;
+        margin-right: 0;
+      }
     }
   }
 }

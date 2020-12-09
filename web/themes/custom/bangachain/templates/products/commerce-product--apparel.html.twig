@@ -2,7 +2,7 @@
 /**
  * @file
  *
- * Default product template for discs.
+ * Default product template for apparel.
  *
  * Available variables:
  * - attributes: HTML attributes for the wrapper.
@@ -45,28 +45,6 @@
           <h2 class="u-color__blue-gray">{{ product.field_brand }}</h2>
         </div>
 
-        <div class="c-product__flight-numbers u-vr__mb--1">
-          <h3 class="u-color__blue">{{'Flight Numbers'|t}}</h3>
-          <ul class="o-list-inline d-flex justify-content-start">
-            <li class="c-product__speed o-list-inline__item u-color__blue" title="Speed">
-              <span>Speed</span>
-              <span>{{ product.field_speed }}</span>
-            </li>
-            <li class="c-product__glide o-list-inline__item u-color__blue" title="Glide">
-              <span>Glide</span>
-              <span>{{ product.field_glide }}</span>
-            </li>
-            <li class="c-product__turn o-list-inline__item u-color__blue" title="Turn">
-              <span>Turn</span>
-              <span>{{ product.field_turn }}</span>
-            </li>
-            <li class="c-product__fade o-list-inline__item u-color__blue" title="Fade">
-              <span>Fade</span>
-              <span>{{ product.field_fade }}</span>
-            </li>
-          </ul>
-        </div>
-
         <div class="c-product__price-stock u-vr__mb--1">
           <div class="c-product__price u-fw__bold">{{ product.variation_price }}</div>
           <div class="c-product__stock">{{ product.variation_field_stock }}</div>
@@ -84,5 +62,6 @@
         {{- product.field_description -}}
       </div>
     {% endif %}
+
   </div>
 </article>

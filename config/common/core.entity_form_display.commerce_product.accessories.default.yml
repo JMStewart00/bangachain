@@ -6,8 +6,10 @@ dependencies:
     - commerce_product.commerce_product_type.accessories
     - field.field.commerce_product.accessories.field_brand
     - field.field.commerce_product.accessories.field_category
+    - field.field.commerce_product.accessories.field_meta_tags
   module:
     - commerce
+    - metatag
     - path
 id: commerce_product.accessories.default
 targetEntityType: commerce_product
@@ -39,6 +41,13 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: entity_reference_autocomplete
+    region: content
+  field_meta_tags:
+    weight: 93
+    settings:
+      sidebar: true
+    third_party_settings: {  }
+    type: metatag_firehose
     region: content
   path:
     type: path

@@ -5,8 +5,10 @@ dependencies:
   config:
     - commerce_product.commerce_product_type.apparel
     - field.field.commerce_product.apparel.body
+    - field.field.commerce_product.apparel.field_meta_tags
   module:
     - commerce_product
+    - metatag
     - text
 id: commerce_product.apparel.default
 targetEntityType: commerce_product
@@ -19,6 +21,13 @@ content:
     weight: 11
     settings: {  }
     third_party_settings: {  }
+    region: content
+  field_meta_tags:
+    weight: 12
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: metatag_empty_formatter
     region: content
   title:
     label: hidden

@@ -7,5 +7,6 @@ _core:
 id: global
 label: Global
 tags:
+  image_src: /sites/default/files/styles/square/public/2020-11/logo.png
   canonical_url: '[current-page:url]'
   title: '[current-page:title] | [site:name]'

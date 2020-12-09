@@ -1,0 +1,21 @@
+uuid: 1df3b856-5d4c-4ccf-a9b6-5125b75669a4
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.bags
+    - field.storage.commerce_product.field_meta_tags
+  module:
+    - metatag
+id: commerce_product.bags.field_meta_tags
+field_name: field_meta_tags
+entity_type: commerce_product
+bundle: bags
+label: 'Meta Tags'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: metatag

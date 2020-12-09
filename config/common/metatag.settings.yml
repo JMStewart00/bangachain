@@ -1,0 +1,14 @@
+entity_type_groups:
+  commerce_product:
+    accessories:
+      basic: basic
+      advanced: advanced
+    apparel:
+      basic: basic
+      advanced: advanced
+    bags:
+      basic: basic
+      advanced: advanced
+    discs:
+      basic: basic
+      advanced: advanced

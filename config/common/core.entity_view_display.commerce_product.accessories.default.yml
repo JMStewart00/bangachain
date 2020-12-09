@@ -6,8 +6,10 @@ dependencies:
     - commerce_product.commerce_product_type.accessories
     - field.field.commerce_product.accessories.field_brand
     - field.field.commerce_product.accessories.field_category
+    - field.field.commerce_product.accessories.field_meta_tags
   module:
     - commerce_product
+    - metatag
 id: commerce_product.accessories.default
 targetEntityType: commerce_product
 bundle: accessories
@@ -29,6 +31,13 @@ content:
     settings:
       link: false
     third_party_settings: {  }
+  field_meta_tags:
+    weight: 4
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: metatag_empty_formatter
+    region: content
   title:
     label: hidden
     type: string

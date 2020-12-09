@@ -1,0 +1,45 @@
+{#
+/**
+ * @file
+ *
+ * Default product template for apparel teasers.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the wrapper.
+ * - product: The rendered product fields.
+ *   Use 'product' to print them all, or print a subset such as
+ *   'product.title'. Use the following code to exclude the
+ *   printing of a given field:
+ *   @code
+ *   {{ product|without('title') }}
+ *   @endcode
+ * - product_entity: The product entity.
+ * - product_url: The product URL.
+ *
+ * @ingroup themeable
+ */
+#}
+
+{%
+  set classes = [
+    'c-product',
+    'c-product--teaser',
+  ]
+%}
+
+<a href="{{ product_url }}">
+  <article{{attributes.addClass(classes)}}>
+    <div class="u-text-center">
+
+        <div class="c-product__image">
+          {{ product.variation_field_product_image }}
+        </div>
+
+        <div class="c-product__title u-vr__mb--1">
+          <div class="u-color__blue h1">{{ product.title }}</div>
+          <div class="u-color__blue-gray">{{ product.field_category }}</div>
+        </div>
+
+    </div>
+  </article>
+</a>

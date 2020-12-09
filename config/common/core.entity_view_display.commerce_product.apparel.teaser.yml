@@ -6,6 +6,7 @@ dependencies:
     - commerce_product.commerce_product_type.apparel
     - core.entity_view_mode.commerce_product.teaser
     - field.field.commerce_product.apparel.body
+    - field.field.commerce_product.apparel.field_meta_tags
   module:
     - commerce_product
     - layout_builder
@@ -44,5 +45,6 @@ content:
     third_party_settings: {  }
 hidden:
   created: true
+  field_meta_tags: true
   stores: true
   uid: true

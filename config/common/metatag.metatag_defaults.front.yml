@@ -7,5 +7,6 @@ _core:
 id: front
 label: 'Front page'
 tags:
-  canonical_url: '[site:url]'
   shortlink: '[site:url]'
+  image_src: /sites/default/files/styles/square/public/2020-11/logo.png
+  canonical_url: '[site:url]'

@@ -1,0 +1,28 @@
+uuid: b148cd4d-27f8-4656-a67d-c599fca0f9fd
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_photo
+    - media.type.image
+    - node.type.page
+id: node.page.field_photo
+field_name: field_photo
+entity_type: node
+bundle: page
+label: 'Promo Image'
+description: 'Image used for previews of content. Facebook, Google indexed field.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

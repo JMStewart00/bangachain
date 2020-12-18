@@ -86,7 +86,7 @@ display:
                   is_secondary: false
                 select_all_none: false
                 select_all_none_nested: false
-                display_inline: 1
+                display_inline: 0
               field_brand_target_id:
                 plugin_id: bef
                 advanced:
@@ -96,7 +96,14 @@ display:
                   is_secondary: false
                 select_all_none: false
                 select_all_none_nested: false
-                display_inline: 1
+                display_inline: 0
+              field_category_target_id_1:
+                plugin_id: default
+                advanced:
+                  rewrite:
+                    filter_rewrite_values: ''
+                  collapsible: false
+                  is_secondary: false
       pager:
         type: full
         options:
@@ -788,7 +795,7 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           reduce_duplicates: false
-          type: textfield
+          type: select
           limit: true
           vid: accessory_category
           hierarchy: false
@@ -816,7 +823,7 @@ display:
             identifier: field_brand_target_id
             required: false
             remember: false
-            multiple: false
+            multiple: true
             remember_roles:
               authenticated: authenticated
               anonymous: '0'
@@ -835,7 +842,7 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           reduce_duplicates: false
-          type: textfield
+          type: select
           limit: true
           vid: brand
           hierarchy: false

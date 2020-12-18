@@ -8024,11 +8024,38 @@ svg.ext {
     margin-left: auto;
     margin-right: 0; } }
 
+table {
+  border-collapse: collapse;
+  margin: 25px 0;
+  font-size: 0.9em;
+  font-family: sans-serif;
+  min-width: 400px;
+  -webkit-box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15); }
+
 table td {
   vertical-align: middle !important; }
 
 table td.is-active {
   background-color: inherit; }
+
+table thead tr {
+  background-color: #3D5A80;
+  color: #ffffff;
+  text-align: left; }
+
+table th,
+table td {
+  padding: 12px 15px; }
+
+table tbody tr {
+  border-bottom: 1px solid #dddddd; }
+
+table tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3; }
+
+table tbody tr:last-of-type {
+  border-bottom: 2px solid #3D5A80; }
 
 .c-teaser-team-member__photo {
   margin-bottom: 0.75rem;

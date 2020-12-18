@@ -13,6 +13,7 @@ dependencies:
     - commerce_price
     - commerce_product
     - commerce_stock_field
+    - user
 _core:
   default_config_hash: q5JTAyS-l1BAVYd-pDYbEQiStgOLjTiNgR95UG2o43w
 id: variations_on_product_page
@@ -30,10 +31,11 @@ display:
     position: 0
     display_options:
       access:
-        type: none
-        options: {  }
+        type: perm
+        options:
+          perm: 'access content'
       cache:
-        type: tag
+        type: none
         options: {  }
       query:
         type: views_query
@@ -640,7 +642,18 @@ display:
       title: Xproduct
       header: {  }
       footer: {  }
-      empty: {  }
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: true
+          tokenize: false
+          content: 'custom custom custom'
+          plugin_id: text_custom
       relationships:
         variations_target_id:
           id: variations_target_id
@@ -680,15 +693,11 @@ display:
             sort_order: asc
             number_of_records: 0
             format: default_summary
-          specify_validation: true
+          specify_validation: false
           validate:
-            type: 'entity:commerce_product'
+            type: none
             fail: 'not found'
-          validate_options:
-            access: true
-            operation: delete
-            multiple: 0
-            bundles: {  }
+          validate_options: {  }
           break_phrase: false
           not: false
           entity_type: commerce_product
@@ -704,6 +713,7 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - user.permissions
       tags:
         - 'config:core.entity_view_display.commerce_product_variation.accessories.default'
         - 'config:core.entity_view_display.commerce_product_variation.apparel.default'
@@ -723,12 +733,15 @@ display:
     display_options:
       display_extenders:
         ajax_history: {  }
+      allow:
+        items_per_page: false
     cache_metadata:
       max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - user.permissions
       tags:
         - 'config:core.entity_view_display.commerce_product_variation.accessories.default'
         - 'config:core.entity_view_display.commerce_product_variation.apparel.default'

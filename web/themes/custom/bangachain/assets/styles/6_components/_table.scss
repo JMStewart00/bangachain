@@ -8,6 +8,15 @@ table {
 
   td {
     vertical-align: middle !important;
+
+    img {
+      max-width: 150px !important;
+    }
+
+    @include media-breakpoint-down(md) {
+      display: block;
+    }
+
     &.is-active {
       background-color: inherit;
     }
@@ -17,6 +26,10 @@ table {
     background-color: $brand-blue;
     color: #ffffff;
     text-align: left;
+
+    @include media-breakpoint-down(md) {
+      display: none;
+    }
   }
 
   th,

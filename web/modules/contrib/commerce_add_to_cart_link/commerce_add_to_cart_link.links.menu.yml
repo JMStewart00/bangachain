@@ -1,0 +1,6 @@
+commerce_add_to_cart_link.settings:
+  title: 'Commerce Add To Cart Link'
+  parent: 'commerce_product.configuration'
+  description: 'Provide Commerce Add To Cart Link settings'
+  route_name: commerce_add_to_cart_link.settings
+  weight: 10

@@ -3,3 +3,9 @@ services:
     class: Drupal\bangachain_commerce_update\Routing\BangachainRouteSubscriber
     tags:
       - { name: event_subscriber }
+
+  # bangachain_commerce_update.order_event_subscriber:
+  #   class: Drupal\bangachain_commerce_update\EventSubscriber\OrderEventSubscriber
+  #   arguments: ['@commerce_stock.service_manager', '@plugin.manager.commerce_stock_event_type', '@plugin.manager.stock_events', '@entity_type.manager',]
+  #   tags:
+  #     - { name: 'event_subscriber' }

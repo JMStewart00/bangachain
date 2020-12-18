@@ -1,0 +1,22 @@
+{
+    "name": "drupal/commerce_add_to_cart_link",
+    "type": "drupal-module",
+    "description": "Provides a field formatter for Commerce product variations having an add to cart link instead of a form.",
+    "homepage": "https://www.drupal.org/project/commerce_add_to_cart_link",
+    "authors": [
+        {
+            "name": "Mag. Andreas Mayr (agoradesign)",
+            "homepage": "https://www.drupal.org/u/agoradesign",
+            "role": "Maintainer"
+        }
+    ],
+    "support": {
+        "issues": "https://drupal.org/project/issues/commerce_add_to_cart_link",
+        "source": "https://git.drupalcode.org/project/commerce_add_to_cart_link"
+    },
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "drupal/core": "^8.8.3 || ^9",
+        "drupal/commerce": "~2.11"
+    }
+}

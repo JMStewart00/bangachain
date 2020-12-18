@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Contains install and update functions for Commerce Add To Cart Link.
+ */
+
+/**
+ * Set initial values for the new csrf_token settings.
+ */
+function commerce_add_to_cart_link_update_8101() {
+  /** @var \Drupal\user\RoleInterface[] $roles */
+  $roles = \Drupal::entityTypeManager()->getStorage('user_role')->loadMultiple();
+  \Drupal::configFactory()
+    ->getEditable('commerce_add_to_cart_link.settings')
+    ->set('csrf_token.roles', array_keys($roles))
+    ->save();
+}

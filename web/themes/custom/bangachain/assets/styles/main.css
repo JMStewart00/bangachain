@@ -8036,6 +8036,13 @@ table {
 table td {
   vertical-align: middle !important; }
 
+table td img {
+  max-width: 150px !important; }
+
+@media (max-width: 991.98px) {
+  table td {
+    display: block; } }
+
 table td.is-active {
   background-color: inherit; }
 
@@ -8043,6 +8050,10 @@ table thead tr {
   background-color: #3D5A80;
   color: #ffffff;
   text-align: left; }
+
+@media (max-width: 991.98px) {
+  table thead tr {
+    display: none; } }
 
 table th,
 table td {

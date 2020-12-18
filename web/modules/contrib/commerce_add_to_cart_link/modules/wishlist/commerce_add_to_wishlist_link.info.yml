@@ -1,0 +1,15 @@
+name: 'Commerce add to wishlist link'
+type: module
+description: 'Provides a field formatter for Commerce product variations having an add to wishlist link instead of a form.'
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: Commerce
+
+dependencies:
+  - commerce_add_to_cart_link:commerce_add_to_cart_link
+  - commerce_wishlist:commerce_wishlist
+
+# Information added by Drupal.org packaging script on 2020-09-17
+version: '2.0.0'
+project: 'commerce_add_to_cart_link'
+datestamp: 1600361911

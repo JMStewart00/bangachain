@@ -1,0 +1,5 @@
+name: Bangachain Views
+description: Views Helpers for the bangachain site
+package: Bangachain
+type: module
+core: 8.x

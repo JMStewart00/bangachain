@@ -1,0 +1,120 @@
+<?php
+
+/**
+ * @file
+ * Hook implementations of commerce_add_to_cart_link module.
+ */
+
+use Drupal\commerce_add_to_cart_link\AddToCartLink;
+use Drupal\commerce_product\Entity\ProductType;
+use Drupal\commerce_product\Entity\ProductVariationType;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function commerce_add_to_cart_link_entity_extra_field_info() {
+  $fields = [];
+
+  // First, add a pseudo field to product variations.
+  /** @var \Drupal\commerce_product\Entity\ProductVariationTypeInterface $product_variation_type */
+  foreach (ProductVariationType::loadMultiple() as $product_variation_type) {
+    $fields['commerce_product_variation'][$product_variation_type->id()]['display']['add_to_cart_link'] = [
+      'label' => t('Add to cart link'),
+      'description' => t('Displays an add to cart link.'),
+      'weight' => 99,
+      // We hide the field by default, as there are in many cases more view
+      // modes to hide than to show (e.g. "cart", "summary").
+      'visible' => FALSE,
+    ];
+  }
+
+  // For simplicity, add a field to products too (targeting default variation).
+  /** @var \Drupal\commerce_product\Entity\ProductTypeInterface $product_type */
+  foreach (ProductType::loadMultiple() as $product_type) {
+    $fields['commerce_product'][$product_type->id()]['display']['add_to_cart_link'] = [
+      'label' => t('Add to cart link'),
+      'description' => t('Displays an add to cart link for the default variation of the product.'),
+      'weight' => 99,
+      // We hide the field by default.
+      'visible' => FALSE,
+    ];
+  }
+
+  return $fields;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function commerce_add_to_cart_link_theme() {
+  return [
+    'commerce_add_to_cart_link' => [
+      'variables' => [
+        'url' => NULL,
+        'product_variation' => NULL,
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_theme_suggestions_commerce_add_to_cart_link().
+ */
+function commerce_add_to_cart_link_theme_suggestions_commerce_add_to_cart_link(array $variables) {
+  $original = $variables['theme_hook_original'];
+  $variation = $variables['product_variation'];
+
+  $suggestions = [];
+  $suggestions[] = $original . '__' . $variation->bundle();
+  $suggestions[] = $original . '__' . $variation->id();
+
+  return $suggestions;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view() for commerce_product.
+ */
+function commerce_add_to_cart_link_commerce_product_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  /** @var \Drupal\commerce_product\Entity\ProductInterface $entity */
+  if ($display->getComponent('add_to_cart_link')) {
+    $variation = $entity->getDefaultVariation();
+    if (empty($variation)) {
+      // Avoid errors, if the product has no (active) variations.
+      return;
+    }
+    $build['add_to_cart_link'] = (new AddToCartLink($variation))->build();
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view() for commerce_product_variation.
+ */
+function commerce_add_to_cart_link_commerce_product_variation_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  /** @var \Drupal\commerce_product\Entity\ProductVariationInterface $entity */
+  if ($display->getComponent('add_to_cart_link')) {
+    $build['add_to_cart_link'] = (new AddToCartLink($entity))->build();
+  }
+}
+
+/**
+ * Implements hook_views_data().
+ */
+function commerce_add_to_cart_link_views_data() {
+  $definition = \Drupal::entityTypeManager()->getDefinition('commerce_product_variation');
+  $tables = [$definition->getDataTable(), $definition->getRevisionDataTable()];
+  $data = [];
+  foreach ($tables as $table) {
+    if ($table) {
+      $data[$table]['commerce_add_to_cart_link'] = [
+        'field' => [
+          'title' => t('Add to cart link'),
+          'id' => 'commerce_add_to_cart_link',
+          'real field' => 'variation_id',
+        ],
+      ];
+    }
+  }
+  return $data;
+}

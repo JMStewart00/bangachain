@@ -1,0 +1,23 @@
+commerce_add_to_cart_link.page:
+  path: '/add-to-cart/{commerce_product}/{commerce_product_variation}/{token}'
+  defaults:
+    _controller: '\Drupal\commerce_add_to_cart_link\Controller\AddToCartController::action'
+    token: ''
+  requirements:
+    _custom_access:  '\Drupal\commerce_add_to_cart_link\Controller\AddToCartController::access'
+    commerce_product: \d+
+    commerce_product_variation: \d+
+  options:
+    parameters:
+      commerce_product:
+        type: entity:commerce_product
+      commerce_product_variation:
+        type: entity:commerce_product_variation
+
+commerce_add_to_cart_link.settings:
+  path: '/admin/commerce/config/add-to-cart-link'
+  defaults:
+    _form: '\Drupal\commerce_add_to_cart_link\Form\AdminSettingsForm'
+    _title: 'Commerce Add To Cart Link'
+  requirements:
+    _permission: 'administer commerce_product_type'

@@ -27,8 +27,6 @@
   ]
 %}
 
-{% set out_of_stock = product.variation_field_stock|render|striptags %}
-
 <a href="{{ product_url }}">
   <article{{attributes.addClass(classes)}}>
     <div class="u-text-center">
@@ -40,7 +38,6 @@
         <div class="c-product__title u-vr__mb--1">
           <div class="u-color__blue h1">{{ product.title }}</div>
           <div class="u-color__blue-gray">{{ product.field_brand }}</div>
-          <div>{{ out_of_stock }}</div>
         </div>
 
         <div class="c-product__flight-numbers u-vr__mb--1">

@@ -1014,7 +1014,7 @@ display:
         operator: AND
         groups:
           1: AND
-      group_by: false
+      group_by: true
     cache_metadata:
       max-age: -1
       contexts:

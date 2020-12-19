@@ -1,0 +1,8 @@
+name: Views Infinite Scroll
+type: module
+description: A pager which allows an infinite scroll effect for views.
+package: Views
+core_version_requirement: ^8.8 || ^9
+
+dependencies:
+ - drupal:views

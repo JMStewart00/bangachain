@@ -188,6 +188,7 @@
         "drupal/upgrade_status": "^3.0",
         "drupal/view_unpublished": "1.x-dev",
         "drupal/views_ajax_history": "^1.2",
+        "drupal/views_infinite_scroll": "1.x-dev@dev",
         "drupal/viewsreference": "^1.4",
         "drush/drush": "^9.2",
         "enyo/dropzone": "^5.7",
@@ -289,6 +290,9 @@
             },
             "drupal/simple_image_rotate": {
                 "Undefined methond getThirdPartySettings()": "https://www.drupal.org/files/issues/2020-08-26/simple-image-rotate-issue-3126067-undefined-getThirdPartySettings-method.patch"
+            },
+            "drupal/better_exposed_filters": {
+                "BEF Links not working with AJAX": "https://www.drupal.org/files/issues/2020-12-11/better_exposed_filters_2938761-49.patch"
             }
         },
         "enable-patching": true,

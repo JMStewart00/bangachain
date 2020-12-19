@@ -2710,6 +2710,9 @@
                     "status": "not-covered",
                     "message": "Beta releases are not covered by Drupal security advisories."
                 }
+            },
+            "patches_applied": {
+                "BEF Links not working with AJAX": "https://www.drupal.org/files/issues/2020-12-11/better_exposed_filters_2938761-49.patch"
             }
         },
         "installation-source": "dist",
@@ -8997,6 +9000,61 @@
         "homepage": "https://www.drupal.org/project/views_bootstrap",
         "support": {
             "source": "https://git.drupalcode.org/project/views_bootstrap"
+        }
+    },
+    {
+        "name": "drupal/views_infinite_scroll",
+        "version": "dev-1.x",
+        "version_normalized": "dev-1.x",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupalcode.org/project/views_infinite_scroll.git",
+            "reference": "8ab168eddb3aea43186871f948b15b510484f6f4"
+        },
+        "require": {
+            "drupal/core": "^8.8 || ^9"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "branch-alias": {
+                "dev-1.x": "1.x-dev"
+            },
+            "drupal": {
+                "version": "8.x-1.7+15-dev",
+                "datestamp": "1601308347",
+                "security-coverage": {
+                    "status": "not-covered",
+                    "message": "Dev releases are not covered by Drupal security advisories."
+                }
+            }
+        },
+        "installation-source": "source",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0-or-later"
+        ],
+        "authors": [
+            {
+                "name": "Bobík",
+                "homepage": "https://www.drupal.org/user/123612"
+            },
+            {
+                "name": "Neslee Canil Pinto",
+                "homepage": "https://www.drupal.org/user/3580850"
+            },
+            {
+                "name": "Remon",
+                "homepage": "https://www.drupal.org/user/143827"
+            },
+            {
+                "name": "Sam152",
+                "homepage": "https://www.drupal.org/user/1485048"
+            }
+        ],
+        "description": "A pager which allows an infinite scroll effect for views.",
+        "homepage": "https://www.drupal.org/project/views_infinite_scroll",
+        "support": {
+            "source": "https://git.drupalcode.org/project/views_infinite_scroll"
         }
     },
     {

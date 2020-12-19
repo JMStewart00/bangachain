@@ -1,0 +1,6 @@
+services:
+  bangachain_views.local_stock_transaction_subscriber:
+    class: Drupal\bangachain_views\EventSubscriber\LocalStockTransactionSubscriber
+    arguments: [ '@commerce_stock.local_stock_service' ]
+    tags:
+      - { name: event_subscriber }

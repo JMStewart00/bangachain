@@ -110,11 +110,11 @@
           $target.is(':text:not(.hasDatepicker), textarea')
           && $.inArray(e.keyCode, ignoredKeyCodes) === -1
         ) {
-          $submit.click();
+          window.setTimeout(function() { $submit.click(); }, 200);
         }
         // Only trigger submit if a change was the trigger (no keyup).
         else if (e.type === 'change') {
-          $submit.click();
+          window.setTimeout(function() { $submit.click(); }, 200);
         }
       }
     }

@@ -107,6 +107,18 @@
                 "type": "zip"
               }
             }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "jackmoore/colorbox",
+                "version": "1.6.4",
+                "type": "drupal-library",
+                "dist": {
+                    "url": "https://github.com/jackmoore/colorbox/archive/1.6.4.zip",
+                    "type": "zip"
+                }
+            }
         }
     ],
     "require": {
@@ -130,6 +142,7 @@
         "drupal/coder": "^8.3",
         "drupal/coffee": "^1.0",
         "drupal/color_field": "^2.4",
+        "drupal/colorbox": "^1.6",
         "drupal/commerce": "^2.20",
         "drupal/commerce_add_to_cart_link": "^2.0",
         "drupal/commerce_autosku": "2.x-dev@dev",
@@ -193,6 +206,7 @@
         "drush/drush": "^9.2",
         "enyo/dropzone": "^5.7",
         "furf/jquery-ui-touch-punch": "^0.0.1",
+        "jackmoore/colorbox": "1.6.4",
         "league/oauth2-google": "^3.0",
         "npm-asset/bootstrap": "^4.5",
         "npm-asset/mburger-css": "^1.3",
@@ -293,6 +307,9 @@
             },
             "drupal/better_exposed_filters": {
                 "BEF Links not working with AJAX": "https://www.drupal.org/files/issues/2020-12-11/better_exposed_filters_2938761-49.patch"
+            },
+            "drupal/colorbox": {
+                "Allow media entity reference fields to be displayed as a gallery in a colorbox": "https://www.drupal.org/files/issues/2020-04-24/2957030-27.patch"
             }
         },
         "enable-patching": true,

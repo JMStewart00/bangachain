@@ -49,11 +49,19 @@
           <div class="c-product__price u-fw__bold">{{ product.variation_price }}</div>
           <div class="c-product__stock">{{ product.variation_field_stock }}</div>
         </div>
-        <div class="c-product__add-to-cart">
-          {{ product.variations }}
-        </div>
       </div>
 
+    </div>
+
+    {% if product.field_description|render %}
+      <div class="c-product__description u-vr__mb--4">
+        <h2 class="h1">About the {{ product.title.0['#context'].value }}</h2>
+        {{- product.field_description -}}
+      </div>
+    {% endif %}
+
+    <div class="c-product__variations u-vr__mb--4">
+      {{ drupal_view('variations_on_product_page', 'block_1') }}
     </div>
 
   </div>

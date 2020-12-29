@@ -7,6 +7,7 @@ dependencies:
     - core.entity_view_mode.commerce_product.teaser
     - field.field.commerce_product.accessories.field_brand
     - field.field.commerce_product.accessories.field_category
+    - field.field.commerce_product.accessories.field_description
     - field.field.commerce_product.accessories.field_meta_tags
   module:
     - commerce_product
@@ -45,8 +46,10 @@ content:
       combine: true
     third_party_settings: {  }
 hidden:
+  add_to_cart_link: true
   created: true
   field_brand: true
+  field_description: true
   field_meta_tags: true
   stores: true
   uid: true

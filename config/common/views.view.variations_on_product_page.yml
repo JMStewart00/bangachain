@@ -441,13 +441,13 @@ display:
           element_wrapper_class: ''
           element_default_classes: false
           empty: ''
-          hide_empty: false
-          empty_zero: false
+          hide_empty: true
+          empty_zero: true
           hide_alter_empty: true
           click_sort_column: target_id
           type: entity_reference_label
           settings:
-            link: true
+            link: false
           group_column: target_id
           group_columns: {  }
           group_rows: true
@@ -598,7 +598,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "\r\n{% if field_stock|render|striptags != 0 %}{{ rendered_entity }}{%else%}OUT OF STOCK{% endif %}"
+            text: '{% if field_stock|render|striptags != 0 %}{{ rendered_entity }}{%else%}OUT OF STOCK{% endif %}'
             make_link: false
             path: ''
             absolute: false
@@ -771,8 +771,11 @@ display:
         - user.permissions
       tags:
         - 'config:core.entity_view_display.commerce_product_variation.accessories.default'
+        - 'config:core.entity_view_display.commerce_product_variation.accessories.summary'
         - 'config:core.entity_view_display.commerce_product_variation.apparel.default'
+        - 'config:core.entity_view_display.commerce_product_variation.apparel.summary'
         - 'config:core.entity_view_display.commerce_product_variation.bags.default'
+        - 'config:core.entity_view_display.commerce_product_variation.bags.summary'
         - 'config:core.entity_view_display.commerce_product_variation.discs.default'
         - 'config:core.entity_view_display.commerce_product_variation.discs.summary'
         - 'config:field.storage.commerce_product_variation.attribute_disc_color'
@@ -799,8 +802,11 @@ display:
         - user.permissions
       tags:
         - 'config:core.entity_view_display.commerce_product_variation.accessories.default'
+        - 'config:core.entity_view_display.commerce_product_variation.accessories.summary'
         - 'config:core.entity_view_display.commerce_product_variation.apparel.default'
+        - 'config:core.entity_view_display.commerce_product_variation.apparel.summary'
         - 'config:core.entity_view_display.commerce_product_variation.bags.default'
+        - 'config:core.entity_view_display.commerce_product_variation.bags.summary'
         - 'config:core.entity_view_display.commerce_product_variation.discs.default'
         - 'config:core.entity_view_display.commerce_product_variation.discs.summary'
         - 'config:field.storage.commerce_product_variation.attribute_disc_color'

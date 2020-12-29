@@ -49,9 +49,6 @@
           <div class="c-product__price u-fw__bold">{{ product.variation_price }}</div>
           <div class="c-product__stock">{{ product.variation_field_stock }}</div>
         </div>
-        <div class="c-product__add-to-cart">
-          {{ product.variations }}
-        </div>
       </div>
 
     </div>
@@ -62,6 +59,10 @@
         {{- product.field_description -}}
       </div>
     {% endif %}
+
+    <div class="c-product__variations u-vr__mb--4">
+      {{ drupal_view('variations_on_product_page', 'block_1') }}
+    </div>
 
   </div>
 </article>

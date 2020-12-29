@@ -8109,6 +8109,8 @@ div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
     min-width: min-content;
     -ms-flex-negative: 0;
     flex-shrink: 0; }
+  .bangachain-table table tbody tr:nth-of-type(even) {
+    background-color: #fcfffc !important; }
   .bangachain-table table th,
   .bangachain-table table td {
     display: block; }

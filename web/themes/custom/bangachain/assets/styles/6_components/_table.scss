@@ -1,52 +1,124 @@
-table {
-  border-collapse: collapse;
-  margin: 25px 0;
-  font-size: 0.9em;
-  font-family: sans-serif;
-  min-width: 400px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+div:not(.bangachain-table) {
+  table {
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 
-  td {
-    vertical-align: middle !important;
+    td {
+      vertical-align: middle !important;
 
-    img {
-      max-width: 150px !important;
+      img {
+        max-width: 150px !important;
+      }
+
+      &.is-active {
+        background-color: inherit;
+      }
     }
 
+    thead tr {
+      background-color: $brand-blue;
+      color: #ffffff;
+      text-align: left;
+    }
+
+    th,
+    td {
+      padding: 12px 15px;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid #dddddd;
+    }
+
+    tbody tr:nth-of-type(even) {
+      background-color: #f3f3f3;
+    }
+  }
+}
+
+// flipped axis, scrollable tables for product variations.
+.bangachain-table {
+  .table-responsive {
+    overflow-x: unset !important;
+  }
+
+  table {
     @include media-breakpoint-down(md) {
-      display: block;
+      min-width: 0 !important;
+      display: flex;
+      overflow: hidden;
+      background: none;
+      white-space: nowrap;
+
+      tbody {
+        -webkit-overflow-scrolling: touch;
+        background-attachment: local, local, scroll, scroll;
+        background-color: $white;
+        background-image: linear-gradient(to right, $white, $white), linear-gradient(to right, $white, $white), linear-gradient(to right, rgba(0, 0, 0, 0.25), rgba(255, 255, 255, 0)), linear-gradient(to left, rgba(0, 0, 0, 0.25), rgba(255, 255, 255, 0));
+        background-position: left center, right center, left center, right center;
+        background-repeat: no-repeat;
+        background-size: 20px 100%, 20px 100%, 10px 100%, 10px 100%;
+      }
+
+      thead {
+        display: flex;
+        flex-shrink: 0;
+        min-width: min-content;
+
+        th:first-child {
+          height: 125px;
+        }
+
+        th:last-child {
+          height: 90px;
+        }
+      }
+
+      tbody {
+        display: flex;
+        position: relative;
+        overflow-x: auto;
+        overflow-y: hidden;
+      }
+
+      tr {
+        display: flex;
+        flex-direction: column;
+        min-width: min-content;
+        flex-shrink: 0;
+      }
+
+      th,
+      td {
+        display: block;
+
+        &:not(:last-child) {
+          border-bottom: 0;
+        }
+      }
+
+      td {
+        background-image: none !important;
+        border-left: 0;
+      }
+
+      tbody tr:first-child {
+        background-image: linear-gradient(to right, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 100%);
+        background-repeat: no-repeat;
+        background-size: 20px 100%;
+      }
+
+      tbody tr:last-child {
+        background-image: linear-gradient(to left, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 100%);
+        background-repeat: no-repeat;
+        background-position: 100% 0;
+        background-size: 20px 100%;
+      }
     }
-
-    &.is-active {
-      background-color: inherit;
-    }
-  }
-
-  thead tr {
-    background-color: $brand-blue;
-    color: #ffffff;
-    text-align: left;
-
-    @include media-breakpoint-down(md) {
-      display: none;
-    }
-  }
-
-  th,
-  td {
-    padding: 12px 15px;
-  }
-
-  tbody tr {
-    border-bottom: 1px solid #dddddd;
-  }
-
-  tbody tr:nth-of-type(even) {
-    background-color: #f3f3f3;
-  }
-
-  tbody tr:last-of-type {
-    border-bottom: 2px solid $brand-blue;
   }
 }
 

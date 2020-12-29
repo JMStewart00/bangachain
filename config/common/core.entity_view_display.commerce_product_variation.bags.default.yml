@@ -8,23 +8,66 @@ dependencies:
     - field.field.commerce_product_variation.bags.field_product_image
     - field.field.commerce_product_variation.bags.field_stock
     - field.field.commerce_product_variation.bags.weight
+  module:
+    - commerce_price
+    - commerce_stock_field
 id: commerce_product_variation.bags.default
 targetEntityType: commerce_product_variation
 bundle: bags
 mode: default
 content:
-  add_to_cart_link:
-    weight: 0
+  attribute_disc_color:
+    type: entity_reference_label
+    weight: 4
     region: content
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+  field_product_image:
+    type: entity_reference_entity_view
+    weight: 2
+    region: content
+    label: hidden
+    settings:
+      view_mode: square
+      link: false
+    third_party_settings: {  }
+  field_stock:
+    type: commerce_stock_level_simple
+    weight: 5
+    region: content
+    label: hidden
     settings: {  }
     third_party_settings: {  }
+  price:
+    type: commerce_price_default
+    weight: 3
+    region: content
+    label: hidden
+    settings:
+      strip_trailing_zeroes: false
+      currency_display: symbol
+    third_party_settings: {  }
+  product_id:
+    type: entity_reference_entity_view
+    weight: 0
+    region: content
+    label: hidden
+    settings:
+      view_mode: teaser
+      link: false
+    third_party_settings: {  }
+  title:
+    type: string
+    weight: 1
+    region: content
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
 hidden:
-  attribute_disc_color: true
-  field_product_image: true
-  field_stock: true
+  add_to_cart_link: true
   list_price: true
-  price: true
-  product_id: true
   sku: true
-  title: true
   weight: true

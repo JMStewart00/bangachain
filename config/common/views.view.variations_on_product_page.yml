@@ -406,8 +406,8 @@ display:
           label: Weight
           exclude: false
           alter:
-            alter_text: false
-            text: ''
+            alter_text: true
+            text: '{{ attribute_disc_weight }}g'
             make_link: false
             path: ''
             absolute: false
@@ -762,6 +762,7 @@ display:
       filter_groups:
         operator: AND
         groups: {  }
+      css_class: bangachain-table
     cache_metadata:
       max-age: -1
       contexts:

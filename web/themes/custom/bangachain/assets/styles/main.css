@@ -7691,9 +7691,6 @@ body.no-scroll {
   text-transform: uppercase;
   text-align: center; }
 
-.o-btn--square:hover, .o-btn--square:focus {
-  background-color: #3D5A80; }
-
 .o-btn--square:hover a, .o-btn--square:focus a {
   color: #fcfffc !important;
   text-decoration: none; }
@@ -7815,7 +7812,8 @@ svg.ext {
   line-height: 1.5625rem;
   position: absolute;
   right: 2rem;
-  top: 1rem; }
+  top: 1rem;
+  cursor: pointer; }
 
 .block-commerce-cart-flyout {
   margin-left: calc(var(--lh__base) * 1 * var(--rvr-multiplier));
@@ -8024,7 +8022,7 @@ svg.ext {
     margin-left: auto;
     margin-right: 0; } }
 
-table {
+div:not(.bangachain-table) table {
   border-collapse: collapse;
   margin: 25px 0;
   font-size: 0.9em;
@@ -8033,40 +8031,104 @@ table {
   -webkit-box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.15); }
 
-table td {
+div:not(.bangachain-table) table td {
   vertical-align: middle !important; }
 
-table td img {
+div:not(.bangachain-table) table td img {
   max-width: 150px !important; }
 
-@media (max-width: 991.98px) {
-  table td {
-    display: block; } }
-
-table td.is-active {
+div:not(.bangachain-table) table td.is-active {
   background-color: inherit; }
 
-table thead tr {
+div:not(.bangachain-table) table thead tr {
   background-color: #3D5A80;
   color: #ffffff;
   text-align: left; }
 
-@media (max-width: 991.98px) {
-  table thead tr {
-    display: none; } }
-
-table th,
-table td {
+div:not(.bangachain-table) table th,
+div:not(.bangachain-table) table td {
   padding: 12px 15px; }
 
-table tbody tr {
+div:not(.bangachain-table) table tbody tr {
   border-bottom: 1px solid #dddddd; }
 
-table tbody tr:nth-of-type(even) {
+div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
   background-color: #f3f3f3; }
 
-table tbody tr:last-of-type {
-  border-bottom: 2px solid #3D5A80; }
+.bangachain-table .table-responsive {
+  overflow-x: unset !important; }
+
+@media (max-width: 991.98px) {
+  .bangachain-table table {
+    min-width: 0 !important;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    overflow: hidden;
+    background: none;
+    white-space: nowrap; }
+  .bangachain-table table tbody {
+    -webkit-overflow-scrolling: touch;
+    background-attachment: local, local, scroll, scroll;
+    background-color: #fcfffc;
+    background-image: -webkit-gradient(linear, left top, right top, from(#fcfffc), to(#fcfffc)), -webkit-gradient(linear, left top, right top, from(#fcfffc), to(#fcfffc)), -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0.25)), to(rgba(255, 255, 255, 0))), -webkit-gradient(linear, right top, left top, from(rgba(0, 0, 0, 0.25)), to(rgba(255, 255, 255, 0)));
+    background-image: linear-gradient(to right, #fcfffc, #fcfffc), linear-gradient(to right, #fcfffc, #fcfffc), linear-gradient(to right, rgba(0, 0, 0, 0.25), rgba(255, 255, 255, 0)), linear-gradient(to left, rgba(0, 0, 0, 0.25), rgba(255, 255, 255, 0));
+    background-position: left center, right center, left center, right center;
+    background-repeat: no-repeat;
+    background-size: 20px 100%, 20px 100%, 10px 100%, 10px 100%; }
+  .bangachain-table table thead {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    min-width: -webkit-min-content;
+    min-width: -moz-min-content;
+    min-width: min-content; }
+  .bangachain-table table thead th:first-child {
+    height: 125px; }
+  .bangachain-table table thead th:last-child {
+    height: 90px; }
+  .bangachain-table table tbody {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    position: relative;
+    overflow-x: auto;
+    overflow-y: hidden; }
+  .bangachain-table table tr {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: -webkit-min-content;
+    min-width: -moz-min-content;
+    min-width: min-content;
+    -ms-flex-negative: 0;
+    flex-shrink: 0; }
+  .bangachain-table table th,
+  .bangachain-table table td {
+    display: block; }
+  .bangachain-table table th:not(:last-child),
+  .bangachain-table table td:not(:last-child) {
+    border-bottom: 0; }
+  .bangachain-table table td {
+    background-image: none !important;
+    border-left: 0; }
+  .bangachain-table table tbody tr:first-child {
+    background-image: -webkit-gradient(linear, left top, right top, color-stop(50%, white), to(rgba(255, 255, 255, 0)));
+    background-image: linear-gradient(to right, white 50%, rgba(255, 255, 255, 0) 100%);
+    background-repeat: no-repeat;
+    background-size: 20px 100%; }
+  .bangachain-table table tbody tr:last-child {
+    background-image: -webkit-gradient(linear, right top, left top, color-stop(50%, white), to(rgba(255, 255, 255, 0)));
+    background-image: linear-gradient(to left, white 50%, rgba(255, 255, 255, 0) 100%);
+    background-repeat: no-repeat;
+    background-position: 100% 0;
+    background-size: 20px 100%; } }
 
 .c-teaser-team-member__photo {
   margin-bottom: 0.75rem;

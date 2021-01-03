@@ -11,6 +11,7 @@ dependencies:
     - field.field.node.team_member.field_photo
     - field.field.node.team_member.field_rating
     - field.field.node.team_member.field_social_media_links
+    - field.field.node.team_member.field_video
     - node.type.team_member
   module:
     - media_library
@@ -88,6 +89,15 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: social_media_links_field_default
+    region: content
+  field_video:
+    type: media_library_widget
+    weight: 26
+    settings:
+      media_types:
+        - remote_video
+        - video
+    third_party_settings: {  }
     region: content
   path:
     type: path

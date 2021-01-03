@@ -12,6 +12,7 @@ dependencies:
     - field.field.node.team_member.field_photo
     - field.field.node.team_member.field_rating
     - field.field.node.team_member.field_social_media_links
+    - field.field.node.team_member.field_video
     - node.type.team_member
   module:
     - user
@@ -37,4 +38,5 @@ hidden:
   field_pdga_number: true
   field_rating: true
   field_social_media_links: true
+  field_video: true
   links: true

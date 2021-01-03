@@ -113,6 +113,13 @@
         <div class="u-vr__mb--2">
           {{ content.body }}
         </div>
+        {% if content.field_video|render %}
+        <div class="u-vr__mb--2">
+          <h3>Videos</h3>
+          {{ content.field_video }}
+        </div>
+        {% endif %}
+
         <div class="c-node-team-member__favorite-discs">
           {{ content.field_favorite_discs }}
         </div>

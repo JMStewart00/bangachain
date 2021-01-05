@@ -1,0 +1,33 @@
+.c-accordion {
+  max-width: 800px;
+  margin: auto;
+  padding: 0 rvr(1);
+
+  &-item {
+    border: $border;
+
+    &__header {
+      background-color: $gray-200;
+      display: flex;
+      flex-wrap: nowrap;
+    }
+
+    &__title {
+      border-right: $border;
+      flex-grow: 1;
+      padding: $spacer;
+    }
+
+    &__icon {
+      background-color: $white;
+      color: $orange;
+      padding: $spacer;
+    }
+
+    &__content {
+      border-top: $border;
+      padding: $spacer;
+    }
+  }
+
+}

@@ -1,0 +1,29 @@
+uuid: 9213b87c-35c1-4a34-bdb5-87f6a6b3e3a4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.accordion.field_paragraphs
+    - paragraphs.paragraphs_type.accordion
+  module:
+    - paragraphs
+id: paragraph.accordion.default
+targetEntityType: paragraph
+bundle: accordion
+mode: default
+content:
+  field_paragraphs:
+    type: entity_reference_paragraphs
+    weight: 0
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
+    third_party_settings: {  }
+    region: content
+hidden:
+  created: true
+  status: true

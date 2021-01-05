@@ -8,6 +8,13 @@ global-styling:
     - core/jquery
     - core/modernizr
 
+accordion:
+  version: 1.0
+  js:
+    assets/js/accordion.js: {}
+  dependencies:
+    - bangachain/bootstrap-collapse
+
 bootstrap-js:
   version: 4.4
   js:

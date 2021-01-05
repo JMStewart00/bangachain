@@ -1,24 +1,32 @@
 .c-footer {
   font-size: rem(15);
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  grid-template-areas:
+    'first'
+    'second'
+    'third';
+  padding: rvr(2);
 
-  @include media-breakpoint-down(xs) {
-    text-align: center;
+  @include media-breakpoint-up(md) {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-areas: 'first second third';
   }
 
-  &__separator {
-    width: 100%;
-    height: 1px;
-    border-top: 1px solid $border-color;
+  &__logo-container {
+    grid-area: first;
+
+    img {
+      max-width: 200px;
+    }
   }
 
   &__subfooter {
-    p {
-      margin-bottom: 0;
-    }
+    grid-area: third;
+  }
 
-    a {
-      display: block;
-    }
+  @include media-breakpoint-down(xs) {
+    text-align: center;
   }
 
   &__social {
@@ -41,4 +49,16 @@
       display: none;
     }
   }
+}
+
+.c-copyright {
+  p {
+    width: 100%;
+  }
+}
+
+.c-contact-us {
+  display: flex;
+  justify-content: center;
+  padding-top: rvr(2);
 }

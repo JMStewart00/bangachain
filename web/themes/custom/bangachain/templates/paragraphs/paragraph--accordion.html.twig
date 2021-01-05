@@ -44,7 +44,7 @@
   ]
 %}
 
-{{ attach_library('lifespan/accordion') }}
+{{ attach_library('bangachain/accordion') }}
 
 {# Sets Unique ID for Accordion from Paragraph ID. #}
 {% set paragraph_id = 'accordion-' ~ paragraph.id.value %}
@@ -58,7 +58,7 @@
   >
     {% block content %}
       {# Loop through all of the accordion sections. #}
-      {% for key, item in content.field_accordion_items if key|first != '#' %}
+      {% for key, item in content.field_paragraphs if key|first != '#' %}
 
         {# Set variables if accordion should be shown. #}
         {% set show_accordion = item['#paragraph'].field_accordion_open.value %}
@@ -75,7 +75,7 @@
             <div class="c-accordion-item__header" role="tab" id="heading-{{ paragraph_id }}-{{ key + 1 }}">
               <div class="c-accordion-item__title">
                 {# Print the accordion section title. #}
-                {{ item['#paragraph'].field_title.value }}
+                {{ item['#paragraph'].field_header.value }}
               </div>
               <div class="c-accordion-item__icon">
                 <i class="fas {{ show_accordion ? 'fa-minus' : 'fa-plus'}}"></i>

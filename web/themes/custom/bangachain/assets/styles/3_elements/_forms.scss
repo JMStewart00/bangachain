@@ -4,8 +4,13 @@ button {
   padding: 0;
 }
 
+
 #contact-message-feedback-form,
 #contact-message-team-application-form {
   max-width: 700px;
   margin: auto;
+}
+
+#contact-message-feedback-form {
+  margin: rvr(4) auto;
 }

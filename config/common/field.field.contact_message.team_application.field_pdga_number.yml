@@ -1,0 +1,23 @@
+uuid: 8106969b-a692-422e-a2c4-be4bd3292503
+langcode: en
+status: true
+dependencies:
+  config:
+    - contact.form.team_application
+    - field.storage.contact_message.field_pdga_number
+id: contact_message.team_application.field_pdga_number
+field_name: field_pdga_number
+entity_type: contact_message
+bundle: team_application
+label: 'PDGA Number'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 0
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

@@ -1,0 +1,23 @@
+uuid: 2b874f7c-7db9-44b5-84ec-30d7a571051c
+langcode: en
+status: true
+dependencies:
+  config:
+    - contact.form.team_application
+    - field.storage.contact_message.field_pdga_rating
+id: contact_message.team_application.field_pdga_rating
+field_name: field_pdga_rating
+entity_type: contact_message
+bundle: team_application
+label: 'PDGA Rating'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 0
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

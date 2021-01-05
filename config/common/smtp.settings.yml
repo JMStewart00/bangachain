@@ -7,13 +7,13 @@ smtp_autotls: false
 smtp_timeout: 30
 smtp_username: bangachain2012@gmail.com
 smtp_password: OmYVf1sg5IWwkFUS
-smtp_from: bangachain2012@gmail.com
+smtp_from: no-reply@bangachain.com
 smtp_fromname: Bang-A-Chain
 smtp_client_hostname: ''
 smtp_client_helo: ''
 smtp_allowhtml: '1'
 smtp_test_address: ''
-smtp_debugging: true
+smtp_debugging: false
 prev_mail_system: php_mail
 smtp_keepalive: false
 _core:

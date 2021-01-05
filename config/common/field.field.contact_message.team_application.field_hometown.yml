@@ -1,0 +1,19 @@
+uuid: c6b513a1-92da-426b-99d3-8ab32fd517a7
+langcode: en
+status: true
+dependencies:
+  config:
+    - contact.form.team_application
+    - field.storage.contact_message.field_hometown
+id: contact_message.team_application.field_hometown
+field_name: field_hometown
+entity_type: contact_message
+bundle: team_application
+label: Hometown
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

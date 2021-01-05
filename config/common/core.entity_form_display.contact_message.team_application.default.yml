@@ -4,37 +4,92 @@ status: true
 dependencies:
   config:
     - contact.form.team_application
+    - field.field.contact_message.team_application.field_events_played
+    - field.field.contact_message.team_application.field_hometown
+    - field.field.contact_message.team_application.field_local_scene
+    - field.field.contact_message.team_application.field_pdga_number
+    - field.field.contact_message.team_application.field_pdga_rating
+    - field.field.contact_message.team_application.field_questions
+    - field.field.contact_message.team_application.field_sponsor
+    - field.field.contact_message.team_application.field_why_team
 id: contact_message.team_application.default
 targetEntityType: contact_message
 bundle: team_application
 mode: default
 content:
+  field_events_played:
+    weight: 5
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_hometown:
+    weight: 2
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_local_scene:
+    weight: 6
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textarea
+    region: content
+  field_pdga_number:
+    weight: 3
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_pdga_rating:
+    weight: 4
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_questions:
+    weight: 9
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textarea
+    region: content
+  field_sponsor:
+    weight: 8
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textarea
+    region: content
+  field_why_team:
+    weight: 7
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textarea
+    region: content
   mail:
     weight: 1
     region: content
     settings: {  }
-    third_party_settings: {  }
-  message:
-    type: string_textarea
-    weight: 3
-    settings:
-      rows: 12
-      placeholder: ''
-    region: content
     third_party_settings: {  }
   name:
     weight: 0
     region: content
     settings: {  }
     third_party_settings: {  }
-  subject:
-    type: string_textfield
-    weight: 2
-    region: content
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
 hidden:
   copy: true
+  message: true
   preview: true
+  subject: true

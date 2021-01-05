@@ -1,4 +1,4 @@
-uuid: 83758a5a-1627-42b4-9fb1-1adf01b081cb
+uuid: 9b24e706-349d-4f6c-8b6a-4b07eff04e07
 langcode: en
 status: true
 dependencies:
@@ -9,13 +9,13 @@ third_party_settings:
     submit_text: 'Send message'
     show_preview: false
     disabled_form_message: 'This contact form has been disabled.'
-    maximum_submissions_user: 2
+    maximum_submissions_user: 0
     page_autoreply_format: plain_text
-id: team_application
-label: 'Team Application'
+id: generic
+label: Generic
 recipients:
   - bangachain2012@gmail.com
 reply: ''
 weight: 0
-message: 'Thank you! We''ll be in touch as soon as we can!'
+message: 'Thanks! We''ll contact you soon!'
 redirect: /

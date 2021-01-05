@@ -4,11 +4,89 @@ status: true
 dependencies:
   config:
     - contact.form.team_application
+    - field.field.contact_message.team_application.field_events_played
+    - field.field.contact_message.team_application.field_hometown
+    - field.field.contact_message.team_application.field_local_scene
+    - field.field.contact_message.team_application.field_pdga_number
+    - field.field.contact_message.team_application.field_pdga_rating
+    - field.field.contact_message.team_application.field_questions
+    - field.field.contact_message.team_application.field_sponsor
+    - field.field.contact_message.team_application.field_why_team
 id: contact_message.team_application.default
 targetEntityType: contact_message
 bundle: team_application
 mode: default
 content:
+  field_events_played:
+    weight: 4
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_integer
+    region: content
+  field_hometown:
+    weight: 1
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_local_scene:
+    weight: 5
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+  field_pdga_number:
+    weight: 2
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_integer
+    region: content
+  field_pdga_rating:
+    weight: 3
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_integer
+    region: content
+  field_questions:
+    weight: 8
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+  field_sponsor:
+    weight: 7
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+  field_why_team:
+    weight: 6
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+  mail:
+    weight: -2
+    region: content
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
   message:
     type: string
     weight: 0
@@ -17,4 +95,20 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
+  name:
+    weight: -3
+    region: content
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+  subject:
+    weight: -1
+    region: content
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
 hidden: {  }

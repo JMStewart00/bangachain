@@ -1,0 +1,23 @@
+uuid: bf4f2700-74d0-4c0a-9902-0605dff7ad9d
+langcode: en
+status: true
+dependencies:
+  config:
+    - contact.form.team_application
+    - field.storage.contact_message.field_events_played
+id: contact_message.team_application.field_events_played
+field_name: field_events_played
+entity_type: contact_message
+bundle: team_application
+label: 'Events Played (last year)'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 0
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

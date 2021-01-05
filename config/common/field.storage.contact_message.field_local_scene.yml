@@ -1,0 +1,19 @@
+uuid: eba0ae4d-f2ad-42c2-8040-0dd7e5e7b662
+langcode: en
+status: true
+dependencies:
+  module:
+    - contact
+id: contact_message.field_local_scene
+field_name: field_local_scene
+entity_type: contact_message
+type: string_long
+settings:
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

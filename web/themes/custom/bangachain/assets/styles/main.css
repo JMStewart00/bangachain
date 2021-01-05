@@ -7212,7 +7212,8 @@ button {
   padding: 0; }
 
 #contact-message-feedback-form,
-#contact-message-team-application-form {
+#contact-message-team-application-form,
+#contact-message-generic-form {
   max-width: 700px;
   margin: auto; }
 

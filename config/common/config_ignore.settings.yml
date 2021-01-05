@@ -3,5 +3,6 @@ ignored_config_entities:
   - system.performance
   - commerce_payment.commerce_payment_gateway.square
   - smtp.settings
+  - 'simple_sitemap.*'
 _core:
   default_config_hash: UVH1aJ4b44UM-VdPVN7hNNuuVqfReJxwfVeDQH1Hvsk

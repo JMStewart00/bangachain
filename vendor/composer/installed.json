@@ -147,7 +147,7 @@
         "version_normalized": "1.4.1.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/kenwheeler/slick.git",
+            "url": "git@github.com:kenwheeler/slick.git",
             "reference": "e3fc23908d647bb2471c00c316ad57b15667975d"
         },
         "dist": {
@@ -170,7 +170,7 @@
         "version_normalized": "0.2.12.0",
         "source": {
             "type": "git",
-            "url": "git@github.com:mreq/slick-lightbox.git",
+            "url": "https://github.com/mreq/slick-lightbox.git",
             "reference": "30459914338d0a9ae6ab328c7e12166997da00a2"
         },
         "dist": {
@@ -4763,6 +4763,69 @@
         }
     },
     {
+        "name": "drupal/contact_storage",
+        "version": "1.1.0",
+        "version_normalized": "1.1.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupalcode.org/project/contact_storage.git",
+            "reference": "8.x-1.1"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/contact_storage-8.x-1.1.zip",
+            "reference": "8.x-1.1",
+            "shasum": "3560a3eb06daa5f5156c0986989a0b5deadd9de1"
+        },
+        "require": {
+            "drupal/core": "^8.7.7 || ^9",
+            "drupal/token": "^1.6"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "drupal": {
+                "version": "8.x-1.1",
+                "datestamp": "1591811491",
+                "security-coverage": {
+                    "status": "covered",
+                    "message": "Covered by Drupal's security advisory policy"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0-or-later"
+        ],
+        "authors": [
+            {
+                "name": "Arla",
+                "homepage": "https://www.drupal.org/user/226712"
+            },
+            {
+                "name": "Berdir",
+                "homepage": "https://www.drupal.org/user/214652"
+            },
+            {
+                "name": "andypost",
+                "homepage": "https://www.drupal.org/user/118908"
+            },
+            {
+                "name": "jibran",
+                "homepage": "https://www.drupal.org/user/1198144"
+            },
+            {
+                "name": "larowlan",
+                "homepage": "https://www.drupal.org/user/395439"
+            }
+        ],
+        "description": "Provides storage and edit capability for contact messages.",
+        "homepage": "https://www.drupal.org/project/contact_storage",
+        "support": {
+            "source": "https://git.drupalcode.org/project/contact_storage"
+        }
+    },
+    {
         "name": "drupal/core",
         "version": "8.9.10",
         "version_normalized": "8.9.10.0",
@@ -4983,7 +5046,8 @@
                 "Break long text strings in layout edit": "https://www.drupal.org/files/issues/2020-08-10/break-long-text-strings-in-layout-3016507-32.patch",
                 "Nested Paragraphs create multiple drag handles": "https://www.drupal.org/files/issues/2019-11-13/claro-nested_paragraphs_multiple_drag_handles-3092181-5.patch",
                 "Views file name suggestions often missing from Twig debugging": "https://www.drupal.org/files/issues/views-template-suggestions-2839945-2.patch",
-                "Do not decode a contact message twice": "https://www.drupal.org/files/issues/2020-10-10/contact-decode-D8.2223967-91.patch"
+                "Do not decode a contact message twice": "https://www.drupal.org/files/issues/2020-10-10/contact-decode-D8.2223967-91.patch",
+                "Off-canvas style resets are overriding styles (especially SVGs) in Safari resulting in display issues": "https://www.drupal.org/files/issues/2019-05-07/off-canvas-style-resets-2958588-13.patch"
             }
         },
         "installation-source": "dist",

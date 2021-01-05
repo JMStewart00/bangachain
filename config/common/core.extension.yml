@@ -53,6 +53,7 @@ module:
   config_ignore: 0
   config_split: 0
   contact: 0
+  contact_storage: 0
   contextual: 0
   ctools: 0
   datetime: 0

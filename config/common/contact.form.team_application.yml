@@ -1,0 +1,12 @@
+uuid: 83758a5a-1627-42b4-9fb1-1adf01b081cb
+langcode: en
+status: true
+dependencies: {  }
+id: team_application
+label: 'Team Application'
+recipients:
+  - bangachain2012@gmail.com
+reply: ''
+weight: 0
+message: 'Thank you! We''ll be in touch as soon as we can!'
+redirect: /

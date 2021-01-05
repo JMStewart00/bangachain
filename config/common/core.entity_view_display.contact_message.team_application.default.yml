@@ -1,0 +1,20 @@
+uuid: 9cbf2ae2-cc2d-4dab-9324-f2281bec1457
+langcode: en
+status: true
+dependencies:
+  config:
+    - contact.form.team_application
+id: contact_message.team_application.default
+targetEntityType: contact_message
+bundle: team_application
+mode: default
+content:
+  message:
+    type: string
+    weight: 0
+    label: above
+    region: content
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+hidden: {  }

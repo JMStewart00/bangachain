@@ -1,0 +1,22 @@
+uuid: 7ccffb7b-4abf-414b-a62a-b86793415741
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.contact_form
+    - field.field.block_content.contact_form.field_form
+id: block_content.contact_form.default
+targetEntityType: block_content
+bundle: contact_form
+mode: default
+content:
+  field_form:
+    weight: 0
+    label: hidden
+    settings:
+      link: true
+      view_mode: default
+    third_party_settings: {  }
+    type: entity_reference_entity_view
+    region: content
+hidden: {  }

@@ -49,3 +49,7 @@ Do not decode a contact message twice
 Source: https://www.drupal.org/files/issues/2020-10-10/contact-decode-D8.2223967-91.patch
 
 
+Off-canvas style resets are overriding styles (especially SVGs) in Safari resulting in display issues
+Source: https://www.drupal.org/files/issues/2019-05-07/off-canvas-style-resets-2958588-13.patch
+
+

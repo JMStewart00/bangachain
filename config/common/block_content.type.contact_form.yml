@@ -1,0 +1,8 @@
+uuid: 528c78a1-2add-4100-b59b-f01b7331c34f
+langcode: en
+status: true
+dependencies: {  }
+id: contact_form
+label: 'Contact form'
+revision: 0
+description: ''

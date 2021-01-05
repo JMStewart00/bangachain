@@ -1,0 +1,40 @@
+uuid: 2f61f116-7168-4fae-893e-a2be73877a12
+langcode: en
+status: true
+dependencies:
+  config:
+    - contact.form.team_application
+id: contact_message.team_application.default
+targetEntityType: contact_message
+bundle: team_application
+mode: default
+content:
+  mail:
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  message:
+    type: string_textarea
+    weight: 3
+    settings:
+      rows: 12
+      placeholder: ''
+    region: content
+    third_party_settings: {  }
+  name:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  subject:
+    type: string_textfield
+    weight: 2
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  copy: true
+  preview: true

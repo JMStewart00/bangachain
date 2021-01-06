@@ -2,14 +2,15 @@
 .c-view-discs,
 .c-view-bags,
 .c-view-accessories,
-.c-view-apparel {
+.c-view-apparel,
+.c-field-favorite-discs {
   a {
     color: inherit;
 
     @include hover-focus() {
       text-decoration: none;
 
-      .h1::after {
+      .h2::after {
         width: 50%;
       }
 
@@ -44,6 +45,4 @@
       grid-template-columns: repeat(4, 1fr);
     }
   }
-
-
 }

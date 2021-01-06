@@ -4,10 +4,20 @@
       max-width: 75%;
       margin: auto;
     }
+
+    .c-field-media-image {
+      margin-left: 0;
+      margin-right: auto;
+
+      @include media-breakpoint-up(lg) {
+        margin-left: auto;
+        margin-right: 0;
+      }
+    }
   }
 
   &__title {
-    .h1 {
+    .h2 {
       position: relative;
 
       &::after {
@@ -35,6 +45,10 @@
         display: none;
       }
     }
+
+    .c-field-media-image {
+      margin: auto;
+    }
   }
 
   &__description {
@@ -58,7 +72,7 @@
       height: rem(50);
       margin: rem(10) rem(6);
       padding: rem(8);
-      line-height: rem(35);
+      line-height: rem(32);
       text-align: center;
       font-size: rem(16);
       font-weight: 700;
@@ -100,15 +114,5 @@
 
   &__image {
     margin-bottom: rvr(1);
-
-    .c-field-media-image {
-      margin-left: 0;
-      margin-right: auto;
-
-      @include media-breakpoint-up(lg) {
-        margin-left: auto;
-        margin-right: 0;
-      }
-    }
   }
 }

@@ -32,7 +32,11 @@
     <div class="u-text-center">
 
         <div class="c-product__image">
-          {{ product.variation_field_product_image }}
+          {% if product.variation_field_product_image|render %}
+            {{ product.variation_field_product_image }}
+          {% else %}
+            <img src="/themes/custom/bangachain/assets/images/default-disc.png" alt="Bang-A-Chain logo">
+          {% endif %}
         </div>
 
         <div class="c-product__title u-vr__mb--1">

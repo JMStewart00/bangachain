@@ -7651,6 +7651,52 @@ body.no-scroll {
 .button {
   margin: 0; }
 
+.draw-border {
+  -webkit-box-shadow: inset 0 0 0 4px #3D5A80;
+  box-shadow: inset 0 0 0 4px #3D5A80;
+  color: #3D5A80;
+  -webkit-transition: color 0.25s 0.08333s;
+  transition: color 0.25s 0.08333s;
+  position: relative; }
+
+.draw-border::before, .draw-border::after {
+  border: 0 solid transparent;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  content: '';
+  pointer-events: none;
+  position: absolute;
+  width: 0;
+  height: 0;
+  bottom: 0;
+  right: 0; }
+
+.draw-border::before {
+  border-bottom-width: 4px;
+  border-left-width: 4px; }
+
+.draw-border::after {
+  border-top-width: 4px;
+  border-right-width: 4px; }
+
+.draw-border:hover {
+  color: #EE6C4D; }
+
+.draw-border:hover::before, .draw-border:hover::after {
+  border-color: #EE6C4D;
+  -webkit-transition: border-color 0s, width 0.25s, height 0.25s;
+  transition: border-color 0s, width 0.25s, height 0.25s;
+  width: 100%;
+  height: 100%; }
+
+.draw-border:hover::before {
+  -webkit-transition-delay: 0s, 0s, 0.25s;
+  transition-delay: 0s, 0s, 0.25s; }
+
+.draw-border:hover::after {
+  -webkit-transition-delay: 0s, 0.25s, 0s;
+  transition-delay: 0s, 0.25s, 0s; }
+
 .o-icon {
   margin-left: 12px; }
 
@@ -8774,7 +8820,8 @@ div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
   grid-template-areas: 'first' 'second' 'third';
-  padding: calc(var(--lh__base) * 2 * var(--rvr-multiplier)); }
+  padding: calc(var(--lh__base) * 2 * var(--rvr-multiplier));
+  border-bottom: 2px solid white; }
 
 @media (min-width: 768px) {
   .c-footer {
@@ -8816,6 +8863,9 @@ div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
 .c-footer__social svg.ext {
   display: none; }
 
+.c-copyright {
+  max-width: none !important; }
+
 .c-copyright p {
   width: 100%; }
 
@@ -8829,6 +8879,9 @@ div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
   padding-top: calc(var(--lh__base) * 2 * var(--rvr-multiplier)); }
 
 .c-header {
+  position: relative;
+  z-index: 10;
+  border-bottom: 2px solid white;
   -webkit-box-shadow: 0 0.75rem 1.5rem -1.5rem #293241;
   box-shadow: 0 0.75rem 1.5rem -1.5rem #293241; }
 

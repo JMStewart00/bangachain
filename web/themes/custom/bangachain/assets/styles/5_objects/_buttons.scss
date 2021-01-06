@@ -131,3 +131,7 @@
 .button {
   margin: 0;
 }
+
+.draw-border {
+  @include btn-border-drawing($brand-blue, $orange, 4px, bottom, right);
+}

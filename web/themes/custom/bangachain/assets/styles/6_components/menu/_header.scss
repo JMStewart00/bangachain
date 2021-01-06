@@ -1,4 +1,7 @@
 .c-header {
+  position: relative;
+  z-index: 10;
+  border-bottom: 2px solid white;
   box-shadow: 0 rem(12) rem(24) rem(-24) $gray-dark;
 
   &__row {

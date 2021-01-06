@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.media.colorbox
     - field.field.media.image.field_media_image
+    - image.style.scaled_width_800
     - image.style.thumbnail
     - media.type.image
   module:
@@ -26,7 +27,7 @@ content:
     settings:
       colorbox_node_style: thumbnail
       colorbox_node_style_first: ''
-      colorbox_image_style: ''
+      colorbox_image_style: scaled_width_800
       colorbox_gallery: post
       colorbox_gallery_custom: ''
       colorbox_caption: none

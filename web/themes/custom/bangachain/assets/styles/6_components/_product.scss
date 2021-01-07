@@ -17,8 +17,11 @@
   }
 
   &__title {
+    margin-bottom: rvr(0.25);
+
     .h2 {
       position: relative;
+      margin-bottom: 0;
 
       &::after {
         content: '';
@@ -40,12 +43,6 @@
       width: 75%;
     }
 
-    .c-product__flight-numbers {
-      @include media-breakpoint-down(md) {
-        display: none;
-      }
-    }
-
     .c-field-media-image {
       margin: auto;
     }
@@ -54,6 +51,10 @@
   &__description {
     padding-top: rvr(2);
     border-top: 3px solid $blue-gray;
+  }
+
+  &__flight-numbers {
+    margin-bottom: rvr(0.25);
   }
 
   &__speed,
@@ -113,6 +114,6 @@
   }
 
   &__image {
-    margin-bottom: rvr(1);
+    margin-bottom: rvr(0.25);
   }
 }

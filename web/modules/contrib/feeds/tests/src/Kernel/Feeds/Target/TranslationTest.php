@@ -70,11 +70,16 @@ class TranslationTest extends FeedsKernelTestBase {
       $language->save();
     }
 
+    // Set article bundle to be translatable.
+    $this->container->get('content_translation.manager')->setEnabled('node', 'article', TRUE);
+
     // Create a text field.
     $this->createFieldWithStorage('field_alpha');
 
     // Install taxonomy tables and add a vocabulary.
     $this->vocabulary = $this->installTaxonomyModuleWithVocabulary();
+    // And set it as translatable.
+    $this->container->get('content_translation.manager')->setEnabled('taxonomy_term', $this->vocabulary->id(), TRUE);
 
     // Add a term reference field to the article bundle.
     $this->createFieldWithStorage('field_tags', [
@@ -364,7 +369,7 @@ class TranslationTest extends FeedsKernelTestBase {
     $this->importContent($this->resourcesPath() . '/csv/translation/content_es.csv');
     $this->assertNodeCount(1);
 
-    // Assert that Spanish translation was created.
+    // Assert that a Spanish translation was created.
     $node = Node::load(1);
     $this->assertTrue($node->hasTranslation('es'));
     $spanish_translation = $node->getTranslation('es');

@@ -1,0 +1,6 @@
+name: Typed Data Global Context Test
+type: module
+package: Testing
+description: 'Provides a simple global context for testing.'
+dependencies:
+  - typed_data:typed_data

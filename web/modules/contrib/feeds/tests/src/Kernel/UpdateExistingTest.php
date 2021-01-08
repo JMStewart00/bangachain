@@ -12,6 +12,21 @@ use Drupal\feeds\Plugin\Type\Processor\ProcessorInterface;
 class UpdateExistingTest extends FeedsKernelTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  public static $modules = [
+    'field',
+    'node',
+    'user',
+    'feeds',
+    'text',
+    'filter',
+    'options',
+    'entity_test',
+    'feeds_test_entity',
+  ];
+
+  /**
    * Tests updating terms by name.
    *
    * Tests that terms from the right vocabulary get updated.
@@ -96,6 +111,123 @@ class UpdateExistingTest extends FeedsKernelTestBase {
     $vocab2_term1 = $this->reloadEntity($vocab2_term1);
     $this->assertEquals('Ut wisi enim ad minim veniam', $vocab2_term1->getName());
     $this->assertEquals('Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.', $vocab2_term1->getDescription());
+  }
+
+  /**
+   * Tests that non-translatable entities can get updated.
+   */
+  public function testUpdateNonTranslatableEntity() {
+    $this->installConfig(['field', 'filter']);
+    $this->installEntitySchema('entity_test_bundle');
+    $this->installEntitySchema('entity_test_string_id');
+    $this->installEntitySchema('user');
+
+    /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $entity_storage */
+    $entity_storage = $this->entityTypeManager->getStorage('entity_test_string_id');
+
+    // Create a user.
+    $this->createUser();
+
+    // Add a field to the entity type.
+    $this->createFieldWithStorage('field_alpha', [
+      'entity_type' => 'entity_test_string_id',
+      'bundle' => 'entity_test_string_id',
+    ]);
+
+    // Create an entity to update.
+    $entity = $entity_storage->create([
+      'id' => 'LRM',
+      'name' => 'Lorem ipsum',
+      'type' => 'entity_test_string_id',
+    ]);
+    $entity->save();
+
+    // Create a feed type to update the entity.
+    $feed_type = $this->createFeedTypeForCsv([
+      'title' => 'title',
+      'alpha' => 'alpha',
+    ], [
+      'processor' => 'entity:entity_test_string_id',
+      'processor_configuration' => [
+        'update_existing' => ProcessorInterface::UPDATE_EXISTING,
+        'values' => [
+          'type' => 'entity_test_string_id',
+        ],
+      ],
+      'mappings' => [
+        [
+          'target' => 'name',
+          'map' => ['value' => 'title'],
+          'unique' => ['value' => TRUE],
+        ],
+        [
+          'target' => 'field_alpha',
+          'map' => ['value' => 'alpha'],
+          'settings' => ['format' => 'plain_text'],
+        ],
+      ],
+    ]);
+
+    // Import.
+    $feed = $this->createFeed($feed_type->id(), [
+      'source' => $this->resourcesPath() . '/csv/content.csv',
+    ]);
+    $feed->import();
+
+    // Assert that the entity was updated.
+    $entity = $this->reloadEntity($entity);
+    $this->assertEquals('Lorem', $entity->field_alpha->value);
+  }
+
+  /**
+   * Tests importing into a base field that has a default value.
+   */
+  public function testImportIntoFieldWithDefaultValue() {
+    $this->installConfig(['field']);
+    // Enable a boolean field with a default value.
+    \Drupal::state()->set('entity_test.boolean_field', TRUE);
+    $this->installEntitySchema('entity_test_bundle');
+    $this->installEntitySchema('feeds_test_entity_test_no_links');
+    $this->installEntitySchema('user');
+
+    // Create a user.
+    $account = $this->createUser();
+
+    // Create a feed type.
+    $feed_type = $this->createFeedTypeForCsv([
+      'title' => 'title',
+      'epsilon' => 'epsilon',
+    ], [
+      'processor' => 'entity:feeds_test_entity_test_no_links',
+      'processor_configuration' => [
+        'owner_id' => $account->id(),
+        'values' => [
+          'type' => 'feeds_test_entity_test_no_links',
+        ],
+      ],
+      'mappings' => [
+        [
+          'target' => 'name',
+          'map' => ['value' => 'title'],
+          'unique' => ['value' => TRUE],
+        ],
+        [
+          'target' => 'boolean_field',
+          'map' => ['value' => 'epsilon'],
+        ],
+      ],
+    ]);
+
+    // Import.
+    $feed = $this->createFeed($feed_type->id(), [
+      'source' => $this->resourcesPath() . '/csv/content.csv',
+    ]);
+    $feed->import();
+
+    /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $entity_storage */
+    $entity_storage = $this->entityTypeManager->getStorage('feeds_test_entity_test_no_links');
+    $entity = $entity_storage->load(1);
+    $this->assertEquals('1', $entity->boolean_field->value);
   }
 
 }

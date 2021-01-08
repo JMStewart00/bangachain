@@ -45,6 +45,14 @@ custom_sources:
     label: Owner
     value: Owner
     machine_name: owner
+  status:
+    label: Status
+    value: Status
+    machine_name: status
+  stores:
+    label: Stores
+    value: Stores
+    machine_name: stores
 mappings:
   -
     target: code
@@ -63,5 +71,17 @@ mappings:
     map:
       target_id: owner
     settings:
-      reference_by: false
-      autocreate: false
+      reference_by: name
+      autocreate: 0
+  -
+    target: status
+    map:
+      value: status
+    settings: {  }
+  -
+    target: stores
+    map:
+      target_id: stores
+    settings:
+      reference_by: store_id
+      autocreate: 0

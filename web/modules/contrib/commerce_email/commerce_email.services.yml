@@ -1,0 +1,14 @@
+services:
+  plugin.manager.commerce_email_event:
+    class: Drupal\commerce_email\EmailEventManager
+    arguments: ['@container.namespaces', '@cache.discovery', '@module_handler', '@entity_type.manager']
+
+  commerce_email.email_subscriber:
+    class: Drupal\commerce_email\EventSubscriber\EmailSubscriber
+    arguments: ['@commerce_email.email_sender']
+    tags:
+      - { name: event_subscriber }
+
+  commerce_email.email_sender:
+    class: Drupal\commerce_email\EmailSender
+    arguments: ['@commerce.mail_handler', '@token']

@@ -24,6 +24,8 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *   ),
  *   bundle_label = @Translation("Gift card type"),
  *   handlers = {
+ *     "event" = "Drupal\commerce_giftcard\Event\GiftcardEvent",
+ *     "storage" = "Drupal\commerce_giftcard\GiftcardStorage",
  *     "list_builder" = "Drupal\commerce_giftcard\GiftcardListBuilder",
  *     "access" = "Drupal\commerce_giftcard\GiftcardAccessControlHandler",
  *     "storage_schema" = "Drupal\commerce_giftcard\GiftcardStorageSchema",

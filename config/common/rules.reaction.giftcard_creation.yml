@@ -1,0 +1,51 @@
+uuid: 6a062715-9c64-4fc1-b411-4be3a9085094
+langcode: en
+status: true
+dependencies: {  }
+id: giftcard_creation
+label: 'Giftcard Creation'
+events:
+  -
+    event_name: 'rules_entity_insert:commerce_giftcard--payout'
+description: ''
+tags: {  }
+config_version: '3'
+expression:
+  id: rules_rule
+  uuid: 6c8d9091-7595-4e0d-a337-aafa288a847d
+  weight: 0
+  conditions:
+    id: rules_and
+    uuid: 4d607473-701e-4f8d-b36b-5b44c35ffa59
+    weight: 0
+    conditions: {  }
+  actions:
+    id: rules_action_set
+    uuid: e802d96c-ae4c-469a-8f4b-ff4ae9b03f05
+    weight: 0
+    actions:
+      -
+        id: rules_action
+        uuid: aacb28c1-7df5-4bd5-bed3-1880af4ed03c
+        weight: 0
+        context_values:
+          to:
+            - '{{ commerce_giftcard.uid.entity.mail.value }}'
+          subject: 'New giftcard waiting for you on Bangachain.com!'
+          message: 'A new giftcard has been added to your account on Bangachain.com! Login to your account to check the balances on all your cards.'
+          reply: no-reply@bangachain.com
+          language: ''
+        context_mapping: {  }
+        context_processors:
+          to:
+            rules_tokens: {  }
+          subject:
+            rules_tokens: {  }
+          message:
+            rules_tokens: {  }
+          reply:
+            rules_tokens: {  }
+          language:
+            rules_tokens: {  }
+        provides_mapping: {  }
+        action_id: rules_send_email

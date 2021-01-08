@@ -174,6 +174,7 @@
         "drupal/fontawesome": "^2.17",
         "drupal/google_tag": "^1.3",
         "drupal/honeypot": "^1.27",
+        "drupal/htmlmail": "^3.0@alpha",
         "drupal/jquery_ui_accordion": "^1.0",
         "drupal/jquery_ui_tooltip": "^1.0",
         "drupal/jquery_ui_touch_punch": "^1.0",
@@ -191,6 +192,7 @@
         "drupal/rabbit_hole": "^1.0@beta",
         "drupal/redirect": "^1.5",
         "drupal/responsive_favicons": "^1.5",
+        "drupal/rules": "^3.0@alpha",
         "drupal/search_api": "^1.15",
         "drupal/simple_image_rotate": "^1.0@alpha",
         "drupal/simple_sitemap": "^3.5",
@@ -312,6 +314,12 @@
             },
             "drupal/colorbox": {
                 "Allow media entity reference fields to be displayed as a gallery in a colorbox": "https://www.drupal.org/files/issues/2020-04-24/2957030-27.patch"
+            },
+            "drupal/commerce_giftcard": {
+                "Gift card should generate standard commerce events": "https://www.drupal.org/files/issues/2020-11-24/commerce_giftcard-modify-giftcard-entity.patch"
+            },
+            "drupal/feeds": {
+                "Cannot hold more than 1 value": "https://www.drupal.org/files/issues/2020-09-26/feeds-multivalue-3155046-19.patch"
             }
         },
         "enable-patching": true,

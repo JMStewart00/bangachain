@@ -107,7 +107,7 @@
         "version_normalized": "1.12.4.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/jquery/jquery-dist.git",
+            "url": "git@github.com:jquery/jquery-dist.git",
             "reference": "5e89585e0121e72ff47de177c5ef604f3089a53d"
         },
         "dist": {
@@ -3699,6 +3699,70 @@
         }
     },
     {
+        "name": "drupal/commerce_email",
+        "version": "1.0.0-beta1",
+        "version_normalized": "1.0.0.0-beta1",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupalcode.org/project/commerce_email.git",
+            "reference": "8.x-1.0-beta1"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/commerce_email-8.x-1.0-beta1.zip",
+            "reference": "8.x-1.0-beta1",
+            "shasum": "39825f33acaab7a64001acdb637f7a36b6b7cc62"
+        },
+        "require": {
+            "drupal/commerce": "*",
+            "drupal/core": "~8.0",
+            "drupal/token": "*"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "drupal": {
+                "version": "8.x-1.0-beta1",
+                "datestamp": "1591114690",
+                "security-coverage": {
+                    "status": "not-covered",
+                    "message": "Beta releases are not covered by Drupal security advisories."
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0-or-later"
+        ],
+        "authors": [
+            {
+                "name": "jsacksick",
+                "homepage": "https://www.drupal.org/user/972218"
+            },
+            {
+                "name": "mglaman",
+                "homepage": "https://www.drupal.org/user/2416470"
+            },
+            {
+                "name": "paul.linney",
+                "homepage": "https://www.drupal.org/user/928636"
+            },
+            {
+                "name": "rinasek",
+                "homepage": "https://www.drupal.org/user/1245514"
+            },
+            {
+                "name": "rszrama",
+                "homepage": "https://www.drupal.org/user/49344"
+            }
+        ],
+        "description": "Provides a UI for defining Commerce emails.",
+        "homepage": "https://www.drupal.org/project/commerce_email",
+        "support": {
+            "source": "https://git.drupalcode.org/project/commerce_email"
+        }
+    },
+    {
         "name": "drupal/commerce_feeds",
         "version": "1.0.0-alpha3",
         "version_normalized": "1.0.0.0-alpha3",
@@ -3798,6 +3862,9 @@
                     "status": "not-covered",
                     "message": "Project has not opted into security advisory coverage!"
                 }
+            },
+            "patches_applied": {
+                "Gift card should generate standard commerce events": "https://www.drupal.org/files/issues/2020-11-24/commerce_giftcard-modify-giftcard-entity.patch"
             }
         },
         "installation-source": "source",
@@ -5898,6 +5965,9 @@
                     "status": "not-covered",
                     "message": "Project has not opted into security advisory coverage!"
                 }
+            },
+            "patches_applied": {
+                "Cannot hold more than 1 value": "https://www.drupal.org/files/issues/2020-09-26/feeds-multivalue-3155046-19.patch"
             }
         },
         "installation-source": "dist",
@@ -6336,6 +6406,75 @@
         ],
         "support": {
             "source": "https://git.drupalcode.org/project/honeypot"
+        }
+    },
+    {
+        "name": "drupal/htmlmail",
+        "version": "3.0.0-alpha2",
+        "version_normalized": "3.0.0.0-alpha2",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupalcode.org/project/htmlmail.git",
+            "reference": "8.x-3.0-alpha2"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/htmlmail-8.x-3.0-alpha2.zip",
+            "reference": "8.x-3.0-alpha2",
+            "shasum": "a94855bb7593a2ca874b97a7fbc344e78b0105fd"
+        },
+        "require": {
+            "drupal/core": "~8.0",
+            "drupal/mailsystem": "*"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "drupal": {
+                "version": "8.x-3.0-alpha2",
+                "datestamp": "1539817149",
+                "security-coverage": {
+                    "status": "not-covered",
+                    "message": "Alpha releases are not covered by Drupal security advisories."
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0+"
+        ],
+        "authors": [
+            {
+                "name": "gaurav.kapoor",
+                "homepage": "https://www.drupal.org/user/3495331",
+                "role": "Maintainer"
+            },
+            {
+                "name": "Nafes",
+                "homepage": "https://www.drupal.org/user/2489926",
+                "role": "Maintainer"
+            },
+            {
+                "name": "RenatoG",
+                "homepage": "https://www.drupal.org/u/RenatoG",
+                "email": "renatog@ciandt.com",
+                "role": "Maintainer"
+            },
+            {
+                "name": "salvis",
+                "homepage": "https://www.drupal.org/u/salvis",
+                "role": "Maintainer"
+            },
+            {
+                "name": "salvis",
+                "homepage": "https://www.drupal.org/user/82964"
+            }
+        ],
+        "description": "Enables HTML in system emails.",
+        "homepage": "https://www.drupal.org/project/htmlmail",
+        "support": {
+            "source": "https://cgit.drupalcode.org/htmlmail",
+            "irc": "irc://irc.freenode.org/drupal-contribute"
         }
     },
     {
@@ -8167,6 +8306,70 @@
         }
     },
     {
+        "name": "drupal/rules",
+        "version": "3.0.0-alpha6",
+        "version_normalized": "3.0.0.0-alpha6",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupalcode.org/project/rules.git",
+            "reference": "8.x-3.0-alpha6"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/rules-8.x-3.0-alpha6.zip",
+            "reference": "8.x-3.0-alpha6",
+            "shasum": "073bf5c23f0ef8f1aebf56538249d50d631d5a24"
+        },
+        "require": {
+            "drupal/core": "^8.7",
+            "drupal/typed_data": "1.x-dev"
+        },
+        "require-dev": {
+            "drupal/typed_data": "1.x-dev"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "drupal": {
+                "version": "8.x-3.0-alpha6",
+                "datestamp": "1595975406",
+                "security-coverage": {
+                    "status": "not-covered",
+                    "message": "Alpha releases are not covered by Drupal security advisories."
+                }
+            },
+            "drush": {
+                "services": {
+                    "drush.services.yml": "^9"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0-or-later"
+        ],
+        "authors": [
+            {
+                "name": "TR",
+                "homepage": "https://www.drupal.org/user/202830"
+            },
+            {
+                "name": "fago",
+                "homepage": "https://www.drupal.org/user/16747"
+            },
+            {
+                "name": "klausi",
+                "homepage": "https://www.drupal.org/user/262198"
+            }
+        ],
+        "description": "React on events and conditionally evaluate actions.",
+        "homepage": "https://www.drupal.org/project/rules",
+        "support": {
+            "source": "https://git.drupalcode.org/project/rules",
+            "issues": "https://www.drupal.org/project/issues/rules"
+        }
+    },
+    {
         "name": "drupal/search_api",
         "version": "1.18.0",
         "version_normalized": "1.18.0.0",
@@ -8889,6 +9092,59 @@
         "support": {
             "source": "https://git.drupalcode.org/project/twig_tweak",
             "issues": "https://www.drupal.org/project/issues/twig_tweak"
+        }
+    },
+    {
+        "name": "drupal/typed_data",
+        "version": "dev-1.x",
+        "version_normalized": "dev-1.x",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupalcode.org/project/typed_data.git",
+            "reference": "27555f47b522730d04f3b33c9a46c0acbcb3146e"
+        },
+        "require": {
+            "drupal/core": "^8.8.2 || ^9"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "branch-alias": {
+                "dev-1.x": "1.x-dev"
+            },
+            "drupal": {
+                "version": "8.x-1.0-alpha5+21-dev",
+                "datestamp": "1600719315",
+                "security-coverage": {
+                    "status": "not-covered",
+                    "message": "Dev releases are not covered by Drupal security advisories."
+                }
+            },
+            "drush": {
+                "services": {
+                    "drush.services.yml": "^9 || ^10"
+                }
+            }
+        },
+        "installation-source": "source",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0-or-later"
+        ],
+        "authors": [
+            {
+                "name": "TR",
+                "homepage": "https://www.drupal.org/user/202830"
+            },
+            {
+                "name": "fago",
+                "homepage": "https://www.drupal.org/user/16747"
+            }
+        ],
+        "description": "Extends the core Typed Data API with new APIs and features.",
+        "homepage": "https://www.drupal.org/project/typed_data",
+        "support": {
+            "source": "https://git.drupalcode.org/project/typed_data",
+            "issues": "https://www.drupal.org/project/issues/typed_data"
         }
     },
     {

@@ -1,0 +1,3 @@
+administer commerce_email:
+  title: 'Administer emails'
+  'restrict access': TRUE

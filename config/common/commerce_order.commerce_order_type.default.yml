@@ -26,6 +26,6 @@ numberPattern: order_default
 refresh_mode: customer
 refresh_frequency: 300
 sendReceipt: true
-receiptBcc: ''
+receiptBcc: bangachain2012@gmail.com
 traits: {  }
 locked: false

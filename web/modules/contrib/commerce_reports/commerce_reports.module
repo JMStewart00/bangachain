@@ -1,0 +1,123 @@
+<?php
+
+use Drupal\commerce_reports\Plugin\views\field\PriceNumericField;
+use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\views\Plugin\views\field\NumericField;
+use Drupal\views\Plugin\views\query\QueryPluginBase;
+use Drupal\views\Plugin\views\query\Sql;
+use Drupal\views\ViewExecutable;
+
+/**
+ * Implements hook_query_TAG_alter().
+ */
+function commerce_reports_query_commerce_reports_alter(AlterableInterface $query) {
+  /** @var \Drupal\commerce_reports\ReportQueryBuilder $query_builder */
+  $query_builder = \Drupal::service('commerce_reports.query_builder');
+  $query_builder->alterQuery($query);
+}
+
+/**
+ * Implements hook_views_query_alter().
+ *
+ * When using aggregation, Views will apply the same grouping function to all
+ * additional fields. That means performing a SUM or AVG on a price field will
+ * cause SUM/AVG to run on the currency code column, which is a string. This
+ * causes a price field's data to be calculated together even though there
+ * may be different currency codes.
+ *
+ * @link https://www.drupal.org/project/drupal/issues/2975149
+ */
+function commerce_reports_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
+  // Only act on report entity views.
+  $base_entity_type = $view->getBaseEntityType();
+  if (!$base_entity_type || $base_entity_type->id() != 'commerce_order_report') {
+    return;
+  }
+  // Only act on SQL queries (do not act on Search API queries, for example.)
+  if (!$query instanceof Sql) {
+    return;
+  }
+
+  foreach ($view->field as $field_plugin) {
+    // If a field has an aggregation function, the display changes it to be
+    // a numeric field handler. We want to stop these fields from applying the
+    // same aggregate function to their additional fields (langcode, delta,
+    // currency code, etc.)
+    if ($field_plugin instanceof NumericField) {
+      $aliases = $field_plugin->aliases;
+      // The current field is in the alias array, remove it so that we preserve
+      // the desired aggregation function.
+      unset($aliases[$field_plugin->realField]);
+
+      // Remove the aggregation function from all additional fields.
+      foreach ($aliases as $alias) {
+        unset($query->fields[$alias]['function']);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_views_pre_build().
+ *
+ * For all price fields, ensure that our PriceNumericField handler is used
+ * instead of the normal NumericField handler. This ensures proper formatting
+ * of the currency.
+ *
+ * This assumes the currency code is available, by having it set to GROUP BY
+ * and not being aggregated by a function.
+ *
+ * @see commerce_reports_views_query_alter
+ */
+function commerce_reports_views_pre_build(ViewExecutable $view) {
+  // Only act on report entity views.
+  $base_entity_type = $view->getBaseEntityType();
+  if (!$base_entity_type || $base_entity_type->id() != 'commerce_order_report') {
+    return;
+  }
+
+  foreach ($view->field as $key => $field_plugin) {
+    if ($field_plugin instanceof NumericField) {
+      // Determine if this is a price field being aggregated.
+      $intersect_test = array_intersect([
+        $field_plugin->field . '_number',
+        $field_plugin->field . '_currency_code'
+      ], $field_plugin->additional_fields);
+
+      if (!empty($intersect_test)) {
+        // Swap out the NumericField handler with our special Price one.
+        $view->field[$key] = PriceNumericField::createFromNumericField($field_plugin);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_update_N().
+ */
+function commerce_reports_update_8001(&$sandbox) {
+  $config_factory = \Drupal::configFactory();
+  $view = $config_factory->getEditable('views.view.purchased_items_report');
+
+  $access = [
+    'type' => 'perm',
+    'options' => [
+      'perm' => 'access commerce reports'
+    ],
+  ];
+  $view->set('display.default.display_options.access', $access);
+
+  $dependencies = $view->get('dependencies.module');
+  $dependencies[] = 'user';
+  $view->set('dependencies.module', $dependencies);
+
+  $data = $view->get('display.default.cache_metadata.contexts');
+  $data[] = 'user.permissions';
+  $view->set('display.default.cache_metadata.contexts', $data);
+
+  $data = $view->get('display.page_1.cache_metadata.contexts');
+  $data[] = 'user.permissions';
+  $view->set('display.page_1.cache_metadata.contexts', $data);
+
+  $view->save();
+}

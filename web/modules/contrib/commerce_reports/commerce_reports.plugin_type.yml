@@ -1,0 +1,5 @@
+commerce_reports.commerce_report_type:
+  label: Order report type
+  provider: commerce_reports
+  plugin_manager_service_id: plugin.manager.commerce_report_type
+  plugin_definition_decorator_class: Drupal\plugin\PluginDefinition\ArrayPluginDefinitionDecorator

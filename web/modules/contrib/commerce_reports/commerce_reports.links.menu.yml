@@ -1,0 +1,22 @@
+commerce_reports.overview:
+  title: 'Reports'
+  route_name: 'commerce_reports.overview'
+  parent: 'commerce.admin_commerce'
+  description: 'Reports for your store.'
+  weight: 10
+
+commerce_reports.configuration:
+  title: 'Reports'
+  route_name: 'commerce_reports.configuration'
+  parent: 'commerce.configuration'
+
+commerce_reports.generate_form:
+  title: 'Generate reports'
+  route_name: 'commerce_reports.generate_form'
+  parent: 'commerce_reports.configuration'
+  description: 'Delete existing order reports and create new ones for one or all report types.'
+
+commerce_reports:sales_report:
+  title: 'Sales'
+  route_name: 'view.sales_report.monthly'
+  parent: 'commerce_reports.overview'

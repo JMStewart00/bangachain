@@ -4187,6 +4187,82 @@
         }
     },
     {
+        "name": "drupal/commerce_reports",
+        "version": "dev-1.x",
+        "version_normalized": "dev-1.x",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupalcode.org/project/commerce_reports.git",
+            "reference": "e303b4ce332c54ab7bc24d0adfe4b87f6ec06ebe"
+        },
+        "require": {
+            "drupal/commerce": "^2.7",
+            "drupal/commerce_order": "*",
+            "drupal/commerce_price": "*",
+            "drupal/core": "^8"
+        },
+        "time": "2019-05-23T20:44:16+00:00",
+        "type": "drupal-module",
+        "extra": {
+            "branch-alias": {
+                "dev-1.x": "1.x-dev"
+            },
+            "drupal": {
+                "version": "8.x-1.0-beta1+3-dev",
+                "datestamp": "1558644485",
+                "security-coverage": {
+                    "status": "not-covered",
+                    "message": "Dev releases are not covered by Drupal security advisories."
+                }
+            },
+            "patches_applied": {
+                "Anonymous users can see Purchased Items Report": "https://www.drupal.org/files/issues/2019-06-07/3004989-17.patch",
+                "Generating Order Reports throws toArray() error": "https://www.drupal.org/files/issues/2019-10-18/3088183-3.patch",
+                "Fix tests deprecation notices and prepare commerce_reports module for Drupal 9": "https://www.drupal.org/files/issues/2021-01-07/3167290-5.patch"
+            }
+        },
+        "installation-source": "source",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0+"
+        ],
+        "authors": [
+            {
+                "name": "aidanlis",
+                "homepage": "https://www.drupal.org/user/502018"
+            },
+            {
+                "name": "cvangysel",
+                "homepage": "https://www.drupal.org/user/868104"
+            },
+            {
+                "name": "dpearcefl",
+                "homepage": "https://www.drupal.org/user/436410"
+            },
+            {
+                "name": "johnkennedy",
+                "homepage": "https://www.drupal.org/user/1046660"
+            },
+            {
+                "name": "mglaman",
+                "homepage": "https://www.drupal.org/user/2416470"
+            },
+            {
+                "name": "paul.linney",
+                "homepage": "https://www.drupal.org/user/928636"
+            },
+            {
+                "name": "strings6",
+                "homepage": "https://www.drupal.org/user/317422"
+            }
+        ],
+        "description": "Provides reporting capabilities for sales, products, customers and payment gateways.",
+        "homepage": "http://drupal.org/project/commerce_reports",
+        "support": {
+            "source": "https://git.drupalcode.org/project/commerce_reports"
+        }
+    },
+    {
         "name": "drupal/commerce_shipping",
         "version": "2.0.0-rc2",
         "version_normalized": "2.0.0.0-RC2",

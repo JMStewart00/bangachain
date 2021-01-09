@@ -1,0 +1,18 @@
+services:
+  commerce_reports.order_placed_subscriber:
+    class: Drupal\commerce_reports\EventSubscriber\OrderPlacedEventSubscriber
+    arguments: ['@state', '@commerce_reports.order_report_generator']
+    tags:
+      - { name: event_subscriber }
+
+  commerce_reports.query_builder:
+    class: Drupal\commerce_reports\ReportQueryBuilder
+    arguments: ['@entity_type.manager']
+
+  plugin.manager.commerce_report_type:
+      class: Drupal\commerce_reports\ReportTypeManager
+      parent: default_plugin_manager
+
+  commerce_reports.order_report_generator:
+    class: Drupal\commerce_reports\OrderReportGenerator
+    arguments: ['@entity_type.manager', '@plugin.manager.commerce_report_type']

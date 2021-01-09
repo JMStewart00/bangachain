@@ -38,6 +38,7 @@ module:
   commerce_price: 0
   commerce_product: 0
   commerce_promotion: 0
+  commerce_reports: 0
   commerce_shipping: 0
   commerce_smart_importer: 0
   commerce_square: 0

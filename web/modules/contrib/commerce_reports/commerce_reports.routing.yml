@@ -1,0 +1,31 @@
+commerce_reports.overview:
+  path: '/admin/commerce/reports'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Reports'
+  requirements:
+    _permission: 'access commerce reports'
+commerce_reports.report:
+  path: '/admin/commerce/reports/{report_type_id}/{type}'
+  defaults:
+    _controller: '\Drupal\commerce_reports\Controller\ReportTable::viewReport'
+    _title: 'View report'
+    type: 'month'
+  requirements:
+    _permission: 'access commerce reports'
+commerce_reports.configuration:
+  path: '/admin/commerce/config/reports'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Reports'
+  requirements:
+    _permission: 'access commerce administration pages'
+commerce_reports.generate_form:
+  path: '/admin/commerce/config/reports/generate-reports'
+  defaults:
+    _form: '\Drupal\commerce_reports\Form\OrderReportGenerateForm'
+    _title: 'Generate order reports'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _permission: 'generate commerce order reports'

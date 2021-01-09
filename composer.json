@@ -151,6 +151,7 @@
         "drupal/commerce_feeds": "^1.0@alpha",
         "drupal/commerce_giftcard": "1.0.x-dev",
         "drupal/commerce_multi_payment": "^1.0",
+        "drupal/commerce_reports": "1.x-dev@dev",
         "drupal/commerce_shipping": "^2.0@RC",
         "drupal/commerce_smart_importer": "^1.0@alpha",
         "drupal/commerce_square": "^1.3",
@@ -320,6 +321,11 @@
             },
             "drupal/feeds": {
                 "Cannot hold more than 1 value": "https://www.drupal.org/files/issues/2020-09-26/feeds-multivalue-3155046-19.patch"
+            },
+            "drupal/commerce_reports": {
+                "Anonymous users can see Purchased Items Report": "https://www.drupal.org/files/issues/2019-06-07/3004989-17.patch",
+                "Generating Order Reports throws toArray() error": "https://www.drupal.org/files/issues/2019-10-18/3088183-3.patch",
+                "Fix tests deprecation notices and prepare commerce_reports module for Drupal 9": "https://www.drupal.org/files/issues/2021-01-07/3167290-5.patch"
             }
         },
         "enable-patching": true,

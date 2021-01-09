@@ -1,0 +1,10 @@
+{
+  "name": "drupal/commerce_reports",
+  "type": "drupal-module",
+  "description": "Provides reporting capabilities for sales, products, customers and payment gateways.",
+  "homepage": "http://drupal.org/project/commerce_reports",
+  "license": "GPL-2.0+",
+  "require": {
+    "drupal/commerce": "^2.7"
+  }
+}

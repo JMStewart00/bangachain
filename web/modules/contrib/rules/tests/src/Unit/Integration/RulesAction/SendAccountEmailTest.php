@@ -28,7 +28,7 @@ namespace Drupal\Tests\rules\Unit\Integration\RulesAction {
     /**
      * {@inheritdoc}
      */
-    protected function setUp() {
+    protected function setUp(): void {
       parent::setUp();
 
       $this->enableModule('user');

@@ -22,7 +22,7 @@ class DataIsEmptyTest extends RulesIntegrationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->condition = $this->conditionManager->createInstance('rules_data_is_empty');

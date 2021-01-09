@@ -16,7 +16,7 @@ class AnnotationProcessingTest extends RulesIntegrationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->enableModule('user');
     // Some of our plugins assume sessions exist:

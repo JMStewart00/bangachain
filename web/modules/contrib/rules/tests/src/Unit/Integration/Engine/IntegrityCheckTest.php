@@ -227,8 +227,8 @@ class IntegrityCheckTest extends RulesEntityIntegrationTestBase {
       ->checkIntegrity();
     $this->assertEquals(1, iterator_count($violation_list));
     $this->assertEquals(
-      'Expected a string data type for context <em class="placeholder">Text to compare</em> but got a list data type instead.',
-      (string) $violation_list[0]->getMessage()
+      'Expected a string data type for context Text to compare but got a list data type instead.',
+      strip_tags((string) $violation_list[0]->getMessage())
     );
     $this->assertEquals($condition->getUuid(), $violation_list[0]->getUuid());
   }
@@ -252,8 +252,8 @@ class IntegrityCheckTest extends RulesEntityIntegrationTestBase {
       ->checkIntegrity();
     $this->assertEquals(1, iterator_count($violation_list));
     $this->assertEquals(
-      'Expected a list data type for context <em class="placeholder">Content types</em> but got a entity:node data type instead.',
-      (string) $violation_list[0]->getMessage()
+      'Expected a list data type for context Content types but got a entity:node data type instead.',
+      strip_tags((string) $violation_list[0]->getMessage())
     );
     $this->assertEquals($condition->getUuid(), $violation_list[0]->getUuid());
   }
@@ -277,8 +277,8 @@ class IntegrityCheckTest extends RulesEntityIntegrationTestBase {
       ->checkIntegrity();
     $this->assertEquals(1, iterator_count($violation_list));
     $this->assertEquals(
-      'Expected a entity:node data type for context <em class="placeholder">Node</em> but got a list data type instead.',
-      (string) $violation_list[0]->getMessage()
+      'Expected a entity:node data type for context Node but got a list data type instead.',
+      strip_tags((string) $violation_list[0]->getMessage())
     );
     $this->assertEquals($condition->getUuid(), $violation_list[0]->getUuid());
   }

@@ -3,11 +3,11 @@
 namespace Drupal\Tests\rules\Kernel;
 
 /**
- * Tests that mails actually go out with the send email action.
+ * Tests that emails actually go out with the send email action.
  *
  * @group Rules
  */
-class RulesMailTest extends RulesKernelTestBase {
+class RulesEmailTest extends RulesKernelTestBase {
 
   /**
    * The action manager used to instantiate the action plugin.
@@ -26,9 +26,9 @@ class RulesMailTest extends RulesKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
-    // Use the state system collector mail backend.
+    // Use the state system collector email backend.
     $this->container->get('config.factory')->getEditable('system.mail')
       ->set('interface.default', 'test_mail_collector')
       ->save();

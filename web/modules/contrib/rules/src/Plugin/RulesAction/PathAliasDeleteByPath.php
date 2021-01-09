@@ -2,7 +2,7 @@
 
 namespace Drupal\rules\Plugin\RulesAction;
 
-use Drupal\Core\Path\AliasStorageInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\rules\Core\RulesActionBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -14,6 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "rules_path_alias_delete_by_path",
  *   label = @Translation("Delete all aliases for a path"),
  *   category = @Translation("Path"),
+ *   provider = "path_alias",
  *   context_definitions = {
  *     "path" = @ContextDefinition("string",
  *       label = @Translation("Existing system path"),
@@ -29,7 +30,7 @@ class PathAliasDeleteByPath extends RulesActionBase implements ContainerFactoryP
   /**
    * The alias storage service.
    *
-   * @var \Drupal\Core\Path\AliasStorageInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $aliasStorage;
 
@@ -42,10 +43,10 @@ class PathAliasDeleteByPath extends RulesActionBase implements ContainerFactoryP
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Path\AliasStorageInterface $alias_storage
+   * @param \Drupal\Core\Entity\EntityStorageInterface $alias_storage
    *   The alias storage service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, AliasStorageInterface $alias_storage) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityStorageInterface $alias_storage) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->aliasStorage = $alias_storage;
   }
@@ -58,18 +59,19 @@ class PathAliasDeleteByPath extends RulesActionBase implements ContainerFactoryP
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('path.alias_storage')
+      $container->get('entity_type.manager')->getStorage('path_alias')
     );
   }
 
   /**
-   * Delete an existing alias by a given path.
+   * Delete existing aliases for a given path.
    *
    * @param string $path
    *   Existing system path.
    */
   protected function doExecute($path) {
-    $this->aliasStorage->delete(['source' => $path]);
+    $aliases = $this->aliasStorage->loadByProperties(['path' => $path]);
+    $this->aliasStorage->delete($aliases);
   }
 
 }

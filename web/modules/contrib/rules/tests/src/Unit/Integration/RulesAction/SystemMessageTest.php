@@ -21,7 +21,7 @@ class SystemMessageTest extends RulesIntegrationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->action = $this->actionManager->createInstance('rules_system_message');
@@ -57,7 +57,7 @@ class SystemMessageTest extends RulesIntegrationTestBase {
 
     $messages = $this->getMessages(MessengerInterface::TYPE_STATUS);
     $this->assertNotNull($messages);
-    $this->assertArrayEquals(['test message'], $messages);
+    $this->assertEquals(['test message'], $messages);
 
     // Set the 'repeat' context to TRUE and execute the action again.
     $this->action->setContextValue('repeat', TRUE);
@@ -66,7 +66,7 @@ class SystemMessageTest extends RulesIntegrationTestBase {
     // The message should be repeated now.
     $messages = $this->getMessages(MessengerInterface::TYPE_STATUS);
     $this->assertNotNull($messages);
-    $this->assertArrayEquals(['test message', 'test message'], $messages);
+    $this->assertEquals(['test message', 'test message'], $messages);
   }
 
   /**
@@ -82,7 +82,7 @@ class SystemMessageTest extends RulesIntegrationTestBase {
 
     $messages = $this->getMessages(MessengerInterface::TYPE_STATUS);
     $this->assertNotNull($messages);
-    $this->assertArrayEquals(['test message'], $messages);
+    $this->assertEquals(['test message'], $messages);
   }
 
   /**

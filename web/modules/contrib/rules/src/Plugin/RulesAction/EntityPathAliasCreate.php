@@ -2,7 +2,7 @@
 
 namespace Drupal\rules\Plugin\RulesAction;
 
-use Drupal\Core\Path\AliasStorageInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\rules\Core\RulesActionBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -23,7 +23,7 @@ class EntityPathAliasCreate extends RulesActionBase implements ContainerFactoryP
   /**
    * The alias storage service.
    *
-   * @var \Drupal\Core\Path\AliasStorageInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $aliasStorage;
 
@@ -43,10 +43,10 @@ class EntityPathAliasCreate extends RulesActionBase implements ContainerFactoryP
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Path\AliasStorageInterface $alias_storage
+   * @param \Drupal\Core\Entity\EntityStorageInterface $alias_storage
    *   The alias storage service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, AliasStorageInterface $alias_storage) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityStorageInterface $alias_storage) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->aliasStorage = $alias_storage;
     $this->entityTypeId = $plugin_definition['entity_type_id'];
@@ -60,7 +60,7 @@ class EntityPathAliasCreate extends RulesActionBase implements ContainerFactoryP
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('path.alias_storage')
+      $container->get('entity_type.manager')->getStorage('path_alias')
     );
   }
 
@@ -80,7 +80,12 @@ class EntityPathAliasCreate extends RulesActionBase implements ContainerFactoryP
 
     $path = '/' . $entity->toUrl()->getInternalPath();
     $langcode = $entity->language()->getId();
-    $this->aliasStorage->save($path, $alias, $langcode);
+    $path_alias = $this->aliasStorage->create([
+      'path' => $path,
+      'alias' => $alias,
+      'langcode' => $langcode,
+    ]);
+    $path_alias->save();
   }
 
 }

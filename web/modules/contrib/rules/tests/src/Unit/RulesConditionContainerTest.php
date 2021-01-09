@@ -48,7 +48,7 @@ class RulesConditionContainerTest extends RulesUnitTestBase {
     $property = new \ReflectionProperty($container, 'conditions');
     $property->setAccessible(TRUE);
 
-    $this->assertArrayEquals([$this->trueConditionExpression->reveal()], array_values($property->getValue($container)));
+    $this->assertEquals([$this->trueConditionExpression->reveal()], array_values($property->getValue($container)));
   }
 
   /**

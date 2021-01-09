@@ -1,34 +1,37 @@
-language: php
-
 os: linux
 
-php:
-  - 5.6
-  - 7.0
-  - 7.3
+language: php
+
+dist: xenial
 
 env:
   global:
     # Make the script re-usable for other modules.
     - MODULE=rules
-    # Allow this many deprecation warnings before failing the build.
-    - SYMFONY_DEPRECATIONS_HELPER=3909
-  jobs:
-    - DRUPAL_CORE=8.7.x
-    - DRUPAL_CORE=8.8.x
-    - DRUPAL_CORE=8.9.x
+    # Initialise the real SYMFONY_DEPRECATIONS_HELPER variable.
+    - SYMFONY_DEPRECATIONS_HELPER=0
+    # Create a default for the allowed deprecations per branch.
+    - DEPRECATIONS=0
 
 jobs:
   fast_finish: true
-  # PHP7.3 is not supported on Core 8.7 and earlier.
-  # PHP5 is not supported on Core 8.8 and later.
-  exclude:
-    - php: 7.3
-      env: DRUPAL_CORE=8.7.x
-    - php: 5.6
+  include:
+    - php: 7.1
       env: DRUPAL_CORE=8.8.x
-    - php: 5.6
+    - php: 7.2
       env: DRUPAL_CORE=8.9.x
+    - php: 7.3
+      env: DRUPAL_CORE=9.0.x
+    - php: 7.4
+      env:
+        - DRUPAL_CORE=9.1.x
+        # --- Remaining self deprecation notices (0)
+        # --- Remaining direct deprecation notices (781)
+        #  50 Support for keys without a placeholder prefix is deprecated
+        # 516 EventDispatcher parameters
+        #  13 UnitTestCase::assertArrayEquals() is deprecated
+        # 202 Drupal\Core\Plugin\ContextAwarePluginBase
+        - DEPRECATIONS=781
 
 services:
   - mysql
@@ -67,22 +70,18 @@ before_script:
   # Install dependencies.
   - travis_retry git clone --branch 8.x-1.x --depth 1 https://git.drupalcode.org/project/typed_data.git modules/typed_data
 
-  # We need an up-to-date composer.
-  - travis_retry composer self-update && travis_retry composer install
+  # At job start-up Composer is installed at 1.8.4 then self-update is run. From
+  # 24 October 2020 this bumped the version to Composer 2. Drupal Core 8.8 has
+  # plugins that only run with composer-plugin-api ^1.0 so revert to Composer 1.
+  - if [ "$DRUPAL_CORE" == "8.8.x" ]; then
+      travis_retry composer self-update --1;
+    fi
+  - travis_retry composer install
 
   # Set the phpcs installed_paths to pick up the Drupal standards.
   - $DRUPAL_ROOT/vendor/bin/phpcs --config-set installed_paths $DRUPAL_ROOT/vendor/drupal/coder/coder_sniffer
 
-  # If running Core 8.6 or 8.7 the following script will upgrade to phpunit 6
-  # which is required in PHP7. The script has now been deleted from Core 8.8.
-  - if [[ $DRUPAL_CORE == "8.6.x" || $DRUPAL_CORE == "8.7.x" ]]; then
-      travis_retry composer run-script drupal-phpunit-upgrade;
-    fi
-
-  # Core 8.7 has more deprecation warnings because it executes more assertions.
-  - if [ $DRUPAL_CORE == "8.7.x" ]; then
-      SYMFONY_DEPRECATIONS_HELPER=4731;
-    fi
+  # Show the allowed number of deprecation warnings.
   - echo $SYMFONY_DEPRECATIONS_HELPER
 
   # Start a web server on port 8888, run in the background.
@@ -90,6 +89,10 @@ before_script:
 
   # Export web server URL for browser tests.
   - export SIMPLETEST_BASE_URL=http://localhost:8888
+
+  # Get the allowed number of deprecation warnings for this branch.
+  - SYMFONY_DEPRECATIONS_HELPER=$DEPRECATIONS || $SYMFONY_DEPRECATIONS_HELPER
+  - echo $SYMFONY_DEPRECATIONS_HELPER
 
 script:
   # Run the PHPUnit tests which also include the kernel tests.

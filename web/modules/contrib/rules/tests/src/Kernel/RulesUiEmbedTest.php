@@ -17,7 +17,12 @@ class RulesUiEmbedTest extends RulesKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['rules', 'rules_test_ui_embed', 'system', 'user'];
+  protected static $modules = [
+    'rules',
+    'rules_test_ui_embed',
+    'system',
+    'user',
+  ];
 
   /**
    * The rules UI manager.
@@ -29,7 +34,7 @@ class RulesUiEmbedTest extends RulesKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->rulesUiManager = $this->container->get('plugin.manager.rules_ui');

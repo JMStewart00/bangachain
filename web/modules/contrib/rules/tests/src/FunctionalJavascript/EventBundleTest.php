@@ -26,7 +26,7 @@ class EventBundleTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Testing profile doesn't include a 'page' or 'article' content type.

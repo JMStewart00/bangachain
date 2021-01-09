@@ -1,0 +1,14 @@
+name: Bang-A-Chain
+mail: no-reply@bangachain.com
+simple_address: false
+sitestyle: true
+textonly: false
+linkonly: false
+user_plaintext_field: ''
+format: full_html
+preserve_class: false
+advanced:
+  incoming: false
+  key: AwahbHqleh-TBTgpStvGzXlgEtSyMD_gOyK39XadMwY
+_core:
+  default_config_hash: rpfRQVoEn2ZWd_lw-iULKPiuina5CqcmzXWlz1OjTwM

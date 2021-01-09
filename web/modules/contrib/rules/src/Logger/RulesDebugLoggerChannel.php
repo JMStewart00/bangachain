@@ -111,7 +111,7 @@ class RulesDebugLoggerChannel extends LoggerChannel {
     // principal reason for this class! Keep the array structure we used in D7
     // so we don't have to re-write the theming functions and JavaScript too
     // much. We added keys for D8 so we don't have to guess the contents of the
-    // array elemens from their order index.
+    // array elements from their order index.
 
     $rfc_level = $level;
     if (is_string($level)) {

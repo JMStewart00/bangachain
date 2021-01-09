@@ -8,6 +8,7 @@ use Drupal\node\NodeInterface;
 use Drupal\rules\Context\ContextConfig;
 use Drupal\rules\Context\ContextDefinition;
 use Drupal\rules\Engine\RulesComponent;
+use Drupal\rules\Exception\EvaluationException;
 use Drupal\Tests\rules\Unit\Integration\RulesEntityIntegrationTestBase;
 
 /**
@@ -20,7 +21,7 @@ class LoopTest extends RulesEntityIntegrationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->enableModule('node');
   }
@@ -301,7 +302,8 @@ class LoopTest extends RulesEntityIntegrationTestBase {
    */
   public function testOutOfScopeVariableExecution() {
     // Set the expected exception class and message.
-    $this->setExpectedException('\Drupal\rules\Exception\EvaluationException', "Unable to get variable 'list_item'; it is not defined.");
+    $this->expectException(EvaluationException::class);
+    $this->expectExceptionMessage("Unable to get variable 'list_item'; it is not defined.");
 
     $rule = $this->rulesExpressionManager->createRule();
     $loop = $this->rulesExpressionManager->createInstance('rules_loop', ['list' => 'string_list']);

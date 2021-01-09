@@ -23,7 +23,7 @@ class ContributedPluginDiscoveryTest extends RulesEntityIntegrationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->enableModule('rules_test');

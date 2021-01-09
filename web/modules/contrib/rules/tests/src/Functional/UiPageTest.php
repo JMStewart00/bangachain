@@ -66,7 +66,7 @@ class UiPageTest extends RulesBrowserTestBase {
     $this->fillField('Condition', 'rules_node_is_promoted');
     $this->pressButton('Continue');
 
-    $this->fillField('context_definitions[node][setting]', 'node');
+    $this->fillField('context_definitions[node][value]', 'node');
     $this->pressButton('Save');
 
     $assert->statusCodeEquals(200);
@@ -107,7 +107,7 @@ class UiPageTest extends RulesBrowserTestBase {
     $this->fillField('Condition', 'rules_node_is_promoted');
     $this->pressButton('Continue');
 
-    $this->fillField('context_definitions[node][setting]', 'node');
+    $this->fillField('context_definitions[node][value]', 'node');
     $this->pressButton('Save');
 
     /** @var \Drupal\Tests\WebAssert $assert */
@@ -203,9 +203,9 @@ class UiPageTest extends RulesBrowserTestBase {
     $this->pressButton('Switch to data selection');
     $this->pressButton('Switch to the direct input mode');
 
-    $this->fillField('context_definitions[to][setting]', 'klausi@example.com');
-    $this->fillField('context_definitions[subject][setting]', 'subject');
-    $this->fillField('context_definitions[message][setting]', 'message');
+    $this->fillField('context_definitions[to][value]', 'klausi@example.com');
+    $this->fillField('context_definitions[subject][value]', 'subject');
+    $this->fillField('context_definitions[message][value]', 'message');
     $this->pressButton('Save');
 
     /** @var \Drupal\Tests\WebAssert $assert */

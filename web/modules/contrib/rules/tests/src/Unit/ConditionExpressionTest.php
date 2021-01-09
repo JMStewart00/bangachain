@@ -58,7 +58,7 @@ class ConditionExpressionTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create a test condition plugin that always evaluates to TRUE.

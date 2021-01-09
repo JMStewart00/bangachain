@@ -90,18 +90,8 @@ abstract class ActionExpressionContainer extends ExpressionContainerBase impleme
    * {@inheritdoc}
    */
   public function getIterator() {
-    if (version_compare(phpversion(), '7.0') >= 0) {
-      // If using PHP7.0 or greater we can use the standard uasort.
-      $iterator = new \ArrayIterator($this->actions);
-      $iterator->uasort([ExpressionContainerBase::class, 'sortByWeightProperty']);
-    }
-    else {
-      // Otherwise use a custom sort for stability when all weights are default.
-      // @todo Remove this when PHP5 is no longer supported.
-      // @see https://www.drupal.org/project/rules/issues/3101013
-      ExpressionContainerBase::mergesort($this->actions, [ExpressionContainerBase::class, 'sortByWeightProperty']);
-      $iterator = new \ArrayIterator($this->actions);
-    }
+    $iterator = new \ArrayIterator($this->actions);
+    $iterator->uasort([ExpressionContainerBase::class, 'sortByWeightProperty']);
     return $iterator;
   }
 

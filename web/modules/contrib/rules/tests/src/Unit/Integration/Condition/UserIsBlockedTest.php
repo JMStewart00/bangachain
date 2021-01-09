@@ -21,7 +21,7 @@ class UserIsBlockedTest extends RulesEntityIntegrationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->enableModule('user');
@@ -48,7 +48,7 @@ class UserIsBlockedTest extends RulesEntityIntegrationTestBase {
     // Set the user context value.
     $this->condition->setContextValue('user', $active_user->reveal());
 
-    $this->assertFalse($this->condition->evaluate());;
+    $this->assertFalse($this->condition->evaluate());
   }
 
 }

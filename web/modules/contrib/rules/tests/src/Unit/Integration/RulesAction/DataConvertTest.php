@@ -3,6 +3,7 @@
 namespace Drupal\Tests\rules\Unit\Integration\RulesAction;
 
 use Drupal\Tests\rules\Unit\Integration\RulesIntegrationTestBase;
+use Drupal\rules\Exception\InvalidArgumentException;
 
 /**
  * @coversDefaultClass \Drupal\rules\Plugin\RulesAction\DataConvert
@@ -20,7 +21,7 @@ class DataConvertTest extends RulesIntegrationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->action = $this->actionManager->createInstance('rules_data_convert');
@@ -36,29 +37,29 @@ class DataConvertTest extends RulesIntegrationTestBase {
 
     // Test the conversion to integer.
     $converted = $this->executeAction($value, 'integer');
-    $this->assertInternalType('integer', $converted->getValue());
+    $this->assertIsInt($converted->getValue());
     $this->assertEquals('integer', $converted->getDataDefinition()->getDataType());
 
     // Test the conversion to integer and floor down.
     $converted = $this->executeAction($value, 'integer', 'down');
-    $this->assertInternalType('integer', $converted->getValue());
+    $this->assertIsInt($converted->getValue());
     $this->assertEquals(1, $converted->getValue());
     $this->assertEquals('integer', $converted->getDataDefinition()->getDataType());
 
     // Test the conversion to integer and ceil up.
     $converted = $this->executeAction($value, 'integer', 'up');
-    $this->assertInternalType('integer', $converted->getValue());
+    $this->assertIsInt($converted->getValue());
     $this->assertEquals('integer', $converted->getDataDefinition()->getDataType());
     $this->assertEquals(2, $converted->getValue());
 
     // Test the conversion to integer and round.
     $converted = $this->executeAction($value, 'integer', 'round');
-    $this->assertInternalType('integer', $converted->getValue());
+    $this->assertIsInt($converted->getValue());
     $this->assertEquals('integer', $converted->getDataDefinition()->getDataType());
     $this->assertEquals(2, $converted->getValue());
 
     $converted = $this->executeAction('+123', 'integer');
-    $this->assertInternalType('integer', $converted->getValue());
+    $this->assertIsInt($converted->getValue());
     $this->assertEquals('integer', $converted->getDataDefinition()->getDataType());
     $this->assertEquals(123, $converted->getValue());
   }
@@ -72,12 +73,12 @@ class DataConvertTest extends RulesIntegrationTestBase {
     $value = '1.5';
 
     $converted = $this->executeAction($value, 'float');
-    $this->assertInternalType('float', $converted->getValue());
+    $this->assertIsFloat($converted->getValue());
     $this->assertEquals('float', $converted->getDataDefinition()->getDataType());
     $this->assertEquals(1.5, $converted->getValue());
 
     $converted = $this->executeAction('+1.5', 'float');
-    $this->assertInternalType('float', $converted->getValue());
+    $this->assertIsFloat($converted->getValue());
     $this->assertEquals('float', $converted->getDataDefinition()->getDataType());
     $this->assertEquals(1.5, $converted->getValue());
   }
@@ -92,7 +93,7 @@ class DataConvertTest extends RulesIntegrationTestBase {
     $value = 1.5;
 
     $converted = $this->executeAction($value, 'string');
-    $this->assertInternalType('string', $converted->getValue());
+    $this->assertIsString($converted->getValue());
     $this->assertEquals('string', $converted->getDataDefinition()->getDataType());
     $this->assertEquals('1.5', $converted->getValue());
   }
@@ -104,7 +105,8 @@ class DataConvertTest extends RulesIntegrationTestBase {
    */
   public function testInvalidValueException() {
     // Set the expected exception class and message.
-    $this->setExpectedException('\Drupal\rules\Exception\InvalidArgumentException', 'Only scalar values are supported.');
+    $this->expectException(InvalidArgumentException::class);
+    $this->expectExceptionMessage('Only scalar values are supported.');
 
     $this->executeAction(['some-array'], 'integer');
   }
@@ -116,10 +118,11 @@ class DataConvertTest extends RulesIntegrationTestBase {
    */
   public function testInvalidRoundingBehavior() {
     // Set the expected exception class and message.
-    $this->setExpectedException('\Drupal\rules\Exception\InvalidArgumentException', 'A rounding behavior only makes sense with an integer target type.');
+    $this->expectException(InvalidArgumentException::class);
+    $this->expectExceptionMessage('A rounding behavior only makes sense with an integer target type.');
 
     $converted = $this->executeAction('some', 'decimal', 'down');
-    $this->assertInternalType('float', $converted->getValue());
+    $this->assertIsFloat($converted->getValue());
     $this->assertEquals('float', $converted->getDataDefinition()->getDataType());
   }
 
@@ -130,7 +133,8 @@ class DataConvertTest extends RulesIntegrationTestBase {
    */
   public function testInvalidRoundingBehaviorException() {
     // Set the expected exception class and message.
-    $this->setExpectedException('\Drupal\rules\Exception\InvalidArgumentException', 'Unknown rounding behavior: invalid rounding');
+    $this->expectException(InvalidArgumentException::class);
+    $this->expectExceptionMessage('Unknown rounding behavior: invalid rounding');
 
     $value = 5.5;
     $rounding_behavior = 'invalid rounding';
@@ -144,7 +148,8 @@ class DataConvertTest extends RulesIntegrationTestBase {
    */
   public function testInvalidTargetTypeException() {
     // Set the expected exception class and message.
-    $this->setExpectedException('\Drupal\rules\Exception\InvalidArgumentException', 'Unknown target type: invalid type');
+    $this->expectException(InvalidArgumentException::class);
+    $this->expectExceptionMessage('Unknown target type: invalid type');
     $value = 5.5;
     $target_type = 'invalid type';
     $this->executeAction($value, $target_type);

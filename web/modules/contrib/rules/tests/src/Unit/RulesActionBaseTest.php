@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\rules\Unit;
 
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\rules\Core\RulesActionBase;
 
@@ -18,7 +19,7 @@ class RulesActionBaseTest extends RulesUnitTestBase {
    */
   public function testSummaryThrowingException() {
     // Set the expected exception class. There is no message to check for.
-    $this->setExpectedException('\Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException');
+    $this->expectException(InvalidPluginDefinitionException::class);
 
     $rules_action_base = $this->getMockForAbstractClass(
       RulesActionBase::class,

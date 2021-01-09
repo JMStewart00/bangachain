@@ -3,7 +3,7 @@
 namespace Drupal\rules\Plugin\Condition;
 
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Path\AliasManagerInterface;
+use Drupal\path_alias\AliasManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\rules\Core\RulesConditionBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -15,6 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "rules_path_has_alias",
  *   label = @Translation("Path has alias"),
  *   category = @Translation("Path"),
+ *   provider = "path_alias",
  *   context_definitions = {
  *     "path" = @ContextDefinition("string",
  *       label = @Translation("Path"),
@@ -36,7 +37,7 @@ class PathHasAlias extends RulesConditionBase implements ContainerFactoryPluginI
   /**
    * The alias manager service.
    *
-   * @var \Drupal\Core\Path\AliasManagerInterface
+   * @var \Drupal\path_alias\AliasManagerInterface
    */
   protected $aliasManager;
 
@@ -49,7 +50,7 @@ class PathHasAlias extends RulesConditionBase implements ContainerFactoryPluginI
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Path\AliasManagerInterface $alias_manager
+   * @param \Drupal\path_alias\AliasManagerInterface $alias_manager
    *   The alias manager service.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, AliasManagerInterface $alias_manager) {
@@ -65,7 +66,7 @@ class PathHasAlias extends RulesConditionBase implements ContainerFactoryPluginI
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('path.alias_manager')
+      $container->get('path_alias.manager')
     );
   }
 
@@ -83,6 +84,7 @@ class PathHasAlias extends RulesConditionBase implements ContainerFactoryPluginI
   protected function doEvaluate($path, LanguageInterface $language = NULL) {
     $langcode = is_null($language) ? NULL : $language->getId();
     $alias = $this->aliasManager->getAliasByPath($path, $langcode);
+    // getAliasByPath() returns the path if there is no alias.
     return $alias != $path;
   }
 

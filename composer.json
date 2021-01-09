@@ -187,13 +187,14 @@
         "drupal/media_library_theme_reset": "^1.0",
         "drupal/menu_block": "^1.6",
         "drupal/metatag": "^1.13",
+        "drupal/mimemail": "1.x-dev@dev",
         "drupal/paragraphs": "^1.11",
         "drupal/pathauto": "^1.6",
         "drupal/quick_node_clone": "^1.12",
         "drupal/rabbit_hole": "^1.0@beta",
         "drupal/redirect": "^1.5",
         "drupal/responsive_favicons": "^1.5",
-        "drupal/rules": "^3.0@alpha",
+        "drupal/rules": "3.x-dev@dev",
         "drupal/search_api": "^1.15",
         "drupal/simple_image_rotate": "^1.0@alpha",
         "drupal/simple_sitemap": "^3.5",
@@ -321,6 +322,9 @@
             },
             "drupal/feeds": {
                 "Cannot hold more than 1 value": "https://www.drupal.org/files/issues/2020-09-26/feeds-multivalue-3155046-19.patch"
+            },
+            "drupal/rules": {
+                "Integrate Typed Data Widgets": "https://www.drupal.org/files/issues/2020-12-09/2471481-141.integrate-typed-data-widgets.patch"
             },
             "drupal/commerce_reports": {
                 "Anonymous users can see Purchased Items Report": "https://www.drupal.org/files/issues/2019-06-07/3004989-17.patch",

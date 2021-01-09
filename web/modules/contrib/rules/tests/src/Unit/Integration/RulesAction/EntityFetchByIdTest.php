@@ -22,7 +22,7 @@ class EntityFetchByIdTest extends RulesEntityIntegrationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->action = $this->actionManager->createInstance('rules_entity_fetch_by_id');

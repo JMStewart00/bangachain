@@ -23,7 +23,7 @@ class UserRoleAddTest extends RulesEntityIntegrationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->enableModule('user');
     $this->action = $this->actionManager->createInstance('rules_user_role_add');

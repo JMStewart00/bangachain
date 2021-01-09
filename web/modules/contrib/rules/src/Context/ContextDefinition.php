@@ -7,8 +7,73 @@ use Drupal\Component\Plugin\Exception\ContextException;
 
 /**
  * Extends the core context definition class with useful methods.
+ *
+ * This class overrides the core ContextDefinition to provide Rules-specific
+ * functionality, but also to preserve the Drupal 8 behavior of
+ * ContextDefinition without triggering deprecated code. Specifically, in Rules
+ * we need to be able to create a ContextDefinition for ANY typed data object,
+ * without prior knowledge of what that type is; we need to be able to say
+ * new ContextDefinition($type) or ContextDefinition::create($type) where $type
+ * may be 'integer', or 'string', or 'entity:node' etc.
+ *
+ * This worked in Drupal 8, but in Drupal 9 we now have to use different classes
+ * for different types. Thus the core ContextDefinition::create($type) will work
+ * ONLY for non-entity types, and we have to use a different way to create
+ * context definitions for entities. This is a problem because now there is no
+ * factory method to create context definitions, and we have to test each type
+ * and just "know" the correct class to use for that type to create a context
+ * definition.
+ *
+ * This Drupal 9 behavior is unworkable in a module like Rules where we rely on
+ * introspection and reflection to manipulate typed data. Without some way to
+ * programmatically create a context definition for an arbitrary data type,
+ * Rules will not work.
+ *
+ * To work around this, we override the core ContextDefinition's __construct()
+ * and create() methods. In the parent::__construct(), there is an explicit
+ * assert that prevents ContextDefinition from being used for an entity. We
+ * remove that here - the __construct() method of this class is otherwise
+ * identical to the parent. We also override the core ContextDefinition's
+ * create() method to create a Rules version of EntityContextDefinition when
+ * ContextDefinition is created for an entity type. This is necessary because
+ * the core EntityContextDefinition doesn't have the necessary Rules extensions
+ * and there is no multiple inheritance in PHP so we have to extend
+ * ContextDefinition and EntityContextDefinition separately.
+ *
+ * This is a poor solution that will work for existing core Rules use-cases, as
+ * EntityContextDefinition is never used directly in Rules, but this may not
+ * work for modules that extend Rules. A proper and permanent solution will
+ * require a change to core Drupal.
+ *
+ * @see \Drupal\rules\Context\EntityContextDefinition
+ * @see https://www.drupal.org/project/rules/issues/3161582
+ * @see https://www.drupal.org/project/drupal/issues/3126747
  */
 class ContextDefinition extends ContextDefinitionCore implements ContextDefinitionInterface {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct($data_type = 'any', $label = NULL, $required = TRUE, $multiple = FALSE, $description = NULL, $default_value = NULL) {
+    $this->dataType = $data_type;
+    $this->label = $label;
+    $this->isRequired = $required;
+    $this->isMultiple = $multiple;
+    $this->description = $description;
+    $this->defaultValue = $default_value;
+  }
+
+  /**
+   * The created context definition object.
+   */
+  public static function create($data_type = 'any') {
+    if (strpos($data_type, 'entity:') === 0) {
+      return new EntityContextDefinition($data_type);
+    }
+    return new static(
+      $data_type
+    );
+  }
 
   /**
    * The mapping of config export keys to internal properties.
@@ -42,6 +107,13 @@ class ContextDefinition extends ContextDefinitionCore implements ContextDefiniti
    * @see \Drupal\rules\Context\ContextDefinitionInterface::getAssignmentRestriction()
    */
   protected $assignmentRestriction = NULL;
+
+  /**
+   * An array of data type => widget id pairs.
+   *
+   * @var string[]
+   */
+  protected $widgetList;
 
   /**
    * {@inheritdoc}
@@ -115,6 +187,82 @@ class ContextDefinition extends ContextDefinitionCore implements ContextDefiniti
   public function setAssignmentRestriction($restriction) {
     $this->assignmentRestriction = $restriction;
     return $this;
+  }
+
+  /**
+   * An array of standard data types and their corresponding widget id.
+   *
+   * This covers all the data types provided by Core and Typed Data API
+   * Enhancements, apart from 'binary' and 'map'.
+   *
+   * @return string[]
+   *   An array of data type => widget id.
+   */
+  protected static function getStandardWidgetList() {
+    return [
+      // Single line text input.
+      'any' => 'text_input',
+      'boolean' => 'text_input',
+      'email' => 'text_input',
+      'entity' => 'text_input',
+      'entity_reference' => 'text_input',
+      'float' => 'text_input',
+      'integer' => 'text_input',
+      'language' => 'text_input',
+      'language_reference' => 'text_input',
+      'string' => 'text_input',
+      'uri' => 'text_input',
+
+      // Multi-line text area.
+      'list' => 'textarea',
+      'text' => 'textarea',
+
+      // Date.
+      'datetime_iso8601' => 'datetime',
+      'timestamp' => 'datetime',
+
+      // Date range.
+      'duration_iso8601' => 'datetime_range',
+      'timespan' => 'datetime_range',
+
+      // Selection list.
+      'none-yet' => 'select',
+    ];
+  }
+
+  /**
+   * Derive a widget id from a datatype.
+   *
+   * The widget id is used to generate a form element provided by Typed Data.
+   * Modules can implement hook_typed_data_widgetlist_alter() to declare which
+   * widget to use for their custom data types.
+   *
+   * @todo this function should be moved into the typed_data module. But whilst
+   * still developing the integration of widgets in Rules it can stay here.
+   * Inject $this->moduleHandler instead of calling \Drupal::moduleHandler() ?
+   *
+   * @param string $dataType
+   *   The datatype to check.
+   *
+   * @return string
+   *   The id of the widget to use when building the input form.
+   */
+  public function getWidgetId($dataType) {
+    if (!isset($this->widgetList)) {
+      $this->widgetList = static::getStandardWidgetList();
+      // Allow other modules to add to the datatype -> widget id list by
+      // invoking all hook_typed_data_widgetlist_alter() implementations.
+      \Drupal::moduleHandler()->alter('typed_data_widgetlist', $this->widgetList);
+    }
+    // Return the widget id for this data type. If none, default to 'broken' id.
+    return $this->widgetList[$dataType] ?? self::BROKEN_WIDGET_ID;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getWidgetSettings() {
+    return [];
   }
 
 }

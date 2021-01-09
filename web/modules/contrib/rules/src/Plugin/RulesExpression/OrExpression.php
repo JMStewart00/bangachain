@@ -21,7 +21,7 @@ class OrExpression extends ConditionExpressionContainer {
   public function evaluate(ExecutionStateInterface $state) {
     // Use the iterator to ensure the conditions are sorted.
     foreach ($this as $condition) {
-      /* @var \Drupal\rules\Engine\ExpressionInterface $condition */
+      /** @var \Drupal\rules\Engine\ExpressionInterface $condition */
       if ($condition->executeWithState($state)) {
         $this->rulesDebugLogger->info('%label evaluated to %result.', [
           '%label' => $this->getLabel(),

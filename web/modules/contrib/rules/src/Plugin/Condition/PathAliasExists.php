@@ -3,8 +3,8 @@
 namespace Drupal\rules\Plugin\Condition;
 
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Path\AliasManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\path_alias\AliasManagerInterface;
 use Drupal\rules\Core\RulesConditionBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -15,6 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "rules_path_alias_exists",
  *   label = @Translation("Path alias exists"),
  *   category = @Translation("Path"),
+ *   provider = "path_alias",
  *   context_definitions = {
  *     "alias" = @ContextDefinition("string",
  *       label = @Translation("Path alias"),
@@ -36,7 +37,7 @@ class PathAliasExists extends RulesConditionBase implements ContainerFactoryPlug
   /**
    * The alias manager service.
    *
-   * @var \Drupal\Core\Path\AliasManagerInterface
+   * @var \Drupal\path_alias\AliasManagerInterface
    */
   protected $aliasManager;
 
@@ -49,7 +50,7 @@ class PathAliasExists extends RulesConditionBase implements ContainerFactoryPlug
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Path\AliasManagerInterface $alias_manager
+   * @param \Drupal\path_alias\AliasManagerInterface $alias_manager
    *   The alias manager service.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, AliasManagerInterface $alias_manager) {
@@ -65,7 +66,7 @@ class PathAliasExists extends RulesConditionBase implements ContainerFactoryPlug
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('path.alias_manager')
+      $container->get('path_alias.manager')
     );
   }
 
@@ -84,6 +85,7 @@ class PathAliasExists extends RulesConditionBase implements ContainerFactoryPlug
   protected function doEvaluate($alias, LanguageInterface $language = NULL) {
     $langcode = is_null($language) ? NULL : $language->getId();
     $path = $this->aliasManager->getPathByAlias($alias, $langcode);
+    // getPathByAlias() returns the alias if there is no path.
     return $path != $alias;
   }
 

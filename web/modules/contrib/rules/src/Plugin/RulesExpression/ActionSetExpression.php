@@ -29,7 +29,7 @@ class ActionSetExpression extends ActionExpressionContainer {
   public function executeWithState(ExecutionStateInterface $state) {
     // Use the iterator to ensure the actions are sorted.
     foreach ($this as $action) {
-      /* @var \Drupal\rules\Engine\ExpressionInterface $action */
+      /** @var \Drupal\rules\Engine\ExpressionInterface $action */
       $action->executeWithState($state);
     }
   }

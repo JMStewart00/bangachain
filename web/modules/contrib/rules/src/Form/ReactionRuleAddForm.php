@@ -155,7 +155,7 @@ class ReactionRuleAddForm extends RulesComponentFormBase {
    *   The form structure.
    */
   public function bundleSelectCallback(array $form, FormStateInterface $form_state) {
-    // Replace the entire container placholder element.
+    // Replace the entire container placeholder element.
     return $form['selection']['container'];
   }
 

@@ -9,7 +9,7 @@ use Drupal\rules\Core\RulesActionBase;
  *
  * @RulesAction(
  *   id = "rules_data_calculate_value",
- *   label = @Translation("Calculates a numeric value"),
+ *   label = @Translation("Calculate a numeric value"),
  *   category = @Translation("Data"),
  *   context_definitions = {
  *     "input_1" = @ContextDefinition("float",

@@ -3,9 +3,10 @@
 namespace Drupal\Tests\rules\Unit\Integration\RulesAction;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Path\AliasStorageInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Url;
 use Drupal\Tests\rules\Unit\Integration\RulesEntityIntegrationTestBase;
+use Drupal\path_alias\PathAliasInterface;
 use Prophecy\Argument;
 
 /**
@@ -24,20 +25,21 @@ class EntityPathAliasCreateTest extends RulesEntityIntegrationTestBase {
   /**
    * The mocked alias storage service.
    *
-   * @var \Drupal\Core\Path\AliasStorageInterface|\Prophecy\Prophecy\ProphecyInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface|\Prophecy\Prophecy\ProphecyInterface
    */
   protected $aliasStorage;
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
+    // Must enable the path_alias module.
+    $this->enableModule('path_alias');
 
-    // Prepare mocked AliasStorageInterface.
-    $this->aliasStorage = $this->prophesize(AliasStorageInterface::class);
-
-    $this->container->set('path.alias_storage', $this->aliasStorage->reveal());
+    // Prepare mocked EntityStorageInterface.
+    $this->aliasStorage = $this->prophesize(EntityStorageInterface::class);
+    $this->entityTypeManager->getStorage('path_alias')->willReturn($this->aliasStorage->reveal());
 
     // Instantiate the action we are testing.
     $this->action = $this->actionManager->createInstance('rules_entity_path_alias_create:entity:test');
@@ -58,8 +60,17 @@ class EntityPathAliasCreateTest extends RulesEntityIntegrationTestBase {
    * @covers ::execute
    */
   public function testActionExecutionWithUnsavedEntity() {
+    $path_alias = $this->prophesizeEntity(PathAliasInterface::class);
+
     // Test that the alias is only saved once.
-    $this->aliasStorage->save('/test/1', '/about', 'en')->shouldBeCalledTimes(1);
+    $path_alias->save()->shouldBeCalledTimes(1);
+
+    $this->aliasStorage->create([
+      'path' => '/test/1',
+      'alias' => '/about',
+      'langcode' => 'en',
+    ])->willReturn($path_alias->reveal())
+      ->shouldBeCalledTimes(1);
 
     $entity = $this->getMockEntity();
     $entity->isNew()->willReturn(TRUE)->shouldBeCalledTimes(1);
@@ -79,8 +90,17 @@ class EntityPathAliasCreateTest extends RulesEntityIntegrationTestBase {
    * @covers ::execute
    */
   public function testActionExecutionWithSavedEntity() {
+    $path_alias = $this->prophesizeEntity(PathAliasInterface::class);
+
     // Test that the alias is only saved once.
-    $this->aliasStorage->save('/test/1', '/about', 'en')->shouldBeCalledTimes(1);
+    $path_alias->save()->shouldBeCalledTimes(1);
+
+    $this->aliasStorage->create([
+      'path' => '/test/1',
+      'alias' => '/about',
+      'langcode' => 'en',
+    ])->willReturn($path_alias->reveal())
+      ->shouldBeCalledTimes(1);
 
     $entity = $this->getMockEntity();
     $entity->isNew()->willReturn(FALSE)->shouldBeCalledTimes(1);

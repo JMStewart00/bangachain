@@ -16,7 +16,7 @@ class ConfigureAndExecuteTest extends RulesBrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'rules'];
+  protected static $modules = ['node', 'rules', 'typed_data'];
 
   /**
    * We use the minimal profile because we want to test local action links.
@@ -35,7 +35,7 @@ class ConfigureAndExecuteTest extends RulesBrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create an article content type that we will use for testing.
@@ -76,16 +76,16 @@ class ConfigureAndExecuteTest extends RulesBrowserTestBase {
     $this->fillField('Condition', 'rules_data_comparison');
     $this->pressButton('Continue');
 
-    $this->fillField('context_definitions[data][setting]', 'node.title.0.value');
-    $this->fillField('context_definitions[value][setting]', 'Test title');
+    $this->fillField('context_definitions[data][value]', 'node.title.0.value');
+    $this->fillField('context_definitions[value][value]', 'Test title');
     $this->pressButton('Save');
 
     $this->clickLink('Add action');
     $this->fillField('Action', 'rules_system_message');
     $this->pressButton('Continue');
 
-    $this->fillField('context_definitions[message][setting]', 'Title matched "Test title"!');
-    $this->fillField('context_definitions[type][setting]', 'status');
+    $this->fillField('context_definitions[message][value]', 'Title matched "Test title"!');
+    $this->fillField('context_definitions[type][value]', 'status');
     $this->pressButton('Save');
 
     // One more save to permanently store the rule.
@@ -180,7 +180,8 @@ class ConfigureAndExecuteTest extends RulesBrowserTestBase {
     $config_entity->save();
 
     // Add a node and check that rule 1 is triggered.
-    $this->drupalPostForm('node/add/article', ['title[0][value]' => 'Two Rules Same Event'], 'Save');
+    $this->drupalGet('node/add/article');
+    $this->submitForm(['title[0][value]' => 'Two Rules Same Event'], 'Save');
     $node = $this->drupalGetNodeByTitle('Two Rules Same Event');
     $assert->pageTextContains($message1);
 
@@ -210,7 +211,8 @@ class ConfigureAndExecuteTest extends RulesBrowserTestBase {
     $config_entity->save();
 
     // Edit the node and check that both rules are triggered.
-    $this->drupalPostForm('node/' . $node->id() . '/edit/', [], 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit/');
+    $this->submitForm([], 'Save');
     $assert->pageTextContains($message1);
     $assert->pageTextContains($message2);
 
@@ -219,7 +221,8 @@ class ConfigureAndExecuteTest extends RulesBrowserTestBase {
     $this->clickLinkByHref('disable/rule2');
 
     // Edit the node and check that only rule 1 is triggered.
-    $this->drupalPostForm('node/' . $node->id() . '/edit/', [], 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit/');
+    $this->submitForm([], 'Save');
     $assert->pageTextContains($message1);
     $assert->pageTextNotContains($message2);
 
@@ -228,7 +231,8 @@ class ConfigureAndExecuteTest extends RulesBrowserTestBase {
     $this->clickLinkByHref('enable/rule2');
 
     // Check that both rules are triggered.
-    $this->drupalPostForm('node/' . $node->id() . '/edit/', [], 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit/');
+    $this->submitForm([], 'Save');
     $assert->pageTextContains($message1);
     $assert->pageTextContains($message2);
 
@@ -236,13 +240,14 @@ class ConfigureAndExecuteTest extends RulesBrowserTestBase {
     $message1updated = 'RULE ONE has a new message.';
     $this->drupalGet('admin/config/workflow/rules/reactions/edit/rule1');
     $this->clickLink('Edit', 1);
-    $this->fillField('context_definitions[message][setting]', $message1updated);
+    $this->fillField('context_definitions[message][value]', $message1updated);
     // Save the action then save the rule.
     $this->pressButton('Save');
     $this->pressButton('Save');
 
     // Check that rule 1 now shows the updated text message.
-    $this->drupalPostForm('node/' . $node->id() . '/edit/', [], 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit/');
+    $this->submitForm([], 'Save');
     $assert->pageTextNotContains($message1);
     $assert->pageTextContains($message1updated);
     $assert->pageTextContains($message2);
@@ -253,7 +258,8 @@ class ConfigureAndExecuteTest extends RulesBrowserTestBase {
     $this->pressButton('Delete');
 
     // Check that only Rule 2's message is shown.
-    $this->drupalPostForm('node/' . $node->id() . '/edit/', [], 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit/');
+    $this->submitForm([], 'Save');
     $assert->pageTextNotContains($message1);
     $assert->pageTextNotContains($message1updated);
     $assert->pageTextContains($message2);
@@ -263,7 +269,8 @@ class ConfigureAndExecuteTest extends RulesBrowserTestBase {
     $this->clickLinkByHref('disable/rule2');
 
     // Check that neither rule's message is shown.
-    $this->drupalPostForm('node/' . $node->id() . '/edit/', [], 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit/');
+    $this->submitForm([], 'Save');
     $assert->pageTextNotContains($message1);
     $assert->pageTextNotContains($message1updated);
     $assert->pageTextNotContains($message2);
@@ -293,15 +300,16 @@ class ConfigureAndExecuteTest extends RulesBrowserTestBase {
     $this->fillField('Condition', 'rules_node_is_of_type');
     $this->pressButton('Continue');
 
-    $this->fillField('context_definitions[node][setting]', 'node');
+    $this->fillField('context_definitions[node][value]', 'node');
 
+    // Maximum allowed length of string input is 255 characters.
     $suboptimal_user_input = [
-      "  \r\nwhitespace at beginning of input\r\n",
+      "  \r\nwhitespace at beginning\r\n",
       "text\r\n",
       "trailing space  \r\n",
       "\rleading terminator\r\n",
       "  leading space\r\n",
-      "multiple words, followed by primitive values\r\n",
+      "multiple words, then primitives\r\n ",
       "0\r\n",
       "0.0\r\n",
       "128\r\n",
@@ -312,9 +320,9 @@ class ConfigureAndExecuteTest extends RulesBrowserTestBase {
       "two empty lines\n\r\n\r",
       "terminator n\n",
       "terminator nr\n\r",
-      "whitespace at end of input\r\n        \r\n",
+      "whitespace at end of input\r\n    \r\n",
     ];
-    $this->fillField('context_definitions[types][setting]', implode($suboptimal_user_input));
+    $this->fillField('context_definitions[types][value]', implode($suboptimal_user_input));
     $this->pressButton('Save');
 
     // One more save to permanently store the rule.
@@ -324,12 +332,12 @@ class ConfigureAndExecuteTest extends RulesBrowserTestBase {
     // and that blank lines, leading and trailing whitespace, and wrong line
     // terminators were removed.
     $expected_config_value = [
-      "whitespace at beginning of input",
+      "whitespace at beginning",
       "text",
       "trailing space",
       "leading terminator",
       "leading space",
-      "multiple words, followed by primitive values",
+      "multiple words, then primitives",
       "0",
       "0.0",
       "128",
@@ -393,25 +401,25 @@ class ConfigureAndExecuteTest extends RulesBrowserTestBase {
     // that the default entry field is regular text entry not a selector.
     $this->drupalGet('admin/config/workflow/rules/reactions/edit/test_rule/edit/' . $condition1->getUuid());
     $assert->buttonExists('edit-context-definitions-value-switch-button');
-    $assert->elementExists('xpath', '//input[@id="edit-context-definitions-value-setting" and not(contains(@class, "rules-autocomplete"))]');
+    $assert->elementExists('xpath', '//input[@id="edit-context-definitions-value-value" and not(contains(@class, "rules-autocomplete"))]');
 
     // Edit condition 2, assert that the switch button is NOT shown for node
     // and that the entry field is a selector with class rules-autocomplete.
     $this->drupalGet('admin/config/workflow/rules/reactions/edit/test_rule/edit/' . $condition2->getUuid());
     $assert->buttonNotExists('edit-context-definitions-node-switch-button');
-    $assert->elementExists('xpath', '//input[@id="edit-context-definitions-node-setting" and contains(@class, "rules-autocomplete")]');
+    $assert->elementExists('xpath', '//input[@id="edit-context-definitions-node-value" and contains(@class, "rules-autocomplete")]');
 
     // Edit action 1, assert that the switch button is shown for message and
     // that the default entry field is a regular text entry not a selector.
     $this->drupalGet('admin/config/workflow/rules/reactions/edit/test_rule/edit/' . $action1->getUuid());
     $assert->buttonExists('edit-context-definitions-message-switch-button');
-    $assert->elementExists('xpath', '//input[@id="edit-context-definitions-message-setting" and not(contains(@class, "rules-autocomplete"))]');
+    $assert->elementExists('xpath', '//input[@id="edit-context-definitions-message-value" and not(contains(@class, "rules-autocomplete"))]');
 
     // Edit action 2, assert that the switch button is NOT shown for type and
     // that the entry field is a regular text entry not a selector.
     $this->drupalGet('admin/config/workflow/rules/reactions/edit/test_rule/edit/' . $action2->getUuid());
     $assert->buttonNotExists('edit-context-definitions-type-switch-button');
-    $assert->elementExists('xpath', '//input[@id="edit-context-definitions-type-setting" and not(contains(@class, "rules-autocomplete"))]');
+    $assert->elementExists('xpath', '//input[@id="edit-context-definitions-type-value" and not(contains(@class, "rules-autocomplete"))]');
   }
 
 }

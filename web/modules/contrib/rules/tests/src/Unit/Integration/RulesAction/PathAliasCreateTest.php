@@ -3,14 +3,15 @@
 namespace Drupal\Tests\rules\Unit\Integration\RulesAction;
 
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Path\AliasStorageInterface;
-use Drupal\Tests\rules\Unit\Integration\RulesIntegrationTestBase;
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Tests\rules\Unit\Integration\RulesEntityIntegrationTestBase;
+use Drupal\path_alias\PathAliasInterface;
 
 /**
  * @coversDefaultClass \Drupal\rules\Plugin\RulesAction\PathAliasCreate
  * @group RulesAction
  */
-class PathAliasCreateTest extends RulesIntegrationTestBase {
+class PathAliasCreateTest extends RulesEntityIntegrationTestBase {
 
   /**
    * The action to be tested.
@@ -22,18 +23,21 @@ class PathAliasCreateTest extends RulesIntegrationTestBase {
   /**
    * The mocked alias storage service.
    *
-   * @var \Drupal\Core\Path\AliasStorageInterface|\Prophecy\Prophecy\ProphecyInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface|\Prophecy\Prophecy\ProphecyInterface
    */
   protected $aliasStorage;
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
+    // Must enable the path_alias module.
+    $this->enableModule('path_alias');
 
-    $this->aliasStorage = $this->prophesize(AliasStorageInterface::class);
-    $this->container->set('path.alias_storage', $this->aliasStorage->reveal());
+    // Prepare mocked EntityStorageInterface.
+    $this->aliasStorage = $this->prophesize(EntityStorageInterface::class);
+    $this->entityTypeManager->getStorage('path_alias')->willReturn($this->aliasStorage->reveal());
 
     $this->action = $this->actionManager->createInstance('rules_path_alias_create');
   }
@@ -53,7 +57,14 @@ class PathAliasCreateTest extends RulesIntegrationTestBase {
    * @covers ::execute
    */
   public function testActionExecutionWithoutLanguage() {
-    $this->aliasStorage->save('/node/1', '/about', LanguageInterface::LANGCODE_NOT_SPECIFIED)
+    $path_alias = $this->prophesizeEntity(PathAliasInterface::class);
+    $path_alias->save()->shouldBeCalledTimes(1);
+
+    $this->aliasStorage->create([
+      'path' => '/node/1',
+      'alias' => '/about',
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
+    ])->willReturn($path_alias->reveal())
       ->shouldBeCalledTimes(1);
 
     $this->action->setContextValue('source', '/node/1')
@@ -68,10 +79,17 @@ class PathAliasCreateTest extends RulesIntegrationTestBase {
    * @covers ::execute
    */
   public function testActionExecutionWithLanguage() {
+    $path_alias = $this->prophesizeEntity(PathAliasInterface::class);
+    $path_alias->save()->shouldBeCalledTimes(1);
+
     $language = $this->prophesize(LanguageInterface::class);
     $language->getId()->willReturn('en');
 
-    $this->aliasStorage->save('/node/1', '/about', 'en')
+    $this->aliasStorage->create([
+      'path' => '/node/1',
+      'alias' => '/about',
+      'langcode' => 'en',
+    ])->willReturn($path_alias->reveal())
       ->shouldBeCalledTimes(1);
 
     $this->action->setContextValue('source', '/node/1')

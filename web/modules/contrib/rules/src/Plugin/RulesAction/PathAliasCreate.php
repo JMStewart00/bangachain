@@ -3,7 +3,7 @@
 namespace Drupal\rules\Plugin\RulesAction;
 
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Path\AliasStorageInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\rules\Core\RulesActionBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -15,6 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "rules_path_alias_create",
  *   label = @Translation("Create any path alias"),
  *   category = @Translation("Path"),
+ *   provider = "path_alias",
  *   context_definitions = {
  *     "source" = @ContextDefinition("string",
  *       label = @Translation("Existing system path"),
@@ -40,7 +41,7 @@ class PathAliasCreate extends RulesActionBase implements ContainerFactoryPluginI
   /**
    * The alias storage service.
    *
-   * @var \Drupal\Core\Path\AliasStorageInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $aliasStorage;
 
@@ -53,10 +54,10 @@ class PathAliasCreate extends RulesActionBase implements ContainerFactoryPluginI
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Path\AliasStorageInterface $alias_storage
+   * @param \Drupal\Core\Entity\EntityStorageInterface $alias_storage
    *   The alias storage service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, AliasStorageInterface $alias_storage) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityStorageInterface $alias_storage) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->aliasStorage = $alias_storage;
   }
@@ -69,7 +70,7 @@ class PathAliasCreate extends RulesActionBase implements ContainerFactoryPluginI
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('path.alias_storage')
+      $container->get('entity_type.manager')->getStorage('path_alias')
     );
   }
 
@@ -85,7 +86,12 @@ class PathAliasCreate extends RulesActionBase implements ContainerFactoryPluginI
    */
   protected function doExecute($source, $alias, LanguageInterface $language = NULL) {
     $langcode = isset($language) ? $language->getId() : LanguageInterface::LANGCODE_NOT_SPECIFIED;
-    $this->aliasStorage->save($source, $alias, $langcode);
+    $path_alias = $this->aliasStorage->create([
+      'path' => $source,
+      'alias' => $alias,
+      'langcode' => $langcode,
+    ]);
+    $path_alias->save();
   }
 
 }

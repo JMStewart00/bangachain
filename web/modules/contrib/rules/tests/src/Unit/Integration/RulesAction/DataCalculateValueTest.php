@@ -20,7 +20,7 @@ class DataCalculateValueTest extends RulesIntegrationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->action = $this->actionManager->createInstance('rules_data_calculate_value');
   }
@@ -31,7 +31,7 @@ class DataCalculateValueTest extends RulesIntegrationTestBase {
    * @covers ::summary
    */
   public function testSummary() {
-    $this->assertEquals('Calculates a numeric value', $this->action->summary());
+    $this->assertEquals('Calculate a numeric value', $this->action->summary());
   }
 
   /**

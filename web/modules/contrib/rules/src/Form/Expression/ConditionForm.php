@@ -57,7 +57,16 @@ class ConditionForm implements ExpressionFormInterface {
       $options = [];
       foreach ($condition_definitions as $group => $definitions) {
         foreach ($definitions as $id => $definition) {
-          $options[$group][$id] = $definition['label'];
+          if ($group != $this->t('Other')) {
+            // Because core Conditions do not currently define some context
+            // values required by Rules, we need to make sure they can't be
+            // selected through the Rules UI. The Rules ConditionManager puts
+            // these core Conditions into the 'Other' group so that we can
+            // identify them and leave them off of the Condition selection
+            // form element below.
+            // @see https://www.drupal.org/project/rules/issues/2927132
+            $options[$group][$id] = $definition['label'];
+          }
         }
       }
 
@@ -111,7 +120,7 @@ class ConditionForm implements ExpressionFormInterface {
       $form['provides'] = [
         '#type' => 'details',
         '#title' => $this->t('Provided variables'),
-        '#description' => $this->t('Adjust the name of provided variables, but note that renaming of already utilized variables invalidates the existing uses.'),
+        '#description' => $this->t('You may change the name of any provided variables, but note that renaming already-utilized variables invalidates the existing uses.'),
         '#open' => TRUE,
       ];
       foreach ($provides_definitions as $provides_name => $provides_definition) {
@@ -172,7 +181,7 @@ class ConditionForm implements ExpressionFormInterface {
     }
 
     $condition_definition = $this->conditionManager->getDefinition($condition_id);
-    $context_config = $this->getContextConfigFromFormValues($form_state, $condition_definition['context_definitions']);
+    $context_config = $this->getContextConfigFromFormValues($form, $form_state, $condition_definition['context_definitions']);
 
     // Rename provided variables, if any.
     if ($provided_variables = $form_state->getValue('provides')) {

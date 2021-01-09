@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e7328ca6927a1f4ea2bd38330d359047",
+    "content-hash": "de7567ccee32ad63b6994a847f2ee80f",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3962,6 +3962,11 @@
                         "status": "not-covered",
                         "message": "Dev releases are not covered by Drupal security advisories."
                     }
+                },
+                "patches_applied": {
+                    "Anonymous users can see Purchased Items Report": "https://www.drupal.org/files/issues/2019-06-07/3004989-17.patch",
+                    "Generating Order Reports throws toArray() error": "https://www.drupal.org/files/issues/2019-10-18/3088183-3.patch",
+                    "Fix tests deprecation notices and prepare commerce_reports module for Drupal 9": "https://www.drupal.org/files/issues/2021-01-07/3167290-5.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
@@ -7290,6 +7295,64 @@
             }
         },
         {
+            "name": "drupal/mimemail",
+            "version": "dev-1.x",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/mimemail.git",
+                "reference": "804005656242e58a672db172e013df0ad481fa80"
+            },
+            "require": {
+                "drupal/core": "^8.8.2 || ^9",
+                "drupal/mailsystem": "*"
+            },
+            "require-dev": {
+                "drupal/rules": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-1.0-alpha3+14-dev",
+                    "datestamp": "1597100346",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Dev releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Allie Micka",
+                    "homepage": "https://www.drupal.org/user/15091"
+                },
+                {
+                    "name": "TR",
+                    "homepage": "https://www.drupal.org/user/202830"
+                },
+                {
+                    "name": "jerdavis",
+                    "homepage": "https://www.drupal.org/user/228997"
+                },
+                {
+                    "name": "sgabe",
+                    "homepage": "https://www.drupal.org/user/232117"
+                }
+            ],
+            "description": "Sends MIME-encoded emails with embedded images and attachments.",
+            "homepage": "https://www.drupal.org/project/mimemail",
+            "support": {
+                "source": "https://git.drupalcode.org/project/mimemail"
+            },
+            "time": "2020-08-10T22:58:34+00:00"
+        },
+        {
             "name": "drupal/page_manager",
             "version": "4.0.0-beta6",
             "source": {
@@ -8012,39 +8075,39 @@
         },
         {
             "name": "drupal/rules",
-            "version": "3.0.0-alpha6",
+            "version": "dev-3.x",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/rules.git",
-                "reference": "8.x-3.0-alpha6"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/rules-8.x-3.0-alpha6.zip",
-                "reference": "8.x-3.0-alpha6",
-                "shasum": "073bf5c23f0ef8f1aebf56538249d50d631d5a24"
+                "reference": "7d1833fde20e3a4577e1a875c5cad0ec8883b32b"
             },
             "require": {
-                "drupal/core": "^8.7",
-                "drupal/typed_data": "1.x-dev"
+                "drupal/core": "^8.8.2 || ^9",
+                "drupal/typed_data": "^1.0"
             },
             "require-dev": {
                 "drupal/typed_data": "1.x-dev"
             },
             "type": "drupal-module",
             "extra": {
+                "branch-alias": {
+                    "dev-3.x": "3.x-dev"
+                },
                 "drupal": {
-                    "version": "8.x-3.0-alpha6",
-                    "datestamp": "1595975406",
+                    "version": "8.x-3.x-dev",
+                    "datestamp": "1608672637",
                     "security-coverage": {
                         "status": "not-covered",
-                        "message": "Alpha releases are not covered by Drupal security advisories."
+                        "message": "Dev releases are not covered by Drupal security advisories."
                     }
                 },
                 "drush": {
                     "services": {
-                        "drush.services.yml": "^9"
+                        "drush.services.yml": "^9 || ^10"
                     }
+                },
+                "patches_applied": {
+                    "Integrate Typed Data Widgets": "https://www.drupal.org/files/issues/2020-09-29/2471481-136.integrate-typed-data-widgets.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
@@ -8070,7 +8133,8 @@
             "support": {
                 "source": "https://git.drupalcode.org/project/rules",
                 "issues": "https://www.drupal.org/project/issues/rules"
-            }
+            },
+            "time": "2020-12-23T01:17:33+00:00"
         },
         {
             "name": "drupal/search_api",
@@ -16448,8 +16512,9 @@
         "drupal/htmlmail": 15,
         "drupal/media_bulk_upload": 15,
         "drupal/media_library_form_element": 15,
+        "drupal/mimemail": 20,
         "drupal/rabbit_hole": 10,
-        "drupal/rules": 15,
+        "drupal/rules": 20,
         "drupal/simple_image_rotate": 15,
         "drupal/swiftmailer": 10,
         "drupal/view_unpublished": 20,

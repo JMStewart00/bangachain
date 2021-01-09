@@ -44,7 +44,7 @@ class LoopExpression extends ActionExpressionContainer {
       $state->setVariableData($list_item_name, $item);
       // Use the iterator to ensure the conditions are sorted.
       foreach ($this as $action) {
-        /* @var \Drupal\rules\Engine\ExpressionInterface $action */
+        /** @var \Drupal\rules\Engine\ExpressionInterface $action */
         $action->executeWithState($state);
       }
     }

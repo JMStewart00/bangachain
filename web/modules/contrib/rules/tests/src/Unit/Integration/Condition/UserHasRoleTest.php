@@ -3,6 +3,7 @@
 namespace Drupal\Tests\rules\Unit\Integration\Condition;
 
 use Drupal\Tests\rules\Unit\Integration\RulesEntityIntegrationTestBase;
+use Drupal\rules\Exception\InvalidArgumentException;
 use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
 
@@ -22,7 +23,7 @@ class UserHasRoleTest extends RulesEntityIntegrationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->enableModule('user');
@@ -90,7 +91,8 @@ class UserHasRoleTest extends RulesEntityIntegrationTestBase {
    */
   public function testInvalidOperationException() {
     // Set the expected exception class and message.
-    $this->setExpectedException('\Drupal\rules\Exception\InvalidArgumentException', 'Either use "AND" or "OR". Leave empty for default "AND" behavior.');
+    $this->expectException(InvalidArgumentException::class);
+    $this->expectExceptionMessage('Either use "AND" or "OR". Leave empty for default "AND" behavior.');
 
     // Set-up a mock object with roles 'authenticated' and 'editor', but not
     // 'administrator'.

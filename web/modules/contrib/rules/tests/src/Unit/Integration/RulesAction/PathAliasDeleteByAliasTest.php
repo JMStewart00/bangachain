@@ -2,8 +2,9 @@
 
 namespace Drupal\Tests\rules\Unit\Integration\RulesAction;
 
-use Drupal\Core\Path\AliasStorageInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Tests\rules\Unit\Integration\RulesIntegrationTestBase;
+use Drupal\path_alias\PathAliasInterface;
 
 /**
  * @coversDefaultClass \Drupal\rules\Plugin\RulesAction\PathAliasDeleteByAlias
@@ -21,18 +22,21 @@ class PathAliasDeleteByAliasTest extends RulesIntegrationTestBase {
   /**
    * The mocked alias storage service.
    *
-   * @var \Drupal\Core\Path\AliasStorageInterface|\Prophecy\Prophecy\ProphecyInterface
+   * @var \Drupal\Core\Entity\Entity\StorageInterface|\Prophecy\Prophecy\ProphecyInterface
    */
   protected $aliasStorage;
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
+    // Must enable the path_alias module.
+    $this->enableModule('path_alias');
 
-    $this->aliasStorage = $this->prophesize(AliasStorageInterface::class);
-    $this->container->set('path.alias_storage', $this->aliasStorage->reveal());
+    // Prepare mocked EntityStorageInterface.
+    $this->aliasStorage = $this->prophesize(EntityStorageInterface::class);
+    $this->entityTypeManager->getStorage('path_alias')->willReturn($this->aliasStorage->reveal());
 
     $this->action = $this->actionManager->createInstance('rules_path_alias_delete_by_alias');
   }
@@ -53,10 +57,14 @@ class PathAliasDeleteByAliasTest extends RulesIntegrationTestBase {
    */
   public function testActionExecution() {
     $alias = '/about/team';
-
-    $this->aliasStorage->delete(['alias' => $alias])->shouldBeCalledTimes(1);
-
     $this->action->setContextValue('alias', $alias);
+
+    $path_alias = $this->prophesizeEntity(PathAliasInterface::class);
+    $this->aliasStorage->delete([$path_alias->reveal()])->shouldBeCalledTimes(1);
+
+    $this->aliasStorage->loadByProperties(['alias' => $alias])
+      ->willReturn([$path_alias->reveal()])
+      ->shouldBeCalledTimes(1);
 
     $this->action->execute();
   }

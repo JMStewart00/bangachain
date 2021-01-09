@@ -64,7 +64,6 @@ class ActionExpression extends ExpressionBase implements ContainerFactoryPluginI
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, RulesActionManagerInterface $action_manager, DataProcessorManager $processor_manager, LoggerChannelInterface $logger) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
     $this->actionManager = $action_manager;
     $this->processorManager = $processor_manager;
     $this->rulesDebugLogger = $logger;

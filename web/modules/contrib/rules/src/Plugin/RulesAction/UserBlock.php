@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   context_definitions = {
  *     "user" = @ContextDefinition("entity:user",
  *       label = @Translation("User"),
- *       description = @Translation("Specifies the user, that should be blocked.")
+ *       description = @Translation("Specifies the user that should be blocked.")
  *     ),
  *   }
  * )

@@ -42,22 +42,9 @@ class ConditionManager extends CoreConditionManager {
     // Make sure that all definitions have a category to avoid PHP notices in
     // CategorizingPluginManagerTrait.
     // @todo Fix this in core in CategorizingPluginManagerTrait.
-    foreach ($definitions as $key => &$definition) {
+    foreach ($definitions as &$definition) {
       if (!isset($definition['category'])) {
         $definition['category'] = $this->t('Other');
-        // @todo Remove the unset() when core conditions can work as
-        // Rules conditions.
-        //
-        // @see https://www.drupal.org/project/rules/issues/2927132
-        //
-        // Because core Conditions do not currently define some context values
-        // required by Rules, we need to make sure they can't be selected
-        // through the Rules UI. To do this, we make use of the fact that none
-        // of the core Conditions make use of the concept of 'category' as
-        // defined by the CategorizingPluginManager. Thus, we assume that any
-        // condition without a 'category' is a core Condition and we remove it
-        // from  list of plugin definitions used by the Rules UI.
-        unset($definitions[$key]);
       }
     }
     return $definitions;

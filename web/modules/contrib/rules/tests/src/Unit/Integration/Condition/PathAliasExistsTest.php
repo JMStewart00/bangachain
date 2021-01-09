@@ -4,6 +4,7 @@ namespace Drupal\Tests\rules\Unit\Integration\Condition;
 
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\rules\Unit\Integration\RulesIntegrationTestBase;
+use Drupal\path_alias\AliasManagerInterface;
 
 /**
  * @coversDefaultClass \Drupal\rules\Plugin\Condition\PathAliasExists
@@ -19,6 +20,11 @@ class PathAliasExistsTest extends RulesIntegrationTestBase {
   protected $condition;
 
   /**
+   * @var \Drupal\path_alias\AliasManagerInterface|\Prophecy\Prophecy\ProphecyInterface
+   */
+  protected $aliasManager;
+
+  /**
    * A mocked language object (english).
    *
    * @var \Drupal\Core\Language\LanguageInterface|\Prophecy\Prophecy\ProphecyInterface
@@ -28,8 +34,12 @@ class PathAliasExistsTest extends RulesIntegrationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
+    // Must enable the path_alias module.
+    $this->enableModule('path_alias');
+    $this->aliasManager = $this->prophesize(AliasManagerInterface::class);
+    $this->container->set('path_alias.manager', $this->aliasManager->reveal());
 
     $this->condition = $this->conditionManager->createInstance('rules_path_alias_exists');
 
@@ -55,6 +65,7 @@ class PathAliasExistsTest extends RulesIntegrationTestBase {
    * @covers ::evaluate
    */
   public function testConditionEvaluationAliasWithPath() {
+    // If the path exists, getPathByAlias() should return the path.
     $this->aliasManager->getPathByAlias('/alias-for-path', NULL)
       ->willReturn('/path-with-alias')
       ->shouldBeCalledTimes(1);
@@ -66,10 +77,12 @@ class PathAliasExistsTest extends RulesIntegrationTestBase {
     // First, only set the path context.
     $this->condition->setContextValue('alias', '/alias-for-path');
 
-    // Test without language context set.
+    // Test without language context set. This should return true because the
+    // alias is defined.
     $this->assertTrue($this->condition->evaluate());
 
-    // Test with language context set.
+    // Test with language context set. Again, this should return true because
+    // the alias is defined.
     $this->condition->setContextValue('language', $this->englishLanguage->reveal());
     $this->assertTrue($this->condition->evaluate());
   }
@@ -80,6 +93,7 @@ class PathAliasExistsTest extends RulesIntegrationTestBase {
    * @covers ::evaluate
    */
   public function testConditionEvaluationAliasWithoutPath() {
+    // If the path does not exist, getPathByAlias() should return the alias.
     $this->aliasManager->getPathByAlias('/alias-for-path-that-does-not-exist', NULL)
       ->willReturn('/alias-for-path-that-does-not-exist')
       ->shouldBeCalledTimes(1);
@@ -91,7 +105,8 @@ class PathAliasExistsTest extends RulesIntegrationTestBase {
     // First, only set the path context.
     $this->condition->setContextValue('alias', '/alias-for-path-that-does-not-exist');
 
-    // Test without language context set.
+    // Test without language context set. This should return false because the
+    // alias was not defined.
     $this->assertFalse($this->condition->evaluate());
 
     // Test with language context set.

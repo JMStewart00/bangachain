@@ -16,7 +16,7 @@ use Drupal\rules\Core\RulesEventManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Storage handler for reaction rule config entities.
+ * Storage handler for Reaction Rule configuration entities.
  *
  * @todo Create an interface for this.
  */

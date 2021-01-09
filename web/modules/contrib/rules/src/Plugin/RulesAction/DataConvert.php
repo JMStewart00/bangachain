@@ -36,7 +36,7 @@ use Drupal\rules\Exception\InvalidArgumentException;
  *     ),
  *   }
  * )
- * @todo Add rounding_behaviour default value "round".
+ * @todo Add rounding_behavior default value "round".
  * @todo Add options_list for target type.
  * @todo Specify the right data type for the provided result.
  */
@@ -59,7 +59,7 @@ class DataConvert extends RulesActionBase {
    * @param string $target_type
    *   The target type the value should be converted into.
    * @param string $rounding_behavior
-   *   The behaviour for rounding.
+   *   The behavior for rounding.
    */
   protected function doExecute($value, $target_type, $rounding_behavior = NULL) {
     // @todo Add support for objects implementing __toString().

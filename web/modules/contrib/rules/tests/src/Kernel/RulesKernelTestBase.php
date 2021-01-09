@@ -74,7 +74,7 @@ abstract class RulesKernelTestBase extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->logger = $this->container->get('logger.channel.rules_debug');

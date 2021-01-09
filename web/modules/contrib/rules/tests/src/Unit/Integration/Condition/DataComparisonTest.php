@@ -21,7 +21,7 @@ class DataComparisonTest extends RulesIntegrationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->condition = $this->conditionManager->createInstance('rules_data_comparison');

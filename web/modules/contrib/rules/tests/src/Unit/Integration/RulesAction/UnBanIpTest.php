@@ -45,7 +45,7 @@ class UnBanIpTest extends RulesIntegrationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     // Must enable the ban module.
     $this->enableModule('ban');

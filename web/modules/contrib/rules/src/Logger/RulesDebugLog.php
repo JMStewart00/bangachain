@@ -180,7 +180,10 @@ class RulesDebugLog implements LoggerInterface {
         // add the details of the log entry.
         $link = NULL;
         if (isset($this->logs[$line]['path']) && !isset($this->logs[$line]['scope'])) {
-          $link = ['title' => $this->t('edit'), 'url' => Url::fromUserInput('/' . $this->logs[$line]['path'])];
+          $link = [
+            'title' => $this->t('edit'),
+            'url' => Url::fromUserInput('/' . $this->logs[$line]['path']),
+          ];
         }
         $build[$line] = [
           '#theme' => 'rules_debug_log_element',

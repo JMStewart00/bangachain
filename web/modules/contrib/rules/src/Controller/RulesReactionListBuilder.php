@@ -113,7 +113,7 @@ class RulesReactionListBuilder extends ConfigEntityListBuilder {
     ];
     $row['event']['data-drupal-selector'] = 'rules-table-filter-text-source';
     $row['event']['data'] = [
-      '#plain_text' => implode(",<br />", $event_labels),
+      '#markup' => implode(",<br />", $event_labels),
     ];
     $row['description']['data-drupal-selector'] = 'rules-table-filter-text-source';
     $row['description']['data'] = [

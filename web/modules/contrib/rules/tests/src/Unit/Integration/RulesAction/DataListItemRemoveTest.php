@@ -20,7 +20,7 @@ class DataListItemRemoveTest extends RulesIntegrationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->action = $this->actionManager->createInstance('rules_list_item_remove');
@@ -50,7 +50,7 @@ class DataListItemRemoveTest extends RulesIntegrationTestBase {
     $this->action->execute();
 
     // The second item should be removed from the list.
-    $this->assertArrayEquals(['One', 'Three'], array_values($this->action->getContextValue('list')));
+    $this->assertEquals(['One', 'Three'], array_values($this->action->getContextValue('list')));
   }
 
 }

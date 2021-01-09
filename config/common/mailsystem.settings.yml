@@ -1,7 +1,7 @@
 theme: bangachain
 defaults:
   sender: SMTPMailSystem
-  formatter: SMTPMailSystem
+  formatter: mime_mail
 _core:
   default_config_hash: IhwTepsVwtbtbcT5GzQKhCXDCRvbk3MNkWqPiuiZ10s
 modules:
@@ -11,9 +11,9 @@ modules:
       sender: swiftmailer
   smtp:
     none:
-      formatter: SMTPMailSystem
+      formatter: mime_mail
       sender: SMTPMailSystem
   contact:
     'Contact Forms':
-      formatter: SMTPMailSystem
+      formatter: mime_mail
       sender: SMTPMailSystem

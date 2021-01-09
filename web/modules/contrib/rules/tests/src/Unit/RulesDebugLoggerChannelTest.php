@@ -49,7 +49,7 @@ class RulesDebugLoggerChannelTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $container = new ContainerBuilder();
     $this->rulesDebugLogger = $this->prophesize(LoggerChannelInterface::class)->reveal();
@@ -123,7 +123,7 @@ class RulesDebugLoggerChannelTest extends UnitTestCase {
         'path' => NULL,
       ];
       $context += $messages[0]['context'];
-      $this->assertArrayEquals([
+      $this->assertEquals([
         0 => [
           'message' => $message,
           'context' => $context,

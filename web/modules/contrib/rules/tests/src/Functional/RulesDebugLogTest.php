@@ -26,7 +26,7 @@ class RulesDebugLogTest extends RulesBrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Testing profile doesn't include a 'page' content type.

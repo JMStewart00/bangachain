@@ -31,10 +31,10 @@ expression:
         context_values:
           to:
             - '{{ commerce_giftcard.uid.entity.mail.value }}'
-          subject: 'New giftcard waiting for you on Bangachain.com!'
-          message: 'A new giftcard has been added to your account on Bangachain.com! Login to your account to check the balances on all your cards.'
+          subject: 'New giftcard on Bangachain.com!'
+          message: "<p>Hey {{commerce_giftcard.uid.entity.name.value}}!</p>\r\n<p>We've added a giftcard to your account! The balance of the new card is ${{commerce_giftcard.balance.0.number}}.</p>\r\n<p>To get the usable code for your gift card and to check your balance, please login to <a href=\"https://bangachain.com\" target=\"_blank\">BangAChain.com</a> and navigate to your payment methods to find the code</p>\r\n<br>\r\n<p>Thanks!</p>\r\n<p>The BangAChain Team</p>"
           reply: no-reply@bangachain.com
-          language: ''
+          language: null
         context_mapping: {  }
         context_processors:
           to:

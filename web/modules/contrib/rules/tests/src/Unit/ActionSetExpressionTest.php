@@ -24,7 +24,7 @@ class ActionSetExpressionTest extends RulesUnitTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // TestActionSetExpression is defined below.

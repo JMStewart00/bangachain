@@ -4,6 +4,7 @@ namespace Drupal\Tests\rules\Unit\Integration\Condition;
 
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\rules\Unit\Integration\RulesIntegrationTestBase;
+use Drupal\path_alias\AliasManagerInterface;
 
 /**
  * @coversDefaultClass \Drupal\rules\Plugin\Condition\PathHasAlias
@@ -19,6 +20,11 @@ class PathHasAliasTest extends RulesIntegrationTestBase {
   protected $condition;
 
   /**
+   * @var \Drupal\path_alias\AliasManagerInterface|\Prophecy\Prophecy\ProphecyInterface
+   */
+  protected $aliasManager;
+
+  /**
    * A mocked language object (english).
    *
    * @var \Drupal\Core\Language\LanguageInterface|\Prophecy\Prophecy\ProphecyInterface
@@ -28,8 +34,12 @@ class PathHasAliasTest extends RulesIntegrationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
+    // Must enable the path_alias module.
+    $this->enableModule('path_alias');
+    $this->aliasManager = $this->prophesize(AliasManagerInterface::class);
+    $this->container->set('path_alias.manager', $this->aliasManager->reveal());
 
     $this->condition = $this->conditionManager->createInstance('rules_path_has_alias');
 
@@ -55,6 +65,7 @@ class PathHasAliasTest extends RulesIntegrationTestBase {
    * @covers ::evaluate
    */
   public function testConditionEvaluationPathWithAlias() {
+    // If the alias exists, getAliasByPath() should return the alias.
     $this->aliasManager->getAliasByPath('/path-with-alias', NULL)
       ->willReturn('/alias-for-path')
       ->shouldBeCalledTimes(1);
@@ -80,6 +91,7 @@ class PathHasAliasTest extends RulesIntegrationTestBase {
    * @covers ::evaluate
    */
   public function testConditionEvaluationPathWithoutAlias() {
+    // If the alias does not exist, getAliasByPath() should return the path.
     $this->aliasManager->getAliasByPath('/path-without-alias', NULL)
       ->willReturn('/path-without-alias')
       ->shouldBeCalledTimes(1);

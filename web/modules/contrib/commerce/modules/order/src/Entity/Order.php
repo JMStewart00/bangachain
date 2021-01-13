@@ -6,10 +6,10 @@ use Drupal\commerce\Entity\CommerceContentEntityBase;
 use Drupal\commerce_order\Adjustment;
 use Drupal\commerce_order\Event\OrderEvents;
 use Drupal\commerce_order\Event\OrderProfilesEvent;
+use Drupal\commerce_order\Exception\OrderVersionMismatchException;
 use Drupal\commerce_price\Price;
 use Drupal\commerce_store\Entity\StoreInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -79,11 +79,13 @@ use Drupal\profile\Entity\ProfileInterface;
  *   bundle_entity_type = "commerce_order_type",
  *   field_ui_base_route = "entity.commerce_order_type.edit_form",
  *   allow_number_patterns = TRUE,
+ *   log_version_mismatch = TRUE,
+ *   constraints = {
+ *      "OrderVersion" = {}
+ *   }
  * )
  */
 class Order extends CommerceContentEntityBase implements OrderInterface {
-
-  use EntityChangedTrait;
 
   /**
    * {@inheritdoc}
@@ -97,6 +99,21 @@ class Order extends CommerceContentEntityBase implements OrderInterface {
    */
   public function setOrderNumber($order_number) {
     $this->set('order_number', $order_number);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getVersion() {
+    return $this->get('version')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setVersion($version) {
+    $this->set('version', $version);
     return $this;
   }
 
@@ -583,6 +600,29 @@ class Order extends CommerceContentEntityBase implements OrderInterface {
   }
 
   /**
+   * Gets the timestamp of the last entity change for the current translation.
+   *
+   * @return int
+   *   The timestamp of the last entity save operation.
+   */
+  public function getChangedTime() {
+    return $this->get('changed')->value;
+  }
+
+  /**
+   * Sets the timestamp of the last entity change for the current translation.
+   *
+   * @param int $timestamp
+   *   The timestamp of the last entity save operation.
+   *
+   * @return $this
+   */
+  public function setChangedTime($timestamp) {
+    $this->set('changed', $timestamp);
+    return $this;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getPlacedTime() {
@@ -628,6 +668,18 @@ class Order extends CommerceContentEntityBase implements OrderInterface {
    */
   public function preSave(EntityStorageInterface $storage) {
     parent::preSave($storage);
+
+    if (isset($this->original) && !$this->isNew() && $this->original->getVersion() > $this->getVersion()) {
+      $mismatch_exception = new OrderVersionMismatchException('The order has either been modified by another user, or you have already submitted modifications. As a result, your changes cannot be saved.');
+      $log_only = $this->getEntityType()->get('log_version_mismatch');
+      if ($log_only) {
+        watchdog_exception('commerce_order', $mismatch_exception);
+      }
+      else {
+        throw $mismatch_exception;
+      }
+    }
+    $this->setVersion($this->getVersion() + 1);
 
     if ($this->isNew() && !$this->getIpAddress()) {
       $this->setIpAddress(\Drupal::request()->getClientIp());
@@ -708,6 +760,14 @@ class Order extends CommerceContentEntityBase implements OrderInterface {
       ->setSetting('max_length', 255)
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
+
+    $fields['version'] = BaseFieldDefinition::create('integer')
+      ->setLabel(t('Version'))
+      ->setDescription(t('The order version number, it gets incremented on each save.'))
+      ->setReadOnly(TRUE)
+      ->setSetting('unsigned', TRUE)
+      // Default to zero, so that the first save is version one.
+      ->setDefaultValue(0);
 
     $fields['store_id'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Store'))

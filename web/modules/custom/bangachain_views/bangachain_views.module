@@ -1,1 +1,11 @@
 <?php
+
+/**
+ * Implements hook_cron().
+ */
+function bangachain_views_cron() {
+  //Dirty fix for #3069966: Orphans in commerce_order_item table
+  $database = \Drupal::database();
+  $database->query("DELETE FROM {commerce_order_item} WHERE order_item_id in (select * from (SELECT c.order_item_id FROM {commerce_order_item} c JOIN {commerce_order_item} ci ON ci.order_id = c.order_id AND ci.purchased_entity = c.purchased_entity AND c.uuid != ci.uuid LEFT JOIN {commerce_order__order_items} co ON c.order_item_id = co.order_items_target_id WHERE co.order_items_target_id is NULL GROUP BY c.order_item_id) as t);");
+
+}

@@ -4,7 +4,7 @@ mail: bangachain2012@gmail.com
 slogan: ''
 page:
   403: ''
-  404: ''
+  404: /node/17
   front: /node/1
 admin_compact_mode: false
 weight_select_max: 100

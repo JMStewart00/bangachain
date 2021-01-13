@@ -28,7 +28,7 @@ display:
         type: none
         options: {  }
       cache:
-        type: tag
+        type: none
         options: {  }
       query:
         type: views_query
@@ -391,7 +391,8 @@ display:
           entity_type: commerce_order
           entity_field: order_id
           plugin_id: numeric
-      display_extenders: {  }
+      display_extenders:
+        ajax_history: {  }
     cache_metadata:
       max-age: -1
       contexts:

@@ -41,6 +41,7 @@ class OrderItemTest extends OrderKernelTestBase {
    * @covers ::setCreatedTime
    */
   public function testOrderItem() {
+    /** @var \Drupal\commerce_order\Entity\OrderItemInterface $order_item */
     $order_item = OrderItem::create([
       'type' => 'test',
     ]);

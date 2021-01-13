@@ -3289,7 +3289,8 @@
                 }
             },
             "patches_applied": {
-                "Promotion without coupons is always applied": "https://www.drupal.org/files/issues/promotion_without-2884888-12.patch"
+                "Promotion without coupons is always applied": "https://www.drupal.org/files/issues/promotion_without-2884888-12.patch",
+                "Implement optimistic locking for orders": "https://www.drupal.org/files/issues/2020-11-12/2656818-56.patch"
             }
         },
         "installation-source": "dist",

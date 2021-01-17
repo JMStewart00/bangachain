@@ -12,60 +12,58 @@ use Drupal\commerce_stock\StockTransactionsInterface;
  * Implements hook_commerce_bulk_variation_alter().
  */
 function bangachain_commerce_update_commerce_bulk_variation_alter(array &$variations, $data = '', $product_type = '') {
-  if ($product_type == 'discs') {
-    // Optionally, decode 'json' or 'xml' data passed on the VBO action
-    // configuration page and use that to alter variations.
-    // $array_data = \Drupal::service('serializer')->decode($data, 'json');.
-    $array_data = \Drupal::service('serializer')->decode($data, 'json');
+  // Optionally, decode 'json' or 'xml' data passed on the VBO action
+  // configuration page and use that to alter variations.
+  // $array_data = \Drupal::service('serializer')->decode($data, 'json');.
+  $array_data = \Drupal::service('serializer')->decode($data, 'json');
 
-    $stock_manager = \Drupal::service('commerce_stock.service_manager');
+  $stock_manager = \Drupal::service('commerce_stock.service_manager');
 
-    foreach ($variations as $variation) {
-      $stock_level = intval($stock_manager->getStockLevel($variation));
+  foreach ($variations as $variation) {
+    $stock_level = intval($stock_manager->getStockLevel($variation));
 
-      if (isset($array_data['stock_in'])) {
-        $stock_manager->createTransaction(
-          $variation,
-          1,
-          '',
-          $array_data['stock_in'],
-          0,
-          'USD',
-          StockTransactionsInterface::STOCK_IN,
-          ['data' => []]
-        );
-      }
+    if (isset($array_data['stock_in'])) {
+      $stock_manager->createTransaction(
+        $variation,
+        1,
+        '',
+        $array_data['stock_in'],
+        0,
+        'USD',
+        StockTransactionsInterface::STOCK_IN,
+        ['data' => []]
+      );
+    }
 
-      if (isset($array_data['reset_stock'])) {
-        $stock_manager->createTransaction(
-          $variation,
-          1,
-          '',
-          -1 * abs($stock_level - 1),
-          0,
-          'USD',
-          StockTransactionsInterface::NEW_STOCK,
-          ['data' => []]
-        );
-      }
+    if (isset($array_data['reset_stock'])) {
+      $stock_manager->createTransaction(
+        $variation,
+        1,
+        '',
+        -1 * abs($stock_level - 1),
+        0,
+        'USD',
+        StockTransactionsInterface::NEW_STOCK,
+        ['data' => []]
+      );
+    }
 
-      if (isset($array_data['stock_out'])) {
-        $stock_manager->createTransaction(
-          $variation,
-          1,
-          '',
-          -1 * abs($array_data['stock_out']),
-          0,
-          'USD',
-          StockTransactionsInterface::STOCK_OUT,
-          ['data' => []]
-        );
-      }
+    if (isset($array_data['stock_out'])) {
+      $stock_manager->createTransaction(
+        $variation,
+        1,
+        '',
+        -1 * abs($array_data['stock_out']),
+        0,
+        'USD',
+        StockTransactionsInterface::STOCK_OUT,
+        ['data' => []]
+      );
+    }
 
-      if (isset($array_data['bin'])) {
-        $variation->set('field_bin', $array_data['bin']);
-        $variation->save();
-      }
+    if (isset($array_data['bin'])) {
+      $variation->set('field_bin', $array_data['bin']);
+      $variation->save();
     }
   }
 }

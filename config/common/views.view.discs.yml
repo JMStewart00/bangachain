@@ -1035,13 +1035,13 @@ display:
   all_discs_page:
     display_plugin: page
     id: all_discs_page
-    display_title: 'All Discs'
+    display_title: 'All Discs Page'
     position: 1
     display_options:
       display_extenders:
         ajax_history:
           enable_history: false
-      path: discs
+      path: discs-page
       display_description: ''
       menu:
         type: normal
@@ -1072,7 +1072,7 @@ display:
   block_1:
     display_plugin: block
     id: block_1
-    display_title: Block
+    display_title: 'Newest Additions'
     position: 1
     display_options:
       display_extenders:
@@ -1244,6 +1244,32 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - user.permissions
+      tags:
+        - 'config:field.storage.commerce_product.field_brand'
+        - 'config:field.storage.commerce_product.field_default_image'
+        - 'config:field.storage.commerce_product.field_fade'
+        - 'config:field.storage.commerce_product.field_glide'
+        - 'config:field.storage.commerce_product.field_speed'
+        - 'config:field.storage.commerce_product.field_stability_category'
+        - 'config:field.storage.commerce_product.field_turn'
+  block_2:
+    display_plugin: block
+    id: block_2
+    display_title: 'All Discs Block'
+    position: 1
+    display_options:
+      display_extenders:
+        ajax_history: {  }
+      display_description: ''
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - user
         - user.permissions
       tags:
         - 'config:field.storage.commerce_product.field_brand'

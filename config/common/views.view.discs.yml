@@ -1041,7 +1041,7 @@ display:
       display_extenders:
         ajax_history:
           enable_history: false
-      path: discs-page
+      path: discs
       display_description: ''
       menu:
         type: normal

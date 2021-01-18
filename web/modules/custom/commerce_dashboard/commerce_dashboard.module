@@ -1,0 +1,12 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_alter().
+ */
+function commerce_dashboard_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form_id == 'commerce_product_variation_discs_edit_form' || $form_id == 'commerce_product_variation_discs_add_form') {
+    $form['#attached']['library'][] = 'commerce_dashboard/set_field_values';
+  }
+}

@@ -1,0 +1,14 @@
+uuid: bb557177-b4e6-41d1-8443-3bb063b5f603
+langcode: en
+status: true
+dependencies: {  }
+id: automatic_pricing
+label: 'Automatic Pricing'
+events:
+  -
+    event_name: 'rules_entity_presave:commerce_product_variation--discs'
+description: ''
+tags: {  }
+config_version: '3'
+expression:
+  id: rules_rule

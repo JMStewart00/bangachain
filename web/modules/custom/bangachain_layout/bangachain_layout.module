@@ -186,18 +186,22 @@ function bangachain_layout_form_layout_builder_configure_block_alter(&$form, For
     if ($section_component->getRegion() !== 'sidebar') {
 
       // Set default value for headings & cta
+      $heading_default_value = '';
       if($section_component->getThirdPartySetting('bangachain_layout', 'primary_heading')) {
         $heading_default_value = $section_component->getThirdPartySetting('bangachain_layout', 'primary_heading');
       }
 
+      $subheading_default_value = '';
       if($section_component->getThirdPartySetting('bangachain_layout', 'primary_subheading')) {
         $subheading_default_value = $section_component->getThirdPartySetting('bangachain_layout', 'primary_subheading');
       }
 
+      $link_title_default_value = '';
       if($section_component->getThirdPartySetting('bangachain_layout', 'primary_cta_title')) {
         $link_title_default_value = $section_component->getThirdPartySetting('bangachain_layout', 'primary_cta_title');
       }
 
+      $link_url_default_value = '';
       if($section_component->getThirdPartySetting('bangachain_layout', 'primary_cta_url')) {
         $link_url_default_value = _get_displayable_string_from_entity_id($section_component->getThirdPartySetting('bangachain_layout', 'primary_cta_url'));
       }

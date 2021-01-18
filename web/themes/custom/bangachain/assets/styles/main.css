@@ -7600,7 +7600,6 @@ body.no-scroll {
     width: 30%; } }
 
 .o-btn--large {
-  border-radius: 30px;
   padding: 1rem 1.5rem; }
 
 .o-btn--icon svg {
@@ -7914,27 +7913,26 @@ svg.ext {
   margin-bottom: calc(var(--lh__base) * 0.25 * var(--rvr-multiplier)); }
 
 .c-product__title .h2 {
-  position: relative; }
-
-.c-product__title .h2::after {
-  content: '';
-  display: block;
-  position: absolute;
-  bottom: -2px;
-  left: 25%;
-  height: 2px;
-  background: #EE6C4D;
-  -webkit-transition: width 0.5s;
-  transition: width 0.5s;
-  width: 0; }
+  position: relative;
+  margin-bottom: 0;
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out; }
 
 @media (max-width: 991.98px) {
   .c-product--teaser {
     margin: auto;
     width: 75%; } }
 
+.c-product--teaser:hover img, .c-product--teaser:focus img {
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1); }
+
+.c-product--teaser:hover .h2, .c-product--teaser:focus .h2 {
+  color: #141d2a; }
+
 .c-product--teaser .c-field-media-image {
-  margin: auto; }
+  margin: auto;
+  overflow: hidden; }
 
 .c-product__description {
   padding-top: calc(var(--lh__base) * 2 * var(--rvr-multiplier));
@@ -8003,6 +8001,10 @@ svg.ext {
 
 .c-product__image {
   margin-bottom: calc(var(--lh__base) * 0.25 * var(--rvr-multiplier)); }
+
+.c-product__image img {
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out; }
 
 div:not(.bangachain-table) table {
   border-collapse: collapse;
@@ -8178,6 +8180,10 @@ div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
 .c-block__subheading {
   font-weight: 500;
   text-align: center; }
+
+.c-block__cta {
+  max-width: 300px;
+  margin: auto; }
 
 .c-block__cta .o-btn {
   display: block;
@@ -9180,6 +9186,16 @@ div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
 .c-view-commerce-cart-form {
   padding: calc(var(--lh__base) * 4 * var(--rvr-multiplier)) calc(var(--lh__base) * 1 * var(--rvr-multiplier)); }
 
+.c-view-discs,
+.c-view-bags,
+.c-view-accessories,
+.c-view-apparel,
+.c-field-favorite-discs {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  grid-gap: 24px;
+  margin-top: calc(var(--lh__base) * 5 * var(--rvr-multiplier)); }
+
 .c-view-discs a,
 .c-view-bags a,
 .c-view-accessories a,
@@ -9250,87 +9266,29 @@ div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
 .c-field-favorite-discs a:focus .c-product__fade--small {
   border: 1px solid #3D5A80; }
 
-.c-view-discs--all_discs_page, .c-view-discs--all_accessories_page, .c-view-discs--all_bags_page, .c-view-discs--all_apparel_page,
-.c-view-bags--all_discs_page,
-.c-view-bags--all_accessories_page,
-.c-view-bags--all_bags_page,
-.c-view-bags--all_apparel_page,
-.c-view-accessories--all_discs_page,
-.c-view-accessories--all_accessories_page,
-.c-view-accessories--all_bags_page,
-.c-view-accessories--all_apparel_page,
-.c-view-apparel--all_discs_page,
-.c-view-apparel--all_accessories_page,
-.c-view-apparel--all_bags_page,
-.c-view-apparel--all_apparel_page,
-.c-field-favorite-discs--all_discs_page,
-.c-field-favorite-discs--all_accessories_page,
-.c-field-favorite-discs--all_bags_page,
-.c-field-favorite-discs--all_apparel_page {
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  grid-gap: 24px;
-  margin-top: calc(var(--lh__base) * 5 * var(--rvr-multiplier)); }
-
 @media (min-width: 768px) {
-  .c-view-discs--all_discs_page, .c-view-discs--all_accessories_page, .c-view-discs--all_bags_page, .c-view-discs--all_apparel_page,
-  .c-view-bags--all_discs_page,
-  .c-view-bags--all_accessories_page,
-  .c-view-bags--all_bags_page,
-  .c-view-bags--all_apparel_page,
-  .c-view-accessories--all_discs_page,
-  .c-view-accessories--all_accessories_page,
-  .c-view-accessories--all_bags_page,
-  .c-view-accessories--all_apparel_page,
-  .c-view-apparel--all_discs_page,
-  .c-view-apparel--all_accessories_page,
-  .c-view-apparel--all_bags_page,
-  .c-view-apparel--all_apparel_page,
-  .c-field-favorite-discs--all_discs_page,
-  .c-field-favorite-discs--all_accessories_page,
-  .c-field-favorite-discs--all_bags_page,
-  .c-field-favorite-discs--all_apparel_page {
+  .c-view-discs,
+  .c-view-bags,
+  .c-view-accessories,
+  .c-view-apparel,
+  .c-field-favorite-discs {
     grid-template-columns: repeat(2, 1fr);
     margin-top: calc(var(--lh__base) * 2 * var(--rvr-multiplier)); } }
 
 @media (min-width: 992px) {
-  .c-view-discs--all_discs_page, .c-view-discs--all_accessories_page, .c-view-discs--all_bags_page, .c-view-discs--all_apparel_page,
-  .c-view-bags--all_discs_page,
-  .c-view-bags--all_accessories_page,
-  .c-view-bags--all_bags_page,
-  .c-view-bags--all_apparel_page,
-  .c-view-accessories--all_discs_page,
-  .c-view-accessories--all_accessories_page,
-  .c-view-accessories--all_bags_page,
-  .c-view-accessories--all_apparel_page,
-  .c-view-apparel--all_discs_page,
-  .c-view-apparel--all_accessories_page,
-  .c-view-apparel--all_bags_page,
-  .c-view-apparel--all_apparel_page,
-  .c-field-favorite-discs--all_discs_page,
-  .c-field-favorite-discs--all_accessories_page,
-  .c-field-favorite-discs--all_bags_page,
-  .c-field-favorite-discs--all_apparel_page {
+  .c-view-discs,
+  .c-view-bags,
+  .c-view-accessories,
+  .c-view-apparel,
+  .c-field-favorite-discs {
     grid-template-columns: repeat(3, 1fr); } }
 
 @media (min-width: 1200px) {
-  .c-view-discs--all_discs_page, .c-view-discs--all_accessories_page, .c-view-discs--all_bags_page, .c-view-discs--all_apparel_page,
-  .c-view-bags--all_discs_page,
-  .c-view-bags--all_accessories_page,
-  .c-view-bags--all_bags_page,
-  .c-view-bags--all_apparel_page,
-  .c-view-accessories--all_discs_page,
-  .c-view-accessories--all_accessories_page,
-  .c-view-accessories--all_bags_page,
-  .c-view-accessories--all_apparel_page,
-  .c-view-apparel--all_discs_page,
-  .c-view-apparel--all_accessories_page,
-  .c-view-apparel--all_bags_page,
-  .c-view-apparel--all_apparel_page,
-  .c-field-favorite-discs--all_discs_page,
-  .c-field-favorite-discs--all_accessories_page,
-  .c-field-favorite-discs--all_bags_page,
-  .c-field-favorite-discs--all_apparel_page {
+  .c-view-discs,
+  .c-view-bags,
+  .c-view-accessories,
+  .c-view-apparel,
+  .c-field-favorite-discs {
     grid-template-columns: repeat(4, 1fr); } }
 
 .c-view-filters {

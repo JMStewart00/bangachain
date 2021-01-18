@@ -125,8 +125,10 @@ function bangachain_preprocess_input(&$variables) {
  */
 function bangachain_preprocess_form_element_label(&$variables) {
   // Do not add suggetstion for Layout Builder labels.
-  if (strpos($variables['element']['#id'], 'layout-settings') !== false) {
-    return;
+  if (isset($variables['element']['#id'])) {
+    if (strpos($variables['element']['#id'], 'layout-settings') !== false) {
+      return;
+    }
   }
 
   $variables['attributes']['class'][] = 'c-form__label';

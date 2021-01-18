@@ -22,18 +22,7 @@
     .h2 {
       position: relative;
       margin-bottom: 0;
-
-      &::after {
-        content: '';
-        display: block;
-        position: absolute;
-        bottom: -2px;
-        left: 25%;
-        height: 2px;
-        background: $orange;
-        transition: width 0.5s;
-        width: 0;
-      }
+      transition: $transition-base;
     }
   }
 
@@ -43,8 +32,19 @@
       width: 75%;
     }
 
+    @include hover-focus() {
+      img {
+        transform: scale(1.1);
+      }
+
+      .h2 {
+        color: darken($brand-blue, 25%);
+      }
+    }
+
     .c-field-media-image {
       margin: auto;
+      overflow: hidden;
     }
   }
 
@@ -115,5 +115,9 @@
 
   &__image {
     margin-bottom: rvr(0.25);
+
+    img {
+      transition: $transition-base;
+    }
   }
 }

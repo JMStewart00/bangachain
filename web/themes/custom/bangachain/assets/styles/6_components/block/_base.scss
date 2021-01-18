@@ -39,6 +39,8 @@
   }
 
   &__cta {
+    max-width: 300px;
+    margin: auto;
     .o-btn {
       display: block;
       margin: rvr(1) auto;

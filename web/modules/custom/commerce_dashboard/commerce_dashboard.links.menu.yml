@@ -1,0 +1,6 @@
+commerce_dashboard.dashboard:
+  title: 'Dashboard'
+  route_name: 'commerce_dashboard.dashboard'
+  parent: 'commerce.admin_commerce'
+  description: 'Dashbboard with reportings of your Commerce store.'
+  weight: -9

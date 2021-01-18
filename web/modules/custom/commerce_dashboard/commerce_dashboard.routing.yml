@@ -1,0 +1,7 @@
+commerce_dashboard.dashboard:
+  path: '/admin/commerce/dashboard'
+  defaults:
+    _controller: '\Drupal\commerce_dashboard\Controller\CommerceDashboard::dashboard'
+    _title: 'Dashboard'
+  requirements:
+    _permission: 'access dashboard'

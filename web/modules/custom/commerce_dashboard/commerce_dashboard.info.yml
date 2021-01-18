@@ -1,0 +1,10 @@
+name: Commerce Dashboard
+type: module
+description: 'Provides a commerce reporting dashboard.'
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: Commerce
+configure: commerce_dashboard.dashboard
+dependencies:
+  - commerce:commerce
+  - drupal:rest

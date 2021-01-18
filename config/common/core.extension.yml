@@ -27,6 +27,7 @@ module:
   commerce_cart_api: 0
   commerce_cart_flyout: 0
   commerce_checkout: 0
+  commerce_dashboard: 0
   commerce_feeds: 0
   commerce_giftcard: 0
   commerce_log: 0

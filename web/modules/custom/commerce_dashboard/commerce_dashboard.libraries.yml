@@ -1,0 +1,38 @@
+vue.js:
+  header: true
+  js:
+    https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js: { type: external, minified: true }
+
+vuetify.js:
+  header: true
+  js:
+    https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js: { type: external, minified: true }
+
+axios.js:
+  header: true
+  js:
+    https://unpkg.com/axios/dist/axios.min.js: { type: external, minified: true }
+
+moment.js:
+  header: true
+  js:
+    js/moment-with-locales.min.js: {}
+
+commerce_dashboard.js:
+  js:
+    js/commerce_dashboard.js: {}
+
+materialdesignicons.css:
+  css:
+    theme:
+      https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css: {}
+
+vuetify.css:
+  css:
+    theme:
+      https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css: {}
+
+robotofont.css:
+  css:
+    theme:
+      https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900: {}

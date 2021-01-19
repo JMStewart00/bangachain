@@ -1,0 +1,14 @@
+uuid: 21776783-57a9-4d61-bd1a-25bbe1403da6
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.team_member
+  module:
+    - user
+id: user_add_role_action.team_member
+label: 'Add the Team Member role to the selected user(s)'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: team_member

@@ -2,8 +2,12 @@ uuid: 7260dc59-9a32-4697-b9d8-d8c366501dc5
 langcode: en
 status: true
 dependencies:
+  config:
+    - core.entity_view_mode.media.colorbox
+    - core.entity_view_mode.media.square
   module:
     - editor
+    - media
 _core:
   default_config_hash: WNeK5FbcY8pXgEpbD_KgRzlF1-5PL3BJXwqaBctPTqw
 name: 'Full HTML'
@@ -34,3 +38,24 @@ filters:
     status: true
     weight: 11
     settings: {  }
+  filter_html:
+    id: filter_html
+    provider: filter
+    status: true
+    weight: -10
+    settings:
+      allowed_html: '<a href hreflang> <em> <strong> <cite> <blockquote cite> <code> <ul type> <ol type start> <li> <dl> <dt> <dd> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <s> <sup> <sub> <table class> <caption> <tbody> <thead> <tfoot> <th> <td> <tr> <hr> <p class> <h1> <pre> <drupal-media data-entity-type data-entity-uuid data-view-mode data-align data-caption alt title> <u> '
+      filter_html_help: true
+      filter_html_nofollow: false
+  media_embed:
+    id: media_embed
+    provider: media
+    status: true
+    weight: 100
+    settings:
+      default_view_mode: default
+      allowed_media_types:
+        image: image
+      allowed_view_modes:
+        colorbox: colorbox
+        square: square

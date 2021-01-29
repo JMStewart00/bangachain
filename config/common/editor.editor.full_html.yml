@@ -18,12 +18,15 @@ settings:
           name: Formatting
           items:
             - Bold
+            - Underline
             - Italic
             - Strike
             - Superscript
             - Subscript
             - '-'
             - RemoveFormat
+            - Undo
+            - Redo
         -
           name: Linking
           items:
@@ -37,8 +40,8 @@ settings:
         -
           name: Media
           items:
+            - DrupalMediaLibrary
             - Blockquote
-            - DrupalImage
             - Table
             - HorizontalRule
         -
@@ -50,14 +53,27 @@ settings:
           items:
             - ShowBlocks
             - Source
+            - Maximize
+      -
+        -
+          name: Other
+          items:
+            - JustifyLeft
+            - JustifyCenter
+            - JustifyRight
+            - JustifyBlock
+            - PasteText
+            - PasteFromWord
   plugins:
     stylescombo:
       styles: ''
+    language:
+      language_list: un
 image_upload:
   status: true
   scheme: public
   directory: inline-images
   max_size: ''
   max_dimensions:
-    width: 0
-    height: 0
+    width: null
+    height: null

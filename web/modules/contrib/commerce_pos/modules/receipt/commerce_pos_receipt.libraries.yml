@@ -1,0 +1,12 @@
+receipt:
+  version: 1.x
+  css:
+    theme:
+      css/commerce_pos_receipt.css: {}
+  js:
+    js/commerce_pos_receipt.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/drupal.ajax

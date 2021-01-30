@@ -1,0 +1,59 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_order.commerce_order_type.pos
+    - field.field.commerce_order.pos.field_cashier
+    - field.field.commerce_order.pos.field_register
+  module:
+    - commerce_order
+    - commerce_pos
+id: commerce_order.pos.default
+targetEntityType: commerce_order
+bundle: pos
+mode: default
+content:
+  adjustments:
+    type: commerce_adjustment_default
+    weight: 1
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  mail:
+    type: email_default
+    weight: 2
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  order_items:
+    type: pos_order_item_widget
+    weight: 0
+    settings:
+      size: 60
+      placeholder: 'Scan or enter product name or SKU'
+      num_results: 10
+      purchasable_entity_view_mode: commerce_pos_product_select
+      allow_decimal: true
+      decimal_step: '0.1'
+    third_party_settings: {  }
+    region: content
+  uid:
+    type: pos_customer_widget
+    weight: 0
+    settings:
+      size: 60
+      placeholder: 'Enter a name, email, or phone number'
+      num_results: 10
+    third_party_settings: {  }
+    region: content
+hidden:
+  billing_profile: true
+  created: true
+  field_cashier: true
+  field_register: true
+  ip_address: true
+  order_number: true
+  state: true
+  store_id: true

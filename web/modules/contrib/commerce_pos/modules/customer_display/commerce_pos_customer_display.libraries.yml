@@ -1,0 +1,12 @@
+display:
+  version: VERSION
+  js:
+    js/commerce_pos_customer_display.js: {}
+  css:
+    layout:
+      css/commerce_pos_customer_display.css: {}
+
+register:
+  version: VERSION
+  js:
+    js/commerce_pos_customer_display_register.js: {}

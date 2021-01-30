@@ -1,0 +1,29 @@
+services:
+  commerce_pos.cashier:
+    class: Drupal\commerce_pos\CashierUsers
+    arguments: ['@database']
+
+  commerce_pos.registers:
+    class: Drupal\commerce_pos\Registers
+
+  commerce_pos.upc:
+    class: Drupal\commerce_pos\UPC
+    arguments: ['@entity_type.manager']
+
+  commerce_pos.current_register:
+    class: Drupal\commerce_pos\CurrentRegister
+
+  commerce_pos.customer_profile_subscriber:
+    class: Drupal\commerce_pos\EventSubscriber\CustomerProfileSubscriber
+    tags:
+      - { name: event_subscriber }
+
+  commerce_pos.recent_cashiers:
+    class: Drupal\commerce_pos\RecentCashiers
+
+  commerce_pos.uninstall_validator:
+    class: Drupal\commerce_pos\CommercePosUninstallValidator
+    tags:
+      - { name: module_install.uninstall_validator }
+    arguments: ['@string_translation', '@entity_type.manager']
+    lazy: true

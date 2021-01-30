@@ -1,0 +1,7 @@
+name: Commerce POS Currency Denominations
+description: Provides a interface for configuring currency denominations.
+type: module
+package: Commerce (POS)
+core: 8.x
+dependencies:
+  - commerce:commerce_price

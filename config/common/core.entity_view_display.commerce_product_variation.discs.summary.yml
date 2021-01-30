@@ -12,6 +12,7 @@ dependencies:
     - field.field.commerce_product_variation.discs.field_bin
     - field.field.commerce_product_variation.discs.field_product_image
     - field.field.commerce_product_variation.discs.field_stock
+    - field.field.commerce_product_variation.discs.field_upc
     - field.field.commerce_product_variation.discs.field_used
     - field.field.commerce_product_variation.discs.field_vendor_cost
     - field.field.commerce_product_variation.discs.weight
@@ -39,11 +40,13 @@ hidden:
   field_bin: true
   field_product_image: true
   field_stock: true
+  field_upc: true
   field_used: true
   field_vendor_cost: true
   list_price: true
   price: true
   product_id: true
+  search_api_excerpt: true
   sku: true
   title: true
   weight: true

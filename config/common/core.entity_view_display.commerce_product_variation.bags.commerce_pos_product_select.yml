@@ -1,0 +1,88 @@
+uuid: 28bcaf17-2e99-4878-82bd-bf7551332889
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_variation_type.bags
+    - core.entity_view_mode.commerce_product_variation.commerce_pos_product_select
+    - field.field.commerce_product_variation.bags.attribute_disc_color
+    - field.field.commerce_product_variation.bags.field_product_image
+    - field.field.commerce_product_variation.bags.field_stock
+    - field.field.commerce_product_variation.bags.field_upc
+    - field.field.commerce_product_variation.bags.weight
+  module:
+    - commerce_price
+    - commerce_stock_field
+    - layout_builder
+    - text
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
+id: commerce_product_variation.bags.commerce_pos_product_select
+targetEntityType: commerce_product_variation
+bundle: bags
+mode: commerce_pos_product_select
+content:
+  attribute_disc_color:
+    type: entity_reference_label
+    weight: 3
+    region: content
+    label: inline
+    settings:
+      link: false
+    third_party_settings: {  }
+  field_product_image:
+    type: entity_reference_entity_view
+    weight: 1
+    region: content
+    label: hidden
+    settings:
+      view_mode: square
+      link: false
+    third_party_settings: {  }
+  field_stock:
+    type: commerce_stock_level_simple
+    weight: 4
+    region: content
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+  field_upc:
+    weight: 5
+    label: inline
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  price:
+    type: commerce_price_default
+    weight: 2
+    region: content
+    label: hidden
+    settings:
+      strip_trailing_zeroes: false
+      currency_display: symbol
+    third_party_settings: {  }
+  sku:
+    type: string
+    weight: 6
+    region: content
+    label: inline
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  title:
+    type: string
+    weight: 0
+    region: content
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+hidden:
+  add_to_cart_link: true
+  list_price: true
+  product_id: true
+  search_api_excerpt: true
+  weight: true

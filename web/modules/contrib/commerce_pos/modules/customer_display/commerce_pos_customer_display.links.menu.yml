@@ -1,0 +1,13 @@
+commerce_pos_customer_display.main:
+  title: 'Customer Display'
+  route_name: 'commerce_pos_customer_display.main'
+  parent: 'commerce_pos.base'
+  description: 'POS Display'
+  weight: 2
+
+commerce_pos_customer_display.settings:
+  title: 'Customer Display'
+  route_name: 'commerce_pos_customer_display.settings'
+  parent: 'commerce_pos.configuration'
+  description: 'Configure your Point of Sale Customer Display'
+  weight: 30

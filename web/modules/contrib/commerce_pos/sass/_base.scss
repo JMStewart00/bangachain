@@ -1,0 +1,174 @@
+/* POS side bar styles */
+
+.layout-pos-form {
+  box-sizing: border-box;
+}
+
+.layout-region-pos-main {
+  float: left;
+  width: 66.66%;
+}
+
+.layout-region-pos-sidebar {
+  float: right;
+  width: 29.33%;
+  padding-left: 40px;
+  margin-top: 1em;
+}
+
+@media screen and (max-width: 1078px) {
+  .layout-region-pos-sidebar {
+    width: 27.33%;
+  }
+}
+
+@media screen and (max-width: 980px) {
+  .layout-region-pos-main {
+    width: 100%;
+  }
+  .layout-region-pos-sidebar {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .layout-region-pos-main {
+    float: none;
+    width: auto;
+  }
+  .layout-region-pos-sidebar {
+    float: none;
+    width: auto;
+    padding-top: 40px;
+    padding-left: 0;
+  }
+}
+
+.layout-region-pos-totals table tr td {
+  font-weight: bold;
+}
+
+.layout-region-pos-totals table tr td:last-child {
+  width: 35%;
+  text-align: right;
+}
+
+.layout-region-pos-totals table tr {
+  padding: 0;
+  width: 100%;
+  background-color: #F0F0F0;
+  color: #333;
+  border: 0;
+  border-bottom: 1px solid #FFFFFF;
+}
+
+.layout-region-pos-totals table tr:hover {
+  background-color: #F0F0F0;
+
+  &.commerce-pos--totals--change {
+    background-color: #0074BD;
+  }
+}
+
+// Payment page only.
+.layout-pos-form-payment .layout-region-pos-totals table tr {
+  &.commerce-pos--totals--change {
+    color: #fff;
+    background-color: #0074BD;
+  }
+
+  &:hover.commerce-pos--totals--change,
+  &:focus.commerce-pos--totals--change {
+    background-color: #0074BD;
+  }
+}
+
+.layout-pos-form-payment {
+  #edit-payment-gateway {
+    padding: 0;
+  }
+  .vertical-tabs {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+  .vertical-tabs__panes {
+    background: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    margin: 0 0 0 150px;
+  }
+  .vertical-tabs__menu {
+    width: 150px;
+  }
+  .vertical-tabs__menu li {
+    background: #FFFFFF;
+    box-shadow: none;
+    border-right: 0;
+  }
+  .vertical-tabs__menu li a {
+    border-bottom: 0;
+    background: #f0f0f0;
+    font-size: 16px;
+    text-decoration: none;
+  }
+  .vertical-tabs__menu-item {
+    a {
+      padding: 20px 15px;
+
+      .vertical-tabs__menu-item-summary {
+        display: none;
+      }
+
+      .vertical-tabs__menu-item-title {
+        color: #0074bd;
+      }
+
+      &:hover {
+        .vertical-tabs__menu-item-title {
+          text-decoration: none;
+        }
+      }
+    }
+  }
+  .vertical-tabs__menu-item.is-selected {
+    border-right: 0;
+    border-bottom: 0;
+    a {
+      background: #FFFFFF;
+      border-bottom: 1px solid #b3b2ad;
+      padding-left: 15px;
+    }
+  }
+  .layout-region-pos-sidebar {
+    .commerce-pos--totals--to-pay.odd {
+      background: #0074bd;
+      text-transform: capitalize;
+      font-size: 16px;
+      td {
+        font-weight: 400;
+      }
+    }
+    .commerce-pos--totals--to-pay.even {
+      text-transform: uppercase;
+      font-size: 16px;
+    }
+    .commerce-pos--totals--change {
+      font-size: 16px;
+    }
+    #edit-totals-totals,
+    #edit-totals-payments {
+      margin-bottom: 23px;
+    }
+  }
+  input.form-number {
+    max-width: 140px;
+    margin-top: 5px;
+    @media screen and (max-width: 700px) {
+      max-width: 100%;
+    }
+  }
+  .details-wrapper {
+    width: 80%;
+    margin: 0 auto;
+  }
+}

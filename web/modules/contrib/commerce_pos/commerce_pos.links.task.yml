@@ -1,0 +1,29 @@
+commerce_pos.main:
+  title: 'Point of Sale'
+  route_name: 'commerce_pos.main'
+  base_route: 'commerce_pos.main'
+  description: 'Point of Sale Interface'
+
+commerce_pos.order_lookup:
+  title: 'Order Lookup'
+  route_name: 'commerce_pos.order_lookup'
+  base_route: 'commerce_pos.main'
+  description: 'Point of Sale Order Lookup'
+
+commerce_pos.parked_order_lookup:
+  title: 'Parked Orders'
+  route_name: 'commerce_pos.parked_order_lookup'
+  base_route: 'commerce_pos.main'
+  description: 'Point of Sale Parked Order Lookup'
+
+commerce_pos.close_register:
+  title: 'Close Register'
+  route_name: 'commerce_pos.close_register'
+  base_route: 'commerce_pos.main'
+  description: 'Close Register'
+
+commerce_pos.select_register:
+  title: 'Change Register'
+  route_name: 'commerce_pos.select_register'
+  base_route: 'commerce_pos.main'
+  description: 'Change your active Register'

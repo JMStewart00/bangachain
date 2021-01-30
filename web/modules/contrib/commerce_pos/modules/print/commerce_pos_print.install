@@ -1,0 +1,32 @@
+<?php
+
+/**
+ * @file
+ * Contains commerce_pos_print.install.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function commerce_pos_print_requirements($phase) {
+  $requirements = [];
+  if ($phase == 'install' || $phase == 'runtime') {
+    $path = 'libraries/jQuery.print/jQuery.print.js';
+    if (!file_exists($path)) {
+      $requirements['commerce_pos_print'] = [
+        'title' => t('Commerce Point of Sale'),
+        'description' => t("To print receipts, labels, and reports you must install the jQuery.print library."),
+        'severity' => REQUIREMENT_WARNING,
+      ];
+    }
+    else {
+      $requirements['commerce_pos_print'] = [
+        'title' => t('Commerce Point of Sale'),
+        'severity' => REQUIREMENT_OK,
+        'value' => t('jQuery.print library has been configured.'),
+      ];
+    }
+  }
+
+  return $requirements;
+}

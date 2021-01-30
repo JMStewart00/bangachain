@@ -1,0 +1,6 @@
+commerce_pos_barcode_scanning.settings:
+  path: '/admin/commerce/config/pos/barcode-scanning'
+  defaults:
+    _form: '\Drupal\commerce_pos_barcode_scanning\Form\SettingsForm'
+  requirements:
+    _permission: 'access commerce pos administration pages'

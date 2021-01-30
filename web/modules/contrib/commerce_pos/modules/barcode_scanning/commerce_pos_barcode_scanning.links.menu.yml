@@ -1,0 +1,6 @@
+commerce_pos_barcode_scanning.configuration:
+  title: 'Barcode Scanning'
+  parent: commerce_pos.configuration
+  description: 'Configure the barcode scanning options.'
+  route_name: commerce_pos_barcode_scanning.settings
+  weight: 25

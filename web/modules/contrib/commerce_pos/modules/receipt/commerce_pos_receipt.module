@@ -1,0 +1,149 @@
+<?php
+
+/**
+ * @file
+ * Contains commerce_pos_receipt.module.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_help().
+ */
+function commerce_pos_receipt_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the commerce_pos_receipt module.
+    case 'help.page.commerce_pos_receipt':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Provides receipt printing for Commerce Point of Sale') . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function commerce_pos_receipt_theme() {
+  $theme['commerce_pos_receipt'] = [
+    'variables' => [
+      'receipt' => NULL,
+    ],
+    'template' => 'commerce-pos-receipt',
+  ];
+  $theme['commerce-pos-receipt-email'] = [
+    'variables' => [
+      'customer_name' => NULL,
+      'order_id' => NULL,
+      'receipt_markup' => NULL,
+      'site_name' => NULL,
+    ],
+    'template' => 'commerce-pos-receipt-email',
+  ];
+
+  return $theme;
+}
+
+/**
+ * Implements hook_entity_operation().
+ */
+function commerce_pos_receipt_entity_operation(EntityInterface $entity) {
+  $operations = [];
+
+  /* @var $entity \Drupal\commerce_order\Entity\OrderInterface */
+  if ($entity->getEntityTypeId() == 'commerce_order') {
+    // @see \Drupal\commerce_pos_receipt\Controller\PrintController::checkAccess()
+    if ($entity->getPlacedTime() && \Drupal::currentUser()->hasPermission('administer commerce_order')) {
+      $operations['show_receipt'] = [
+        'title' => t('Show receipt'),
+        'url' => Url::fromRoute('commerce_pos_receipt.show', ['commerce_order' => $entity->id()]),
+        'weight' => 50,
+      ];
+    }
+  }
+
+  return $operations;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for form changing.
+ */
+function commerce_pos_receipt_form_commerce_pos_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form_state->get('step') == 'payment') {
+    // Add a radio button to select whether the user wants to print or email the
+    // receipt.
+    $form['totals']['print_email_receipt'] = [
+      '#type' => 'radios',
+      '#title' => t('Receipt'),
+      '#options' => [
+        'print' => t('Print'),
+        'email' => t('Email'),
+        'print_and_email' => t('Both'),
+        'none' => t('No Receipt'),
+      ],
+      '#default_value' => 'print',
+    ];
+
+    $form['receipt'] = [
+      '#type' => 'container',
+    ];
+
+    $form['#attached']['library'][] = 'commerce_pos_receipt/receipt';
+    $form['#attached']['library'][] = 'commerce_pos_print/jQuery.print';
+
+    $form['#attached']['drupalSettings']['commercePosReceipt'] = [
+      'orderId' => $form_state->getFormObject()->getEntity()->id(),
+    ];
+
+    $form['receipt']['contents'] = [
+      '#markup' => '<div id="commerce-pos-receipt"></div>',
+    ];
+
+    $form['actions']['finish']['#attributes']['class'][] = 'commerce-pos-receipt-button';
+  }
+}
+
+/**
+ * Implements hook_mail().
+ */
+function commerce_pos_receipt_mail($key, &$message, $params) {
+  $options = [
+    'langcode' => $message['langcode'],
+  ];
+
+  switch ($key) {
+    case 'commerce_pos_order_receipt':
+      $message['from'] = $params['from'];
+      $message['subject'] = t('Receipt for Order #@order_id', ['@order_id' => $params['order_id']], $options);
+      $message['body'][] = $params['message'];
+      $message['headers']['Content-Type'] = 'text/html; charset=UTF-8; format=flowed; delsp=yes';
+
+      break;
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for form changing.
+ */
+function commerce_pos_form_commerce_pos_order_lookup_alter(&$form, FormStateInterface $form_state, $form_id) {
+
+  // Add the 'Show Receipt' link to the 'Operations' button for each order.
+  if (Drupal::currentUser()->hasPermission('commerce pos view receipts')) {
+
+    $order_ids = $form_state->get('order_ids');
+
+    foreach ($order_ids as $index => $order_id) {
+      $receipt_url = Url::fromRoute('commerce_pos_receipt.show', ['commerce_order' => $order_id]);
+
+      $form['order_lookup']['results']['result']['#rows'][$index]['operations']['data']['#links'] += [
+        'receipt' => [
+          'title' => t('Show Receipt'),
+          'url' => $receipt_url,
+        ],
+      ];
+    }
+  }
+}

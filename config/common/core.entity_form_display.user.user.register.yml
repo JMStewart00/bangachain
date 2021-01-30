@@ -5,6 +5,8 @@ dependencies:
   config:
     - core.entity_form_mode.user.register
     - field.field.user.user.commerce_remote_id
+    - field.field.user.user.field_cashier_id
+    - field.field.user.user.field_commerce_pos_phone_number
     - field.field.user.user.user_picture
   module:
     - path
@@ -41,4 +43,6 @@ hidden:
   commerce_remote_id: true
   contact: true
   customer_profiles: true
+  field_cashier_id: true
+  field_commerce_pos_phone_number: true
   user_picture: true

@@ -1,0 +1,25 @@
+{#
+/**
+* @file
+* Receipt email.
+*
+* Available variables:
+* - receipt: The receipt.
+*
+* @ingroup themeable
+*/
+#}
+{%  if customer_name %}
+Dear {{ customer_name }},
+<br>
+<br>
+{% endif %}
+Receipt for Order #{{ order_id }}
+<br>
+<div style="border: 1px solid red;" class="commerce-pos-receipt">
+  {{ receipt_markup }}
+</div>
+<br>
+Thank you.
+<br>
+{{ site_name }}

@@ -1,0 +1,5 @@
+order_lookup_limit: 10
+product_search_server: pos
+product_search_index: pos
+_core:
+  default_config_hash: o-VTd4-27euO9X90O2Ky-pu-xnqm0ah7BfocjiLD3Oc

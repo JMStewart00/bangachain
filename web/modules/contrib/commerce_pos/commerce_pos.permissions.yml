@@ -1,0 +1,11 @@
+'access commerce pos administration pages':
+  title: 'Use the commerce point of sale administration pages'
+'access commerce pos pages':
+  title: 'Use the commerce point of sale standard functionality'
+'access commerce pos order lookup':
+  title: 'Use the commerce point of sale order lookup'
+'alter product unit price':
+  title: 'Allow users to alter the product price'
+  restrict access: true
+'change commerce pos active register':
+  title: 'Change the active commerce point of sale register'

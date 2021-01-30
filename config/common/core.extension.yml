@@ -36,6 +36,11 @@ module:
   commerce_order: 0
   commerce_payment: 0
   commerce_payment_example: 0
+  commerce_pos: 0
+  commerce_pos_currency_denominations: 0
+  commerce_pos_keypad: 0
+  commerce_pos_print: 0
+  commerce_pos_receipt: 0
   commerce_price: 0
   commerce_product: 0
   commerce_promotion: 0
@@ -118,6 +123,7 @@ module:
   rh_node: 0
   rules: 0
   search: 0
+  search_api: 0
   serialization: 0
   shortcut: 0
   simple_image_rotate: 0
@@ -131,6 +137,7 @@ module:
   system: 0
   tamper: 0
   taxonomy: 0
+  telephone: 0
   text: 0
   token: 0
   toolbar: 0

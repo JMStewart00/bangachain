@@ -1,0 +1,26 @@
+uuid: d3fa4084-adf4-4959-9fe2-5ad1e05bcf59
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_variation_type.discs
+    - field.storage.commerce_product_variation.field_upc
+  enforced:
+    module:
+      - commerce_pos
+  module:
+    - text
+_core:
+  default_config_hash: DJYLM7brHYdsXqruKEyAeIJyJ4GQKYpoZxch71yzlu0
+id: commerce_product_variation.discs.field_upc
+field_name: field_upc
+entity_type: commerce_product_variation
+bundle: discs
+label: UPC
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text

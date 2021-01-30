@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Provides the ability to print labels for products.
+ */
+
+function commerce_pos_print_test_library_info_alter(array &$libraries, $extension) {
+  // For testing purposes link straight to the library in github.
+  if ($extension == 'commerce_pos_print' && isset($libraries['jQuery.print'])) {
+    $libraries['jQuery.print']['js'] = ['http://doersguild.github.io/jQuery.print/jQuery.print.js' => []];
+  }
+}

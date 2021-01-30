@@ -1,0 +1,16 @@
+keypad:
+  version: VERSION
+  css:
+    component:
+      css/commerce_pos_keypad.css: {}
+  js:
+    js/commerce_pos_keypad.js: {}
+  drupalSettings:
+    commerce_pos_keypad:
+      commerce_pos_keypad:
+        commercePosKeypadKeypad: null
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+    - core/drupalSettings

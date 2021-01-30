@@ -1,0 +1,99 @@
+uuid: 3d288e86-d345-4178-983f-0030c79f5d76
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_variation_type.discs
+    - core.entity_view_mode.commerce_product_variation.commerce_pos_product_select
+    - field.field.commerce_product_variation.discs.attribute_disc_color
+    - field.field.commerce_product_variation.discs.attribute_disc_plastic
+    - field.field.commerce_product_variation.discs.attribute_disc_weight
+    - field.field.commerce_product_variation.discs.feeds_item
+    - field.field.commerce_product_variation.discs.field_bin
+    - field.field.commerce_product_variation.discs.field_product_image
+    - field.field.commerce_product_variation.discs.field_stock
+    - field.field.commerce_product_variation.discs.field_upc
+    - field.field.commerce_product_variation.discs.field_used
+    - field.field.commerce_product_variation.discs.field_vendor_cost
+    - field.field.commerce_product_variation.discs.weight
+    - image.style.large
+  module:
+    - commerce_price
+    - media
+_core:
+  default_config_hash: iA80ICXaupUBW9yG0NuYRp1m9DdG96zIQCLKPM11HPc
+id: commerce_product_variation.discs.commerce_pos_product_select
+targetEntityType: commerce_product_variation
+bundle: discs
+mode: commerce_pos_product_select
+content:
+  attribute_disc_color:
+    type: entity_reference_label
+    weight: 4
+    region: content
+    label: inline
+    settings:
+      link: false
+    third_party_settings: {  }
+  attribute_disc_plastic:
+    type: entity_reference_label
+    weight: 6
+    region: content
+    label: inline
+    settings:
+      link: false
+    third_party_settings: {  }
+  attribute_disc_weight:
+    type: entity_reference_label
+    weight: 5
+    region: content
+    label: inline
+    settings:
+      link: false
+    third_party_settings: {  }
+  field_product_image:
+    type: media_thumbnail
+    weight: 3
+    region: content
+    label: hidden
+    settings:
+      image_style: large
+      image_link: ''
+    third_party_settings: {  }
+  price:
+    label: inline
+    type: commerce_price_default
+    weight: 2
+    region: content
+    settings:
+      strip_trailing_zeroes: false
+      currency_display: symbol
+    third_party_settings: {  }
+  sku:
+    type: string
+    weight: 0
+    region: content
+    label: inline
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  title:
+    type: string
+    weight: 1
+    region: content
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+hidden:
+  add_to_cart_link: true
+  feeds_item: true
+  field_bin: true
+  field_stock: true
+  field_upc: true
+  field_used: true
+  field_vendor_cost: true
+  list_price: true
+  product_id: true
+  search_api_excerpt: true
+  weight: true

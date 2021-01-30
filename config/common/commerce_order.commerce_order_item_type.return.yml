@@ -1,0 +1,17 @@
+uuid: a3f2afde-ab27-4e2a-a5f7-ca788655ed9b
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_tax
+third_party_settings:
+  commerce_tax:
+    taxable_type: physical_goods
+_core:
+  default_config_hash: 1qrva2PEkPAmYhv6x4SkZXb_RNSeEtSnssXJHuqPWgQ
+label: Return
+id: return
+purchasableEntityType: commerce_product_variation
+orderType: default
+traits: {  }
+locked: false

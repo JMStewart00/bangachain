@@ -1,0 +1,69 @@
+<?php
+
+/**
+ * @file
+ * Creates a customer facing screen that shows the current POS order with live updates.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\user\Entity\User;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function commerce_pos_customer_display_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the commerce_pos module.
+    case 'help.page.commerce_pos_customer_display':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Commerce POS Customer Display is an experimental submodule for displaying in real-time the items and total cost of a POS sale.') . '</p>';
+      $output .= '<h4>' . t('Getting Started') . '</h4>';
+      $output .= '<p>' . t('Installation is fairly straightforward - just go to wherever your composer.json file is and run <code>composer require cboden/ratchet</code>.') . '</p>';
+      $output .= '<p>' . t("Once you've configured the settings you will need to manually execute the websocket server by running the following commands.") . '</p>';
+      $output .= '<code>' . t('cd webroot<br />php modules/contrib/commerce_pos/modules/customer_display/server.php &') . '</code>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Form Alter.
+ */
+function commerce_pos_customer_display_form_commerce_pos_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form['#attached']['library'][] = 'commerce_pos_customer_display/register';
+
+  $register = \Drupal::service('commerce_pos.current_register')->get();
+
+  if (isset($register)) {
+    $form['#attached']['drupalSettings']['commercePOSCustomerDisplayRegisterId'] = $register->id();
+  }
+
+  $user = User::load(\Drupal::currentUser()->id());
+  $form['#attached']['drupalSettings']['commercePOSCustomerDisplayCashierName'] = $user->getAccountName();
+
+  $config = \Drupal::configFactory()->getEditable('commerce_pos_customer_display.settings');
+
+  $url = 'wss://' . $config->get('websocket_host') . ':' . $config->get('websocket_external_port') . '/display';
+  $form['#attached']['drupalSettings']['commercePOSCustomerDisplayURL'] = $url;
+
+}
+
+/**
+ * Implements hook_theme().
+ */
+function commerce_pos_customer_display_theme($existing, $type, $theme, $path) {
+  return [
+    'commerce_pos_customer_display_display' => [
+      'variables' => [
+        'store' => NULL,
+        'register' => NULL,
+        'store_logo' => NULL,
+        'accent_colour' => NULL,
+      ],
+    ],
+  ];
+
+}

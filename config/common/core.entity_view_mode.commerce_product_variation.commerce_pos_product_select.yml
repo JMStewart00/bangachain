@@ -1,0 +1,12 @@
+uuid: 1df8fa5b-89b6-400c-a3d0-90d93ec43cf7
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_product
+_core:
+  default_config_hash: RLZUK4kXYbUY5WkY1w-cE-iwT4BYTr1puDcAcuZg-Rg
+id: commerce_product_variation.commerce_pos_product_select
+label: 'Commerce POS product select'
+targetEntityType: commerce_product_variation
+cache: true

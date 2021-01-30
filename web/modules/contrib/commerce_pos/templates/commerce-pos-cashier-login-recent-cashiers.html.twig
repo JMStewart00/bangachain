@@ -1,0 +1,25 @@
+{#
+/**
+ * @file
+ * Template for the Commerce POS recent cashiers list.
+ *
+ * Available variables:
+ * - cashiers: The cashiers list.
+ *
+ * @ingroup themeable
+ */
+#}
+<div class = "commerce-pos-login__pane commerce-pos-login__pane--users">
+  <div class="commerce-pos-login__pane__content">
+    <a href="#" class="commerce-pos-login__pane__toggle commerce-pos-login__pane__toggle--users">{{ 'Users'|t }}</a>
+    <div class="commerce-pos-login__pane__body">
+      <ul class="commerce-pos-login__users-list">
+        {% for cashier in cashiers %}
+          <li>
+            <a href="#" class="commerce-pos-login__users-list__user">{{ cashier.name }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>

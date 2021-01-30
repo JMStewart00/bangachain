@@ -8,6 +8,7 @@ dependencies:
     - field.field.commerce_product_variation.accessories.attribute_disc_color
     - field.field.commerce_product_variation.accessories.field_product_image
     - field.field.commerce_product_variation.accessories.field_stock
+    - field.field.commerce_product_variation.accessories.field_upc
     - field.field.commerce_product_variation.accessories.weight
   module:
     - layout_builder
@@ -29,9 +30,11 @@ hidden:
   attribute_disc_color: true
   field_product_image: true
   field_stock: true
+  field_upc: true
   list_price: true
   price: true
   product_id: true
+  search_api_excerpt: true
   sku: true
   title: true
   weight: true

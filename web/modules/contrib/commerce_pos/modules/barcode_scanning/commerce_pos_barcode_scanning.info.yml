@@ -1,0 +1,7 @@
+name: Commerce POS Barcode Scanning
+type: module
+description: Allows users to scan barcodes with their camera.
+core: 8.x
+package: Commerce (POS)
+dependencies:
+  - commerce_pos:commerce_pos

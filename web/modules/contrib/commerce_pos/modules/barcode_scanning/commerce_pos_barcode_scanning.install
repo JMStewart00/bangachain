@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * @file
+ * Checks if the quagga library has been installed, which is required for barcode
+ * scanning.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function commerce_pos_barcode_scanning_requirements($phase) {
+  $requirements = [];
+  if ($phase == 'install' || $phase == 'runtime') {
+    $path = 'libraries/quagga/quagga.min.js';
+    if (!file_exists($path)) {
+      $requirements['commerce_pos_barcode_scanning'] = [
+        'title' => t('POS Barcode Scanning'),
+        'description' => t('To scan barcodes, you need to install the quagga JavaScript library. <a href="/modules/contrib/commerce_pos/modules/barcode_scanning/README.md">How To</a>'),
+        'severity' => REQUIREMENT_WARNING,
+      ];
+    }
+    else {
+      $requirements['commerce_pos_barcode_scanning'] = [
+        'title' => t('POS Barcode Scanning'),
+        'severity' => REQUIREMENT_OK,
+        'value' => t('quagga JavaScript library has been configured.'),
+      ];
+    }
+  }
+
+  return $requirements;
+}

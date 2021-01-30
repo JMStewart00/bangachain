@@ -1,0 +1,29 @@
+uuid: 99680b13-ca81-4f93-a840-b1f30e8c15e6
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - commerce_pos
+_core:
+  default_config_hash: euUTHjr7eehTaXi4Z0bbQs6gDimU_ZL-Bp-m6gPAXuU
+id: pos_gift_card
+label: 'Gift card'
+weight: null
+plugin: manual
+configuration:
+  instructions:
+    value: ''
+    format: plain_text
+  display_label: 'Gift card'
+  mode: n/a
+  payment_method_types:
+    - credit_card
+  collect_billing_information: true
+conditions:
+  -
+    plugin: order_type
+    configuration:
+      bundles:
+        - pos
+conditionOperator: AND

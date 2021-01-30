@@ -1,0 +1,234 @@
+$c-primary: #990000;
+
+// Variables.
+$c-gray-dark: #000;
+$c-gray-mid: #666;
+$c-gray-light: #ccc;
+$c-gray-lighter: #f0f0f0;
+$font-size-base: 16px;
+$header-height: 150px;
+$sidebar-width: 750px;
+
+// Hide admin bar.
+#toolbar-administration {
+  display: none;
+}
+
+// Layout.
+html, body, .dialog-off-canvas-main-canvas {
+  height: 100% !important;
+  overflow: hidden;
+  margin-bottom: -1px;
+  background: #fff;
+  font-size: $font-size-base;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  line-height: 1.2;
+}
+
+.dialog-off-canvas-main-canvas {
+  font-size: 0;
+}
+
+.commerce-pos-customer-display * {
+  box-sizing: border-box;
+  position: relative;
+}
+
+.commerce-pos-customer-display {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  font-size: 0;
+}
+
+.commerce-pos-customer-display__left {
+  display: inline-block;
+  vertical-align: top;
+  height: 100%;
+  width: calc(100% - #{$sidebar-width});
+  color: #000;
+  overflow: hidden;
+}
+
+.commerce-pos-customer-display__right {
+  display: inline-block;
+  vertical-align: top;
+  height: 100%;
+  width: $sidebar-width;
+  color: #fff;
+
+  .commerce-pos-customer-display__right__top {
+    padding: 60px;
+  }
+
+  .commerce-pos-customer-display__right__bottom {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 60px;
+    background-color: rgba(0, 0, 0, .35);
+  }
+}
+
+// Header.
+.commerce-pos-customer-display__header {
+  height: $header-height;
+  margin: 0 65px;
+  padding: 30px 0;
+  border-bottom: 2px solid $c-gray-lighter;
+
+  // Logo
+  .commerce-pos-customer-display__store-logo {
+    display: inline-block;
+    float: left;
+
+    img {
+      max-height: calc(#{$header-height} - 60px);
+      padding-right: 50px;
+    }
+  }
+
+  // Store info.
+  .commerce-pos-customer-display__store-info {
+
+    .commerce-pos-customer-display__store-name {
+      padding-bottom: 5px;
+      font-size: 2.5rem;
+      color: $c-gray-dark;
+    }
+
+    .commerce-pos-customer-display__store-location,
+    .commerce-pos-customer-display__cashier {
+      display: inline-block;
+      font-size: $font-size-base;
+      color: $c-gray-mid;
+      padding-right: 15px;
+
+      .commerce-pos-customer-display__store-location__label,
+      .commerce-pos-customer-display__cashier__label {
+        display: inline-block;
+      }
+
+      .commerce-pos-customer-display__store-location__value,
+      .commerce-pos-customer-display__cashier__value {
+        display: inline-block;
+      }
+    }
+  }
+}
+
+// Items (products).
+.commerce-pos-customer-display__items {
+  height: calc(100% - #{$header-height});
+  width: 100%;
+  padding-right: 18px; // Used to hide scrollbar.
+  overflow-y: scroll;
+  box-sizing: content-box;
+  font-size: $font-size-base;
+
+  // Individual item.
+  .commerce-pos-customer-display__item {
+    display: none;
+    padding: 30px 0;
+    margin: 0 65px;
+    border-bottom: 2px solid $c-gray-lighter;
+
+    &:last-of-type {
+      border: none;
+    }
+
+    .commerce-pos-customer-display__item__image {
+      display: inline-block;
+      vertical-align: top;
+      width: 225px;
+      margin-right: 50px;
+      text-align: center;
+
+      img {
+        max-width: 220px;
+        border: 1px solid $c-gray-light;
+      }
+    }
+
+    .icon-image-placeholder {
+      display: inline-block;
+      vertical-align: middle;
+      height: 90px;
+      width: 90px;
+      margin-top: 10px;
+      fill: $c-gray-lighter;
+    }
+
+    .commerce-pos-customer-display__item__info-wrapper {
+      display: inline-block;
+      vertical-align: top;
+      width: calc(100% - 275px);
+    }
+
+    .field--name-title {
+      padding-bottom: 10px;
+      font-size: 2.25rem;
+    }
+
+    .field--name-sku {
+      padding-bottom: 25px;
+      font-size: 1.125rem;
+      color: $c-gray-mid;
+    }
+
+    .commerce-pos-customer-display__item__quantity {
+      font-size: 1.375rem;
+      padding-bottom: 10px;
+      color: $c-gray-mid;
+
+      div {
+        display: inline-block;
+        padding-right: 10px;
+      }
+    }
+
+    .commerce-pos-customer-display__item__total-price {
+      font-size: 2.25rem;
+      font-weight: bold;
+    }
+  }
+}
+
+// Total title.
+.commerce-pos-customer-display__totals-title {
+  font-size: 3rem;
+  text-align: right;
+  padding-bottom: 60px;
+}
+
+// Total - Individual total default styles.
+.commerce-pos-customer-display__total {
+  padding-bottom: 40px;
+
+  &:last-of-type {
+    padding-bottom: 0;
+  }
+
+  .commerce-pos-customer-display__total__label {
+    display: inline-block;
+    width: 40%;
+    vertical-align: baseline;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+  }
+
+  .commerce-pos-customer-display__total__value {
+    display: inline-block;
+    width: 60%;
+    vertical-align: baseline;
+    font-size: 2.25rem;
+    text-align: right;
+  }
+}
+
+// Total - Specific total override styles.
+.commerce-pos-customer-display__total--to-pay {
+  .commerce-pos-customer-display__total__value {
+    font-size: 3.75rem;
+  }
+}

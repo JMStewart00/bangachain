@@ -1,0 +1,134 @@
+<?php
+
+/**
+ * @file
+ * Contains commerce_pos.module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function commerce_pos_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the commerce_pos module.
+    case 'help.page.commerce_pos':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t("Commerce Point of Sale provides several useful interfaces and submodules for operating a store's POS system directly in Drupal.") . '</p>';
+      $output .= '<p>' . t('It includes a cashier login system, touch-friendly registers, is fully integrated into Commerce POS, and has Search API support.') . '</p>';
+      $output .= '<h4>' . t('Included Submodules') . '</h4>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Commerce POS Barcode Scanning') . '</dt>';
+      $output .= '<dd>' . t('Provides the ability to use a camera or other scanner to read barcodes for the POS register interface.') . '</dd>';
+      $output .= '<dt>' . t('Commerce POS Currency Denominations') . '</dt>';
+      $output .= '<dd>' . t('Allows you to configure currency denominations.') . '</dd>';
+      $output .= '<dt>' . t('Commerce POS Customer Display') . '</dt>';
+      $output .= '<dd>' . t('<b>Experimental</b> Enables a customer facing display that updates in real time.') . '</dd>';
+      $output .= '<dt>' . t('Commerce POS Keypad') . '</dt>';
+      $output .= '<dd>' . t('Implements a touch-friendly keypad into the register payment interface.') . '</dd>';
+      $output .= '<dt>' . t('Commerce POS Labels') . '</dt>';
+      $output .= '<dd>' . t('Adds the ability to generate and print custom product labels for POS items.') . '</dd>';
+      $output .= '<dt>' . t('Commerce POS Print') . '</dt>';
+      $output .= '<dd>' . t('Gives other modules the ability to print.') . '</dd>';
+      $output .= '<dt>' . t('Commerce POS Receipt') . '</dt>';
+      $output .= '<dd>' . t('Allows POS to generate and print a receipt for a customer.') . '</dd>';
+      $output .= '<dt>' . t('Commerce POS Reports') . '</dt>';
+      $output .= '<dd>' . t('Provides a simple interface for viewing reports from POS registers.') . '</dd>';
+      $output .= '</dl>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function commerce_pos_theme($existing, $type, $theme, $path) {
+  return [
+    'commerce_pos_form_order' => [
+      'render element' => 'form',
+    ],
+    'commerce_pos_form_payment' => [
+      'render element' => 'form',
+    ],
+    'commerce_pos_cashier_login_page' => [
+      'render element' => 'page',
+      'path' => $path . '/templates',
+      'template' => 'commerce-pos-cashier-login',
+      'variables' => [
+        'form' => NULL,
+        'messages' => NULL,
+        'store_name' => NULL,
+        'login_background' => NULL,
+      ],
+    ],
+    'commerce_pos_cashier_login_recent_cashiers' => [
+      'render element' => 'page',
+      'path' => $path . '/templates',
+      'template' => 'commerce-pos-cashier-login-recent-cashiers',
+      'variables' => [
+        'cashiers' => NULL,
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter() for 'commerce_product_type_form'.
+ */
+function commerce_pos_form_commerce_product_type_form_alter(array &$form, FormStateInterface $form_state) {
+  $product_type = $form_state->getFormObject()->getEntity();
+  $show_in_pos = $product_type->getThirdPartySetting('commerce_pos', 'show_in_pos', TRUE);
+
+  $form['commerce_pos'] = [
+    '#type' => 'details',
+    '#title' => t('Point of Sale'),
+    '#weight' => 10,
+    '#open' => TRUE,
+    '#collapsible' => TRUE,
+  ];
+  $form['commerce_pos']['show_in_pos'] = [
+    '#type' => 'radios',
+    '#title' => 'Show in POS',
+    '#options' => ['show' => 'Show', 'hide' => 'Hide'],
+    '#default_value' => !empty($show_in_pos) ? 'show' : 'hide',
+  ];
+
+  $form['actions']['submit']['#submit'][] = 'commerce_pos_product_type_form_submit';
+}
+
+/**
+ * Form submission handler for 'commerce_product_type_form'.
+ */
+function commerce_pos_product_type_form_submit($form, FormStateInterface $form_state) {
+  /** @var \Drupal\commerce_order\Entity\OrderTypeInterface $order_type */
+  $product_type = $form_state->getFormObject()->getEntity();
+  $show_in_pos = &$form_state->getValue('show_in_pos');
+
+  $show_in_pos = $show_in_pos == 'show' ? TRUE : FALSE;
+  $product_type->setThirdPartySetting('commerce_pos', 'show_in_pos', $show_in_pos);
+  $product_type->save();
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for 'entity_form_display_edit_form'.
+ *
+ * Hides irrelevant purchased_entity widgets on the add_to_cart order item
+ * form display.
+ */
+function commerce_pos_form_entity_form_display_edit_form_alter(array &$form, FormStateInterface $form_state) {
+  /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $entity */
+  $entity = $form_state->getFormObject()->getEntity();
+  if ($form['#entity_type'] == 'commerce_order_item' && $entity->getMode() == 'add_to_cart') {
+    $order_item_type = $form['#bundle'];
+    $orderType = \Drupal::entityTypeManager()->getStorage('commerce_order_item_type')->load($order_item_type)->get('orderType');
+    if ($orderType != 'pos') {
+      unset($form['fields']['purchased_entity']['plugin']['type']['#options']['pos_order_item_widget']);
+      unset($form['fields']['purchased_entity']['plugin']['type']['#options']['pos_customer_widget']);
+    }
+  }
+}

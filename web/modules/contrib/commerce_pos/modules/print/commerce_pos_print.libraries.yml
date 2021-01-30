@@ -1,0 +1,14 @@
+jQuery.print:
+  remote: https://github.com/DoersGuild/jQuery.print
+  version: "1.6.0"
+  license:
+    name: Creative Commons Attribution 3.0 Unported (CC BY 3.0)
+    url: https://github.com/DoersGuild/jQuery.print/blob/master/LICENSE
+    gpl-compatible: true
+  js:
+    /libraries/jQuery.print/jQuery.print.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/drupal.ajax

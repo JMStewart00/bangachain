@@ -1,0 +1,24 @@
+uuid: de1b10dd-eb2a-4708-ad45-f049e5864c51
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - commerce_pos
+_core:
+  default_config_hash: w0XutO98pxN5_n0Mn7NnB-BVHI5-RVT_k3tg-bBkY3w
+id: pos_cashier
+label: Cashier
+weight: 3
+is_admin: null
+permissions:
+  - 'access commerce administration pages'
+  - 'access commerce pos order lookup'
+  - 'access commerce pos pages'
+  - 'access toolbar'
+  - 'change commerce pos active register'
+  - 'create pos commerce_order'
+  - 'delete pos commerce_order'
+  - 'update pos commerce_order'
+  - 'view pos commerce_order'
+  - 'view the administration theme'

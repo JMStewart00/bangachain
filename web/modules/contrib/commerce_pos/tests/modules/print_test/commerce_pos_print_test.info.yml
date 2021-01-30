@@ -1,0 +1,7 @@
+name: Commerce POS Print test
+type: module
+description: Provides the ability to test printing using the jQuery library.
+core: 8.x
+package: Testing
+dependencies:
+  - commerce_pos:commerce_pos_print

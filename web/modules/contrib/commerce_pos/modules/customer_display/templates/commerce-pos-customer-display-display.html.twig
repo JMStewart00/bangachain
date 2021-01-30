@@ -1,0 +1,106 @@
+{#
+/**
+ * @file
+ * Customer facing POS display
+ *
+ * Available variables:
+ * - register: The current register.
+ * - store: The current store
+ * - store_logo: The POS store logo
+ *
+ * @ingroup themeable
+ */
+#}
+
+<div class="commerce-pos-customer-display clearfix">
+  {# Left side. #}
+  <div class="commerce-pos-customer-display__left">
+    {# Header. #}
+    <div class="commerce-pos-customer-display__header">
+      {% if store_logo %}
+        {# Store logo. #}
+        <div class="commerce-pos-customer-display__store-logo">
+          <img src="{{ store_logo }}" alt="Store Logo">
+        </div>
+      {% endif %}
+
+      {# Store info. #}
+      <div class="commerce-pos-customer-display__store-info">
+        <div class="commerce-pos-customer-display__store-name">
+          {{ store.name }}
+        </div>
+
+        <div class="commerce-pos-customer-display__store-location">
+          <div class="commerce-pos-customer-display__store-location__label">
+            {{ "Location:"|t }}
+          </div>
+          <div class="commerce-pos-customer-display__store-location__value">
+            {{  register.name }}
+          </div>
+        </div>
+
+        <div class="commerce-pos-customer-display__cashier">
+          <div class="commerce-pos-customer-display__cashier__label">
+            {{ "Cashier:"|t }}
+          </div>
+          <div class="commerce-pos-customer-display__cashier__value">
+              {# Populated from JS #}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {# Product line items. #}
+    <div class="commerce-pos-customer-display__items">
+      {# Populated from JS #}
+    </div>
+  </div>
+
+  {# Right side. #}
+  <div class="commerce-pos-customer-display__right" style="background-color: {{ accent_colour ? accent_colour : '#111111' }};">
+    {# Right side - top. #}
+    <div class="commerce-pos-customer-display__right__top">
+      {# Title. #}
+      <div class="commerce-pos-customer-display__totals-title">
+        {{ "Your Order"|t }}
+      </div>
+
+      {# Totals. #}
+      <div class="commerce-pos-customer-display__totals">
+          {# Populated from JS #}
+      </div>
+    </div>
+
+    {# Right side - bottom. #}
+    <div class="commerce-pos-customer-display__right__bottom">
+      {# To pay/change. #}
+      <div class="commerce-pos-customer-display__total commerce-pos-customer-display__total--to-pay">
+        <div class="commerce-pos-customer-display__total__label">
+          {{ "To Pay"|t }}
+        </div>
+
+        <div class="commerce-pos-customer-display__total__value">
+            {# Populated from JS #}
+        </div>
+      </div>
+      <div class="commerce-pos-customer-display__total commerce-pos-customer-display__total--total-paid">
+        <div class="commerce-pos-customer-display__total__label">
+            {{ "Total Paid"|t }}
+        </div>
+
+        <div class="commerce-pos-customer-display__total__value">
+            {# Populated from JS #}
+        </div>
+      </div>
+      <div class="commerce-pos-customer-display__total commerce-pos-customer-display__total--change">
+        <div class="commerce-pos-customer-display__total__label">
+            {{ "Change"|t }}
+        </div>
+
+        <div class="commerce-pos-customer-display__total__value">
+            {# Populated from JS #}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

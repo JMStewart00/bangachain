@@ -1,0 +1,21 @@
+uuid: 2c9196f0-37d3-42a7-8b05-77b92a70c381
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_variation_type.bags
+    - field.storage.commerce_product_variation.field_upc
+  module:
+    - text
+id: commerce_product_variation.bags.field_upc
+field_name: field_upc
+entity_type: commerce_product_variation
+bundle: bags
+label: UPC
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text

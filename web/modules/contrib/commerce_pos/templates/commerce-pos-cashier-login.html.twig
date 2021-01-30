@@ -1,0 +1,34 @@
+{#
+/**
+ * @file
+ * Template for the Commerce POS Cashier Login.
+ *
+ * Available variables:
+ * - form: The login form.
+ *
+ * @ingroup themeable
+ */
+#}
+
+{{ attach_library('commerce_pos/cashier_login') }}
+<div class="commerce-pos-cashier-login">
+  <div class="commerce-pos-login-bar">
+    <span class="commerce-pos-login-bar__logo">{{ store_name }}</span>
+  </div>
+
+  <div class="commerce-pos-login" style="background-image: url({{ login_background|replace({' ': '%20'}) }});">
+    <div class="commerce-pos-login__container">
+      <div class="commerce-pos-login__content">
+        <div class="commerce-pos-login__pane commerce-pos-login__pane--login is-active">
+          <div class="commerce-pos-login__pane__content">
+            <a href="#" class="commerce-pos-login__pane__toggle commerce-pos-login__pane__toggle--login">{{ 'Login'|t }}</a>
+            <div class="commerce-pos-login__pane__body">
+              {{ messages }}
+              {{ form }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

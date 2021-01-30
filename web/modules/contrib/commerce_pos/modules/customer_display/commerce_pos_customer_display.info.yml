@@ -1,0 +1,8 @@
+name: Commerce POS Customer Display (Experimental)
+type: module
+description: Generates a real time customer checkout display. If you are not on a close network you may expose POS cart
+  contents but not any personal or sensitive information. Use at your own risk.
+core: 8.x
+package: Commerce (POS)
+dependencies:
+  - commerce_pos:commerce_pos

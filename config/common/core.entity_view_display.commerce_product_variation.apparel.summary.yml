@@ -9,6 +9,7 @@ dependencies:
     - field.field.commerce_product_variation.apparel.attribute_size
     - field.field.commerce_product_variation.apparel.field_product_image
     - field.field.commerce_product_variation.apparel.field_stock
+    - field.field.commerce_product_variation.apparel.field_upc
     - field.field.commerce_product_variation.apparel.weight
   module:
     - layout_builder
@@ -31,9 +32,11 @@ hidden:
   attribute_size: true
   field_product_image: true
   field_stock: true
+  field_upc: true
   list_price: true
   price: true
   product_id: true
+  search_api_excerpt: true
   sku: true
   title: true
   weight: true

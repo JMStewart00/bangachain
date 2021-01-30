@@ -1,0 +1,15 @@
+commerce_pos_reports.base:
+  path: '/admin/commerce/pos/reports'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Reports'
+  requirements:
+    _permission: 'access commerce pos reports'
+
+commerce_pos_reports.end-of-day:
+  path: '/admin/commerce/pos/reports/end-of-day'
+  defaults:
+    _form: '\Drupal\commerce_pos_reports\Form\EndOfDayForm'
+    _title: 'Reports - End of Day'
+  requirements:
+    _permission: 'access commerce pos reports'

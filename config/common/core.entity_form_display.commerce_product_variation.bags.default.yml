@@ -7,6 +7,7 @@ dependencies:
     - field.field.commerce_product_variation.bags.attribute_disc_color
     - field.field.commerce_product_variation.bags.field_product_image
     - field.field.commerce_product_variation.bags.field_stock
+    - field.field.commerce_product_variation.bags.field_upc
     - field.field.commerce_product_variation.bags.weight
   module:
     - commerce_bulk
@@ -14,6 +15,7 @@ dependencies:
     - commerce_stock_field
     - media_library
     - physical
+    - text
 id: commerce_product_variation.bags.default
 targetEntityType: commerce_product_variation
 bundle: bags
@@ -47,6 +49,14 @@ content:
       step: '1'
     third_party_settings: {  }
     type: commerce_stock_level_simple_transaction
+    region: content
+  field_upc:
+    weight: 10
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textfield
     region: content
   list_price:
     type: commerce_list_price

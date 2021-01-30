@@ -1,0 +1,68 @@
+<?php
+
+/**
+ * @file
+ * Provides the ability to give print functionality for other sub-modules.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function commerce_pos_print_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the commerce_pos module.
+    case 'help.page.commerce_pos_print':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Commerce POS Print modules provides printing capabilities for other modules.') . '</p>';
+      $output .= '<p>' . t('This submodule does require an external JavaScript library.') . '</p>';
+      $output .= '<h4>' . t('Manual Installation') . '</h4>';
+      $output .= '<ul>';
+      $output .= '<li>' . t('Download the latest release of jQuery.print from <a href="https://github.com/DoersGuild/jquery.print/">the GitHub Page</a>.') . '</li>';
+      $output .= '<li>' . t('Extract jQuery.print from the zip and place it in webroot/libraries/jQuery.print/ (it should look like webroot/libraries/jQuery.print/jQuery.print.js).') . '</li>';
+      $output .= '</ul>';
+      $output .= '<h4>' . t('Composer Installation') . '</h4>';
+      $output .= '<ul>';
+      $output .= '<li>' . t('Add the following to your composer.json:') . '</li>';
+      // @TODO Figure out a better solution for this code block for composer.json
+      $output .= '<pre><code>';
+      $output .= '"require": {
+    .
+    .
+    "DoersGuild/jQuery.print": "master"
+ }
+
+ "installer-paths": {
+    .
+    .
+    "libraries/{$name}": ["type:drupal-library"]
+}
+
+"repositories": {
+    .
+    .
+    {
+        "type": "package",
+        "package": {
+            "name": "DoersGuild/jQuery.print",
+            "version": "master",
+            "type": "drupal-library",
+            "source": {
+                "url": "https://github.com/DoersGuild/jQuery.print.git",
+                "type": "git",
+                "reference": "origin/master"
+            }
+        }
+    }
+}';
+      $output .= '</code></pre>';
+      $output .= '<li>' . t('Run <code>composer install</code>') . '</li>';
+      $output .= '</ul>';
+
+      return $output;
+
+    default:
+  }
+}

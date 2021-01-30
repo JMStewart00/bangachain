@@ -1,0 +1,24 @@
+name: Commerce POS
+type: module
+description: Allows users to set up a Point of Sale system within their Drupal Commerce site.
+core: 8.x
+package: Commerce (POS)
+dependencies:
+  - commerce:commerce_order
+  - commerce:commerce_payment
+  - commerce:commerce_product
+  - commerce:commerce_log
+  - commerce:commerce_tax
+  - drupal:telephone
+  - commerce_pos:commerce_pos_keypad
+  - search_api:search_api
+config_devel:
+  install:
+    - commerce_store.commerce_store_type.physical
+    - commerce_order.commerce_order_type.pos
+    - commerce_order.commerce_order_item_type.return
+    - commerce_payment.commerce_payment_gateway.pos_cash
+    - commerce_payment.commerce_payment_gateway.pos_credit
+    - commerce_payment.commerce_payment_gateway.pos_debit
+    - commerce_payment.commerce_payment_gateway.pos_gift_card
+    - user.role.pos_cashier

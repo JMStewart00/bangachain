@@ -1,0 +1,19 @@
+{
+  "name": "drupal/commerce_pos",
+  "type": "drupal-module",
+  "description": "Provides Point of Sale functionality for Commerce",
+  "keywords": ["Drupal", "POS", "Commerce"],
+  "license": "GPL-2.0-or-later",
+  "homepage": "https://www.drupal.org/project/commerce_pos",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/commerce_pos",
+    "source": "http://cgit.drupalcode.org/commerce_pos"
+  },
+  "require": {
+    "drupal/commerce": "~2.16",
+    "drupal/search_api": "~1.9",
+    "picqer/php-barcode-generator": "^0.2.2",
+    "cboden/ratchet": "^0.4.1"
+  }
+}

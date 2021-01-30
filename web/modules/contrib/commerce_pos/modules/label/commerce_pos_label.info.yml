@@ -1,0 +1,7 @@
+name: Commerce POS Labels
+type: module
+description: Provides the ability to generate and print point of sale product labels.
+core: 8.x
+package: Commerce (POS)
+dependencies:
+  - commerce_pos:commerce_pos_print

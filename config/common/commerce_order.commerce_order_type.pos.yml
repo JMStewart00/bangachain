@@ -1,0 +1,21 @@
+uuid: c741d4f2-8581-4aa9-9c32-e999f3412f8e
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - commerce_pos
+  module:
+    - commerce_pos
+_core:
+  default_config_hash: 3m5d4NpCiMG5sQgIsUQulq9odO27qOvn29rAc_2pUo0
+label: 'Point of Sale'
+id: pos
+workflow: order_pos
+numberPattern: null
+refresh_mode: customer
+refresh_frequency: 300
+sendReceipt: true
+receiptBcc: ''
+traits: {  }
+locked: false

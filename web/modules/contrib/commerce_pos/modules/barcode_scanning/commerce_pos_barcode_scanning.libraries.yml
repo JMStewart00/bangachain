@@ -1,0 +1,21 @@
+form:
+  version: VERSION
+  css:
+    layout:
+      css/commerce_pos_barcode_scanning.css: {}
+  js:
+    js/commerce_pos_barcode_scanning.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - commerce_pos/quagga
+quagga:
+  remote: https://github.com/serratus/quaggaJS.git
+  version: 1.0.0
+  license:
+    name: MIT
+    url: https://github.com/serratus/quaggaJS/blob/master/LICENSE
+    gpl-compatible: yes
+  js:
+    /libraries/webrtc/adapter-latest.js: {}
+    /libraries/quagga/quagga.min.js: {}

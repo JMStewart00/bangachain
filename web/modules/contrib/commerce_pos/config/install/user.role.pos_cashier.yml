@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - commerce_pos
+id: pos_cashier
+label: Cashier
+weight: 3
+is_admin: null
+permissions:
+  - 'access commerce administration pages'
+  - 'access commerce pos pages'
+  - 'access toolbar'
+  - 'change commerce pos active register'
+  - 'create pos commerce_order'
+  - 'delete pos commerce_order'
+  - 'update pos commerce_order'
+  - 'view pos commerce_order'
+  - 'view the administration theme'

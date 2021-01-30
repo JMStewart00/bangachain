@@ -1,0 +1,15 @@
+commerce_pos_customer_display.main:
+  path: '/pos-customer-display'
+  defaults:
+    _controller: '\Drupal\commerce_pos_customer_display\Controller\Display::content'
+    _title: 'Point of Sale Customer Display'
+  requirements:
+    _permission: 'access commerce pos pages'
+
+commerce_pos_customer_display.settings:
+  path: '/admin/commerce/config/pos/customer-display/settings'
+  defaults:
+    _form: '\Drupal\commerce_pos_customer_display\Form\CustomerDisplaySettingsForm'
+    _title: 'Display Settings'
+  requirements:
+    _permission: 'access commerce pos administration pages'

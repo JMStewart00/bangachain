@@ -35,7 +35,7 @@ class FieldNormalizer extends CoreFieldNormalizer {
     $supported = parent::supportsNormalization($data, $format);
     if ($supported) {
       $route = $this->routeMatch->getRouteObject();
-      return $route->hasRequirement('_cart_api');
+      return $route && $route->hasRequirement('_cart_api');
     }
     return $supported;
   }

@@ -38,7 +38,7 @@ class Store extends EntityField {
 
     $form['hide_single_store'] = [
       '#type' => 'checkbox',
-      '#title' => t("Hide if there's only one store."),
+      '#title' => $this->t("Hide if there's only one store."),
       '#default_value' => $this->options['hide_single_store'],
     ];
   }

@@ -73,14 +73,14 @@
    *   During `unload` remove the scroll event binding.
    */
   Drupal.behaviors.views_infinite_scroll_automatic = {
-    attach : function(context, settings) {
-      $(context).find(automaticPagerSelector).once('infinite-scroll').each(function() {
+    attach : function (context, settings) {
+      $(context).find(automaticPagerSelector).once('infinite-scroll').each(function () {
         var $pager = $(this);
         $pager.addClass('visually-hidden');
-        var isLoadNeeded = function(){
+        var isLoadNeeded = function () {
           return window.innerHeight + window.pageYOffset > $pager.offset().top - scrollThreshold;
         };
-        $window.on(scrollEvent, debounce(function() {
+        $window.on(scrollEvent, debounce(function () {
           if (isLoadNeeded()) {
             $pager.find('[rel=next]').click();
             $window.off(scrollEvent);

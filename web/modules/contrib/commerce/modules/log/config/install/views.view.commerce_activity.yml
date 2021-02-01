@@ -83,7 +83,7 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
-          default: created
+          default: '-1'
           empty_table: false
       row:
         type: fields

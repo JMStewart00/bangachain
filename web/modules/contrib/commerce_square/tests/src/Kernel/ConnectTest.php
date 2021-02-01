@@ -13,6 +13,7 @@ class ConnectTest extends KernelTestBase {
 
   public static $modules = [
     'commerce_square',
+    'commerce_number_pattern',
   ];
 
   /**
@@ -47,4 +48,5 @@ class ConnectTest extends KernelTestBase {
     $this->assertEquals('TESTTOKEN', $connect->getAccessToken('production'));
     $this->assertEquals($this->container->get('datetime.time')->getRequestTime(), $connect->getAccessTokenExpiration('production'));
   }
+
 }

@@ -9,7 +9,7 @@ dependencies:
   - drupal:text
   - drupal:datetime_range
 
-# Information added by Drupal.org packaging script on 2020-11-10
-version: '8.x-1.5'
+# Information added by Drupal.org packaging script on 2020-12-10
+version: '8.x-1.6'
 project: 'sitewide_alert'
-datestamp: 1605039573
+datestamp: 1607620554

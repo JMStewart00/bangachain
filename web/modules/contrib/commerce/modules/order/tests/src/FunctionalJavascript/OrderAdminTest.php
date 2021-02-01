@@ -91,7 +91,12 @@ class OrderAdminTest extends OrderWebDriverTestBase {
     ];
     $this->submitForm($edit, t('Create'));
 
+    $this->getSession()->getPage()->pressButton('add_billing_information');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->buttonExists('hide_profile_form');
     $this->assertRenderedAddress($this->defaultAddress, 'billing_profile[0][profile]');
+    $this->getSession()->getPage()->pressButton('hide_profile_form');
+    $this->assertSession()->assertWaitOnAjaxRequest();
     // Test that commerce_order_test_field_widget_form_alter() has the expected
     // outcome.
     $this->assertSame([], \Drupal::state()->get("commerce_order_test_field_widget_form_alter"));
@@ -144,9 +149,13 @@ class OrderAdminTest extends OrderWebDriverTestBase {
     // There is no adjustment - the order should save successfully.
     $this->submitForm([], 'Save');
     $this->assertSession()->pageTextContains('The order has been successfully saved.');
+    $order = Order::load(1);
+    $this->assertNull($order->getBillingProfile());;
 
     // Use an adjustment that is not locked by default.
-    $this->clickLink('Edit');
+    $this->drupalGet($order->toUrl('edit-form'));
+    $this->getSession()->getPage()->pressButton('add_billing_information');
+    $this->assertSession()->assertWaitOnAjaxRequest();
     $edit = [
       'adjustments[0][type]' => 'fee',
       'adjustments[0][definition][label]' => '',
@@ -162,7 +171,7 @@ class OrderAdminTest extends OrderWebDriverTestBase {
     $order_number = $this->getSession()->getPage()->findAll('css', 'tr td.views-field-order-number');
     $this->assertEquals(1, count($order_number));
 
-    $order = Order::load(1);
+    $order = $this->reloadEntity($order);
     $this->assertEquals(2, count($order->getItems()));
     $this->assertEquals(new Price('10.88', 'USD'), $order->getTotalPrice());
     $this->assertCount(1, $order->getAdjustments());
@@ -227,6 +236,7 @@ class OrderAdminTest extends OrderWebDriverTestBase {
     $order->save();
 
     $this->drupalGet($order->toUrl('edit-form'));
+    $this->assertSession()->buttonNotExists('hide_profile_form');
     $this->assertSession()->fieldValueEquals('adjustments[0][definition][label]', '10% off');
     $this->assertSession()->fieldValueEquals('adjustments[1][definition][label]', 'Handling fee');
     $this->assertSession()->optionExists('adjustments[2][type]', 'Custom');

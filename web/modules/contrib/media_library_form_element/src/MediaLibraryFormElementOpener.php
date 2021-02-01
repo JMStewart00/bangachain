@@ -6,6 +6,7 @@ use Drupal\media_library\MediaLibraryOpenerInterface;
 use Drupal\media_library\MediaLibraryState;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\CloseModalDialogCommand;
 use Drupal\Core\Ajax\InvokeCommand;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -37,8 +38,6 @@ class MediaLibraryFormElementOpener implements MediaLibraryOpenerInterface {
    * {@inheritdoc}
    */
   public function checkAccess(MediaLibraryState $state, AccountInterface $account) {
-    $parameters = $state->getOpenerParameters() + ['entity_id' => NULL];
-
     $process_result = function ($result) {
       if ($result instanceof RefinableCacheableDependencyInterface) {
         $result->addCacheContexts(['url.query_args']);
@@ -65,7 +64,8 @@ class MediaLibraryFormElementOpener implements MediaLibraryOpenerInterface {
 
     $response
       ->addCommand(new InvokeCommand(NULL, 'setMediaUploadFieldValue', [$ids, "[data-media-library-form-element-value=\"$widget_id\"]"]))
-      ->addCommand(new InvokeCommand("[data-media-library-form-element-update=\"$widget_id\"]", 'trigger', ['mousedown']));
+      ->addCommand(new InvokeCommand("[data-media-library-form-element-update=\"$widget_id\"]", 'trigger', ['mousedown']))
+      ->addCommand(new CloseModalDialogCommand(TRUE, '#modal-media-library'));
 
     return $response;
   }

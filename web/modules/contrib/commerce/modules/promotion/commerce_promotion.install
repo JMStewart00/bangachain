@@ -5,6 +5,7 @@
  * Install, update and uninstall functions for the commerce_promotion module.
  */
 
+use Drupal\commerce\CommerceContentEntityStorageSchema;
 use Drupal\Core\Field\BaseFieldDefinition;
 
 /**
@@ -159,4 +160,28 @@ function commerce_promotion_update_8205() {
 
   $entity_definition_update->installFieldStorageDefinition('usage_limit_customer', 'commerce_promotion', 'commerce_promotion', $storage_definition);
   $entity_definition_update->installFieldStorageDefinition('usage_limit_customer', 'commerce_promotion_coupon', 'commerce_promotion', $storage_definition);
+}
+
+/**
+ * Ensure new field indexes on the coupon entity.
+ */
+function commerce_promotion_update_8206() {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+
+  // Get the current coupon entity type definition, ensure the storage schema
+  // class is set.
+  $entity_type = $entity_type_manager->getDefinition('commerce_promotion_coupon')
+    ->setHandlerClass('storage_schema', CommerceContentEntityStorageSchema::class);
+
+  // Regenerate entity type indexes.
+  $definition_update_manager->updateEntityType($entity_type);
+}
+
+/**
+ * Update the code field definition.
+ */
+function commerce_promotion_update_8207() {
+  $definition_update_manager = \Drupal::service('entity.definition_update_manager');
+  $definition_update_manager->updateFieldStorageDefinition($definition_update_manager->getFieldStorageDefinition('code', 'commerce_promotion_coupon'));
 }

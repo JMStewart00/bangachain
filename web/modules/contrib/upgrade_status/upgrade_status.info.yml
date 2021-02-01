@@ -7,8 +7,9 @@ core: 8.x
 php: '7.1'
 dependencies:
   - drupal:update
+  - drupal:system (>=8.7)
 
-# Information added by Drupal.org packaging script on 2020-11-04
-version: '8.x-3.0'
+# Information added by Drupal.org packaging script on 2021-01-29
+version: '8.x-3.3'
 project: 'upgrade_status'
-datestamp: 1604508429
+datestamp: 1611903071

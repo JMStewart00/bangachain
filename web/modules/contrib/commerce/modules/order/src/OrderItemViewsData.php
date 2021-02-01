@@ -41,7 +41,7 @@ class OrderItemViewsData extends CommerceEntityViewsData {
       $data['commerce_order_item'][$entity_type_id] = [
         'relationship' => [
           'title' => $entity_type->getLabel(),
-          'help' => t('The purchased @entity_type.', ['@entity_type' => $entity_type->getSingularLabel()]),
+          'help' => $this->t('The purchased @entity_type.', ['@entity_type' => $entity_type->getSingularLabel()]),
           'base' => $this->getViewsTableForEntityType($entity_type),
           'base field' => $entity_type->getKey('id'),
           'relationship field' => $table_mapping->getColumnNames('purchased_entity')['target_id'],
@@ -54,7 +54,7 @@ class OrderItemViewsData extends CommerceEntityViewsData {
       $data[$target_base_table]['reverse__commerce_order_item__purchased_entity'] = [
         'relationship' => [
           'title' => $this->entityType->getLabel(),
-          'help' => t('The @order_item_entity_type for this @entity_type.', [
+          'help' => $this->t('The @order_item_entity_type for this @entity_type.', [
             '@order_item_entity_type' => $this->entityType->getPluralLabel(),
             '@entity_type' => $entity_type->getSingularLabel(),
           ]),

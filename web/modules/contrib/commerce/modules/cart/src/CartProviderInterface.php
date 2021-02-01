@@ -80,22 +80,26 @@ interface CartProviderInterface {
    *
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The user. If empty, the current user is assumed.
+   * @param \Drupal\commerce_store\Entity\StoreInterface $store
+   *   The store. If empty, the current store is assumed.
    *
    * @return \Drupal\commerce_order\Entity\OrderInterface[]
    *   A list of cart orders.
    */
-  public function getCarts(AccountInterface $account = NULL);
+  public function getCarts(AccountInterface $account = NULL, StoreInterface $store = NULL);
 
   /**
    * Gets all cart order ids for the given user.
    *
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The user. If empty, the current user is assumed.
+   * @param \Drupal\commerce_store\Entity\StoreInterface $store
+   *   The store. If empty, the current store is assumed.
    *
    * @return int[]
    *   A list of cart orders ids.
    */
-  public function getCartIds(AccountInterface $account = NULL);
+  public function getCartIds(AccountInterface $account = NULL, StoreInterface $store = NULL);
 
   /**
    * Clears the static caches.

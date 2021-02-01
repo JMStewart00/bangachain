@@ -23,7 +23,7 @@ class PromotionForm extends ContentEntityForm {
     if ($store_query->count()->execute() == 0) {
       $link = Link::createFromRoute('Add a new store.', 'entity.commerce_store.add_page');
       $form['warning'] = [
-        '#markup' => t("Promotions can't be created until a store has been added. @link", ['@link' => $link->toString()]),
+        '#markup' => $this->t("Promotions can't be created until a store has been added. @link", ['@link' => $link->toString()]),
       ];
       return $form;
     }

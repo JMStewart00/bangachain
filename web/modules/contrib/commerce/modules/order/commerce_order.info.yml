@@ -14,7 +14,7 @@ dependencies:
   - state_machine:state_machine
   - drupal:options
 
-# Information added by Drupal.org packaging script on 2020-09-22
-version: '8.x-2.21'
+# Information added by Drupal.org packaging script on 2021-01-09
+version: '8.x-2.23'
 project: 'commerce'
-datestamp: 1600787978
+datestamp: 1610219289

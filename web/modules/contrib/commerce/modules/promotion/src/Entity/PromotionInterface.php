@@ -421,4 +421,12 @@ interface PromotionInterface extends ContentEntityInterface, EntityStoresInterfa
    */
   public function apply(OrderInterface $order);
 
+  /**
+   * Allows a promotion to clean up any modifications done to the given order.
+   *
+   * @param \Drupal\commerce_order\Entity\OrderInterface $order
+   *   The order.
+   */
+  public function clear(OrderInterface $order);
+
 }

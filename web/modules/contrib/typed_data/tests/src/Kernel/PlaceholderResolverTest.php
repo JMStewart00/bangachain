@@ -61,7 +61,7 @@ class PlaceholderResolverTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = [
+  public static $modules = [
     'typed_data',
     'system',
     'node',
@@ -74,7 +74,7 @@ class PlaceholderResolverTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
+  protected function setUp() {
     parent::setUp();
 
     $this->installEntitySchema('user');

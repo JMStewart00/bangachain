@@ -112,11 +112,10 @@ class CouponTest extends OrderKernelTestBase {
     ]);
     $promotion->save();
 
+    /** @var \Drupal\commerce_promotion\Entity\CouponInterface $coupon */
     $coupon = Coupon::create([
       'promotion_id' => $promotion->id(),
       'code' => 'coupon_code',
-      'usage_limit' => 1,
-      'usage_limit_customer' => 1,
       'status' => TRUE,
     ]);
     $coupon->save();
@@ -127,13 +126,21 @@ class CouponTest extends OrderKernelTestBase {
     $coupon->setEnabled(TRUE);
 
     $this->container->get('commerce_promotion.usage')->register($order, $promotion, $coupon);
+    // Test that the promotion usage is checked at the coupon level.
     $this->assertFalse($coupon->available($order));
 
-    // Test limit coupon usage by customer.
     $promotion->setUsageLimit(0);
     $promotion->setCustomerUsageLimit(0);
     $promotion->save();
     $promotion = $this->reloadEntity($promotion);
+    $this->assertTrue($coupon->available($order));
+
+    // Test the global coupon usage limit.
+    $coupon->setUsageLimit(1);
+    $this->assertFalse($coupon->available($order));
+
+    // Test limit coupon usage by customer.
+    $coupon->setCustomerUsageLimit(1);
     $coupon->setUsageLimit(0);
     $coupon->save();
     $coupon = $this->reloadEntity($coupon);

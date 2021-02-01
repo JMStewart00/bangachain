@@ -16,8 +16,8 @@ class OrderItemInlineForm extends EntityInlineForm {
    */
   public function getEntityTypeLabels() {
     $labels = [
-      'singular' => t('order item'),
-      'plural' => t('order items'),
+      'singular' => $this->t('order item'),
+      'plural' => $this->t('order items'),
     ];
     return $labels;
   }
@@ -29,12 +29,12 @@ class OrderItemInlineForm extends EntityInlineForm {
     $fields = parent::getTableFields($bundles);
     $fields['unit_price'] = [
       'type' => 'field',
-      'label' => t('Unit price'),
+      'label' => $this->t('Unit price'),
       'weight' => 2,
     ];
     $fields['quantity'] = [
       'type' => 'field',
-      'label' => t('Quantity'),
+      'label' => $this->t('Quantity'),
       'weight' => 3,
     ];
 

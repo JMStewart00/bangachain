@@ -65,6 +65,17 @@ class OrderItemAccessTest extends OrderKernelTestBase {
     $this->assertTrue($order_item->access('update', $account));
     $this->assertTrue($order_item->access('delete', $account));
 
+    // Test access for locked order items.
+    $order_item_access_handler = \Drupal::entityTypeManager()->getAccessControlHandler('commerce_order_item');
+    $order_item_access_handler->resetCache();
+    $order_item->lock();
+    $this->assertTrue($order_item->access('update', $account));
+    $this->assertTrue($order_item->access('delete', $account));
+    $order_item->getOrder()->set('state', 'draft');
+    $order_item_access_handler->resetCache();
+    $this->assertFalse($order_item->access('update', $account));
+    $this->assertFalse($order_item->access('delete', $account));
+
     $account = $this->createUser([], ['administer commerce_order']);
     $this->assertTrue($order_item->access('view', $account));
     $this->assertTrue($order_item->access('update', $account));

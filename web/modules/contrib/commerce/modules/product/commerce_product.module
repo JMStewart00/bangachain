@@ -390,3 +390,13 @@ function commerce_product_block_alter(array &$info) {
     }
   }
 }
+
+/**
+ * Implements hook_field_group_content_element_keys_alter().
+ *
+ * Allow products to render fields groups defined from Fields UI.
+ */
+function commerce_product_field_group_content_element_keys_alter(&$keys) {
+  $keys['commerce_product'] = 'product';
+  $keys['commerce_product_variation'] = 'product_variation';
+}

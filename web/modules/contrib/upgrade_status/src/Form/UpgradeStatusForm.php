@@ -458,7 +458,7 @@ class UpgradeStatusForm extends FormBase {
               '#type' => 'markup',
               // Use the project name from the info array instead of $key.
               // $key is the local name, not necessarily the project name.
-              '#markup' => '<a href="https://drupal.org/project/issues/' . $extension->info['project'] . '?text=Drupal+9&status=All">' . $this->t('Issues') . '</a>',
+              '#markup' => '<a href="https://drupal.org/project/issues/' . $extension->info['project'] . '?text=Drupal+9&status=All">' . $this->t('Issues', [], ['context' => 'Drupal.org issues']) . '</a>',
             ],
           ]
         ];

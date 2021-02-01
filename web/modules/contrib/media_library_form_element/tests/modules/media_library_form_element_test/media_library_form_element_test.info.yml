@@ -6,7 +6,7 @@ core: 8.x
 core_version_requirement: ^8 || ^9
 hidden: true
 
-# Information added by Drupal.org packaging script on 2020-06-19
-version: '8.x-1.0-beta5'
+# Information added by Drupal.org packaging script on 2020-12-15
+version: '8.x-1.3'
 project: 'media_library_form_element'
-datestamp: 1592562571
+datestamp: 1608023003

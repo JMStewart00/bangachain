@@ -150,13 +150,13 @@ class TaxNumberItem extends FieldItemBase implements TaxNumberItemInterface {
       'type' => [
         'AllowedValues' => [
           'choices' => $this->getAllowedTypes(),
-          'message' => t('Invalid type specified.'),
+          'message' => $this->t('Invalid type specified.'),
         ],
       ],
       'value' => [
         'Length' => [
           'max' => $max_length,
-          'maxMessage' => t('%name: may not be longer than @max characters.', [
+          'maxMessage' => $this->t('%name: may not be longer than @max characters.', [
             '%name' => $this->getFieldDefinition()->getLabel(),
             '@max' => $max_length,
           ]),
@@ -169,7 +169,7 @@ class TaxNumberItem extends FieldItemBase implements TaxNumberItemInterface {
             VerificationResult::STATE_FAILURE,
             VerificationResult::STATE_UNKNOWN,
           ],
-          'message' => t('Invalid verification_state specified.'),
+          'message' => $this->t('Invalid verification_state specified.'),
         ],
       ],
     ]);

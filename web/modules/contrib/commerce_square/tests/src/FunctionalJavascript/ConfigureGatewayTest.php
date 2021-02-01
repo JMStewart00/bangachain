@@ -4,7 +4,6 @@ namespace Drupal\Tests\commerce_square\FunctionalJavascript;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Url;
-use Drupal\FunctionalJavascriptTests\JSWebAssert;
 use Drupal\Tests\commerce\FunctionalJavascript\CommerceWebDriverTestBase;
 
 /**

@@ -1,7 +1,7 @@
 
 # Sitewide Alert menu items definition
 entity.sitewide_alert.collection:
-  title: 'Sitewide Alerts'
+  title: 'Sitewide alerts'
   route_name: entity.sitewide_alert.collection
   description: 'List Sitewide Alerts'
   parent: system.admin_content

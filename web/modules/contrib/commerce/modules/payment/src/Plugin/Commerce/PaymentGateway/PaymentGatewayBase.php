@@ -311,7 +311,7 @@ abstract class PaymentGatewayBase extends PluginBase implements PaymentGatewayIn
     $form['display_label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Display name'),
-      '#description' => t('Shown to customers during checkout.'),
+      '#description' => $this->t('Shown to customers during checkout.'),
       '#default_value' => $this->configuration['display_label'],
       '#required' => TRUE,
     ];

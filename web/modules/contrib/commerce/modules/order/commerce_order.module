@@ -157,6 +157,12 @@ function template_preprocess_commerce_order(array &$variables) {
   foreach (Element::children($variables['elements']) as $key) {
     $variables['order'][$key] = $variables['elements'][$key];
   }
+  // Inject order fields not manually printed in a separate variable for easier
+  // rendering.
+  if (in_array($view_mode, ['user', 'admin'])) {
+    $printed_fields = ['order_items', 'total_price', 'activity', 'completed', 'placed', 'changed', 'uid', 'mail', 'ip_address', 'billing_information', 'shipping_information', 'state', 'balance'];
+    $variables['additional_order_fields'] = array_diff_key($variables['order'], array_combine($printed_fields, $printed_fields));
+  }
 
   if ($billing_profile = $order->getBillingProfile()) {
     $profile_view_bulder = \Drupal::entityTypeManager()->getViewBuilder('profile');

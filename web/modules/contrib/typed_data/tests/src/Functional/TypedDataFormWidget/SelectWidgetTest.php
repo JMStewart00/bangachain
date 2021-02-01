@@ -33,7 +33,7 @@ class SelectWidgetTest extends FormWidgetBrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
+  protected function setUp() {
     parent::setUp();
     $this->widget = $this->getFormWidgetManager()->createInstance('select');
   }

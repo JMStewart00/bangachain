@@ -13,13 +13,13 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 use Drupal\Core\Entity\Entity\EntityFormMode;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Tests\commerce\Kernel\CommerceKernelTestBase;
+use Drupal\Tests\commerce_order\Kernel\OrderKernelTestBase;
 use Symfony\Component\Routing\Route;
 
 /**
  * @group commerce_cart_api
  */
-class EntityReferenceNormalizerTest extends CommerceKernelTestBase implements ServiceModifierInterface {
+class EntityReferenceNormalizerTest extends OrderKernelTestBase implements ServiceModifierInterface {
 
   /**
    * @var \Drupal\commerce_order\Entity\Order
@@ -31,12 +31,6 @@ class EntityReferenceNormalizerTest extends CommerceKernelTestBase implements Se
    */
   public static $modules = [
     'serialization',
-    'entity_reference_revisions',
-    'profile',
-    'address',
-    'state_machine',
-    'commerce_order',
-    'path',
     'commerce_product',
     'commerce_cart',
     'commerce_cart_api',
@@ -103,9 +97,6 @@ class EntityReferenceNormalizerTest extends CommerceKernelTestBase implements Se
    */
   protected function setUp() {
     parent::setUp();
-    $this->installEntitySchema('profile');
-    $this->installEntitySchema('commerce_order');
-    $this->installEntitySchema('commerce_order_item');
     $this->installEntitySchema('commerce_product');
     $this->installEntitySchema('commerce_product_variation');
     $this->installEntitySchema('commerce_product_attribute_value');

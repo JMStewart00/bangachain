@@ -7,6 +7,7 @@ use Drupal\commerce\Entity\CommerceContentEntityBase;
 use Drupal\commerce\Plugin\Commerce\Condition\ConditionInterface;
 use Drupal\commerce\Plugin\Commerce\Condition\ParentEntityAwareInterface;
 use Drupal\commerce_order\Entity\OrderInterface;
+use Drupal\commerce_price\Calculator;
 use Drupal\commerce_promotion\Plugin\Commerce\PromotionOffer\OrderItemPromotionOfferInterface;
 use Drupal\commerce_promotion\Plugin\Commerce\PromotionOffer\PromotionOfferInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
@@ -40,6 +41,8 @@ use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
  *     "form" = {
  *       "default" = "Drupal\commerce_promotion\Form\PromotionForm",
  *       "add" = "Drupal\commerce_promotion\Form\PromotionForm",
+ *       "enable" = "Drupal\commerce_promotion\Form\PromotionEnableForm",
+ *       "disable" = "Drupal\commerce_promotion\Form\PromotionDisableForm",
  *       "edit" = "Drupal\commerce_promotion\Form\PromotionForm",
  *       "duplicate" = "Drupal\commerce_promotion\Form\PromotionForm",
  *       "delete" = "Drupal\Core\Entity\ContentEntityDeleteForm"
@@ -48,7 +51,7 @@ use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
  *       "default" = "Drupal\entity\Menu\DefaultEntityLocalTaskProvider",
  *     },
  *     "route_provider" = {
- *       "default" = "Drupal\entity\Routing\AdminHtmlRouteProvider",
+ *       "default" = "Drupal\commerce_promotion\PromotionRouteProvider",
  *       "delete-multiple" = "Drupal\entity\Routing\DeleteMultipleRouteProvider",
  *     },
  *     "translation" = "Drupal\commerce_promotion\PromotionTranslationHandler",
@@ -72,6 +75,8 @@ use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
  *   links = {
  *     "add-form" = "/promotion/add",
  *     "edit-form" = "/promotion/{commerce_promotion}/edit",
+ *     "enable-form" = "/promotion/{commerce_promotion}/enable",
+ *     "disable-form" = "/promotion/{commerce_promotion}/disable",
  *     "duplicate-form" = "/promotion/{commerce_promotion}/duplicate",
  *     "delete-form" = "/promotion/{commerce_promotion}/delete",
  *     "delete-multiple-form" = "/admin/commerce/promotions/delete",
@@ -567,6 +572,10 @@ class Promotion extends CommerceContentEntityBase implements PromotionInterface 
       $offer_conditions = new ConditionGroup($offer->getConditions(), $offer->getConditionOperator());
       // Apply the offer to order items that pass the conditions.
       foreach ($order->getItems() as $order_item) {
+        // Skip order items with a null unit price or with a quantity = 0.
+        if (!$order_item->getUnitPrice() || Calculator::compare($order_item->getQuantity(), '0') === 0) {
+          continue;
+        }
         if ($offer_conditions->evaluate($order_item)) {
           $offer->apply($order_item, $this);
         }
@@ -574,6 +583,21 @@ class Promotion extends CommerceContentEntityBase implements PromotionInterface 
     }
     else {
       $offer->apply($order, $this);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function clear(OrderInterface $order) {
+    $offer = $this->getOffer();
+    if ($offer instanceof OrderItemPromotionOfferInterface) {
+      foreach ($order->getItems() as $order_item) {
+        $offer->clear($order_item, $this);
+      }
+    }
+    else {
+      $offer->clear($order, $this);
     }
   }
 

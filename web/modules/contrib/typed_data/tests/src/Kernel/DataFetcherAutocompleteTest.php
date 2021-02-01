@@ -49,12 +49,12 @@ class DataFetcherAutocompleteTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['typed_data', 'system', 'node', 'field', 'user'];
+  public static $modules = ['typed_data', 'system', 'node', 'field', 'user'];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
+  protected function setUp() {
     parent::setUp();
 
     $this->installEntitySchema('user');

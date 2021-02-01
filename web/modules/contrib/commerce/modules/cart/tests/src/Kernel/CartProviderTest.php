@@ -4,8 +4,6 @@ namespace Drupal\Tests\commerce_cart\Kernel;
 
 use Drupal\commerce_cart\Exception\DuplicateCartException;
 use Drupal\commerce_order\Entity\OrderInterface;
-use Drupal\commerce_store\Entity\Store;
-use Drupal\commerce_store\Entity\StoreType;
 
 /**
  * Tests the cart provider.
@@ -43,15 +41,6 @@ class CartProviderTest extends CartKernelTestBase {
     parent::setUp();
 
     $this->entityTypeManager = $this->container->get('entity_type.manager');
-
-    StoreType::create(['id' => 'animals', 'label' => 'Animals']);
-    $store = Store::create([
-      'type' => 'animals',
-      'name' => 'Llamas and more',
-    ]);
-    $store->save();
-    $this->store = $this->reloadEntity($store);
-
     $this->anonymousUser = $this->createUser([
       'uid' => 0,
       'name' => '',
@@ -88,14 +77,25 @@ class CartProviderTest extends CartKernelTestBase {
     $cart = $this->cartProvider->getCart('default', $this->store, $this->anonymousUser);
     $this->assertInstanceOf(OrderInterface::class, $cart);
 
-    $cart_id = $this->cartProvider->getCartId('default', $this->store, $this->anonymousUser);
-    $this->assertEquals(1, $cart_id);
+    $this->assertEquals($cart->id(), $this->cartProvider->getCartId('default', $this->store, $this->anonymousUser));
+    $this->assertEquals($cart->id(), $this->cartProvider->getCartId('default', NULL, $this->anonymousUser));
 
-    $carts = $this->cartProvider->getCarts($this->anonymousUser);
+    $carts = $this->cartProvider->getCarts($this->anonymousUser, $this->store);
+    $this->assertCount(1, $carts);
     $this->assertContainsOnlyInstancesOf(OrderInterface::class, $carts);
 
-    $cart_ids = $this->cartProvider->getCartIds($this->anonymousUser);
-    $this->assertContains(1, $cart_ids);
+    $this->assertContains(1, $this->cartProvider->getCartIds($this->anonymousUser, $this->store));
+    $this->assertContains(1, $this->cartProvider->getCartIds($this->anonymousUser));
+
+    // Tests passing a different store.
+    $another_store = $this->createStore();
+    $another_cart = $this->cartProvider->createCart('default', $another_store, $this->anonymousUser);
+    $another_cart = $this->reloadEntity($another_cart);
+    $this->assertInstanceOf(OrderInterface::class, $another_cart);
+    $this->assertEquals($another_cart->id(), $this->cartProvider->getCartId('default', $another_store, $this->anonymousUser));
+    $carts = $this->cartProvider->getCarts($this->anonymousUser, $another_store);
+    $this->assertEquals($another_cart, reset($carts));
+    $this->assertContains($another_cart->id(), $this->cartProvider->getCartIds($this->anonymousUser, $another_store));
   }
 
   /**
@@ -126,14 +126,22 @@ class CartProviderTest extends CartKernelTestBase {
     $cart = $this->cartProvider->getCart('default', $this->store, $this->authenticatedUser);
     $this->assertInstanceOf(OrderInterface::class, $cart);
 
-    $cart_id = $this->cartProvider->getCartId('default', $this->store, $this->authenticatedUser);
-    $this->assertEquals(1, $cart_id);
+    $this->assertEquals($cart->id(), $this->cartProvider->getCartId('default', $this->store, $this->authenticatedUser));
+    $this->assertEquals($cart->id(), $this->cartProvider->getCartId('default', NULL, $this->authenticatedUser));
 
     $carts = $this->cartProvider->getCarts($this->authenticatedUser);
     $this->assertContainsOnlyInstancesOf(OrderInterface::class, $carts);
 
-    $cart_ids = $this->cartProvider->getCartIds($this->authenticatedUser);
-    $this->assertContains(1, $cart_ids);
+    $this->assertContains(1, $this->cartProvider->getCartIds($this->authenticatedUser, $this->store));
+    $this->assertContains(1, $this->cartProvider->getCartIds($this->authenticatedUser));
+
+    // Tests passing a different store.
+    $another_store = $this->createStore();
+    $this->cartProvider->createCart('default', $another_store, $this->authenticatedUser);
+    $another_cart = $this->cartProvider->getCart('default', $another_store, $this->authenticatedUser);
+    $this->assertInstanceOf(OrderInterface::class, $another_cart);
+    $this->assertEquals($another_cart->id(), $this->cartProvider->getCartId('default', $another_store, $this->authenticatedUser));
+    $this->assertContains($another_cart->id(), $this->cartProvider->getCartIds($this->authenticatedUser, $another_store));
   }
 
   /**
@@ -189,6 +197,12 @@ class CartProviderTest extends CartKernelTestBase {
     $cart->save();
     $this->cartProvider->clearCaches();
     $cart = $this->cartProvider->getCart('default', $this->store, $this->authenticatedUser);
+    $this->assertNull($cart);
+
+    // Cart assigned to a different store should not be returned.
+    $this->cartProvider->createCart('default', $this->store, $this->anonymousUser);
+    $another_store = $this->createStore();
+    $cart = $this->cartProvider->getCart('default', $another_store, $this->anonymousUser);
     $this->assertNull($cart);
   }
 

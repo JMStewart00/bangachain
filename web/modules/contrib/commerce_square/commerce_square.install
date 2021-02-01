@@ -2,6 +2,15 @@
 
 /**
  * @file
+ * Contains install and update functions for Commerce Square.
+ */
+
+use Drupal\Core\Url;
+use SquareConnect\Api\LocationsApi;
+use SquareConnect\ApiException;
+
+/**
+ * @file
  * Provides install and update hooks for Commerce Square.
  */
 
@@ -22,7 +31,7 @@ function commerce_square_requirements($phase) {
     $state = \Drupal::state();
     if ($state->get('commerce_square.production_refresh_token') === NULL) {
       $request = \Drupal::request();
-      $try_again_url = \Drupal\Core\Url::fromUri($request->getUriForPath(''))->setOptions(['query' => ['continue' => 1]])->toString(TRUE)->getGeneratedUrl();
+      $try_again_url = Url::fromUri($request->getUriForPath(''))->setOptions(['query' => ['continue' => 1]])->toString(TRUE)->getGeneratedUrl();
       $requirements['commerce_square_authentication'] = [
         'title' => t('Commerce Square Connect'),
         'description' => t('<p>In the <a href="https://connect.squareup.com/apps">Square Developer Portal</a> make sure your application is on Connect API version 2019-03-13 or later.</p><p>Once you have updated your application, you may <a href=":url">click here to continue.</a></p>', [
@@ -35,7 +44,7 @@ function commerce_square_requirements($phase) {
   elseif ($phase === 'runtime') {
     $connect = \Drupal::getContainer()->get('commerce_square.connect');
     $client = $connect->getClient('production');
-    $locations_api = new \SquareConnect\Api\LocationsApi($client);
+    $locations_api = new LocationsApi($client);
     try {
       $locations_api->listLocations();
       $requirements['commerce_square_authentication'] = [
@@ -44,11 +53,11 @@ function commerce_square_requirements($phase) {
         'severity' => REQUIREMENT_OK,
       ];
     }
-    catch (\SquareConnect\ApiException $e) {
+    catch (ApiException $e) {
       $requirements['commerce_square_authentication'] = [
         'title' => t('Commerce Square Connect'),
         'description' => t('Square Connect OAuth access token is not valid. Please reconnect by submitting the <a href=":url">Square settings form</a>.', [
-          ':url' => \Drupal\Core\Url::fromRoute('commerce_square.settings'),
+          ':url' => Url::fromRoute('commerce_square.settings'),
         ]),
         'severity' => REQUIREMENT_ERROR,
       ];

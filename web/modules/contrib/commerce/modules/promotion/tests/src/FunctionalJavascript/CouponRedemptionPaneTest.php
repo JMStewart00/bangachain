@@ -358,4 +358,42 @@ class CouponRedemptionPaneTest extends CommerceWebDriverTestBase {
     $this->assertStringContainsString('Johnny Appleseed', $page->find('css', 'p.address')->getText());
   }
 
+  /**
+   * Tests that payment is not skipped if an order is no longer free.
+   */
+  public function testPaymentAfterCouponRemoval() {
+    $offer = $this->promotion->getOffer();
+    $offer->setConfiguration([
+      'percentage' => '1',
+    ]);
+    $this->promotion->setOffer($offer);
+    $this->promotion->save();
+    $coupons = $this->promotion->getCoupons();
+    $coupon = reset($coupons);
+    $this->cart->get('coupons')->appendItem($coupon->id());
+    $this->cart->save();
+    $this->drupalGet(Url::fromRoute('commerce_checkout.form', ['commerce_order' => $this->cart->id()]));
+    $this->submitForm([
+      'payment_information[billing_information][address][0][address][given_name]' => 'Johnny',
+      'payment_information[billing_information][address][0][address][family_name]' => 'Appleseed',
+      'payment_information[billing_information][address][0][address][address_line1]' => '123 New York Drive',
+      'payment_information[billing_information][address][0][address][locality]' => 'New York City',
+      'payment_information[billing_information][address][0][address][administrative_area]' => 'NY',
+      'payment_information[billing_information][address][0][address][postal_code]' => '10001',
+    ], 'Continue to review');
+    $this->assertSession()->pageTextContains($coupon->getCode());
+    $this->assertSession()->buttonExists('Complete checkout');
+    $this->getSession()->getPage()->pressButton('Remove coupon');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->pageTextNotContains($coupon->getCode());
+    // Now that the coupon is removed, the button label should change.
+    $this->submitForm([], 'Pay and complete purchase');
+    // In theory, the customer should be redirected to the order information
+    // step because the order is no longer free and the order doesn't reference
+    // a payment gateway.
+    $this->assertSession()->pageTextNotContains('Your order number is 1. You can view your order on your account page when logged in.');
+    $this->assertSession()->pageTextContains('No payment gateway selected.');
+    $this->getSession()->getPage()->hasField('Example');
+  }
+
 }

@@ -284,7 +284,6 @@
                 "Break long text strings in layout edit": "https://www.drupal.org/files/issues/2020-08-10/break-long-text-strings-in-layout-3016507-32.patch",
                 "Nested Paragraphs create multiple drag handles": "https://www.drupal.org/files/issues/2019-11-13/claro-nested_paragraphs_multiple_drag_handles-3092181-5.patch",
                 "Views file name suggestions often missing from Twig debugging": "https://www.drupal.org/files/issues/views-template-suggestions-2839945-2.patch",
-                "Do not decode a contact message twice": "https://www.drupal.org/files/issues/2020-10-10/contact-decode-D8.2223967-91.patch",
                 "Off-canvas style resets are overriding styles (especially SVGs) in Safari resulting in display issues": "https://www.drupal.org/files/issues/2019-05-07/off-canvas-style-resets-2958588-13.patch"
             },
             "drupal/block_class": {
@@ -301,8 +300,7 @@
                 "Missing Input Fields": "https://www.drupal.org/files/issues/2019-11-08/3093086-1.patch"
             },
             "drupal/commerce": {
-                "Promotion without coupons is always applied": "https://www.drupal.org/files/issues/promotion_without-2884888-12.patch",
-                "Implement optimistic locking for orders": "https://www.drupal.org/files/issues/2020-11-12/2656818-56.patch"
+                "Promotion without coupons is always applied": "https://www.drupal.org/files/issues/promotion_without-2884888-12.patch"
             },
             "drupal/jquery_ui_touch_punch": {
                 "Download the library": "https://www.drupal.org/files/issues/2020-11-19/3159222-32.patch"

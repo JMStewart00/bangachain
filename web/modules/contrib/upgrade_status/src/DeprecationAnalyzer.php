@@ -203,8 +203,10 @@ final class DeprecationAnalyzer {
   /**
    * Finds bin-dir location.
    *
-   * This can be set in composer.json via `bin-dir` config and may not be inside
-   * vendor directory.
+   * This can be set in composer.json via `bin-dir` config and may not be
+   * inside the vendor directory. The logic somewhat duplicates
+   * DrupalFinder's vendor directory detection for best developer guidance
+   * in case of errors.
    *
    * @return string
    *   Bin directory path if found.
@@ -212,36 +214,47 @@ final class DeprecationAnalyzer {
    * @throws \Exception
    */
   protected function findBinPath() {
-    // The bin directory may be found inside the vendor directory.
-    if (file_exists($this->vendorPath . '/bin/phpstan')) {
-      return $this->vendorPath . '/bin';
+    $composer_name = trim(getenv('COMPOSER')) ?: 'composer.json';
+    $composer_json_path = $this->finder->getComposerRoot() . '/' . $composer_name;
+    if ($composer_json_path && file_exists($composer_json_path)) {
+      $json = json_decode(file_get_contents($composer_json_path), TRUE);
+      if (is_null($json) || !is_array($json)) {
+        throw new \Exception('Unable to decode composer information from ' . $composer_json_path . '.');
+      }
     }
     else {
-      $attempted_paths = [$this->vendorPath . '/bin/phpstan'];
+      throw new \Exception('The composer.json file was not found at ' . $composer_json_path . '.');
     }
 
-    // See if we can locate a custom bin directory based on composer.json
-    // settings.
-    $composerFileName = trim(getenv('COMPOSER')) ?: 'composer.json';
-    $rootComposer = $this->finder->getComposerRoot() . '/' . $composerFileName;
-    $json = json_decode(file_get_contents($rootComposer), TRUE);
-
-    if (is_null($json)) {
-      throw new \Exception('Unable to decode composer information from ' . $rootComposer);
-    }
-
-    if (is_array($json) && isset($json['config']['bin-dir'])) {
+    // If a bin-dir is specified, that is most specific.
+    if (isset($json['config']['bin-dir'])) {
       $binPath = $this->finder->getComposerRoot() . '/' . $json['config']['bin-dir'];
       if (file_exists($binPath . '/phpstan')) {
         return $binPath;
       }
       else {
-        $attempted_paths[] = $binPath . '/phpstan';
+        throw new \Exception('The PHPStan binary was not found in the bin-dir specified by ' . $composer_json_path . '. Attempted: ' . $binPath . '/phpstan.');
       }
     }
 
-    // Bail here as continuing makes no sense.
-    throw new \Exception('Vendor binary path not correct or phpstan is not installed there. Did you install Upgrade Status with composer? Checked: ' . join(',', $attempted_paths));
+    // If a vendor-dir is specified, that is slightly less specific.
+    if (isset($json['config']['vendor-dir'])) {
+      $binPath = $this->finder->getComposerRoot() . '/' . $json['config']['vendor-dir'] . '/bin';
+      if (file_exists($binPath . '/phpstan')) {
+        return $binPath;
+      }
+      else {
+        throw new \Exception('The PHPStan binary was not found in the vendor-dir specified by ' . $composer_json_path . '. Attempted: ' . $binPath . '/phpstan.');
+      }
+    }
+
+    // Try the assumed default vendor directory as a last resort.
+    $binPath = $this->finder->getComposerRoot() . '/vendor/bin';
+    if (file_exists($binPath . '/phpstan')) {
+      return $binPath;
+    }
+
+    throw new \Exception('The PHPStan binary was not found in the default vendor directory based on the location of ' . $composer_json_path . '. You may need to configure a vendor-dir in composer.json. See https://getcomposer.org/doc/06-config.md#vendor-dir. Attempted: ' . $binPath . '/phpstan.');
   }
 
   /**
@@ -276,13 +289,21 @@ final class DeprecationAnalyzer {
        $this->logger->error('PHPStan failed: %results', ['%results' => print_r($output, TRUE)]);
        $json = [
          'files' => [
-           'PHPStan failed' => 'PHP API deprecations cannot be checked. Reason: ' . print_r($output, TRUE),
-           'line' => 0,
-          ],
-          'totals' => [
-            'errors' => 1,
-            'file_errors' => 1,
-          ],
+           // Add a failure message with the nonexistent 'PHPStan failed'
+           // filename, so the error conforms to the expected format.
+           'PHPStan failed' => [
+             'messages' => [
+               [
+                 'message' => 'PHP API deprecations cannot be checked. Reason: ' . print_r($output, TRUE),
+                 'line' => 0,
+               ],
+             ],
+           ]
+         ],
+         'totals' => [
+           'errors' => 1,
+           'file_errors' => 1,
+         ],
        ];
     }
     $result = [
@@ -296,11 +317,9 @@ final class DeprecationAnalyzer {
       preg_match('/\s(\d).?$/', $twig_deprecation, $line_matches);
       $twig_deprecation = preg_replace('! in (.+)\.twig at line \d+\.!', '.', $twig_deprecation);
       $twig_deprecation .= ' See https://drupal.org/node/3071078.';
-      $result['data']['files'][$file_matches[1]]['messages'] = [
-        [
-          'message' => $twig_deprecation,
-          'line' => $line_matches[1] ?: 0,
-        ],
+      $result['data']['files'][$file_matches[1]]['messages'][] = [
+        'message' => $twig_deprecation,
+        'line' => $line_matches[1] ?: 0,
       ];
       $result['data']['totals']['errors']++;
       $result['data']['totals']['file_errors']++;
@@ -398,36 +417,34 @@ final class DeprecationAnalyzer {
     $result['data']['totals']['upgrade_status_next'] = ProjectCollector::NEXT_RELAX;
 
     foreach ($result['data']['files'] as $path => &$errors) {
-      if (!empty($errors['messages'])) {
-        foreach ($errors['messages'] as &$error) {
+      foreach ($errors['messages'] as &$error) {
 
-          // Overwrite message with processed text. Save category.
-          [$message, $category] = $this->categorizeMessage($error['message'], $extension);
-          $error['message'] = $message;
-          $error['upgrade_status_category'] = $category;
+        // Overwrite message with processed text. Save category.
+        [$message, $category] = $this->categorizeMessage($error['message'], $extension);
+        $error['message'] = $message;
+        $error['upgrade_status_category'] = $category;
 
-          // If the category was 'rector' that means at least one error was
-          // identified as covered by rector, so next step should be to run
-          // rector on this project.
-          if ($category == 'rector') {
-            $result['data']['totals']['upgrade_status_next'] = ProjectCollector::NEXT_RECTOR;
-          }
-          // If the category was not rector, if the next step is still to
-          // relax, modify that to fix manually.
-          elseif ($result['data']['totals']['upgrade_status_next'] == ProjectCollector::NEXT_RELAX) {
-            $result['data']['totals']['upgrade_status_next'] = ProjectCollector::NEXT_MANUAL;
-          }
+        // If the category was 'rector' that means at least one error was
+        // identified as covered by rector, so next step should be to run
+        // rector on this project.
+        if ($category == 'rector') {
+          $result['data']['totals']['upgrade_status_next'] = ProjectCollector::NEXT_RECTOR;
+        }
+        // If the category was not rector, if the next step is still to
+        // relax, modify that to fix manually.
+        elseif ($result['data']['totals']['upgrade_status_next'] == ProjectCollector::NEXT_RELAX) {
+          $result['data']['totals']['upgrade_status_next'] = ProjectCollector::NEXT_MANUAL;
+        }
 
-          // Sum up the error based on the category it ended up in. Split the
-          // categories into two high level buckets needing attention now or
-          // later for Drupal 9 compatibility. Ignore Drupal 10 here.
-          @$result['data']['totals']['upgrade_status_category'][$category]++;
-          if (in_array($category, ['safe', 'old', 'rector'])) {
-            @$result['data']['totals']['upgrade_status_split']['error']++;
-          }
-          elseif (in_array($category, ['later', 'uncategorized'])) {
-            @$result['data']['totals']['upgrade_status_split']['warning']++;
-          }
+        // Sum up the error based on the category it ended up in. Split the
+        // categories into two high level buckets needing attention now or
+        // later for Drupal 9 compatibility. Ignore Drupal 10 here.
+        @$result['data']['totals']['upgrade_status_category'][$category]++;
+        if (in_array($category, ['safe', 'old', 'rector'])) {
+          @$result['data']['totals']['upgrade_status_split']['error']++;
+        }
+        elseif (in_array($category, ['later', 'uncategorized'])) {
+          @$result['data']['totals']['upgrade_status_split']['warning']++;
         }
       }
     }
@@ -509,13 +526,17 @@ final class DeprecationAnalyzer {
     );
 
     if (!class_exists('PHPStan\ExtensionInstaller\GeneratedConfig')) {
-      $config .= "\nincludes:\n\t- '" .
-        $this->vendorPath . "/mglaman/phpstan-drupal/extension.neon'\n\t- '" .
-        $this->vendorPath . "/phpstan/phpstan-deprecation-rules/rules.neon'\n";
+      $extension_neon = $this->vendorPath . '/mglaman/phpstan-drupal/extension.neon';
+      $rules_neon = $this->vendorPath . '/phpstan/phpstan-deprecation-rules/rules.neon';
+      if (!file_exists($extension_neon) || !file_exists($rules_neon)) {
+        throw new \Exception('Vendor source files were not found. You may need to configure a vendor-dir in composer.json. See https://getcomposer.org/doc/06-config.md#vendor-dir. Missing ' . $extension_neon . ' and ' . $rules_neon . '.');
+      }
+      $config .= "\nincludes:\n\t- '" . $extension_neon . "'\n\t- '" . $rules_neon . "'\n";
     }
+
     $success = file_put_contents($this->phpstanNeonPath, $config);
     if (!$success) {
-      throw new \Exception('Unable to write configuration for PHPStan to ' . $this->phpstanNeonPath);
+      throw new \Exception('Unable to write configuration for PHPStan to ' . $this->phpstanNeonPath . '.');
     }
   }
 

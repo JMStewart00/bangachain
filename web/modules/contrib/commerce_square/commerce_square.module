@@ -2,7 +2,7 @@
 
 /**
  * @file
- * commerce_square module file.
+ * Defines common functionality for the commerce_square module.
  */
 
 use SquareConnect\Api\OAuthApi;

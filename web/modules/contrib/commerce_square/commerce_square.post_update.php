@@ -5,6 +5,7 @@
  * Post update functions for Commerce Square.
  */
 
+use Drupal\Core\Url;
 use Drupal\Core\Utility\UpdateException;
 use SquareConnect\Api\OAuthApi;
 use SquareConnect\ApiException;
@@ -17,7 +18,7 @@ function commerce_square_post_update_oauth_token_warning() {
   $messenger = \Drupal::messenger();
   $messenger->addWarning(t('The Square integration requires the ORDERS_WRITE permission to add purchase details for orders sent to Square. You must <a href=":link">reauthorize with Square</a>', [
     // Url generation is odd in the update kernel, see https://www.drupal.org/project/drupal/issues/2956953.
-    ':link' => \Drupal\Core\Url::fromRoute('commerce_square.settings', [], ['base_url' => ''])->toString(),
+    ':link' => Url::fromRoute('commerce_square.settings', [], ['base_url' => ''])->toString(),
   ]));
 }
 

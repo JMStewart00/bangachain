@@ -5,6 +5,8 @@ namespace Drupal\commerce_promotion;
 use Drupal\commerce_order\Entity\OrderInterface;
 use Drupal\commerce_order\OrderProcessorInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 
 /**
  * Applies promotions to orders during the order refresh process.
@@ -12,20 +14,30 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 class PromotionOrderProcessor implements OrderProcessorInterface {
 
   /**
-   * The promotion storage.
+   * The entity type manager.
    *
-   * @var \Drupal\commerce_promotion\PromotionStorageInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $promotionStorage;
+  protected $entityTypeManager;
+
+  /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
 
   /**
    * Constructs a new PromotionOrderProcessor object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
-    $this->promotionStorage = $entity_type_manager->getStorage('commerce_promotion');
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, LanguageManagerInterface $language_manager) {
+    $this->entityTypeManager = $entity_type_manager;
+    $this->languageManager = $language_manager;
   }
 
   /**
@@ -41,6 +53,7 @@ class PromotionOrderProcessor implements OrderProcessorInterface {
       $coupons_field_list->removeItem($delta);
     }
 
+    $content_langcode = $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
     /** @var \Drupal\commerce_promotion\Entity\CouponInterface[] $coupons */
     $coupons = $order->get('coupons')->referencedEntities();
     foreach ($coupons as $index => $coupon) {
@@ -49,11 +62,19 @@ class PromotionOrderProcessor implements OrderProcessorInterface {
     }
 
     // Non-coupon promotions are loaded and applied separately.
-    $promotions = $this->promotionStorage->loadAvailable($order);
+    /** @var \Drupal\commerce_promotion\PromotionStorageInterface $promotion_storage */
+    $promotion_storage = $this->entityTypeManager->getStorage('commerce_promotion');
+    $promotions = $promotion_storage->loadAvailable($order);
     foreach ($promotions as $promotion) {
-      if ($promotion->applies($order)) {
-        $promotion->apply($order);
+      if (!$promotion->applies($order)) {
+        continue;
       }
+      // Ensure the promotion is in the right language, to ensure promotions
+      // adjustments labels are correctly translated.
+      if ($promotion->hasTranslation($content_langcode)) {
+        $promotion = $promotion->getTranslation($content_langcode);
+      }
+      $promotion->apply($order);
     }
   }
 

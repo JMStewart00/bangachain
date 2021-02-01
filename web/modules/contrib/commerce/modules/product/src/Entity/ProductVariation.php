@@ -32,6 +32,7 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
  *   handlers = {
  *     "event" = "Drupal\commerce_product\Event\ProductVariationEvent",
  *     "storage" = "Drupal\commerce_product\ProductVariationStorage",
+ *     "storage_schema" = "Drupal\commerce\CommerceContentEntityStorageSchema",
  *     "access" = "Drupal\commerce_product\ProductVariationAccessControlHandler",
  *     "permission_provider" = "Drupal\commerce_product\ProductVariationPermissionProvider",
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
@@ -53,6 +54,10 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
  *     "translation" = "Drupal\content_translation\ContentTranslationHandler"
  *   },
  *   admin_permission = "administer commerce_product",
+ *   fieldable = TRUE,
+ *   field_indexes = {
+ *     "sku"
+ *   },
  *   translatable = TRUE,
  *   translation = {
  *     "content_translation" = {

@@ -4,13 +4,14 @@ namespace Drupal\commerce_order\Plugin\Commerce\Condition;
 
 use Drupal\commerce\EntityUuidMapperInterface;
 use Drupal\commerce\Plugin\Commerce\Condition\ConditionBase;
+use Drupal\commerce\Plugin\Commerce\Condition\PurchasableEntityConditionInterface;
 use Drupal\commerce\PurchasableEntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-abstract class PurchasedEntityConditionBase extends ConditionBase implements ContainerFactoryPluginInterface {
+abstract class PurchasedEntityConditionBase extends ConditionBase implements PurchasableEntityConditionInterface, ContainerFactoryPluginInterface {
 
   /**
    * The entity type manager.
@@ -132,6 +133,25 @@ abstract class PurchasedEntityConditionBase extends ConditionBase implements Con
     return $purchasable_entity !== NULL &&
       $purchasable_entity->getEntityTypeId() === $this->getPurchasableEntityType() &&
       in_array($purchasable_entity->uuid(), $this->configuration['entities'], TRUE);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPurchasableEntityIds() {
+    return $this->entityUuidMapper->mapToIds($this->getPurchasableEntityType(), $this->configuration['entities']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPurchasableEntities() {
+    if ($entity_ids = $this->getPurchasableEntityIds()) {
+      $storage = $this->entityTypeManager->getStorage($this->getPurchasableEntityType());
+      $entities = $storage->loadMultiple($entity_ids);
+    }
+
+    return $entities ?? [];
   }
 
 }

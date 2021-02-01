@@ -84,7 +84,7 @@ class AdjustmentDefaultWidget extends WidgetBase {
     ];
     $element['definition']['amount'] = [
       '#type' => 'commerce_price',
-      '#title' => t('Amount'),
+      '#title' => $this->t('Amount'),
       '#default_value' => ($adjustment) ? $adjustment->getAmount()->toArray() : NULL,
       '#allow_negative' => TRUE,
       '#states' => [
@@ -96,7 +96,7 @@ class AdjustmentDefaultWidget extends WidgetBase {
     ];
     $element['definition']['included'] = [
       '#type' => 'checkbox',
-      '#title' => t('Included in the base price'),
+      '#title' => $this->t('Included in the base price'),
       '#default_value' => ($adjustment) ? $adjustment->isIncluded() : FALSE,
     ];
 

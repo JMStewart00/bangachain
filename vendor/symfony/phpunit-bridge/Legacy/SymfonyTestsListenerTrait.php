@@ -133,8 +133,8 @@ class SymfonyTestsListenerTrait
             echo "Testing $suiteName\n";
             $this->state = 0;
 
-            if (!class_exists('Doctrine\Common\Annotations\AnnotationRegistry', false) && class_exists('Doctrine\Common\Annotations\AnnotationRegistry')) {
-                if (method_exists('Doctrine\Common\Annotations\AnnotationRegistry', 'registerUniqueLoader')) {
+            if (!class_exists(AnnotationRegistry::class, false) && class_exists(AnnotationRegistry::class)) {
+                if (method_exists(AnnotationRegistry::class, 'registerUniqueLoader')) {
                     AnnotationRegistry::registerUniqueLoader('class_exists');
                 } else {
                     AnnotationRegistry::registerLoader('class_exists');
@@ -260,12 +260,12 @@ class SymfonyTestsListenerTrait
             unlink($this->runsInSeparateProcess);
             putenv('SYMFONY_DEPRECATIONS_SERIALIZE');
             foreach ($deprecations ? unserialize($deprecations) : [] as $deprecation) {
-                $error = serialize(['deprecation' => $deprecation[1], 'class' => $className, 'method' => $test->getName(false), 'triggering_file' => isset($deprecation[2]) ? $deprecation[2] : null]);
+                $error = serialize(['deprecation' => $deprecation[1], 'class' => $className, 'method' => $test->getName(false), 'triggering_file' => isset($deprecation[2]) ? $deprecation[2] : null, 'files_stack' => isset($deprecation[3]) ? $deprecation[3] : []]);
                 if ($deprecation[0]) {
                     // unsilenced on purpose
-                    trigger_error($error, E_USER_DEPRECATED);
+                    trigger_error($error, \E_USER_DEPRECATED);
                 } else {
-                    @trigger_error($error, E_USER_DEPRECATED);
+                    @trigger_error($error, \E_USER_DEPRECATED);
                 }
             }
             $this->runsInSeparateProcess = false;
@@ -302,7 +302,7 @@ class SymfonyTestsListenerTrait
 
     public function handleError($type, $msg, $file, $line, $context = [])
     {
-        if (E_USER_DEPRECATED !== $type && E_DEPRECATED !== $type) {
+        if (\E_USER_DEPRECATED !== $type && \E_DEPRECATED !== $type) {
             $h = $this->previousErrorHandler;
 
             return $h ? $h($type, $msg, $file, $line, $context) : false;

@@ -169,7 +169,7 @@ class DefaultPaymentAdminTest extends CommerceBrowserTestBase {
     $this->getSession()->getPage()->pressButton('Continue');
     $this->submitForm(['payment[amount][number]' => '100'], 'Add payment');
     $this->assertSession()->addressEquals($this->paymentUri);
-    $this->assertSession()->pageTextContains('Completed');
+    $this->assertSession()->elementContains('css', 'table tbody tr td:nth-child(2)', 'Completed');
 
     \Drupal::entityTypeManager()->getStorage('commerce_payment')->resetCache([1]);
     /** @var \Drupal\commerce_payment\Entity\PaymentInterface $payment */
@@ -191,20 +191,21 @@ class DefaultPaymentAdminTest extends CommerceBrowserTestBase {
       'order_id' => $this->order->id(),
       'amount' => new Price('10', 'USD'),
     ]);
-
     $this->paymentGateway->getPlugin()->createPayment($payment, FALSE);
 
     $this->drupalGet($this->paymentUri);
     $this->assertSession()->pageTextContains('Authorization');
-
     $this->drupalGet($this->paymentUri . '/' . $payment->id() . '/operation/capture');
     $this->submitForm(['payment[amount][number]' => '10'], 'Capture');
-    $this->assertSession()->addressEquals($this->paymentUri);
-    $this->assertSession()->pageTextNotContains('Authorization');
-    $this->assertSession()->pageTextContains('Completed');
 
     \Drupal::entityTypeManager()->getStorage('commerce_payment')->resetCache([$payment->id()]);
     $payment = Payment::load($payment->id());
+    $this->assertSession()->addressEquals($this->paymentUri);
+    $this->assertSession()->pageTextNotContains('Authorization');
+    $this->assertSession()->elementContains('css', 'table tbody tr td:nth-child(2)', 'Completed');
+    $date_formatter = $this->container->get('date.formatter');
+    $this->assertSession()->elementContains('css', 'table tbody tr td:nth-child(5)', $date_formatter->format($payment->getCompletedTime(), 'short'));
+
     $this->assertEquals($payment->getState()->getLabel(), 'Completed');
   }
 
@@ -222,12 +223,12 @@ class DefaultPaymentAdminTest extends CommerceBrowserTestBase {
     $this->paymentGateway->getPlugin()->createPayment($payment, TRUE);
 
     $this->drupalGet($this->paymentUri);
-    $this->assertSession()->pageTextContains('Completed');
+    $this->assertSession()->elementContains('css', 'table tbody tr td:nth-child(2)', 'Completed');
 
     $this->drupalGet($this->paymentUri . '/' . $payment->id() . '/operation/refund');
     $this->submitForm(['payment[amount][number]' => '10'], 'Refund');
     $this->assertSession()->addressEquals($this->paymentUri);
-    $this->assertSession()->pageTextNotContains('Completed');
+    $this->assertSession()->elementNotContains('css', 'table tbody tr td:nth-child(2)', 'Completed');
     $this->assertSession()->pageTextContains('Refunded');
 
     \Drupal::entityTypeManager()->getStorage('commerce_payment')->resetCache([$payment->id()]);

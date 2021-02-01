@@ -2,11 +2,11 @@
 
 namespace Drupal\typed_data\Context;
 
-use Drupal\Component\Annotation\Doctrine\SimpleAnnotationReader;
+use Doctrine\Common\Annotations\SimpleAnnotationReader;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery as CoreAnnotatedClassDiscovery;
 
 /**
- * Extends the annotation class discovery for usage with Typed Data context.
+ * Extends the annotation class discovery for usage with Typed data context.
  *
  * We modify the annotations classes for ContextDefinition and for Condition.
  * This class makes sure that our plugin managers apply these.

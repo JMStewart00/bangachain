@@ -7,6 +7,7 @@ dependencies:
     - field.field.commerce_order.default.shipments
   module:
     - commerce_order
+    - commerce_price
     - state_machine
     - user
 _core:
@@ -16,6 +17,15 @@ targetEntityType: commerce_order
 bundle: default
 mode: default
 content:
+  balance:
+    type: commerce_price_default
+    label: inline
+    weight: 9
+    settings:
+      strip_trailing_zeroes: false
+      currency_display: symbol
+    third_party_settings: {  }
+    region: content
   changed:
     type: timestamp
     weight: 4
@@ -92,6 +102,7 @@ content:
 hidden:
   billing_profile: true
   order_number: true
+  search_api_excerpt: true
   shipments: true
   store_id: true
   total_paid: true

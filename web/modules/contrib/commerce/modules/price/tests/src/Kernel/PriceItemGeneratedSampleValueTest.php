@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php
 
 namespace Drupal\Tests\commerce_price\Kernel;
 
@@ -17,9 +17,13 @@ class PriceItemGeneratedSampleValueTest extends CommerceKernelTestBase {
   /**
    * Tests the generated sample value.
    *
+   * @param array $available_currencies
+   *   The available currencies.
+   *
    * @dataProvider dataForGeneratedSamples
    */
   public function testGeneratedSampleValue(array $available_currencies) {
+    /** @var \Drupal\commerce_price\CurrencyImporterInterface $currency_importer */
     $currency_importer = $this->container->get('commerce_price.currency_importer');
     foreach ($available_currencies as $available_currency) {
       $currency_importer->import($available_currency);

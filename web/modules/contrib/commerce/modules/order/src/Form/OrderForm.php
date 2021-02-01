@@ -95,7 +95,7 @@ class OrderForm extends ContentEntityForm {
     ];
     $form['customer'] = [
       '#type' => 'details',
-      '#title' => t('Customer information'),
+      '#title' => $this->t('Customer information'),
       '#group' => 'advanced',
       '#open' => TRUE,
       '#attributes' => [

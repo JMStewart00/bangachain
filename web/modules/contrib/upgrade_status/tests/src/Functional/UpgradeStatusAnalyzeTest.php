@@ -73,12 +73,14 @@ class UpgradeStatusAnalyzeTest extends UpgradeStatusTestBase {
 
     $report = $key_value->get('upgrade_status_test_theme');
     $this->assertNotEmpty($report);
-    $this->assertEquals(4, $report['data']['totals']['file_errors']);
+    $this->assertEquals(5, $report['data']['totals']['file_errors']);
     $this->assertCount(3, $report['data']['files']);
     $file = reset($report['data']['files']);
-    $message = $file['messages'][0];
-    $this->assertEquals('Twig Tag "raw" is deprecated since version 1.21. Use "verbatim" instead. See https://drupal.org/node/3071078.', $message['message']);
-    $this->assertEquals(1, $message['line']);
+    foreach ([0 => 1, 1 => 4] as $index => $line) {
+      $message = $file['messages'][$index];
+      $this->assertEquals('Twig Tag "raw" is deprecated since version 1.21. Use "verbatim" instead. See https://drupal.org/node/3071078.', $message['message']);
+      $this->assertEquals($line, $message['line']);
+    }
     $file = next($report['data']['files']);
     $this->assertEquals('Theme is overriding a deprecated library. The "upgrade_status_test_library/deprecated_library" asset library is deprecated for testing.', $file['messages'][0]['message']);
     $this->assertEquals(0, $file['messages'][0]['line']);

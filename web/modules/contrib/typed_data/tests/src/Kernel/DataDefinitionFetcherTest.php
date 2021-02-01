@@ -43,12 +43,12 @@ class DataDefinitionFetcherTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['typed_data', 'system', 'node', 'field', 'user'];
+  public static $modules = ['typed_data', 'system', 'node', 'field', 'user'];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
+  protected function setUp() {
     parent::setUp();
 
     $this->installEntitySchema('node');
@@ -182,8 +182,16 @@ class DataDefinitionFetcherTest extends KernelTestBase {
    * @covers ::fetchDefinitionByPropertyPath
    */
   public function testFetchingInvalidProperty() {
-    $this->expectException(InvalidArgumentException::class);
-    $this->expectExceptionMessage("Unable to apply data selector 'field_invalid.0.value' at 'field_invalid'");
+    // @todo In Drupal 8.8.x PHPUnit 8 functions needs to be used.
+    // Remove this once 8.7.x is unsupported.
+    // @see https://www.drupal.org/project/typed_data/issues/3096756
+    if (version_compare(substr(\Drupal::VERSION, 0, 3), '8.8', '>=')) {
+      $this->expectException(InvalidArgumentException::class);
+      $this->expectExceptionMessage("Unable to apply data selector 'field_invalid.0.value' at 'field_invalid'");
+    }
+    else {
+      $this->setExpectedException(InvalidArgumentException::class, "Unable to apply data selector 'field_invalid.0.value' at 'field_invalid'");
+    }
     // This should trigger an exception.
     $this->dataFetcher->fetchDefinitionByPropertyPath(
       $this->nodeDefinition,
@@ -225,8 +233,16 @@ class DataDefinitionFetcherTest extends KernelTestBase {
    * @covers ::fetchDefinitionByPropertyPath
    */
   public function testFetchingNonComplexType() {
-    $this->expectException(InvalidArgumentException::class);
-    $this->expectExceptionMessage("The data selector 'field_integer.0.value.not_existing' cannot be applied because the parent property 'value' is not a list or a complex structure");
+    // @todo In Drupal 8.8.x PHPUnit 8 functions needs to be used.
+    // Remove this once 8.7.x is unsupported.
+    // @see https://www.drupal.org/project/typed_data/issues/3096756
+    if (version_compare(substr(\Drupal::VERSION, 0, 3), '8.8', '>=')) {
+      $this->expectException(InvalidArgumentException::class);
+      $this->expectExceptionMessage("The data selector 'field_integer.0.value.not_existing' cannot be applied because the parent property 'value' is not a list or a complex structure");
+    }
+    else {
+      $this->setExpectedException(InvalidArgumentException::class, "The data selector 'field_integer.0.value.not_existing' cannot be applied because the parent property 'value' is not a list or a complex structure");
+    }
     // This should trigger an exception.
     $this->dataFetcher->fetchDefinitionByPropertyPath(
       $this->nodeDefinition,
@@ -238,8 +254,16 @@ class DataDefinitionFetcherTest extends KernelTestBase {
    * @covers ::fetchDefinitionByPropertyPath
    */
   public function testFetchingFromPrimitive() {
-    $this->expectException(InvalidArgumentException::class);
-    $this->expectExceptionMessage("The data selector 'unknown_property' cannot be applied because the definition of type 'string' is not a list or a complex structure");
+    // @todo In Drupal 8.8.x PHPUnit 8 functions needs to be used.
+    // Remove this once 8.7.x is unsupported.
+    // @see https://www.drupal.org/project/typed_data/issues/3096756
+    if (version_compare(substr(\Drupal::VERSION, 0, 3), '8.8', '>=')) {
+      $this->expectException(InvalidArgumentException::class);
+      $this->expectExceptionMessage("The data selector 'unknown_property' cannot be applied because the definition of type 'string' is not a list or a complex structure");
+    }
+    else {
+      $this->setExpectedException(InvalidArgumentException::class, "The data selector 'unknown_property' cannot be applied because the definition of type 'string' is not a list or a complex structure");
+    }
     $definition = $this->nodeDefinition
       ->getPropertyDefinition('title')
       ->getItemDefinition()
@@ -256,8 +280,16 @@ class DataDefinitionFetcherTest extends KernelTestBase {
    * @covers ::fetchDefinitionByPropertyPath
    */
   public function testFetchingAtInvalidPosition() {
-    $this->expectException(InvalidArgumentException::class);
-    $this->expectExceptionMessage("The data selector 'unknown_property' cannot be applied because the definition of type 'integer' is not a list or a complex structure");
+    // @todo In Drupal 8.8.x PHPUnit 8 functions needs to be used.
+    // Remove this once 8.7.x is unsupported.
+    // @see https://www.drupal.org/project/typed_data/issues/3096756
+    if (version_compare(substr(\Drupal::VERSION, 0, 3), '8.8', '>=')) {
+      $this->expectException(InvalidArgumentException::class);
+      $this->expectExceptionMessage("The data selector 'unknown_property' cannot be applied because the definition of type 'integer' is not a list or a complex structure");
+    }
+    else {
+      $this->setExpectedException(InvalidArgumentException::class, "The data selector 'unknown_property' cannot be applied because the definition of type 'integer' is not a list or a complex structure");
+    }
     $list_definition = $this->typedDataManager->createListDataDefinition('integer');
 
     // This should trigger an exception.

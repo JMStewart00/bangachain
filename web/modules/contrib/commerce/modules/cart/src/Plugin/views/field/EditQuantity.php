@@ -151,18 +151,27 @@ class EditQuantity extends FieldPluginBase {
         $precision = 0;
       }
 
-      $form[$this->options['id']][$row_index] = [
-        '#type' => 'number',
-        '#title' => $this->t('Quantity'),
-        '#title_display' => 'invisible',
-        '#default_value' => round($order_item->getQuantity(), $precision),
-        '#size' => 4,
-        '#min' => 0,
-        '#max' => 9999,
-        '#step' => $step,
-        '#required' => TRUE,
-      ];
+      if (!$order_item->isLocked()) {
+        $form[$this->options['id']][$row_index] = [
+          '#type' => 'number',
+          '#title' => $this->t('Quantity'),
+          '#title_display' => 'invisible',
+          '#default_value' => round($order_item->getQuantity(), $precision),
+          '#size' => 4,
+          '#min' => 0,
+          '#max' => 9999,
+          '#step' => $step,
+          '#required' => TRUE,
+        ];
+      }
+      else {
+        $form[$this->options['id']][$row_index] = [
+          '#type' => 'item',
+          '#plain_text' => round($order_item->getQuantity(), $precision),
+        ];
+      }
     }
+
     $form['actions']['submit']['#update_cart'] = TRUE;
     $form['actions']['submit']['#show_update_message'] = TRUE;
     // Replace the form submit button label.

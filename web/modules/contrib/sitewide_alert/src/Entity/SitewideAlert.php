@@ -59,6 +59,11 @@ use Drupal\user\UserInterface;
  *     "langcode" = "langcode",
  *     "published" = "status",
  *   },
+ *   revision_metadata_keys = {
+ *     "revision_user" = "revision_user",
+ *     "revision_created" = "revision_created",
+ *     "revision_log_message" = "revision_log",
+ *   },
  *   links = {
  *     "canonical" = "/admin/content/sitewide_alert/{sitewide_alert}",
  *     "add-form" = "/admin/content/sitewide_alert/add",

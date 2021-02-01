@@ -149,7 +149,7 @@ class CartAddResource extends CartResourceBase {
   /**
    * Add order items to the session's carts.
    *
-   * @param array $body
+   * @param array $data
    *   The unserialized request body.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request.
@@ -159,11 +159,11 @@ class CartAddResource extends CartResourceBase {
    *
    * @throws \Exception
    */
-  public function post(array $body, Request $request) {
+  public function post(array $data, Request $request) {
     $order_items = [];
 
     // Do an initial validation of the payload before any processing.
-    foreach ($body as $key => $order_item_data) {
+    foreach ($data as $key => $order_item_data) {
       if (!isset($order_item_data['purchased_entity_type'])) {
         throw new UnprocessableEntityHttpException(sprintf('You must specify a purchasable entity type for row: %s', $key));
       }
@@ -174,7 +174,7 @@ class CartAddResource extends CartResourceBase {
         throw new UnprocessableEntityHttpException(sprintf('You must specify a valid purchasable entity type for row: %s', $key));
       }
     }
-    foreach ($body as $order_item_data) {
+    foreach ($data as $order_item_data) {
       $storage = $this->entityTypeManager->getStorage($order_item_data['purchased_entity_type']);
       $purchased_entity = $storage->load($order_item_data['purchased_entity_id']);
       if (!$purchased_entity || !$purchased_entity instanceof PurchasableEntityInterface) {

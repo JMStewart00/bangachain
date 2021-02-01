@@ -163,6 +163,7 @@ class ProductTest extends CommerceKernelTestBase {
     $this->assertNotEmpty($product->hasVariation($variation1));
 
     $this->assertEquals($product->getDefaultVariation(), $variation2);
+    $this->assertEquals($variation2, $product->get('default_variation')->entity);
     $this->assertNotEquals($product->getDefaultVariation(), $variation1);
 
     // Confirm that postSave() sets the product_id on each variation.

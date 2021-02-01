@@ -14,12 +14,13 @@ class UninstallTest extends KernelTestBase {
   public static $modules = [
     'system',
     'commerce_square',
+    'commerce_number_pattern',
   ];
 
   /**
    * Tests OAuth data is removed from the state key value store.
    */
-  public function testUninstallRemoveOAuthData() {
+  public function testUninstallRemoveAuthData() {
     $this->container->get('state')->set('commerce_square.production_access_token', 'TESTTOKEN');
     $this->container->get('state')->set('commerce_square.production_access_token_expiry', $this->container->get('datetime.time')->getRequestTime());
 

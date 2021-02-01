@@ -62,6 +62,13 @@ class PaymentCheckoutTest extends CommerceWebDriverTestBase {
   protected $defaultProfile;
 
   /**
+   * A test user.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $user;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -222,6 +229,8 @@ class PaymentCheckoutTest extends CommerceWebDriverTestBase {
       'card_number' => '9999',
       'reusable' => FALSE,
     ]);
+
+    $this->user = $this->createUser(['view commerce_product', 'access checkout']);
   }
 
   /**
@@ -287,6 +296,11 @@ class PaymentCheckoutTest extends CommerceWebDriverTestBase {
    * Tests checkout with a new payment method.
    */
   public function testCheckoutWithNewPaymentMethod() {
+    // Note that we test with a different user with less rights to ensure
+    // the billing profile can be viewed on the review step.
+    $this->drupalLogin($this->user);
+    $this->defaultProfile->setOwner($this->user);
+    $this->defaultProfile->save();
     // Test the 'capture' setting of PaymentProcess while here.
     /** @var \Drupal\commerce_checkout\Entity\CheckoutFlow $checkout_flow */
     $checkout_flow = CheckoutFlow::load('default');

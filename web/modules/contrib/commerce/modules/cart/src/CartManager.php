@@ -3,6 +3,7 @@
 namespace Drupal\commerce_cart;
 
 use Drupal\commerce\PurchasableEntityInterface;
+use Drupal\commerce_cart\Event\CartOrderItemAddEvent;
 use Drupal\commerce_order\Entity\OrderInterface;
 use Drupal\commerce_order\Entity\OrderItemInterface;
 use Drupal\commerce_cart\Event\CartEvents;
@@ -127,6 +128,8 @@ class CartManager implements CartManagerInterface {
       $event = new CartEntityAddEvent($cart, $purchased_entity, $quantity, $saved_order_item);
       $this->eventDispatcher->dispatch(CartEvents::CART_ENTITY_ADD, $event);
     }
+    $event = new CartOrderItemAddEvent($cart, $quantity, $saved_order_item);
+    $this->eventDispatcher->dispatch(CartEvents::CART_ORDER_ITEM_ADD, $event);
 
     $this->resetCheckoutStep($cart);
     if ($save_cart) {

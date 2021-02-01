@@ -25,7 +25,7 @@ use Drupal\media_library\MediaLibraryUiBuilder;
  *     '#type' => 'media_library',
  *     '#allowed_bundles' => ['image'],
  *     '#title' => t('Upload your image'),
- *     '#default_value' => NULL|1,
+ *     '#default_value' => NULL|'1'|'2,3,1',
  *     '#description' => t('Upload or select your profile image.'),
  *     '#cardinality' => -1|1,
  *   ];
@@ -49,8 +49,6 @@ class MediaLibrary extends FormElement {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public static function processMediaLibrary(array &$element, FormStateInterface $form_state, array &$complete_form): array {
-    $referenced_entity = NULL;
-    $entity_id = NULL;
     $default_value = NULL;
     $referenced_entities = [];
 
@@ -66,9 +64,7 @@ class MediaLibrary extends FormElement {
     }
 
     if (!empty($entity_ids)) {
-      foreach ($entity_ids as $entity_id) {
-        $referenced_entities[] = \Drupal::entityTypeManager()->getStorage('media')->load($entity_id);
-      }
+      $referenced_entities = \Drupal::entityTypeManager()->getStorage('media')->loadMultiple($entity_ids);
     }
 
     $view_builder = \Drupal::entityTypeManager()->getViewBuilder('media');
@@ -92,6 +88,7 @@ class MediaLibrary extends FormElement {
           'id' => $wrapper_id,
           'class' => ['media-library-form-element'],
         ],
+        '#modal_selector' => '#modal-media-library',
         '#attached' => [
           'library' => [
             'media_library_form_element/media_library_form_element',
@@ -211,6 +208,7 @@ class MediaLibrary extends FormElement {
 
     // Create a new media library URL with the correct state parameters.
     $selected_type_id = reset($allowed_media_type_ids);
+    $remaining = $cardinality_unlimited ? FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED : $remaining;
     // This particular media library opener needs some extra metadata for its
     // \Drupal\media_library\MediaLibraryOpenerInterface::getSelectionResponse()
     // to be able to target the element
@@ -289,7 +287,7 @@ class MediaLibrary extends FormElement {
       '#submit' => [[static::class, 'updateItem']],
       // Prevent errors in other widgets from preventing updates.
       // Exclude other validations in case there is no data yet.
-      '#limit_validation_errors' => !empty($referenced_entity) ? $limit_validation_errors : [],
+      '#limit_validation_errors' => !empty($referenced_entities) ? $limit_validation_errors : [],
     ];
 
     return $element;
@@ -547,7 +545,7 @@ class MediaLibrary extends FormElement {
     $library_ui = \Drupal::service('media_library.ui_builder')->buildUi($triggering_element['#media_library_state']);
     $dialog_options = MediaLibraryUiBuilder::dialogOptions();
 
-    return (new AjaxResponse())->addCommand(new OpenModalDialogCommand($dialog_options['title'], $library_ui, $dialog_options));
+    return (new AjaxResponse())->addCommand(new OpenModalDialogCommand($dialog_options['title'], $library_ui, $dialog_options, NULL, '#modal-media-library'));
   }
 
   /**
@@ -575,4 +573,5 @@ class MediaLibrary extends FormElement {
       '#theme' => 'media_library_element',
     ];
   }
+
 }

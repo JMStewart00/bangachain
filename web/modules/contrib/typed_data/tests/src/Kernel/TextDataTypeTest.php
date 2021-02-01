@@ -19,7 +19,7 @@ class TextDataTypeTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system', 'typed_data'];
+  public static $modules = ['system', 'typed_data'];
 
   /**
    * Tests that the Text datatype is instantiated correctly.
@@ -34,8 +34,8 @@ class TextDataTypeTest extends KernelTestBase {
 
     // Check that the new object is an instance of TypedDataInterface and of
     // StringInterface (not TextInterface).
-    $this->assertTrue($typed_data instanceof TypedDataInterface, 'Typed Data object is an instance of the typed data interface.');
-    $this->assertTrue($typed_data instanceof StringInterface, 'Typed Data object is an instance of StringInterface).');
+    $this->assertTrue($typed_data instanceof TypedDataInterface, 'Typed data object is an instance of the typed data interface.');
+    $this->assertTrue($typed_data instanceof StringInterface, 'Typed data object is an instance of StringInterface).');
 
     // Check basic get and set functionality.
     $this->assertTrue($typed_data->getValue() === $value, 'Text value was fetched.');

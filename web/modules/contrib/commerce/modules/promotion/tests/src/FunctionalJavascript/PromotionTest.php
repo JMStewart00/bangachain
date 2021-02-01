@@ -323,4 +323,61 @@ class PromotionTest extends CommerceWebDriverTestBase {
     $this->assertEmpty($promotion_exists);
   }
 
+  /**
+   * Tests disabling a promotion.
+   */
+  public function testDisablePromotion() {
+    /** @var \Drupal\commerce_promotion\Entity\PromotionInterface $promotion */
+    $promotion = $this->createEntity('commerce_promotion', [
+      'name' => $this->randomMachineName(8),
+    ]);
+    $this->assertTrue($promotion->isEnabled());
+    $this->drupalGet($promotion->toUrl('disable-form'));
+    $this->assertSession()->pageTextContains(t('Are you sure you want to disable the promotion @label?', ['@label' => $promotion->label()]));
+    $this->submitForm([], t('Disable'));
+
+    $promotion = $this->reloadEntity($promotion);
+    $this->assertFalse($promotion->isEnabled());
+  }
+
+  /**
+   * Tests enabling a promotion.
+   */
+  public function testEnablePromotion() {
+    /** @var \Drupal\commerce_promotion\Entity\PromotionInterface $promotion */
+    $promotion = $this->createEntity('commerce_promotion', [
+      'name' => $this->randomMachineName(8),
+      'status' => FALSE,
+    ]);
+    $this->assertFalse($promotion->isEnabled());
+    $this->drupalGet($promotion->toUrl('enable-form'));
+    $this->assertSession()->pageTextContains(t('Are you sure you want to enable the promotion @label?', ['@label' => $promotion->label()]));
+    $this->submitForm([], t('Enable'));
+
+    $promotion = $this->reloadEntity($promotion);
+    $this->assertTrue($promotion->isEnabled());
+  }
+
+  /**
+   * Tests viewing the admin/commerce/promotions page.
+   */
+  public function testAdminPromotions() {
+    /** @var \Drupal\commerce_promotion\Entity\PromotionInterface $promotion */
+    $promotion = $this->createEntity('commerce_promotion', [
+      'name' => $this->randomMachineName(8),
+    ]);
+    $this->drupalGet('admin/commerce/promotions');
+    $this->assertNotEmpty($this->getSession()->getPage()->hasLink('Add promotion'));
+    $this->assertSession()->pageTextNotContains('There are no enabled promotions yet.');
+    $this->assertSession()->pageTextContains('There are no disabled promotions.');
+    $this->assertTrue($this->getSession()->getPage()->hasLink('Disable'));
+    $this->assertFalse($this->getSession()->getPage()->hasLink('Enable'));
+    $this->assertTrue($this->getSession()->getPage()->hasLink('Delete'));
+    $this->drupalGet($promotion->toUrl('disable-form'));
+    $this->submitForm([], t('Disable'));
+    $this->assertSession()->pageTextContains('There are no enabled promotions yet.');
+    $this->assertSession()->pageTextNotContains('There are no disabled promotions.');
+    $this->assertTrue($this->getSession()->getPage()->hasLink('Enable'));
+  }
+
 }

@@ -223,7 +223,7 @@ class CommerceEntityViewsData extends EntityViewsData {
       $label = $field_definition->getLabel();
 
       $table_data['delta'] = [
-        'title' => t('@label (@name:delta)', ['@label' => $label, '@name' => $field_name]),
+        'title' => $this->t('@label (@name:delta)', ['@label' => $label, '@name' => $field_name]),
         'title short' => t('@label:delta', ['@label' => $label]),
       ];
       $table_data['delta']['field'] = [

@@ -6,8 +6,8 @@ use Drupal\commerce_cart\CartSessionInterface;
 use Drupal\commerce_cart_api\CartTokenSession;
 use Drupal\Core\TempStore\SharedTempStoreFactory;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -69,10 +69,10 @@ final class CartTokenSubscriber implements EventSubscriberInterface {
   /**
    * Loads the token cart data and resets it to the session.
    *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
    *   The response event, which contains the current request.
    */
-  public function onRequest(GetResponseEvent $event) {
+  public function onRequest(RequestEvent $event) {
     $cart_token = $event->getRequest()->query->get(CartTokenSession::QUERY_NAME);
     if ($cart_token) {
       $token_cart_data = $this->tempStore->get($cart_token);
@@ -89,10 +89,10 @@ final class CartTokenSubscriber implements EventSubscriberInterface {
   /**
    * Ensures the Vary header contains the cart token header name.
    *
-   * @param \Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
    *   The response event.
    */
-  public function onResponse(FilterResponseEvent $event) {
+  public function onResponse(ResponseEvent $event) {
     if (!$event->isMasterRequest()) {
       return;
     }

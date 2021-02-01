@@ -40,7 +40,7 @@ interface AvailabilityManagerInterface {
    * Checks the availability of the given order item.
    *
    * @param \Drupal\commerce_order\Entity\OrderItemInterface $order_item
-   *   The the order item.
+   *   The order item.
    * @param \Drupal\commerce\Context $context
    *   The context.
    *

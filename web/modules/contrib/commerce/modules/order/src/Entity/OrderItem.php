@@ -309,6 +309,29 @@ class OrderItem extends CommerceContentEntityBase implements OrderItemInterface 
   /**
    * {@inheritdoc}
    */
+  public function isLocked() {
+    return (bool) $this->get('locked')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function lock() {
+    $this->set('locked', TRUE);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function unlock() {
+    $this->set('locked', FALSE);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getCreatedTime() {
     return $this->get('created')->value;
   }
@@ -443,6 +466,14 @@ class OrderItem extends CommerceContentEntityBase implements OrderItemInterface 
     $fields['data'] = BaseFieldDefinition::create('map')
       ->setLabel(t('Data'))
       ->setDescription(t('A serialized array of additional data.'));
+
+    $fields['locked'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Locked'))
+      ->setSettings([
+        'on_label' => t('Yes'),
+        'off_label' => t('No'),
+      ])
+      ->setDefaultValue(FALSE);
 
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Created'))

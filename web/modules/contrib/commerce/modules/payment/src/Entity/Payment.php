@@ -29,6 +29,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "event" = "Drupal\commerce_payment\Event\PaymentEvent",
  *     "list_builder" = "Drupal\commerce_payment\PaymentListBuilder",
  *     "storage" = "Drupal\commerce_payment\PaymentStorage",
+ *     "storage_schema" = "Drupal\commerce\CommerceContentEntityStorageSchema",
  *     "form" = {
  *       "operation" = "Drupal\commerce_payment\Form\PaymentOperationForm",
  *       "delete" = "Drupal\Core\Entity\ContentEntityDeleteForm",
@@ -40,6 +41,9 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *   },
  *   base_table = "commerce_payment",
  *   admin_permission = "administer commerce_payment",
+ *   field_indexes = {
+ *     "remote_id"
+ *   },
  *   entity_keys = {
  *     "id" = "payment_id",
  *     "bundle" = "type",

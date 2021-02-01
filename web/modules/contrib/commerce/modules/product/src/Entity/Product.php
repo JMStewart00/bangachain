@@ -6,6 +6,7 @@ use Drupal\commerce\Entity\CommerceContentEntityBase;
 use Drupal\commerce\EntityOwnerTrait;
 use Drupal\commerce_product\Event\ProductDefaultVariationEvent;
 use Drupal\commerce_product\Event\ProductEvents;
+use Drupal\commerce_product\Plugin\Field\ComputedDefaultVariation;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityPublishedTrait;
 use Drupal\Core\Entity\EntityChangedTrait;
@@ -378,6 +379,17 @@ class Product extends CommerceContentEntityBase implements ProductInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
+    $fields['default_variation'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Default variation'))
+      ->setDescription(t('The default variation.'))
+      ->setSetting('target_type', 'commerce_product_variation')
+      ->setSetting('handler', 'default')
+      ->setComputed(TRUE)
+      ->setCardinality(1)
+      ->setClass(ComputedDefaultVariation::class)
+      ->setDisplayConfigurable('form', FALSE)
+      ->setDisplayConfigurable('view', FALSE);
+
     $fields['path'] = BaseFieldDefinition::create('path')
       ->setLabel(t('URL alias'))
       ->setDescription(t('The product URL alias.'))
@@ -426,12 +438,16 @@ class Product extends CommerceContentEntityBase implements ProductInterface {
     /** @var \Drupal\Core\Field\BaseFieldDefinition[] $fields */
     $fields = [];
     $fields['variations'] = clone $base_field_definitions['variations'];
+    $fields['default_variation'] = clone $base_field_definitions['default_variation'];
     /** @var \Drupal\commerce_product\Entity\ProductTypeInterface $product_type */
     $product_type = ProductType::load($bundle);
     if ($product_type) {
       $variation_type_id = $product_type->getVariationTypeId();
       // Restrict the variations field to the configured variation type.
       $fields['variations']->setSetting('handler_settings', [
+        'target_bundles' => [$variation_type_id => $variation_type_id],
+      ]);
+      $fields['default_variation']->setSetting('handler_settings', [
         'target_bundles' => [$variation_type_id => $variation_type_id],
       ]);
     }

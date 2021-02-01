@@ -447,7 +447,6 @@ class Square extends OnsitePaymentGatewayBase implements SquareInterface {
       $payment->setState('refunded');
     }
 
-
     $payment->setRefundedAmount($new_refunded_amount);
     $payment->save();
   }

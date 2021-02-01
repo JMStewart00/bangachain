@@ -19,6 +19,7 @@ class SquareConfigurationUpradeTest extends CommerceKernelTestBase {
     'commerce_order',
     'commerce_payment',
     'commerce_square',
+    'commerce_number_pattern',
   ];
 
   /**

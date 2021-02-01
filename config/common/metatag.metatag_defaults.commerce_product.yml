@@ -5,5 +5,4 @@ dependencies: {  }
 id: commerce_product
 label: Product
 tags:
-  image_src: /sites/default/files/styles/square/public/2020-11/logo.png
   title: '[current-page:title] | [site:name]'

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8dd21af382a039b69c7e11249a53ef56",
+    "content-hash": "165a2cb90f0727c4349f6fea4378238d",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3714,8 +3714,7 @@
             "homepage": "http://drupal.org/project/commerce_giftcard",
             "support": {
                 "source": "https://git.drupalcode.org/project/commerce_giftcard"
-            },
-            "time": "2020-10-07T12:41:20+00:00"
+            }
         },
         {
             "name": "drupal/commerce_log",
@@ -4715,8 +4714,7 @@
             "homepage": "https://www.drupal.org/project/commerce_wishlist",
             "support": {
                 "source": "https://git.drupalcode.org/project/commerce_wishlist"
-            },
-            "time": "2020-08-27T14:48:01+00:00"
+            }
         },
         {
             "name": "drupal/config_filter",
@@ -9271,8 +9269,7 @@
             "homepage": "https://www.drupal.org/project/view_unpublished",
             "support": {
                 "source": "https://git.drupalcode.org/project/view_unpublished"
-            },
-            "time": "2020-08-17T18:09:38+00:00"
+            }
         },
         {
             "name": "drupal/views_ajax_history",
@@ -9441,8 +9438,7 @@
             "homepage": "https://www.drupal.org/project/views_infinite_scroll",
             "support": {
                 "source": "https://git.drupalcode.org/project/views_infinite_scroll"
-            },
-            "time": "2021-01-30T09:11:08+00:00"
+            }
         },
         {
             "name": "drupal/viewsreference",

@@ -49,13 +49,17 @@
   <article{{ attributes.addClass(classes) }}>
 
     {% if content.field_image|render %}
-      <div class="c-column-item__media-wrapper">
-        {{ content.field_image }}
-      </div>
+      <a href="{{ content.field_link.0['#url'].toString() }}">
+        <div class="c-column-item__media-wrapper">
+          {{ content.field_image }}
+        </div>
+      </a>
     {% endif %}
 
     {% if content.field_header %}
-      <div class="c-column-item__header">{{ content.field_header }}</div>
+      <a href="{{ content.field_link.0['#url'].toString() }}">
+        <div class="c-column-item__header">{{ content.field_header }}</div>
+      </a>
     {% endif %}
 
     {% if content.field_description %}

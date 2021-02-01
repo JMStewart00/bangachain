@@ -56,6 +56,9 @@
       <div class="c-product__description u-vr__mb--4">
         <h2 class="h1">About the {{ product.title.0['#context'].value }}</h2>
         {{- product.field_description -}}
+        <div class="c-product__video u-vr__my--2">
+          {{ product.field_video }}
+        </div>
       </div>
     {% endif %}
 

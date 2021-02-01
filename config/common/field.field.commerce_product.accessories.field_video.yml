@@ -1,0 +1,30 @@
+uuid: 42159aac-b2db-418f-a48c-e1d309774239
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.accessories
+    - field.storage.commerce_product.field_video
+    - media.type.remote_video
+    - media.type.video
+id: commerce_product.accessories.field_video
+field_name: field_video
+entity_type: commerce_product
+bundle: accessories
+label: Video
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      remote_video: remote_video
+      video: video
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: remote_video
+field_type: entity_reference

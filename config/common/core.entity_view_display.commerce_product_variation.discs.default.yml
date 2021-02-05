@@ -9,6 +9,7 @@ dependencies:
     - field.field.commerce_product_variation.discs.attribute_disc_weight
     - field.field.commerce_product_variation.discs.feeds_item
     - field.field.commerce_product_variation.discs.field_bin
+    - field.field.commerce_product_variation.discs.field_needs_artwork
     - field.field.commerce_product_variation.discs.field_product_image
     - field.field.commerce_product_variation.discs.field_stock
     - field.field.commerce_product_variation.discs.field_upc
@@ -23,6 +24,16 @@ targetEntityType: commerce_product_variation
 bundle: discs
 mode: default
 content:
+  field_needs_artwork:
+    weight: 4
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
+    region: content
   field_product_image:
     type: entity_reference_entity_view
     weight: 1

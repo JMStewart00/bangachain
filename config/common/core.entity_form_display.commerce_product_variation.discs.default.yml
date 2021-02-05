@@ -9,6 +9,7 @@ dependencies:
     - field.field.commerce_product_variation.discs.attribute_disc_weight
     - field.field.commerce_product_variation.discs.feeds_item
     - field.field.commerce_product_variation.discs.field_bin
+    - field.field.commerce_product_variation.discs.field_needs_artwork
     - field.field.commerce_product_variation.discs.field_product_image
     - field.field.commerce_product_variation.discs.field_stock
     - field.field.commerce_product_variation.discs.field_upc
@@ -28,13 +29,13 @@ mode: default
 content:
   attribute_disc_color:
     type: options_select
-    weight: 6
+    weight: 7
     settings: {  }
     third_party_settings: {  }
     region: content
   attribute_disc_plastic:
     type: entity_reference_autocomplete
-    weight: 3
+    weight: 4
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -44,33 +45,40 @@ content:
     region: content
   attribute_disc_weight:
     type: options_select
-    weight: 7
+    weight: 8
     settings: {  }
     third_party_settings: {  }
     region: content
   commerce_stock_always_in_stock:
     type: boolean_checkbox
-    weight: 11
+    weight: 12
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_bin:
-    weight: 9
+    weight: 10
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
     region: content
+  field_needs_artwork:
+    weight: 1
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
   field_product_image:
     type: media_library_widget
-    weight: 1
+    weight: 2
     settings:
       media_types: {  }
     third_party_settings: {  }
     region: content
   field_stock:
-    weight: 10
+    weight: 11
     settings:
       default_transaction_note: 'Transaction issued by stock level field.'
       step: '1'
@@ -79,14 +87,14 @@ content:
     type: commerce_stock_level_simple_transaction
     region: content
   field_used:
-    weight: 2
+    weight: 3
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_vendor_cost:
-    weight: 4
+    weight: 5
     settings:
       placeholder: ''
     third_party_settings: {  }
@@ -94,7 +102,7 @@ content:
     region: content
   price:
     type: commerce_price_default
-    weight: 5
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -117,12 +125,12 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 12
+    weight: 13
     region: content
     third_party_settings: {  }
   weight:
     type: physical_measurement_default
-    weight: 8
+    weight: 9
     settings:
       default_unit: g
       allow_unit_change: false

@@ -10,6 +10,7 @@ dependencies:
     - field.field.commerce_product_variation.discs.attribute_disc_weight
     - field.field.commerce_product_variation.discs.feeds_item
     - field.field.commerce_product_variation.discs.field_bin
+    - field.field.commerce_product_variation.discs.field_needs_artwork
     - field.field.commerce_product_variation.discs.field_product_image
     - field.field.commerce_product_variation.discs.field_stock
     - field.field.commerce_product_variation.discs.field_upc
@@ -38,6 +39,7 @@ hidden:
   attribute_disc_weight: true
   feeds_item: true
   field_bin: true
+  field_needs_artwork: true
   field_product_image: true
   field_stock: true
   field_upc: true

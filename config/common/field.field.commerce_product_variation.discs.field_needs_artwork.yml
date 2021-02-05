@@ -1,0 +1,23 @@
+uuid: 9553385a-a139-4b21-b200-8e334ddb1297
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_variation_type.discs
+    - field.storage.commerce_product_variation.field_needs_artwork
+id: commerce_product_variation.discs.field_needs_artwork
+field_name: field_needs_artwork
+entity_type: commerce_product_variation
+bundle: discs
+label: 'Needs Artwork'
+description: 'If this product should include an uploaded file for custom dyes.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

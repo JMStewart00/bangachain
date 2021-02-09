@@ -1171,19 +1171,6 @@ display:
             operator_limit_selection: false
             operator_list: {  }
           group: 1
-        type:
-          id: type
-          table: commerce_product_field_data
-          field: type
-          value:
-            discs: discs
-          entity_type: commerce_product
-          entity_field: type
-          plugin_id: commerce_entity_bundle
-          expose:
-            operator_limit_selection: false
-            operator_list: {  }
-          group: 1
         qty:
           id: qty
           table: commerce_stock_location_level

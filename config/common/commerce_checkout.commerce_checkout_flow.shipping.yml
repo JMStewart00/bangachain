@@ -32,29 +32,6 @@ configuration:
       require_shipping_profile: false
       step: order_information
       weight: 2
-    review:
-      step: review
-      weight: 5
-    completion_message:
-      message:
-        value: "Your order number is [commerce_order:order_number].\r\nYou can view your order on your account page when logged in."
-        format: plain_text
-      step: complete
-      weight: 7
-    order_summary:
-      view: commerce_checkout_order_summary
-      step: _sidebar
-      weight: 10
-    artwork_upload_pane_file_upload:
-      step: _sidebar
-      weight: 9
-    completion_register:
-      step: complete
-      weight: 8
-    commerce_giftcard_redemption:
-      allow_multiple: true
-      step: _sidebar
-      weight: 11
     multi_payment_apply:
       display_label: 'Apply Multiple Payments'
       wrapper_element: fieldset
@@ -63,14 +40,37 @@ configuration:
     payment_information:
       step: order_information
       weight: 4
+    review:
+      step: review
+      weight: 5
     payment_process:
       capture: true
       step: payment
       weight: 6
+    completion_message:
+      message:
+        value: "Your order number is [commerce_order:order_number].\r\nYou can view your order on your account page when logged in."
+        format: plain_text
+      step: complete
+      weight: 7
+    completion_register:
+      step: complete
+      weight: 8
+    artwork_upload_pane_file_upload:
+      step: _disabled
+      weight: 12
+    order_summary:
+      view: commerce_checkout_order_summary
+      step: _sidebar
+      weight: 9
+    commerce_giftcard_redemption:
+      allow_multiple: true
+      step: _sidebar
+      weight: 10
     coupon_redemption:
       allow_multiple: true
       step: _sidebar
-      weight: 12
+      weight: 11
     email_registration_completion_registration:
       step: _disabled
       weight: 13

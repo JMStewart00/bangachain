@@ -8,8 +8,3 @@ dependencies:
   - commerce:commerce_price
   - commerce:commerce_store
   - commerce:commerce_product
-
-# Information added by Drupal.org packaging script on 2020-06-09
-version: '8.x-1.0-alpha1'
-project: 'commerce_smart_importer'
-datestamp: 1591705291

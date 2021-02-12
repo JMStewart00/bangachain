@@ -761,7 +761,7 @@ class CommerceSmartImporerService extends ControllerBase {
     if ($url != filter_var($url, FILTER_SANITIZE_URL)) {
       throw new Exception("There are some illegal characters in url");
     }
-    if ($url{0} != '/') {
+    if (substr((string) $url, 0, 1) !== '/') {
       throw new Exception("URL alias must start with /");
     }
     return ['alias' => $url];
@@ -771,17 +771,14 @@ class CommerceSmartImporerService extends ControllerBase {
    * Creates bool value based on field settings.
    */
   public function createBool($bool, $field_settings) {
-    if (is_numeric($bool)) {
-      $bool = (int) $bool;
-    }
-    if ($bool === 1 || $bool === 0) {
-      return (bool) $bool;
+    if ($bool == 1 || $bool == 0) {
+      return $bool;
     }
     elseif ($bool == 'on_label' || $field_settings['on_label'] == $bool) {
-      return TRUE;
+      return 1;
     }
     elseif ($bool == 'off_label' || $field_settings['off_label'] == $bool) {
-      return FALSE;
+      return 0;
     }
     else {
       throw new Exception("Not valid boolean");
@@ -1532,7 +1529,7 @@ class CommerceSmartImporerService extends ControllerBase {
       if (empty($redirection)) {
         continue;
       }
-      if ($redirection{0} == '/') {
+      if (substr((string) $redirection, 0, 1) === '/') {
         $redirection = substr($redirection, 1);
       }
       Redirect::create([
@@ -1671,10 +1668,6 @@ class CommerceSmartImporerService extends ControllerBase {
     $values = [];
     foreach ($entity->get($field_definition['machine_names'])->getValue() as $item) {
       $entity = $this->entityTypeManager()->getStorage($field_definition['field_settings']['target_type'])->load($item['target_id']);
-      if (!$entity) {
-        continue;
-      }
-      // TODO: Rewrite this to use entity key label instead of hard coding it.
       if ($entity->hasField('name')) {
         $values[] = $entity->getName();
       }
@@ -1785,7 +1778,7 @@ class CommerceSmartImporerService extends ControllerBase {
       if ($field['machine_names'] == 'currency' || $field['field_settings']['read-only']) {
         continue;
       }
-      if (!is_numeric($value[$field['index']]) && empty($value[$field['index']])) {
+      if (empty($value[$field['index']])) {
         continue;
       }
       if ($field['field_types'] == 'redirection') {
@@ -1833,7 +1826,7 @@ class CommerceSmartImporerService extends ControllerBase {
    * Returns variation id by sku.
    */
   public function getVariationIdBySku($id) {
-    $query = $this->database->query("SELECT variation_id FROM {commerce_product_variation_field_data} WHERE sku='" . $id . "'");
+    $query = $this->database->query("SELECT variation_id FROM commerce_product_variation_field_data WHERE sku='" . $id . "'");
     $sku = $query->fetchAll();
 
     if (!empty($sku)) {
@@ -1880,7 +1873,7 @@ class CommerceSmartImporerService extends ControllerBase {
   }
 
   public function getAllStoreIds() {
-    $store_results = $this->database->query("SELECT store_id FROM {commerce_store_field_data}")->fetchAll();
+    $store_results = $this->database->query("SELECT store_id FROM commerce_store_field_data")->fetchAll();
     $stores = [];
     foreach ($store_results as $store_result) {
       $stores[] = current($store_result);

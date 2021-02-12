@@ -94,7 +94,7 @@ class CSVImportForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
 
-    $sql = $this->database->query("SELECT store_id FROM {commerce_store_field_data} LIMIT 1")
+    $sql = $this->database->query("SELECT store_id FROM commerce_store_field_data LIMIT 1")
       ->fetchAll();
     if (count($sql) != 0) {
       if ($_GET['action'] == 'check') {
@@ -223,15 +223,6 @@ class CSVImportForm extends FormBase {
       $importParameters = new ImportingParameters();
       $importParameters->disableAll();
       $external_folders = [CommerceSmartImporterConstants::TEMP_DIR . '/'];
-    }
-
-    if (!is_readable($uri)) {
-      $message = $this->t('Smart importer was unable to read file at path @path please check your file system permissions.', [
-        '@path' => $uri
-      ]);
-      $this->logger('commerce_smart_importer')->error($message);
-      $this->messenger()->addError($message);
-      return;
     }
     $config = $this->smartImporterService->getConfig();
     $external_folders = array_merge($external_folders, $config['external_folders']);

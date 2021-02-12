@@ -4547,12 +4547,18 @@
     },
     {
         "name": "drupal/commerce_smart_importer",
-        "version": "dev-1.x",
-        "version_normalized": "dev-1.x",
+        "version": "1.0.0-alpha1",
+        "version_normalized": "1.0.0.0-alpha1",
         "source": {
             "type": "git",
             "url": "https://git.drupalcode.org/project/commerce_smart_importer.git",
-            "reference": "cd4373fc73214d1d62c11c25f8240b40c7868717"
+            "reference": "8.x-1.0-alpha1"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/commerce_smart_importer-8.x-1.0-alpha1.zip",
+            "reference": "8.x-1.0-alpha1",
+            "shasum": "1a902fedace0a454e208b484eef46b93eeaed54e"
         },
         "require": {
             "drupal/commerce_price": "*",
@@ -4562,15 +4568,12 @@
         },
         "type": "drupal-module",
         "extra": {
-            "branch-alias": {
-                "dev-1.x": "1.x-dev"
-            },
             "drupal": {
-                "version": "8.x-1.x-dev",
-                "datestamp": "1606386508",
+                "version": "8.x-1.0-alpha1",
+                "datestamp": "1591705289",
                 "security-coverage": {
                     "status": "not-covered",
-                    "message": "Dev releases are not covered by Drupal security advisories."
+                    "message": "Alpha releases are not covered by Drupal security advisories."
                 }
             },
             "patches_applied": {

@@ -89,7 +89,7 @@ class SmartImporterConfigurationForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state, Request $request = NULL) {
     $config = $this->config('commerce_smart_importer.settings');
     $importer_config = $this->smartImporterService->getConfig();
-    $sql = $this->database->query("SELECT store_id, name FROM {commerce_store_field_data}")->fetchAll();
+    $sql = $this->database->query("SELECT store_id, name FROM commerce_store_field_data")->fetchAll();
 
     $options['all'] = 'All';
     foreach ($sql as $stores) {

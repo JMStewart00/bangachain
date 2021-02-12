@@ -97,7 +97,7 @@ class CSVUpdateForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
 
-    $sql = $this->database->query("SELECT store_id FROM {commerce_store_field_data} LIMIT 1")->fetchAll();
+    $sql = $this->database->query("SELECT store_id FROM commerce_store_field_data LIMIT 1")->fetchAll();
     if (count($sql) != 0) {
       if ($_GET['action'] == 'check') {
         $form['csv_file'] = [

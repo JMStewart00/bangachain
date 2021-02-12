@@ -9,7 +9,7 @@ dependencies:
     - field.field.commerce_product_variation.discs.attribute_disc_weight
     - field.field.commerce_product_variation.discs.field_bin
     - field.field.commerce_product_variation.discs.field_used
-    - field.field.commerce_product_variation.discs.weight
+    - field.field.commerce_product_variation.discs.field_vendor_cost
   module:
     - commerce_feeds
     - commerce_product
@@ -116,13 +116,11 @@ custom_sources:
     label: Stock
     value: Stock
     machine_name: stock
+  vendor_cost:
+    label: 'Vendor Cost'
+    value: 'Vendor Cost'
+    machine_name: vendor_cost
 mappings:
-  -
-    target: weight
-    map:
-      number: weight
-    settings:
-      unit: g
   -
     target: sku
     map:
@@ -170,3 +168,10 @@ mappings:
       number: price
     settings:
       currency_code: USD
+  -
+    target: field_vendor_cost
+    map:
+      value: vendor_cost
+    unique: {  }
+    settings:
+      language: null

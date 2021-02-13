@@ -140,6 +140,7 @@ class ComposerStaticInit3d80e700841ab59d16fa8cf88fa4b442
             'Prophecy\\' => 9,
             'Picqer\\Barcode\\' => 15,
             'PhpParser\\' => 10,
+            'PantheonSystems\\CDNBehatHelpers\\' => 32,
             'PHPStan\\' => 8,
             'PHPMailer\\PHPMailer\\' => 20,
         ),
@@ -477,6 +478,10 @@ class ComposerStaticInit3d80e700841ab59d16fa8cf88fa4b442
         'PhpParser\\' => 
         array (
             0 => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser',
+        ),
+        'PantheonSystems\\CDNBehatHelpers\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/web/modules/contrib/pantheon_advanced_page_cache/tests/behat/helper_classes',
         ),
         'PHPStan\\' => 
         array (

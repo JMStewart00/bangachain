@@ -90,6 +90,8 @@ if (isset($_ENV['AH_SITE_GROUP'], $_ENV['AH_SITE_ENVIRONMENT'])) {
 }
 
 if (isset($_SERVER['PANTHEON_ENVIRONMENT'])) {
-  $domain = $_SERVER['HTTP_HOST'];
-  setcookie('NO_CACHE', '1', time()+0, $_SERVER['REQUEST_URI'], $domain);
+  if ($_SERVER['PANTHEON_ENVIRONMENT'] === 'dev') {
+    $domain = $_SERVER['HTTP_HOST'];
+    setcookie('NO_CACHE', '1', time()+0, $_SERVER['REQUEST_URI'], $domain);
+  }
 }

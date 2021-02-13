@@ -116,6 +116,7 @@ class PosOrderItemAutoComplete extends ControllerBase {
       $config = $this->config('commerce_pos.settings');
       $index = $config->get('product_search_index');
       if ($index) {
+        ksm($index);
         $index = Index::load($index);
       }
 
@@ -142,6 +143,7 @@ class PosOrderItemAutoComplete extends ControllerBase {
       $query->range(0, $count);
 
       $results = $query->execute();
+      ksm($results);
 
       return $results;
     }

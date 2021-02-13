@@ -7,7 +7,6 @@
 !/web/sites/default/settings.pantheon.php
 !/web/sites/default/services.pantheon.preproduction.yml
 !/web/sites/default/redirects.php
-pantheon.upstream.yml
 
 # Lando
 /drupal8.*.gz

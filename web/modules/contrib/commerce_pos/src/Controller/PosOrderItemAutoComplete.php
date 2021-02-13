@@ -110,13 +110,14 @@ class PosOrderItemAutoComplete extends ControllerBase {
    */
   public function searchQueryString($string, $count) {
     $register = \Drupal::service('commerce_pos.current_register')->get();
+    print_r('hey');
     if ($register) {
+      dd('hey2');
       $store_id = $register->getStoreId();
 
       $config = $this->config('commerce_pos.settings');
       $index = $config->get('product_search_index');
       if ($index) {
-        ksm($index);
         $index = Index::load($index);
       }
 

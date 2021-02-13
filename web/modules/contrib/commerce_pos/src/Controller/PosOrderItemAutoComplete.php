@@ -2,6 +2,7 @@
 
 namespace Drupal\commerce_pos\Controller;
 
+use Drupal\commerce_pos\Entity\Register;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Render\RendererInterface;
@@ -109,10 +110,9 @@ class PosOrderItemAutoComplete extends ControllerBase {
    *   The query search result.
    */
   public function searchQueryString($string, $count) {
-    $register = \Drupal::service('commerce_pos.current_register')->get();
-    print_r('hey');
+    // $register = \Drupal::service('commerce_pos.current_register')->get();
+    $register = Register::load(1);
     if ($register) {
-      dd('hey2');
       $store_id = $register->getStoreId();
 
       $config = $this->config('commerce_pos.settings');

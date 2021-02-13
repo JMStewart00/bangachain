@@ -113,6 +113,7 @@ class PosOrderItemAutoComplete extends ControllerBase {
     // $register = \Drupal::service('commerce_pos.current_register')->get();
     $register = Register::load(1);
     if ($register) {
+      print_r('yo');
       $store_id = $register->getStoreId();
 
       $config = $this->config('commerce_pos.settings');
@@ -144,7 +145,6 @@ class PosOrderItemAutoComplete extends ControllerBase {
       $query->range(0, $count);
 
       $results = $query->execute();
-      ksm($results);
 
       return $results;
     }

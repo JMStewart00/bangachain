@@ -333,6 +333,9 @@
                 "Anonymous users can see Purchased Items Report": "https://www.drupal.org/files/issues/2019-06-07/3004989-17.patch",
                 "Generating Order Reports throws toArray() error": "https://www.drupal.org/files/issues/2019-10-18/3088183-3.patch",
                 "Fix tests deprecation notices and prepare commerce_reports module for Drupal 9": "https://www.drupal.org/files/issues/2021-01-07/3167290-5.patch"
+            },
+            "drupal/commerce_pos": {
+                "Auto set register to id of 1": "./patches/specify-register-at-1.patch"
             }
         },
         "enable-patching": true,

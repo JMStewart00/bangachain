@@ -23,7 +23,7 @@ class CurrentRegister {
 
     $register_id = $_COOKIE['commerce_pos_register'];
 
-    $register = Register::load(1);
+    $register = Register::load($register_id);
 
     if (!$register) {
       // We couldn't load this register, assume it has been removed

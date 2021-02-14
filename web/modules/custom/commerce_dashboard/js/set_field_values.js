@@ -194,7 +194,10 @@
         "electron": { cost: 7, price: 12 },
         "cosmic electron": { cost: 7.5, price: 14 },
         "eclipse 2.0": { cost: 11, price: 20 },
-        "fission":{ cost: 10, price: 19 }
+        "fission":{ cost: 10, price: 19 },
+        "unique blend jawbreaker": { cost: 10, price: 20 },
+        "c-line color glow": { cost: 10, price: 20 },
+        "evo": { cost: 10, price: 20 }
       }
 
       $('#edit-attribute-disc-plastic-0-target-id', context).change((e) => {

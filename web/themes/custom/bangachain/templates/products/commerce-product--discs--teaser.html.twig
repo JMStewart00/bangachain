@@ -35,7 +35,9 @@
           {% if product.variation_field_product_image|render %}
             {{ product.variation_field_product_image }}
           {% else %}
-            <img src="/themes/custom/bangachain/assets/images/default-disc.png" alt="Bang-A-Chain logo" style="max-width: 300px;">
+            <div class="c-field-media-image">
+              <img src="/themes/custom/bangachain/assets/images/default-disc.png" alt="Bang-A-Chain logo" style="max-width: 200px;">
+            </div>
           {% endif %}
         </div>
 

@@ -165,7 +165,7 @@ class CSVExportForm extends FormBase {
 
     $form['product']['product_fields_fieldset'] = [
       '#type' => 'fieldset',
-      '#title' => $this->t('Product identifier Fields'),
+      '#title' => $this->t('Product Fields'),
     ];
 
     $form['product']['product_fields_fieldset']['product_fields'] = [
@@ -190,7 +190,7 @@ class CSVExportForm extends FormBase {
 
     $form['variation']['variation_fields_fieldset'] = [
       '#type' => 'fieldset',
-      '#title' => $this->t('Variation identifier Fields'),
+      '#title' => $this->t('Variation Fields'),
     ];
 
     $form['variation']['variation_fields_fieldset']['variation_fields'] = [
@@ -272,12 +272,13 @@ class CSVExportForm extends FormBase {
 
     $this->leaveOnlyCheckedFields($fields, $export_fields_names);
     if ($values['export_by'] != 'all' && $values['export_tax_' . $values['export_by']] != 'all') {
-      $query = $this->database->query("SELECT cp.product_id FROM commerce_product cp JOIN commerce_product__" . $values['export_by'] . " tax ON tax.entity_id=cp.product_id WHERE tax." . $values['export_by'] . "_target_id=" . $values['export_tax_' . $values['export_by']])->fetchAll();
+      $query = $this->database->query("SELECT cp.product_id FROM {commerce_product} cp JOIN {commerce_product__" . $values['export_by'] . "} tax ON cp.type = '" . $config['commerce_product_bundle'] . "' tax.entity_id=cp.product_id WHERE tax." . $values['export_by'] . "_target_id=" . $values['export_tax_' . $values['export_by']])->fetchAll();
       $field_value = [$values['export_by'], $values['export_tax_' . $values['export_by']]];
     }
     else {
       $query = $this->database->select('commerce_product')
         ->fields('commerce_product', ['product_id'])
+        ->condition('type', $config['commerce_product_bundle'])
         ->execute()->fetchAll();
       $field_value = [];
     }
@@ -356,20 +357,22 @@ class CSVExportForm extends FormBase {
   public function exportProducts($start, $limit, $field_definitions, array $field_value) {
 
     $product_data = [];
+    $config = $this->smartImporterService->getConfig();
     if (empty($field_value)) {
       $query = $this->database->select('commerce_product')
         ->fields('commerce_product', ['product_id'])
+        ->condition('type', $config['commerce_product_bundle'])
         ->range($start, $limit)->execute()->fetchAll();
     }
     else {
-      $query = $this->database->query("SELECT cp.product_id FROM commerce_product cp JOIN commerce_product__" . $field_value[0] . " tax ON tax.entity_id=cp.product_id WHERE tax." . $field_value[0] . "_target_id=" . $field_value[1])->fetchAll();
+      $query = $this->database->query("SELECT cp.product_id FROM {commerce_product} cp JOIN {commerce_product__" . $field_value[0] . "} tax ON tax.entity_id=cp.product_id WHERE cp.type= '" . $config['commerce_product_bundle'] . "'tax." . $field_value[0] . "_target_id=" . $field_value[1])->fetchAll();
     }
 
     foreach ($query as $product) {
       $product_temp_data = [];
       $product_temp_data['product'] = $product->product_id;
 
-      $variation_query = $this->database->query('SELECT variation_id FROM commerce_product_variation_field_data WHERE product_id=' . $product->product_id)
+      $variation_query = $this->database->query('SELECT variation_id FROM {commerce_product_variation_field_data} WHERE product_id=' . $product->product_id)
         ->fetchAll();
       foreach ($variation_query as $variation) {
         $product_temp_data['variation'][] = $variation->variation_id;

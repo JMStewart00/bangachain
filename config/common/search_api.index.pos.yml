@@ -2,13 +2,13 @@ uuid: e95517bb-b187-4b81-b65a-f35d170864d6
 langcode: en
 status: true
 dependencies:
-  module:
-    - commerce_product
-    - search_api
   config:
     - field.storage.commerce_product.body
     - field.storage.commerce_product_variation.field_upc
-    - search_api.server.pos
+    - search_api.server.point_of_sale
+  module:
+    - commerce_product
+    - search_api
 _core:
   default_config_hash: _T8VgaVCLogLqluCGtAfWuXKUl1i2Ppw8q8RPehWGFg
 id: pos
@@ -23,11 +23,10 @@ field_settings:
     type: text
     boost: 0.5
     dependencies:
-      module:
-        - commerce_product
-        - commerce_product
       config:
         - field.storage.commerce_product.body
+      module:
+        - commerce_product
   field_upc:
     label: UPC
     datasource_id: 'entity:commerce_product_variation'
@@ -53,8 +52,6 @@ field_settings:
     dependencies:
       module:
         - commerce_product
-        - commerce_product
-        - commerce_product
   title:
     label: Title
     datasource_id: 'entity:commerce_product_variation'
@@ -70,8 +67,6 @@ field_settings:
     type: text
     dependencies:
       module:
-        - commerce_product
-        - commerce_product
         - commerce_product
 datasource_settings:
   'entity:commerce_product_variation':
@@ -146,6 +141,7 @@ processor_settings:
     weights:
       preprocess_index: -47
       preprocess_query: -46
+    ignored: ._-
   transliteration:
     all_fields: true
     fields:
@@ -163,4 +159,4 @@ tracker_settings:
 options:
   index_directly: true
   cron_limit: 50
-server: pos
+server: point_of_sale

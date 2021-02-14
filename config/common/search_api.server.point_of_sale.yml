@@ -1,0 +1,14 @@
+uuid: a310802d-59b0-4c05-b01f-806920323881
+langcode: en
+status: true
+dependencies:
+  module:
+    - search_api_db
+id: point_of_sale
+name: 'Point of Sale'
+description: ''
+backend: search_api_db
+backend_config:
+  database: 'default:default'
+  min_chars: 1
+  matching: partial

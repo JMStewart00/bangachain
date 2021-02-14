@@ -68,6 +68,7 @@ module:
   datetime: 0
   datetime_range: 0
   dblog: 0
+  devel: 0
   dropzonejs: 0
   dynamic_page_cache: 0
   editor: 0
@@ -82,7 +83,6 @@ module:
   file: 0
   filter: 0
   fontawesome: 0
-  google_tag: 0
   help: 0
   history: 0
   honeypot: 0
@@ -149,6 +149,7 @@ module:
   twig_tweak: 0
   typed_data: 0
   update: 0
+  upgrade_status: 0
   user: 0
   views_ajax_history: 0
   views_infinite_scroll: 0

@@ -195,6 +195,8 @@
         "drupal/pathauto": "^1.6",
         "drupal/quick_node_clone": "^1.12",
         "drupal/rabbit_hole": "^1.0@beta",
+        "drupal/recaptcha": "^3.0",
+        "drupal/recaptcha_v3": "^1.4",
         "drupal/redirect": "^1.5",
         "drupal/responsive_favicons": "^1.5",
         "drupal/rules": "3.x-dev@dev",

@@ -128,6 +128,7 @@ class ComposerStaticInit3d80e700841ab59d16fa8cf88fa4b442
             'React\\EventLoop\\' => 16,
             'React\\Dns\\' => 10,
             'React\\Cache\\' => 12,
+            'ReCaptcha\\' => 10,
             'Ratchet\\RFC6455\\' => 16,
             'Ratchet\\' => 8,
         ),
@@ -442,6 +443,10 @@ class ComposerStaticInit3d80e700841ab59d16fa8cf88fa4b442
         'React\\Cache\\' => 
         array (
             0 => __DIR__ . '/..' . '/react/cache/src',
+        ),
+        'ReCaptcha\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/google/recaptcha/src/ReCaptcha',
         ),
         'Ratchet\\RFC6455\\' => 
         array (

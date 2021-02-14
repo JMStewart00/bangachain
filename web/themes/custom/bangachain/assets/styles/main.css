@@ -7814,8 +7814,8 @@ svg.ext {
   width: 1.25rem;
   border-radius: 50%;
   position: absolute;
-  top: 0;
-  left: 23px;
+  top: -3px;
+  left: 12px;
   text-align: center;
   color: #fcfffc;
   font-size: 0.875rem;

@@ -6,6 +6,8 @@ dependencies:
     - field.field.user.user.commerce_remote_id
     - field.field.user.user.field_cashier_id
     - field.field.user.user.field_commerce_pos_phone_number
+    - field.field.user.user.field_first_name
+    - field.field.user.user.field_last_name
     - field.field.user.user.user_picture
   module:
     - path
@@ -18,28 +20,44 @@ bundle: user
 mode: default
 content:
   account:
-    weight: 0
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  contact:
     weight: 2
     region: content
     settings: {  }
     third_party_settings: {  }
-  language:
+  contact:
+    weight: 4
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_first_name:
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_last_name:
     weight: 1
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  language:
+    weight: 3
     region: content
     settings: {  }
     third_party_settings: {  }
   path:
     type: path
-    weight: 4
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }
   timezone:
-    weight: 3
+    weight: 5
     region: content
     settings: {  }
     third_party_settings: {  }

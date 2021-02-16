@@ -32,7 +32,7 @@ expression:
           to:
             - '{{ commerce_giftcard.uid.entity.mail.value }}'
           subject: 'New giftcard on Bangachain.com!'
-          message: "<p>Hey {{commerce_giftcard.uid.entity.name.value}}!</p>\r\n<p>We've added a giftcard to your account! The balance of the new card is ${{commerce_giftcard.balance.0.number}}.</p>\r\n<p>To get the usable code for your gift card and to check your balance, please login to <a href=\"https://bangachain.com\" target=\"_blank\">BangAChain.com</a> and navigate to your payment methods to find the code</p>\r\n<br>\r\n<p>Thanks!</p>\r\n<p>The BangAChain Team</p>"
+          message: "<p>Hey {{commerce_giftcard.uid.entity.name.value}}!</p>\r\n<p>We've added a giftcard worth ${{commerce_giftcard.balance.0.number}} to your account from a recent tournament you played in.</p>\r\n<p>To get the usable code for your gift card and to check your balance, please login to <a href=\"https://bangachain.com/user\" target=\"_blank\">BangAChain.com</a> and navigate to your payment methods to find the code</p>\r\n<br>\r\n<p>If you've forgotten your password, please use the <a href=\"https://bangachain.com/user/password\" target=\"_blank\">Forgot Password</a> page to reset it. Once you send the reset request you will receive an email with a password reset link to login and reset your password. Be sure to remember your password!</p>\r\n<p>If you have trouble with anything, please reach out to us on our <a href=\"https://bangachain.com/contact\" target=\"_blank\">Contact Us Page</a>.</p>\r\n<p>Thanks!</p>\r\n<p>The BangAChain Team</p>"
           reply: no-reply@bangachain.com
           language: null
         context_mapping: {  }

@@ -9202,7 +9202,7 @@ div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
 .c-view-apparel,
 .c-field-favorite-discs {
   display: grid;
-  grid-template-columns: repeat(1, 1fr);
+  grid-template-columns: repeat(1, minmax(150px, 1fr));
   grid-gap: 24px;
   margin-top: calc(var(--lh__base) * 5 * var(--rvr-multiplier)); }
 
@@ -9282,7 +9282,7 @@ div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
   .c-view-accessories,
   .c-view-apparel,
   .c-field-favorite-discs {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(150px, 1fr));
     margin-top: calc(var(--lh__base) * 2 * var(--rvr-multiplier)); } }
 
 @media (min-width: 992px) {
@@ -9291,7 +9291,7 @@ div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
   .c-view-accessories,
   .c-view-apparel,
   .c-field-favorite-discs {
-    grid-template-columns: repeat(3, 1fr); } }
+    grid-template-columns: repeat(3, minmax(150px, 1fr)); } }
 
 @media (min-width: 1200px) {
   .c-view-discs,
@@ -9299,7 +9299,7 @@ div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
   .c-view-accessories,
   .c-view-apparel,
   .c-field-favorite-discs {
-    grid-template-columns: repeat(4, 1fr); } }
+    grid-template-columns: repeat(4, minmax(150px, 1fr)); } }
 
 .c-field-favorite-discs {
   grid-template-columns: repeat(1, 1fr) !important; }

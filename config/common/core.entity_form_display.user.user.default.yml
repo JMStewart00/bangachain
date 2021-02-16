@@ -10,7 +10,7 @@ dependencies:
     - field.field.user.user.field_last_name
     - field.field.user.user.user_picture
   module:
-    - path
+    - telephone
     - user
 _core:
   default_config_hash: K-1rBM8mTIkFp9RqOC2tMRUukOQ1xbRCfSKK8dEddnA
@@ -24,10 +24,12 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  contact:
-    weight: 4
+  field_commerce_pos_phone_number:
+    type: telephone_default
+    weight: 3
     region: content
-    settings: {  }
+    settings:
+      placeholder: ''
     third_party_settings: {  }
   field_first_name:
     weight: 0
@@ -45,25 +47,12 @@ content:
     third_party_settings: {  }
     type: string_textfield
     region: content
-  language:
-    weight: 3
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  path:
-    type: path
-    weight: 6
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  timezone:
-    weight: 5
-    region: content
-    settings: {  }
-    third_party_settings: {  }
 hidden:
   commerce_remote_id: true
+  contact: true
   customer_profiles: true
   field_cashier_id: true
-  field_commerce_pos_phone_number: true
+  language: true
+  path: true
+  timezone: true
   user_picture: true

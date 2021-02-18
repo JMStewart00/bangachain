@@ -16,7 +16,6 @@ module:
   block_class: 0
   block_content: 0
   breakpoint: 0
-  captcha: 0
   ckeditor: 0
   color: 0
   color_field: 0
@@ -40,6 +39,7 @@ module:
   commerce_payment: 0
   commerce_payment_example: 0
   commerce_pos: 0
+  commerce_pos_barcode_scanning: 0
   commerce_pos_currency_denominations: 0
   commerce_pos_keypad: 0
   commerce_pos_print: 0
@@ -83,7 +83,6 @@ module:
   file: 0
   filter: 0
   fontawesome: 0
-  google_tag: 0
   help: 0
   history: 0
   honeypot: 0
@@ -123,8 +122,7 @@ module:
   rabbit_hole: 0
   rdf: 0
   readmehelp: 0
-  recaptcha: 0
-  recaptcha_v3: 0
+  reg_confirm_email: 0
   responsive_favicons: 0
   rest: 0
   rh_node: 0

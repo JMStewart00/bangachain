@@ -1,0 +1,28 @@
+{
+  "name": "drupal/reg_confirm_email",
+  "description": "Adds a confirm email address field under email address field on registration form.",
+  "type": "drupal-module",
+  "homepage": "https://www.drupal.org/project/reg_confirm_email",
+  "authors": [
+    {
+      "name": "Judy Montesa (montesajudy)",
+      "homepage": "https://www.drupal.org/u/montesajudy",
+      "role": "Maintainer"
+    },
+    {
+      "name": "Volodymyr Knyshuk (knyshuk.vova)",
+      "email": "knyshuk.vova@gmail.com",
+      "homepage": "http://knysh.uk",
+      "role": "Maintainer"
+    }
+  ],
+  "support": {
+    "issues": "https://drupal.org/project/issues/reg_confirm_email",
+    "source": "https://cgit.drupalcode.org/reg_confirm_email"
+  },
+  "license": "GPL-2.0+",
+  "minimum-stability": "dev",
+  "require": {
+    "php": ">=5.6.0"
+  }
+}

@@ -25,13 +25,28 @@ expression:
         weight: 0
         context_values:
           operation: '=='
-          value: Fullfillment
+          value: fulfillment
         context_mapping:
           data: commerce_order.state.value
         context_processors:
           operation:
             rules_tokens: {  }
           value:
+            rules_tokens: {  }
+        provides_mapping: {  }
+        condition_id: rules_data_comparison
+        negate: false
+      -
+        id: rules_condition
+        uuid: 18ec4c0e-8344-4461-880d-2f3c70381062
+        weight: 0
+        context_values:
+          operation: '!='
+        context_mapping:
+          data: commerce_order_unchanged.state.value
+          value: commerce_order.state.value
+        context_processors:
+          operation:
             rules_tokens: {  }
         provides_mapping: {  }
         condition_id: rules_data_comparison

@@ -1,0 +1,145 @@
+<?php
+
+/**
+ * @file
+ * Module file for reg_confirm_email.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * {@inheritdoc}
+ *
+ * Implements hook_form_FORM_ID_alter() for form with ID user_admin_settings.
+ *
+ * Append the fields to change status of enabling registration confirmation
+ * email field.
+ */
+function reg_confirm_email_form_user_admin_settings_alter(&$form, FormStateInterface &$form_state, $form_id) {
+  // Load current status configuration.
+  $config = \Drupal::config('reg_confirm_email.settings');
+  $mail_confirm = $config->get('mail_confirm');
+  $mail_desc = $config->get('mail_desc');
+
+  // Set weights for the form elements.
+  $form['anonymous_settings']['#weight'] = -3;
+  $form['registration_cancellation']['#weight'] = -1;
+
+  // Add a checkbox option in account settings page.
+  $form['reg_confirm_email_settings'] = [
+    '#type' => 'details',
+    '#open' => TRUE,
+    '#weight' => -2,
+    '#title' => t('Confirm email address'),
+  ];
+  $form['reg_confirm_email_settings']['mail_confirm'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Use two e-mail fields on registration form'),
+    '#default_value' => $mail_confirm,
+    '#description' => t("User will have to type the same e-mail address into both fields. This helps to confirm that they've typed the correct address."),
+  ];
+  $form['reg_confirm_email_settings']['mail_desc'] = [
+    '#type' => 'textfield',
+    '#title' => t('Confirm Email Description'),
+    '#default_value' => $mail_desc,
+    '#description' => t('Add help text for confirm email field.'),
+  ];
+
+  // Attach submit handler to save the additional field value to module
+  // configuration.
+  $form['#submit'][] = '_reg_confirm_email_form_submit';
+}
+
+/**
+ * {@inheritdoc}
+ *
+ * Implements hook_form_FORM_ID_alter() for form with ID user_register_form.
+ *
+ * Append the confirmation email field to user register form.
+ */
+function reg_confirm_email_form_user_register_form_alter(&$form, FormStateInterface &$form_state, $form_id) {
+  // Load current status configuration.
+  $config = \Drupal::config('reg_confirm_email.settings');
+  $mail_confirm = $config->get('mail_confirm');
+  $mail_desc = $config->get('mail_desc');
+
+  // Show the confirm email field only if it is enabled in settings and
+  // default email field present in the form.
+  if ($mail_confirm && isset($form['account']['mail'])) {
+    // The confirmation mail field will be placed immediately after default
+    // mail field.
+    $conf_mail['conf_mail'] = [
+      '#type' => 'email',
+      '#title' => t('Confirm e-mail address'),
+      '#description' => $mail_desc,
+      '#required' => TRUE,
+    ];
+
+    // Specify weight only if value present in default mail field definition.
+    if (isset($form['account']['mail']['#weight'])) {
+      $conf_mail['conf_mail']['#weight'] = $form['account']['mail']['#weight'] + 0.1;
+    }
+
+    // Append confirmation email field in position after default mail field.
+    $form['account'] = _reg_confirm_email_array_insert_after($form['account'], 'mail', $conf_mail);
+
+    // Attach the validation handler.
+    $form['#validate'][] = '_reg_confirm_email_user_register_validate';
+  }
+}
+
+/**
+ * Submit callback for user admin settings form.
+ *
+ * Save the configuration for module which related to user_admin_settings form.
+ *
+ * @param array $form
+ *   An associative array containing the structure of the form.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The current state of the form.
+ */
+function _reg_confirm_email_form_submit(array &$form, FormStateInterface $form_state) {
+  \Drupal::configFactory()->getEditable('reg_confirm_email.settings')
+    ->set('mail_confirm', $form_state->getValue('mail_confirm'))
+    ->set('mail_desc', $form_state->getValue('mail_desc'))
+    ->save();
+}
+
+/**
+ * Custom validation function for user registration form.
+ *
+ * Check to see whether e-mail address matches the confirm e-mail address.
+ *
+ * @param array $form
+ *   An associative array containing the structure of the form.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The current state of the form.
+ *
+ * @see reg_confirm_email_form_user_register_form_alter
+ */
+function _reg_confirm_email_user_register_validate(array $form, FormStateInterface &$form_state) {
+  if ($form_state->getValue('mail') !== $form_state->getValue('conf_mail')) {
+    $form_state->setErrorByName('conf_mail', t('Your e-mail address and confirmed e-mail address must match.'));
+  }
+}
+
+/**
+ * Insert a value or key/value pair after a specific key in an array.
+ *
+ * @param array $original_array
+ *   An original array that will be processed.
+ * @param string $key_of_original_array
+ *   A key of the original array, after which new element will be inserted.
+ *   If key doesn't exist, value is appended to the end of the array.
+ * @param array $new_element
+ *   A new element, which will be inserted after original array key.
+ *
+ * @return array
+ *   An updated array with new element added in specified place.
+ */
+function _reg_confirm_email_array_insert_after(array $original_array, $key_of_original_array, array $new_element) {
+  $keys = array_keys($original_array);
+  $index = array_search($key_of_original_array, $keys);
+  $pos = FALSE === $index ? count($original_array) : $index + 1;
+  return array_merge(array_slice($original_array, 0, $pos), $new_element, array_slice($original_array, $pos));
+}

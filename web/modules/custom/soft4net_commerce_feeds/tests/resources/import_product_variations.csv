@@ -1,0 +1,6 @@
+product_id,sku,title,price,attribute_size,dimensions_length,dimensions_width,dimensions_height,weight,field_stock_level
+552,Imported-PID_552-XS-Blue-UID_0,"Title 1",11.12,"XS",3,3,3,4,10
+552,Imported-PID_552-S-Green-UID_0,"Title 2",22.12,"S",3,3,3,4,20
+552,Imported-PID_552-L-Green-UID_0,"Title 3",33.12,"L",3,3,3,4,30
+552,Imported-PID_552-L-Red-UID_0,"Title 4",44.12,"XL",3,3,3,4,40
+552,Imported-PID_552-XL-Green-UID_0,"Title 5",55.12,"XL",3,3,3,4,50

@@ -1,0 +1,4 @@
+mail_confirm: true
+mail_desc: 'Please re-type your e-mail address to confirm it is accurate'
+_core:
+  default_config_hash: zCTHYTbZPEAhnw7aj8F44q1FwnsqakV5UqWzai4P-BY

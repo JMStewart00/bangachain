@@ -41,7 +41,7 @@ if (getenv('LANDO_INFO') && !defined('PANTHEON_ENVIRONMENT')) {
   ];
 
   // Enable the local config split for Lando environments
-  $config['config_split.config_split.prod']['status'] = TRUE;
+  $config['config_split.config_split.local']['status'] = TRUE;
 }
 
 $pantheon_settings_file = __DIR__ . '/settings.pantheon.php';

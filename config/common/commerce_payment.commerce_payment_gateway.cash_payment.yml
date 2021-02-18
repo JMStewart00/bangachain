@@ -1,6 +1,6 @@
 uuid: 91a2d9c0-f45f-481a-8e53-3aa53fed15c4
 langcode: en
-status: true
+status: false
 dependencies: {  }
 id: cash_payment
 label: 'Cash Payment'

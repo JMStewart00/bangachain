@@ -1,0 +1,11 @@
+name: Registration Confirm Email Address
+description: 'Adds a confirm email address field under email address field on registration form.'
+core: 8.x
+type: module
+configure: entity.user.admin_form
+core_version_requirement: ^8 || ^9
+
+# Information added by Drupal.org packaging script on 2020-03-24
+version: '8.x-1.2'
+project: 'reg_confirm_email'
+datestamp: 1585088105

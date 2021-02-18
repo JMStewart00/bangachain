@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0e09976aefddba50238d6aeaf1bd638f",
+    "content-hash": "964552821bcd03dc48cd80af4e203c8f",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -105,7 +105,7 @@
             "version": "1.12.4",
             "source": {
                 "type": "git",
-                "url": "git@github.com:jquery/jquery-dist.git",
+                "url": "https://github.com/jquery/jquery-dist.git",
                 "reference": "5e89585e0121e72ff47de177c5ef604f3089a53d"
             },
             "dist": {
@@ -8604,6 +8604,59 @@
             "homepage": "https://www.drupal.org/project/redirect",
             "support": {
                 "source": "https://git.drupalcode.org/project/redirect"
+            }
+        },
+        {
+            "name": "drupal/reg_confirm_email",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/reg_confirm_email.git",
+                "reference": "8.x-1.2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/reg_confirm_email-8.x-1.2.zip",
+                "reference": "8.x-1.2",
+                "shasum": "cefb2efab77905c32d43b96e550f207325fd9ec3"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9",
+                "php": ">=5.6.0"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.2",
+                    "datestamp": "1585088102",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Judy Montesa (montesajudy)",
+                    "homepage": "https://www.drupal.org/u/montesajudy",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Volodymyr Knyshuk (knyshuk.vova)",
+                    "homepage": "http://knysh.uk",
+                    "email": "knyshuk.vova@gmail.com",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "Adds a confirm email address field under email address field on registration form.",
+            "homepage": "https://www.drupal.org/project/reg_confirm_email",
+            "support": {
+                "source": "https://cgit.drupalcode.org/reg_confirm_email",
+                "issues": "https://drupal.org/project/issues/reg_confirm_email"
             }
         },
         {

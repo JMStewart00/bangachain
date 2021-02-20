@@ -1,0 +1,41 @@
+.c-mobile-search-filters {
+  height: 100vh;
+  left: 0;
+  overflow-y: scroll;
+  position: fixed;
+  top: 0;
+  transform: translate3d(-100vw, 0, 0);
+  transition: transform 0.3s cubic-bezier(0, 0.52, 0, 1);
+  width: 100vw;
+  z-index: 10;
+
+  &.open {
+    transform: translate3d(0, 0, 0);
+  }
+
+  &__actions {
+    color: $brand-blue;
+    flex-wrap: nowrap;
+  }
+
+  &__apply {
+    background-color: $brand-blue;
+    color: $white;
+    padding: rvr(1) rvr(2);
+  }
+
+  &__close {
+    flex-grow: 1;
+    text-align: left;
+  }
+
+  .c-facet-summary {
+    &__filter-clear {
+      align-self: center;
+      flex-grow: 1;
+      text-align: right;
+      margin: 0;
+      padding-right: rvr(1);
+    }
+  }
+}

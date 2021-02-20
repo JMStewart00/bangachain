@@ -1,0 +1,163 @@
+uuid: 306ad72c-acfd-4643-a8f2-f410b31013cd
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.commerce_product.field_brand
+    - field.storage.commerce_product.field_category
+    - field.storage.commerce_product.field_default_image
+    - field.storage.media.field_media_image
+    - field.storage.commerce_product.body
+    - field.storage.commerce_product.field_fade
+    - field.storage.commerce_product.field_glide
+    - field.storage.commerce_product.field_speed
+    - field.storage.commerce_product.field_turn
+    - field.storage.commerce_product_variation.field_product_image
+    - search_api.server.algolia
+  module:
+    - taxonomy
+    - file
+    - media
+    - commerce_product
+    - search_api
+id: main_search
+name: 'Main Search'
+description: ''
+read_only: false
+field_settings:
+  brand:
+    label: 'Brand » Taxonomy term » Name'
+    datasource_id: 'entity:commerce_product'
+    property_path: 'field_brand:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.commerce_product.field_brand
+      module:
+        - taxonomy
+  category:
+    label: 'Category » Taxonomy term » Name'
+    datasource_id: 'entity:commerce_product'
+    property_path: 'field_category:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.commerce_product.field_category
+      module:
+        - taxonomy
+  description:
+    label: 'Description » Processed summary'
+    datasource_id: 'entity:commerce_product'
+    property_path: 'body:summary_processed'
+    type: string
+    dependencies:
+      config:
+        - field.storage.commerce_product.body
+  fade:
+    label: Fade
+    datasource_id: 'entity:commerce_product'
+    property_path: field_fade
+    type: string
+    dependencies:
+      config:
+        - field.storage.commerce_product.field_fade
+  glide:
+    label: Glide
+    datasource_id: 'entity:commerce_product'
+    property_path: field_glide
+    type: string
+    dependencies:
+      config:
+        - field.storage.commerce_product.field_glide
+  product_image:
+    label: 'Default Image » Media » Image » File » URI » Root-relative file URL'
+    datasource_id: 'entity:commerce_product'
+    property_path: 'field_default_image:entity:field_media_image:entity:uri:url'
+    type: string
+    dependencies:
+      config:
+        - field.storage.commerce_product.field_default_image
+        - field.storage.media.field_media_image
+      module:
+        - file
+        - media
+  product_type:
+    label: 'Product type'
+    datasource_id: 'entity:commerce_product'
+    property_path: type
+    type: string
+    dependencies:
+      module:
+        - commerce_product
+  speed:
+    label: Speed
+    datasource_id: 'entity:commerce_product'
+    property_path: field_speed
+    type: string
+    dependencies:
+      config:
+        - field.storage.commerce_product.field_speed
+  status:
+    label: Published
+    datasource_id: 'entity:commerce_product'
+    property_path: status
+    type: boolean
+    dependencies:
+      module:
+        - commerce_product
+  title:
+    label: Title
+    datasource_id: 'entity:commerce_product'
+    property_path: title
+    type: string
+    dependencies:
+      module:
+        - commerce_product
+  turn:
+    label: Turn
+    datasource_id: 'entity:commerce_product'
+    property_path: field_turn
+    type: string
+    dependencies:
+      config:
+        - field.storage.commerce_product.field_turn
+  url:
+    label: URI
+    property_path: search_api_url
+    type: string
+    configuration:
+      absolute: false
+  variation_images:
+    label: 'Variations » Product variation » Product Image » Media » Image » File » URI » Root-relative file URL'
+    datasource_id: 'entity:commerce_product'
+    property_path: 'variations:entity:field_product_image:entity:field_media_image:entity:uri:url'
+    type: string
+    dependencies:
+      config:
+        - field.storage.commerce_product_variation.field_product_image
+        - field.storage.media.field_media_image
+      module:
+        - commerce_product
+        - file
+        - media
+datasource_settings:
+  'entity:commerce_product':
+    bundles:
+      default: true
+      selected: {  }
+    languages:
+      default: true
+      selected: {  }
+processor_settings:
+  add_url: {  }
+  aggregated_field: {  }
+  language_with_fallback: {  }
+  rendered_item: {  }
+tracker_settings:
+  default:
+    indexing_order: fifo
+options:
+  index_directly: true
+  cron_limit: 50
+  algolia_index_name: prod_bangachain_main
+server: algolia

@@ -22,6 +22,10 @@
     }
   }
 
+  &__menu {
+    grid-area: second;
+  }
+
   &__subfooter {
     grid-area: third;
   }

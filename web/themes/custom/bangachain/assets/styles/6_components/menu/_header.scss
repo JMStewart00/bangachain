@@ -37,13 +37,19 @@
     }
   }
 
+  &__search {
+    flex-grow: 1;
+    max-width: 500px;
+    margin-left: auto;
+
+    .hide {
+      display: none;
+    }
+  }
+
   &__account-menu {
     display: flex;
-    margin: auto;
-
-    @include media-breakpoint-up(md) {
-      margin: 0 0 0 auto;
-    }
+    margin: 0;
 
     .region-header {
       display: flex;

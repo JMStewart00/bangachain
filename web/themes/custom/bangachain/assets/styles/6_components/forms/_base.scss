@@ -143,6 +143,7 @@
       line-height: 2;
       margin-bottom: rem(5);
       padding-left: spacer(2.25);
+      text-transform: capitalize;
 
       @include hover-focus() {
         font-weight: $fw-bold;

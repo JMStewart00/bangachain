@@ -202,6 +202,7 @@
         "drupal/responsive_favicons": "^1.5",
         "drupal/rules": "3.x-dev@dev",
         "drupal/search_api": "^1.15",
+        "drupal/search_api_algolia": "^2.0@alpha",
         "drupal/simple_image_rotate": "^1.0@alpha",
         "drupal/simple_sitemap": "^3.5",
         "drupal/sitewide_alert": "^1.3",

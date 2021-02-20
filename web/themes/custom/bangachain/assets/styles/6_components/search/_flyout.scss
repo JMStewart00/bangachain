@@ -1,0 +1,49 @@
+.c-search-flyout {
+  height: 0;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: visibility 0s, height 0.3s linear 0.2s, opacity 0.3s linear 0.2s;
+  visibility: hidden;
+  width: 100vw;
+  z-index: 10;
+
+  &.open {
+    height: 100vh;
+    opacity: 1;
+    visibility: visible;
+  }
+
+  &__close {
+    display: flex;
+    justify-content: flex-end;
+    position: absolute;
+    right: 0;
+    top: 0;
+
+    button {
+      padding: vr(1);
+    }
+
+    .o-icon {
+      color: $brand-blue;
+    }
+  }
+
+  &__container {
+    align-content: center;
+    align-items: center;
+    display: flex;
+    flex-flow: column nowrap;
+    height: 100vh;
+    justify-content: center;
+
+    .c-form {
+      @include media-breakpoint-up(lg) {
+        width: 50%;
+      }
+    }
+  }
+}

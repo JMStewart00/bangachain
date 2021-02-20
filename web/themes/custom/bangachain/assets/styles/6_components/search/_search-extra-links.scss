@@ -1,0 +1,18 @@
+.c-search-extra-links {
+  margin-bottom: spacer(1);
+
+  &__btn {
+    border: 2px solid $gray-500;
+    display: inline-block;
+    margin-right: spacer(0.75);
+    padding: spacer(0.5) 0;
+    text-align: center;
+    width: 150px;
+
+    &--is-active {
+      border-color: $brand-blue;
+      background-color: $brand-blue;
+      color: $white;
+    }
+  }
+}

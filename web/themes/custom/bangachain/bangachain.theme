@@ -55,6 +55,19 @@ function bangachain_preprocess_form_element(&$variables) {
   $variables['attributes']['class'][] = 'c-form__element';
 }
 
+/**
+ * Implements hook_preprocess_HOOK() for form_element.
+ *
+ * This is used to add a class to form element wrappers.
+ */
+
+function bangachain_preprocess_page(&$variables) {
+  $current_uri = \Drupal::request()->getRequestUri();
+  if ($current_uri === '/search') {
+    $variables['hide_search'] = TRUE;
+  }
+}
+
 /*
  * Implements hook_theme_suggestions_HOOK_alter().
  */

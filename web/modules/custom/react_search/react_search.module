@@ -1,0 +1,43 @@
+<?php
+
+use Drupal\block\Entity\Block;
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\file\Entity\File;
+use Drupal\media\Entity\Media;
+use Drupal\Core\Url;
+use Drupal\node\Entity\Node;
+use Drupal\taxonomy\Entity\Term;
+
+/**
+ * @file
+ * File with functions related to the React search applications.
+ */
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function react_search_preprocess_page(array &$variables) {
+
+}
+
+/**
+ * Helper function to return entity from route.
+ */
+function _react_search_get_route_entity() {
+  $route_match = \Drupal::routeMatch();
+  // Entity will be found in the route parameters.
+  if (($route = $route_match->getRouteObject()) && ($parameters = $route->getOption('parameters'))) {
+    // Determine if the current route represents an entity.
+    foreach ($parameters as $name => $options) {
+      if (isset($options['type']) && strpos($options['type'], 'entity:') === 0) {
+        $entity = $route_match->getParameter($name);
+        if ($entity instanceof ContentEntityInterface && $entity->hasLinkTemplate('canonical')) {
+          return $entity;
+        }
+        // Since entity was found, no need to iterate further.
+        return NULL;
+      }
+    }
+  }
+}
+

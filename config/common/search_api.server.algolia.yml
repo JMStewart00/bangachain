@@ -1,0 +1,13 @@
+uuid: eb48be00-243e-446f-8533-b08ddc417b08
+langcode: en
+status: true
+dependencies:
+  module:
+    - search_api_algolia
+id: algolia
+name: Algolia
+description: ''
+backend: search_api_algolia
+backend_config:
+  application_id: GY14PJVXGY
+  api_key: d0eba9df71f672d2b146ee5b62c5564b

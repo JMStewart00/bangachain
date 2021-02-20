@@ -1,0 +1,46 @@
+<?php
+
+/**
+ * @file
+ * Provides an Algolia Search based service class for the Search API.
+ */
+
+use AlgoliaSearch\AlgoliaException;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\search_api\Entity\Index;
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function search_api_algolia_form_search_api_index_edit_form_alter(&$form, FormStateInterface $form_state) {
+  $index = Index::load($form['id']['#default_value']);
+
+  $server = $index->getServerInstance();
+  if ($server->getBackendId() == 'search_api_algolia') {
+    try {
+      $backend = $server->getBackend();
+
+      $indexes = $backend->listIndexes();
+
+      $indexes = ['_none' => t('- none -')] + $indexes;
+
+      $form['options']['algolia_index_name'] = [
+        '#type' => 'radios',
+        '#title' => t('Available Algolia indexes'),
+        '#options' => $indexes,
+        '#default_value' => ($index->getOption('algolia_index_name')) ? $index->getOption('algolia_index_name') : '_none',
+      ];
+    }
+    catch (AlgoliaException $exception) {
+      drupal_set_message(t('Unable to connect to Algolia.'), 'error');
+      watchdog_exception('search_api_algolia', $exception, 'Unable to connect to Algolia.');
+      if ($index_name = $index->getOption('algolia_index_name')) {
+        $form['options']['algolia_index_name'] = [
+          '#type' => 'item',
+          '#title' => t('Algolia index'),
+          '#markup' => $index_name,
+        ];
+      }
+    }
+  }
+}

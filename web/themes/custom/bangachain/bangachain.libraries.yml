@@ -68,6 +68,14 @@ mmenu-js:
   dependencies:
     - bangachain/global-styling
 
+navbar-search:
+  version: 1.0
+  js:
+    assets/js/navbar-search.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+
 view-filters-toggle:
   version: 1.0
   js:

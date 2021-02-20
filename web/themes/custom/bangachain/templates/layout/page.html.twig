@@ -60,6 +60,16 @@
 					<b></b>
 					<b></b>
 				</a>
+        <div class="c-header__search">
+          <form action="" class="c-form{{ hide_search ? ' hide'}}" id="search">
+            <div class="c-form__element c-form__element--search-input">
+              <input class="c-form__text c-form__text--has-addon" placeholder="{{'Search BangAChain.com'|t}}" aria-label="{{'Search BangAChain.com'|t}}" aria-describedby="search-addon" type="search" id="searchInput" />
+              <button class="o-btn o-btn--input-addon" aria-label="Search" id="search-addon" type="submit">
+                {{'Search'|t}}
+              </button>
+            </div>
+          </form>
+        </div>
 				<div class="c-header__account-menu">
 					{{ page.header }}
 				</div>

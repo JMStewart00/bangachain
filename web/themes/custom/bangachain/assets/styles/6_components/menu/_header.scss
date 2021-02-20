@@ -18,7 +18,7 @@
     }
 
     img {
-      width: rem(80);
+      width: rem(120);
 
       @include media-breakpoint-down(xl) {
         display: block;

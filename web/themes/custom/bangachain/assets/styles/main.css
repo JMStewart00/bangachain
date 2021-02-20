@@ -8923,7 +8923,7 @@ div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
     width: auto; } }
 
 .c-header__logo-container img {
-  width: 5rem; }
+  width: 6.25rem; }
 
 @media (max-width: 1439.98px) {
   .c-header__logo-container img {

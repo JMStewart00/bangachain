@@ -74,12 +74,6 @@ export const SearchLayout = ({
 
           <div className="l-row--no-columns c-form">
             <SearchInput placeholder={searchPlaceholder} />
-            {sortItems.length > 0 &&
-              <SortBy
-                defaultRefinement={defaultSort}
-                items={sortItems}
-              />
-            }
           </div>
 
           {/* If the window is medium or lower, render the mobile filters */}

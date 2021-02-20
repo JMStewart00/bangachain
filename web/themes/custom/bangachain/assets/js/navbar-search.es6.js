@@ -10,7 +10,7 @@
       $("#search").once("searchFlyout").submit(function (e) {
         e.preventDefault();
         var q = encodeURI($("#searchInput").val());
-        window.location.href = "/search?query=".concat(q); // slug matches current D7 site slug
+        window.location.href = "/search?query=".concat(q);
       });
     }
   };

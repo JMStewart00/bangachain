@@ -13,7 +13,7 @@ export const SiteWideResult = ({ hit }) => {
     glide,
     fade,
     product_image,
-    variation_images
+    variation_images = []
   } = hit;
 
   const indexedImageField = toArray(variation_images);
@@ -37,7 +37,7 @@ export const SiteWideResult = ({ hit }) => {
           ) : (
             <img src={'/themes/custom/bangachain/assets/images/default-disc.png'} alt={'Default Disc Image'} width="200" height="200" />
           )}
-          {title && <h2><TitleHighlight hit={hit} attribute='title'/></h2>}
+          {title && <h2>{title}</h2>}
           { (speed || glide || turn || fade) &&
             <div class="c-product__flight-numbers">
               <ul class="o-list-inline">
@@ -53,28 +53,3 @@ export const SiteWideResult = ({ hit }) => {
     </div>
   );
 }
-
-// Search highlighting for the Title link.
-const TitleHighlight = connectHighlight(({ highlight, attribute, hit }) => {
-  const parsedHit = highlight({
-    highlightProperty: '_highlightResult',
-    attribute,
-    hit,
-  });
-  return (
-    <>
-      {
-        parsedHit.map((part, index) => {
-          return (
-            part.isHighlighted ?
-              <strong key={index}>{part.value}</strong> :
-              <React.Fragment key={index}>{part.value}</React.Fragment>
-          )
-        })
-      }
-    </>
-  );
-});
-
-
-

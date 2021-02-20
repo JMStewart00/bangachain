@@ -9024,7 +9024,7 @@ div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
 
 @media (max-width: 1199.98px) {
   .c-header__main-menu {
-    display: none; } }
+    display: hidden; } }
 
 .c-header__search {
   -webkit-box-flex: 1;

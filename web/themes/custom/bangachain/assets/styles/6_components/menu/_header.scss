@@ -33,7 +33,7 @@
     margin-left: rvr(0.5);
 
     @include media-breakpoint-down(lg) {
-      display: none;
+      display: hidden;
     }
   }
 

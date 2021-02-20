@@ -18,7 +18,7 @@ import { SearchLayout } from '../generic/SearchLayout';
 import { searchClient } from '../../utils/searchClient';
 import { DEBOUNCE_TIME, MAIN_ID } from '../../utils/constants';
 
-class MainSearch extends Component {
+class DiscSearch extends Component {
   state = {
     searchState: urlToSearchState(this.props.location),
     lastLocation: this.props.location,
@@ -51,7 +51,6 @@ class MainSearch extends Component {
   render() {
     const { searchState } = this.state;
     const facets = [
-      { label: 'Product', field: 'product_type', andOr: 'or', alpha: true },
       { label: 'Brand', field: 'brand', andOr: 'or', alpha: true },
       { label: 'Speed', field: 'speed', andOr: 'or', alpha: true },
       { label: 'Glide', field: 'glide', andOr: 'or', alpha: true },
@@ -75,7 +74,7 @@ class MainSearch extends Component {
         */}
         <Configure
           hitsPerPage={24}
-          filters={`status:true`}
+          filters={`status:true AND product_type:discs`}
         />
         <SearchLayout
           defaultSort={MAIN_ID}
@@ -90,4 +89,4 @@ class MainSearch extends Component {
   }
 }
 
-export default MainSearch;
+export default DiscSearch;

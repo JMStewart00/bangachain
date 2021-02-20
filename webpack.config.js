@@ -3,6 +3,7 @@ const path = require('path');
 const config = {
   entry: {
     'main': './web/modules/custom/react_search/js/main.js',
+    'discs': './web/modules/custom/react_search/js/discs.js',
   },
   module: {
     rules: [

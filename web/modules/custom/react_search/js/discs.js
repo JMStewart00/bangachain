@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import DiscSearch from './components/main_search/DiscSearch';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import ProviderSearch from './components/provider_search/ProviderSearch';
 
 ReactDOM.render(
   <Router>
-    <Route path="/" component={ProviderSearch} />
+    <Route path="/" component={DiscSearch} />
   </Router>,
-  document.getElementById('providerSearch')
+  document.getElementById('discSearch')
 );

@@ -26,6 +26,11 @@ class SearchBlock extends DeriverBase {
         'html_id' => t('mainSearch'),
         'javascript_id' => t('main'),
       ],
+      'react_search_discs' => [
+        'name' => t('Disc Search'),
+        'html_id' => t('discSearch'),
+        'javascript_id' => t('discs'),
+      ],
     ];
 
     foreach ($blocks as $block_id => $value) {

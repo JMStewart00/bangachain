@@ -6,3 +6,11 @@ main:
     theme:
       'https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/algolia-min.css': { type: external }
 
+discs:
+  version: 1.x
+  js:
+    dist/js/discs.js: { minified: true, preprocess: false }
+  css:
+    theme:
+      'https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/algolia-min.css': { type: external }
+

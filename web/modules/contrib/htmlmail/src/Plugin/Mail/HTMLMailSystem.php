@@ -15,33 +15,75 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\htmlmail\Helper\HtmlMailHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Egulias\EmailValidator\EmailValidator;
-use Drupal\htmlmail\Utility\HTMLMailMime;
+use Drupal\htmlmail\Utility\HtmlMailMime;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface;
 
 /**
- * Modify the Drupal mail system to use HTMLMail when sending emails.
+ * Modify the Drupal mail system to use HTML Mail when sending emails.
  *
  * @Mail(
  *   id = "htmlmail",
- *   label = @Translation("HTMLMail mailer"),
- *   description = @Translation("Sends the message using HTMLMail.")
+ *   label = @Translation("HTML Mail mailer"),
+ *   description = @Translation("Sends the message using HTML Mail.")
  * )
  */
-class HTMLMailSystem implements MailInterface, ContainerFactoryPluginInterface {
-
-  protected $emailValidator;
-  protected $systemConfig;
-  protected $moduleHandler;
-  protected $logger;
-  protected $configVariables;
-  protected $siteSettings;
-  protected $fileSystem;
-  protected $renderer;
-  protected $mimeType;
-  protected $configFactory;
+class HtmlMailSystem implements MailInterface, ContainerFactoryPluginInterface {
 
   /**
-   * HTMLMailSystem constructor.
+   * The email validator service.
+   *
+   * @var \Egulias\EmailValidator\EmailValidator
+   */
+  protected $emailValidator;
+
+  /**
+   * The module handler service.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
+   * The file system service.
+   *
+   * @var \Drupal\Core\File\FileSystemInterface
+   */
+  protected $fileSystem;
+
+  /**
+   * The logger service.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
+   */
+  protected $logger;
+
+  /**
+   * The site settings service.
+   *
+   * @var \Drupal\Core\Site\Settings
+   */
+  protected $siteSettings;
+
+  /**
+   * The render service.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
+   * The mime type guesser service.
+   *
+   * @var \Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface
+   */
+  protected $mimeType;
+
+  protected $configFactory;
+  protected $systemConfig;
+  protected $configVariables;
+
+  /**
+   * HtmlMailSystem constructor.
    *
    * @param array $configuration
    *   The configuration array.
@@ -62,7 +104,7 @@ class HTMLMailSystem implements MailInterface, ContainerFactoryPluginInterface {
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The render service.
    * @param \Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface $mimeTypeGuesser
-   *   The mime guesser service.
+   *   The mime type guesser service.
    */
   public function __construct(
     array $configuration,
@@ -160,7 +202,7 @@ class HTMLMailSystem implements MailInterface, ContainerFactoryPluginInterface {
   public function format(array $message) {
     $eol = $this->siteSettings->get('mail_line_endings', PHP_EOL);
     $default_from = $this->getDefaultFromMail();
-    $force_plain = $this->configVariables->get('htmlmail_html_with_plain');
+    $force_plain = $this->configVariables->get('html_with_plain');
 
     if (!empty($message['headers']['From'])
       && $message['headers']['From'] == $default_from
@@ -172,7 +214,7 @@ class HTMLMailSystem implements MailInterface, ContainerFactoryPluginInterface {
     }
 
     // Collapse the message body array.
-    if ($this->configVariables->get('htmlmail_use_mime_mail')) {
+    if ($this->configVariables->get('use_mail_mime')) {
       $body = $this->formatMailMime($message);
       $plain = $message['MailMIME']->getTXTBody();
     }
@@ -225,7 +267,7 @@ class HTMLMailSystem implements MailInterface, ContainerFactoryPluginInterface {
         }
       }
       // Optionally apply the selected output filter.
-      if ($filter = $this->configVariables->get('htmlmail_postfilter')) {
+      if ($filter = $this->configVariables->get('postfilter')) {
         $filtered_body = check_markup($body, $filter);
         if ($filtered_body) {
           $body = $filtered_body;
@@ -252,7 +294,7 @@ class HTMLMailSystem implements MailInterface, ContainerFactoryPluginInterface {
         if (!$message['body']) {
 
           $this->getLogger()->warning('The %toemail function did not return any text. Please report this error to the %mailmime issue queue.', [
-            '%toemail' => 'HTMLMailMime::toEmail()',
+            '%toemail' => 'HtmlMailMime::toEmail()',
             '%mailmime' => 'Mail MIME',
           ]);
         }
@@ -260,7 +302,7 @@ class HTMLMailSystem implements MailInterface, ContainerFactoryPluginInterface {
       else {
         $message['headers']['Content-Type'] = 'text/html; charset=utf-8';
         $message['body'] = $body;
-        if ($this->configVariables->get('htmlmail_html_with_plain')) {
+        if ($this->configVariables->get('html_with_plain')) {
           $boundary = uniqid('np');
           $message['headers']['Content-Type'] = 'multipart/alternative;boundary="' . $boundary . '"';
           $html = $message['body'];
@@ -290,7 +332,7 @@ class HTMLMailSystem implements MailInterface, ContainerFactoryPluginInterface {
         list($message['headers'], $message['body']) = $mime->toEmail($message['headers']);
         if (!$message['body']) {
           $this->getLogger()->warning('The %toemail function did not return any text. Please report this error to the %mailmime issue queue.', [
-            '%toemail' => 'HTMLMailMime::toEmail()',
+            '%toemail' => 'HtmlMailMime::toEmail()',
             '%mailmime' => 'Mail MIME',
           ]);
         }
@@ -334,8 +376,8 @@ class HTMLMailSystem implements MailInterface, ContainerFactoryPluginInterface {
       $message['to'] = $message['headers']['To'];
     }
 
-    if (class_exists('HTMLMailMime')) {
-      $mime = new HTMLMailMime($this->logger, $this->siteSettings, $this->mimeType, $this->fileSystem);
+    if (class_exists('HtmlMailMime')) {
+      $mime = new HtmlMailMime($this->logger, $this->siteSettings, $this->mimeType, $this->fileSystem);
       $to = $mime->mimeEncodeHeader('to', $message['to']);
       $subject = $mime->mimeEncodeHeader('subject', $message['subject']);
       $txt_headers = $mime->mimeTxtHeaders($message['headers']);
@@ -355,11 +397,11 @@ class HTMLMailSystem implements MailInterface, ContainerFactoryPluginInterface {
       ]);
       return FALSE;
     }
-    if ($this->configVariables->get('htmlmail_debug')) {
+    if ($this->configVariables->get('debug')) {
       $params = [
         $to,
         $subject,
-        Unicode::substr($body, 0, min(80, strpos("\n", $body))) . '...',
+        mb_substr($body, 0, min(80, strpos("\n", $body))) . '...',
         $txt_headers,
       ];
     }
@@ -373,21 +415,15 @@ class HTMLMailSystem implements MailInterface, ContainerFactoryPluginInterface {
         $result = @mail($to, $subject, $body, $txt_headers);
         ini_set('sendmail_from', $old_from);
       }
-      elseif (ini_get('safe_mode')) {
-        // If safe mode is in effect, passing the fifth parameter to @mail
-        // will cause it to return FALSE and generate a PHP warning, even
-        // if the parameter is NULL.
-        $result = @mail($to, $subject, $body, $txt_headers);
-      }
       else {
         // On most non-Windows systems, the "-f" option to the sendmail command
         // is used to set the Return-Path.
-        // We validate the return path, unless it is equal to the site mail, which
-        // we assume to be safe.
-        $site_mail = $this->configFactory->get('system.site')->get('mail');
-        $extra = ($site_mail === $message['headers']['Return-Path'] || static::_isShellSafe($message['headers']['Return-Path'])) ? '-f' . $message['headers']['Return-Path'] : '';
+        // We validate the return path, unless it is equal to the site mail,
+        // which we assume to be safe.
+        $site_mail = $this->getDefaultFromMail();
+        $extra = ($site_mail === $message['headers']['Return-Path'] || static::isShellSafe($message['headers']['Return-Path'])) ? '-f' . $message['headers']['Return-Path'] : '';
         $result = @mail($to, $subject, $body, $txt_headers, $extra);
-        if ($this->configVariables->get('htmlmail_debug')) {
+        if ($this->configVariables->get('debug')) {
           $params[] = $extra;
         }
       }
@@ -396,21 +432,12 @@ class HTMLMailSystem implements MailInterface, ContainerFactoryPluginInterface {
       // No return-path was set.
       $result = @mail($to, $subject, $body, $txt_headers);
     }
-    if (!$result && $this->configVariables->get('htmlmail_debug')) {
+    if (!$result && $this->configVariables->get('debug')) {
       $call = '@mail(' . implode(', ', $params) . ')';
       foreach ($params as $i => $value) {
-        $params[$i] = var_export($value, 1);
+        $params[$i] = var_export($value, TRUE);
       }
-      if (defined('DEBUG_BACKTRACE_IGNORE_ARGS')) {
-        $trace = print_r(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), 1);
-      }
-      else {
-        $trace = debug_backtrace(0);
-        for ($i = count($trace) - 1; $i >= 0; $i--) {
-          unset($trace[$i]['args']);
-        }
-        $trace = print_r($trace);
-      }
+      $trace = print_r(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), TRUE);
       $this->getLogger()->info('Mail sending failed because:<br /><pre>@call</pre><br />returned FALSE.<br /><pre>@trace</pre>', [
         '@call' => $call,
         '@trace' => $trace,
@@ -426,19 +453,22 @@ class HTMLMailSystem implements MailInterface, ContainerFactoryPluginInterface {
    * CVE-2016-10045. Note that escapeshellarg and escapeshellcmd are inadequate
    * for this purpose.
    *
+   * This method should be kept in sync with PhpMail::_isShellSafe().
+   *
    * @param string $string
    *   The string to be validated.
    *
    * @return bool
-   *   True if the string is shell-safe.
+   *   TRUE if the string is shell-safe.
    *
    * @see https://github.com/PHPMailer/PHPMailer/issues/924
    * @see https://github.com/PHPMailer/PHPMailer/blob/v5.2.21/class.phpmailer.php#L1430
+   * @see https://www.drupal.org/sa-core-2018-006
+   * @see https://www.drupal.org/sa-contrib-2018-069
    *
-   * @todo Rename to ::isShellSafe() and/or discuss whether this is the correct
-   *   location for this helper.
+   * @see \Drupal\Core\Mail\Plugin\Mail\PhpMail::_isShellSafe()
    */
-  protected static function _isShellSafe($string) {
+  protected static function isShellSafe($string) {
     if (escapeshellcmd($string) !== $string || !in_array(escapeshellarg($string), ["'$string'", "\"$string\""])) {
       return FALSE;
     }
@@ -451,15 +481,15 @@ class HTMLMailSystem implements MailInterface, ContainerFactoryPluginInterface {
   /**
    * Use the MailMime class to format the message body.
    *
-   * @see http://drupal.org/project/mailmime
+   * @see https://www.drupal.org/project/mailmime
    */
   public function formatMailMime(array &$message) {
     $eol = $this->siteSettings->get('mail_line_endings', PHP_EOL);
-    $message['body'] = HTMLMailMime::concat($message['body'], $eol);
+    $message['body'] = HtmlMailMime::concat($message['body'], $eol);
     // Build a full email message string.
-    $email = HTMLMailMime::encodeEmail($message['headers'], $message['body'], $eol);
+    $email = HtmlMailMime::encodeEmail($message['headers'], $message['body'], $eol);
     // Parse it into MIME parts.
-    if (!($mime = HTMLMailMime::parse($email, $this->logger, $this->mimeType, $this->fileSystem))) {
+    if (!($mime = HtmlMailMime::parse($email, $this->logger, $this->mimeType, $this->fileSystem))) {
       $this->getLogger()->error('Could not parse email message.');
       return $message;
     }

@@ -2,16 +2,29 @@
 
 namespace Drupal\Tests\feeds\Unit\Element {
 
+  use Drupal\Core\DependencyInjection\ContainerBuilder;
   use Drupal\Core\Form\FormState;
+  use Drupal\Core\StreamWrapper\StreamWrapperManager;
   use Drupal\feeds\Element\Uri;
   use Drupal\Tests\feeds\Unit\FeedsUnitTestCase;
-  use Drupal\Core\StreamWrapper\StreamWrapperManager;
 
   /**
    * @coversDefaultClass \Drupal\feeds\Element\Uri
    * @group feeds
    */
   class UriTest extends FeedsUnitTestCase {
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setUp() {
+      parent::setUp();
+
+      // Set a stub for the string translation service.
+      $container = new ContainerBuilder();
+      $container->set('string_translation', $this->getStringTranslationStub());
+      \Drupal::setContainer($container);
+    }
 
     /**
      * Tests validation.

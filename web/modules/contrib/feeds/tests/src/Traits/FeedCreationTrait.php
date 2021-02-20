@@ -114,6 +114,7 @@ trait FeedCreationTrait {
       [
         'target' => 'title',
         'map' => ['value' => 'title'],
+        'unique' => [],
         'settings' => [
           'language' => NULL,
         ],

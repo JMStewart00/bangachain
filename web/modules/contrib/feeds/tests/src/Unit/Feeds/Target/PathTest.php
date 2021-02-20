@@ -2,7 +2,10 @@
 
 namespace Drupal\Tests\feeds\Unit\Feeds\Target;
 
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\feeds\Feeds\Target\Path;
+use Drupal\feeds\FeedTypeInterface;
 
 /**
  * @coversDefaultClass \Drupal\feeds\Feeds\Target\Path
@@ -18,22 +21,78 @@ class PathTest extends FieldTargetTestBase {
   }
 
   /**
-   * @covers ::prepareValue
+   * Mocks a field definition.
+   *
+   * @param array $settings
+   *   The field storage and instance settings.
+   *
+   * @return \Drupal\Core\Field\FieldDefinitionInterface
+   *   A mocked field definition.
    */
-  public function testPrepareValue() {
-    $method = $this->getMethod('Drupal\feeds\Feeds\Target\Path', 'prepareTarget')->getClosure();
+  protected function getMockFieldDefinition(array $settings = []) {
+    $definition = $this->createMock(FieldDefinitionInterface::class);
+    $definition->expects($this->any())
+      ->method('getSettings')
+      ->will($this->returnValue($settings));
+
+    $definition->expects($this->atLeastOnce())
+      ->method('getFieldStorageDefinition')
+      ->will($this->returnValue($this->createMock(FieldStorageDefinitionInterface::class)));
+
+    return $definition;
+  }
+
+  /**
+   * @covers ::prepareValue
+   *
+   * @param string $expected
+   *   The expected path.
+   * @param array $values
+   *   The values passed to the prepareValue() method.
+   *
+   * @dataProvider valuesProvider
+   */
+  public function testPrepareValue($expected, array $values) {
+    $method = $this->getMethod(Path::class, 'prepareTarget')->getClosure();
 
     $configuration = [
-      'feed_type' => $this->createMock('Drupal\feeds\FeedTypeInterface'),
+      'feed_type' => $this->createMock(FeedTypeInterface::class),
       'target_definition' => $method($this->getMockFieldDefinition()),
     ];
     $target = new Path($configuration, 'path', []);
 
     $method = $this->getProtectedClosure($target, 'prepareValue');
 
-    $values = ['alias' => 'path '];
     $method(0, $values);
-    $this->assertSame($values['alias'], 'path');
+    $this->assertSame($expected, $values['alias']);
+  }
+
+  /**
+   * Data provider for ::testPrepareValue().
+   */
+  public function valuesProvider() {
+    return [
+      'without-slash' => [
+        'expected' => '/path',
+        'values' => ['alias' => 'path '],
+      ],
+      'with-slash' => [
+        'expected' => '/foo',
+        'values' => ['alias' => '/foo '],
+      ],
+      'starting-with-space' => [
+        'expected' => '/bar',
+        'values' => ['alias' => ' bar'],
+      ],
+      'starting-with-space-and-with-slash' => [
+        'expected' => '/qux',
+        'values' => ['alias' => ' /qux'],
+      ],
+      'already-correctly-formatted' => [
+        'expected' => '/foo-bar',
+        'values' => ['alias' => '/foo-bar'],
+      ],
+    ];
   }
 
 }

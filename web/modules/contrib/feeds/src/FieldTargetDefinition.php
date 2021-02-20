@@ -92,18 +92,28 @@ class FieldTargetDefinition extends TargetDefinition {
    * {@inheritdoc}
    */
   public function getPropertyLabel($property) {
-    return $this->fieldDefinition->getItemDefinition()
-      ->getPropertyDefinition($property)
-      ->getLabel();
+    if (!empty($this->properties[$property]['label'])) {
+      return $this->properties[$property]['label'];
+    }
+
+    $property_definition = $this->fieldDefinition->getItemDefinition()
+      ->getPropertyDefinition($property);
+    return $property_definition ? $property_definition->getLabel() :
+      parent::getPropertyLabel($property);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getPropertyDescription($property) {
-    return $this->fieldDefinition->getItemDefinition()
-      ->getPropertyDefinition($property)
-      ->getDescription();
+    if (!empty($this->properties[$property]['description'])) {
+      return $this->properties[$property]['description'];
+    }
+
+    $property_definition = $this->fieldDefinition->getItemDefinition()
+      ->getPropertyDefinition($property);
+    return $property_definition ? $property_definition->getDescription() :
+      parent::getPropertyDescription($property);
   }
 
 }

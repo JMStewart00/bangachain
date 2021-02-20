@@ -41,7 +41,7 @@ class ProductVariationFieldRendererLayoutBuilder extends ProductVariationFieldRe
     // Get parent product and load its view mode display.
     $product = $variation->getProduct();
     assert($product !== NULL);
-    $view_mode_display = $this->entityDisplayRepository->getViewDisplay($product->getEntityTypeId(), $product->bundle());
+    $view_mode_display = $this->entityDisplayRepository->getViewDisplay($product->getEntityTypeId(), $product->bundle(), $view_mode);
     // Check if layouts are enabled for that product.
     if ($view_mode_display instanceof LayoutBuilderEntityViewDisplay && $view_mode_display->isLayoutBuilderEnabled()) {
       // Grab sections from bundle layout view mode.

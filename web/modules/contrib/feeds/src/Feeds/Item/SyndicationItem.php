@@ -12,6 +12,7 @@ class SyndicationItem extends BaseItem {
   protected $description;
   protected $author_name;
   protected $timestamp;
+  protected $updated;
   protected $url;
   protected $guid;
   protected $tags;

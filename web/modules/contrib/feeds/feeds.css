@@ -20,3 +20,11 @@
 .feeds-feed-type-secondary-settings {
   clear: both;
 }
+
+.missing-target .target::before {
+  content: url("images/error.svg");
+  width: 16px;
+  height: 16px;
+  float: left;
+  margin-right: .5em;
+}

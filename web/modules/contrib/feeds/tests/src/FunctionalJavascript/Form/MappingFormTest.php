@@ -175,4 +175,34 @@ class MappingFormTest extends FeedsJavascriptTestBase {
     $assert_session->pageTextContains('The machine-readable name is already in use. It must be unique.');
   }
 
+  /**
+   * Tests that a mapper to entity ID gets set as unique by default.
+   */
+  public function testEntityIdTargetIsUniqueByDefault() {
+    $feed_type = $this->createFeedType();
+
+    // Go to the mapping form.
+    $this->drupalGet('/admin/structure/feeds/manage/' . $feed_type->id() . '/mapping');
+
+    $session = $this->getSession();
+    $assert_session = $this->assertSession();
+    $page = $session->getPage();
+
+    $assert_session->fieldExists('add_target');
+    $page->selectFieldOption('add_target', 'nid');
+    $assert_session->assertWaitOnAjaxRequest();
+
+    // Assert that "unique" is ticked by default.
+    $assert_session->fieldValueEquals('mappings[2][unique][value]', '1');
+
+    // Try to save the form.
+    $this->submitForm([], 'Save');
+    $assert_session->pageTextNotContains('When mapping to the entity ID (ID), it is recommended to set it as unique.');
+
+    // Assert that the new target is marked as "unique".
+    $feed_type = $this->reloadEntity($feed_type);
+    $mapping = $feed_type->getMappings()[2];
+    $this->assertEquals(1, $mapping['unique']['value']);
+  }
+
 }

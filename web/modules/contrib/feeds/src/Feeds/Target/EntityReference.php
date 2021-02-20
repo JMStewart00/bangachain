@@ -3,6 +3,7 @@
 namespace Drupal\feeds\Feeds\Target;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
@@ -97,7 +98,7 @@ class EntityReference extends FieldTargetBase implements ConfigurableTargetInter
     // Only reference content entities. Configuration entities will need custom
     // targets.
     $type = $field_definition->getSetting('target_type');
-    if (!\Drupal::entityTypeManager()->getDefinition($type)->entityClassImplements('\Drupal\Core\Entity\ContentEntityInterface')) {
+    if (!\Drupal::entityTypeManager()->getDefinition($type)->entityClassImplements(ContentEntityInterface::class)) {
       return;
     }
 

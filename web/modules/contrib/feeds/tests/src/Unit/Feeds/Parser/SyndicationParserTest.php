@@ -107,8 +107,33 @@ class SyndicationParserTest extends FeedsUnitTestCase {
 
     $result = $this->parser->parse($this->feed, $fetcher_result, $this->state);
     $this->assertSame(count($result), 6);
+    $this->assertSame($result[0]->get('title'), "First thoughts: Dems' Black Tuesday - msnbc.com");
     $this->assertSame($result[0]->get('author_name'), 'Person Name');
+    $this->assertSame($result[0]->get('timestamp'), 1262805987);
+    $this->assertSame($result[0]->get('updated'), 1262805987);
+    $this->assertSame($result[0]->get('guid'), 'tag:news.google.com,2005:cluster=17593687403189');
     $this->assertSame($result[3]->get('title'), 'NEWSMAKER-New Japan finance minister a fiery battler - Reuters');
+  }
+
+  /**
+   * Tests parsing an Atom feed.
+   *
+   * @covers ::parse
+   */
+  public function testParseAtom() {
+    $file = $this->resourcesPath() . '/atom/entries.atom';
+    $fetcher_result = new RawFetcherResult(file_get_contents($file), $this->getMockFileSystem());
+
+    $result = $this->parser->parse($this->feed, $fetcher_result, $this->state);
+    $this->assertSame(count($result), 3);
+    $this->assertSame($result[0]->get('title'), 'Re-spin the patch');
+    $this->assertSame($result[0]->get('content'), 'Re-spin the patch for feeds 7.x-2.0-beta2.');
+    $this->assertSame($result[0]->get('description'), 'Re-spin the patch for feeds 7.x-2.0-beta2.');
+    $this->assertSame($result[0]->get('author_name'), 'natew');
+    $this->assertSame($result[0]->get('timestamp'), 1475082480);
+    $this->assertSame($result[0]->get('updated'), 1477756140);
+    $this->assertSame($result[0]->get('url'), 'node/1281496#comment-11669575');
+    $this->assertSame($result[0]->get('guid'), 'comment-11669575');
   }
 
   /**
@@ -140,7 +165,7 @@ class SyndicationParserTest extends FeedsUnitTestCase {
    */
   public function testGetMappingSources() {
     // Not really much to test here.
-    $this->assertSame(count($this->parser->getMappingSources()), 16);
+    $this->assertSame(count($this->parser->getMappingSources()), 17);
   }
 
 }

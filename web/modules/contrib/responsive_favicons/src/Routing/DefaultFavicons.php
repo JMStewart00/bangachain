@@ -29,11 +29,11 @@ class DefaultFavicons {
     // List of icons to redirect.
     // Note, in order for these to work alter the fast404 pattern to allow these
     // requests to hit Drupal. Please see the README for more information.
-    $icons = array(
+    $icons = [
       '/apple-touch-icon.png',
       '/apple-touch-icon-precomposed.png',
       '/browserconfig.xml',
-    );
+    ];
     // Try to avoid clashing with the favicon module.
     if (!$moduleHandler->moduleExists('favicon')) {
       $icons[] = '/favicon.ico';
@@ -43,14 +43,14 @@ class DefaultFavicons {
         // Path to attach this route to:
         $icon,
         // Route defaults:
-        array(
+        [
           '_controller' => '\Drupal\responsive_favicons\Controller\GetFile::deliver',
           '_title' => ''
-        ),
+        ],
         // Route requirements:
-        array(
+        [
           '_access' => 'TRUE',
-        )
+        ]
       );
       // Add the route under a unique key.
       $key = preg_replace("/[^A-Za-z]/", '', $icon);

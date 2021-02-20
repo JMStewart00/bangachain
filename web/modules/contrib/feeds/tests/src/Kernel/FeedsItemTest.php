@@ -148,4 +148,32 @@ class FeedsItemTest extends FeedsKernelTestBase {
     $this->assertEquals('Ut wisi enim ad minim veniam.', $node->body->value);
   }
 
+  /**
+   * Tests if a reference to a feed is cleaned up when deleting a feed.
+   */
+  public function testDeleteFeed() {
+    $feed_type = $this->createFeedType([
+      'fetcher' => 'directory',
+      'fetcher_configuration' => [
+        'allowed_extensions' => 'atom rss rss1 rss2 opml xml',
+      ],
+    ]);
+
+    // Import feed.
+    $feed = $this->createFeed($feed_type->id(), [
+      'source' => $this->resourcesPath() . '/rss/googlenewstz.rss2',
+    ]);
+    $feed->import();
+
+    // Assert six created nodes.
+    $this->assertNodeCount(6);
+
+    // Now delete the feed.
+    $feed->delete();
+
+    // Assert that the imported nodes no longer reference the feed.
+    $node = Node::load(1);
+    $this->assertTrue($node->feeds_item->isEmpty());
+  }
+
 }

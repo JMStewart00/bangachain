@@ -70,7 +70,7 @@ class HtmlMailHelper {
    *   The 'theme' key of $message if set and allowed, empty string otherwise.
    */
   public static function getSelectedTheme(array &$message = []) {
-    $selected = isset($message['theme']) ? $message['theme'] : \Drupal::config('htmlmail.settings')->get('htmlmail_theme');
+    $selected = isset($message['theme']) ? $message['theme'] : \Drupal::config('htmlmail.settings')->get('theme');
     if ($selected) {
       // Make sure the selected theme is allowed.
       $themes = self::getAllowedThemes();

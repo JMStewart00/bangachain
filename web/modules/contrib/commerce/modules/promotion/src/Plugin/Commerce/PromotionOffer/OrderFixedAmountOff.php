@@ -28,14 +28,15 @@ class OrderFixedAmountOff extends OrderPromotionOfferBase {
     $this->assertEntity($entity);
     /** @var \Drupal\commerce_order\Entity\OrderInterface $order */
     $order = $entity;
-    $total_price = $order->getTotalPrice();
+    $subtotal_price = $order->getSubTotalPrice();
     $amount = $this->getAmount();
-    if ($total_price->getCurrencyCode() != $amount->getCurrencyCode()) {
+    if ($subtotal_price->getCurrencyCode() != $amount->getCurrencyCode()) {
       return;
     }
+    $total_price = $order->getTotalPrice();
     // The promotion amount can't be larger than the total, to avoid
     // potentially having a negative order total.
-    if ($amount->greaterThan($total_price)) {
+    if ($total_price && $amount->greaterThan($total_price)) {
       $amount = $total_price;
     }
 

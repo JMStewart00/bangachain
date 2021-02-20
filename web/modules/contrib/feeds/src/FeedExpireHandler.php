@@ -23,7 +23,7 @@ class FeedExpireHandler extends FeedHandlerBase {
       $feed->lock();
     }
     catch (LockException $e) {
-      $this->messenger()->addWarning(t('The feed became locked before the expiring could begin.'));
+      $this->messenger()->addWarning($this->t('The feed became locked before the expiring could begin.'));
       return;
     }
     $feed->clearStates();
@@ -39,7 +39,7 @@ class FeedExpireHandler extends FeedHandlerBase {
       'title' => $this->t('Expiring: %title', ['%title' => $feed->label()]),
       'init_message' => $this->t('Expiring: %title', ['%title' => $feed->label()]),
       'progress_message' => $this->t('Expiring: %title', ['%title' => $feed->label()]),
-      'error_message' => $this->t('An error occored while expiring %title.', ['%title' => $feed->label()]),
+      'error_message' => $this->t('An error occurred while expiring %title.', ['%title' => $feed->label()]),
     ];
 
     foreach ($ids as $id) {

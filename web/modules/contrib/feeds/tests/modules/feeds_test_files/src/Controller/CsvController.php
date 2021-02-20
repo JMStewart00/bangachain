@@ -46,7 +46,7 @@ class CsvController extends ControllerBase {
     $csv_lines = [
       ['title', 'timestamp', 'file'],
       ['Tubing is awesome', '205200720', $assets_url . '/tubing.jpeg'],
-      ['Jeff vs Tom', '428112720', $assets_url . '/foosball.jpeg'],
+      ['Jeff vs Tom', '428112720', $assets_url . '/foosball.jpeg?10000'],
       ['Attersee', '1151766000', $assets_url . '/attersee.jpeg'],
       ['H Street NE', '1256326995', $assets_url . '/hstreet.jpeg'],
       ['La Fayette Park', '1256326995', $assets_url . '/la fayette.jpeg'],

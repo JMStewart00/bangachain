@@ -56,6 +56,13 @@ abstract class TargetBase extends ConfigurablePluginBase implements TargetInterf
   /**
    * {@inheritdoc}
    */
+  public function getTargetDefinition() {
+    return $this->targetDefinition;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function defaultConfiguration() {
     return [];
   }

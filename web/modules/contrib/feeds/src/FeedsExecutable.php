@@ -289,6 +289,14 @@ class FeedsExecutable implements FeedsExecutableInterface, ContainerInjectionInt
 
   /**
    * Finalizes the import.
+   *
+   * @param \Drupal\feeds\FeedInterface $feed
+   *   The feed which import batch is about to be finished.
+   * @param \Drupal\feeds\Result\FetcherResultInterface $fetcher_result
+   *   The last fetcher result.
+   *
+   * @return bool
+   *   True if the last batch was done. False if the import is still ongoing.
    */
   protected function finish(FeedInterface $feed, FetcherResultInterface $fetcher_result) {
     // Update item count.
@@ -298,11 +306,13 @@ class FeedsExecutable implements FeedsExecutableInterface, ContainerInjectionInt
       $this->createBatch($feed, static::PARSE)
         ->addOperation(static::PARSE, ['fetcher_result' => $fetcher_result])
         ->run();
+      return FALSE;
     }
     elseif ($feed->progressFetching() !== StateInterface::BATCH_COMPLETE) {
       $this->createBatch($feed, static::FETCH)
         ->addOperation(static::FETCH)
         ->run();
+      return FALSE;
     }
     elseif ($feed->progressCleaning() !== StateInterface::BATCH_COMPLETE) {
       $clean_state = $feed->getState(StateInterface::CLEAN);
@@ -315,9 +325,11 @@ class FeedsExecutable implements FeedsExecutableInterface, ContainerInjectionInt
       // Add a final item that finalizes the import.
       $batch->addOperation(static::FINISH, ['fetcher_result' => $fetcher_result]);
       $batch->run();
+      return FALSE;
     }
     else {
       $feed->finishImport();
+      return TRUE;
     }
   }
 

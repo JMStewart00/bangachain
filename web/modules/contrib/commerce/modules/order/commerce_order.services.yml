@@ -42,6 +42,7 @@ services:
     class: Drupal\commerce_order\OrderRefresh
     arguments: ['@entity_type.manager', '@commerce_price.chain_price_resolver', '@current_user', '@datetime.time']
     tags:
+      - { name: service_collector, call: addPreprocessor, tag: commerce_order.order_preprocessor }
       - { name: service_collector, call: addProcessor, tag: commerce_order.order_processor }
 
   commerce_order.availability_order_processor:

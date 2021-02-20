@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Test module for the entity API providing several entity types for testing.
+ * Hook implementations.
  */
 
 use Drupal\Core\Entity\EntityTypeInterface;

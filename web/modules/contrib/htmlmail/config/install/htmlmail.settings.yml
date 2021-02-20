@@ -1,9 +1,9 @@
-htmlmail_debug: false
-hmtlmail_theme: ''
-htmlmail_html_with_plain: false
-htmlmail_use_mime_mail: false
-htmlmail_postfilter: '0'
-htmlmail_test:
+debug: false
+theme: ''
+html_with_plain: false
+use_mail_mime: false
+postfilter: '0'
+test:
   to: 'user@example.com'
   subject: 'subject test'
   body:

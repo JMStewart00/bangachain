@@ -28,6 +28,7 @@ class InfiniteScroll extends SqlBase {
     if (!empty($text) && strpos($text, '@') !== FALSE) {
       $replacements = [
         '@next_page_count' => $this->getNumberItemsLeft(),
+        '@remaining_items_count' => $this->getRemainingNumberItems(),
         '@total' => (int) $this->getTotalItems(),
       ];
       $this->options['views_infinite_scroll']['button_text'] = strtr($text, $replacements);
@@ -36,6 +37,7 @@ class InfiniteScroll extends SqlBase {
     return [
       '#theme' => $this->themeFunctions(),
       '#options' => $this->options['views_infinite_scroll'],
+      '#view' => $this->view,
       '#attached' => [
         'library' => ['views_infinite_scroll/views-infinite-scroll'],
       ],
@@ -105,6 +107,7 @@ class InfiniteScroll extends SqlBase {
           '#theme' => 'item_list',
           '#items' => [
             '@next_page_count -- the next page record count',
+            '@remaining_items_count -- the remaining amount of results',
             '@total -- the total amount of results returned from the view',
           ],
           '#prefix' => $this->t('The following tokens are supported:'),
@@ -160,6 +163,20 @@ class InfiniteScroll extends SqlBase {
       return $next_page_count;
     }
     return $next_page_count;
+  }
+
+  /**
+   * Returns the number of items remaining over the next pages.
+   *
+   * @return int
+   *   The number of items over the remaining pages.
+   */
+  protected function getRemainingNumberItems() {
+    $items_per_page = (int) $this->view->getItemsPerPage();
+    $total = (int) $this->getTotalItems();
+    $current_page = (int) $this->getCurrentPage() + 1;
+
+    return $total - ($current_page * $items_per_page);
   }
 
 }

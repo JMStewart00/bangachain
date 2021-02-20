@@ -7,7 +7,7 @@ dependencies:
   - commerce:commerce_product
   - entity_print:entity_print
 
-# Information added by Drupal.org packaging script on 2021-01-09
-version: '8.x-2.23'
+# Information added by Drupal.org packaging script on 2021-02-08
+version: '8.x-2.24'
 project: 'commerce'
-datestamp: 1610219289
+datestamp: 1612808409

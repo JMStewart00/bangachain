@@ -35,7 +35,7 @@ class FeedAccessControlHandler extends EntityAccessControlHandler {
         return AccessResult::allowedIf($has_perm && $feed->isLocked());
 
       case 'delete':
-        return AccessResult::allowedIf($has_perm && !$feed->isLocked() && !$feed->getItemCount() && !$feed->isNew());
+        return AccessResult::allowedIf($has_perm && !$feed->isLocked() && !$feed->isNew());
 
       default:
         return AccessResult::neutral();

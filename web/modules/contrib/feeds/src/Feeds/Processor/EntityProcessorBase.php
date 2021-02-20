@@ -17,10 +17,13 @@ use Drupal\feeds\Entity\FeedType;
 use Drupal\feeds\Event\FeedsEvents;
 use Drupal\feeds\Exception\EmptyFeedException;
 use Drupal\feeds\Exception\EntityAccessException;
+use Drupal\feeds\Exception\MissingTargetException;
 use Drupal\feeds\Exception\ValidationException;
 use Drupal\feeds\FeedInterface;
 use Drupal\feeds\Feeds\Item\ItemInterface;
 use Drupal\feeds\Feeds\State\CleanStateInterface;
+use Drupal\feeds\FieldTargetDefinition;
+use Drupal\feeds\Plugin\Type\MappingPluginFormInterface;
 use Drupal\feeds\Plugin\Type\Processor\EntityProcessorInterface;
 use Drupal\feeds\Plugin\Type\Target\TargetInterface;
 use Drupal\feeds\Plugin\Type\Target\TranslatableTargetInterface;
@@ -35,7 +38,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * Creates entities from feed items.
  */
-abstract class EntityProcessorBase extends ProcessorBase implements EntityProcessorInterface, ContainerFactoryPluginInterface {
+abstract class EntityProcessorBase extends ProcessorBase implements EntityProcessorInterface, ContainerFactoryPluginInterface, MappingPluginFormInterface {
 
   /**
    * The entity type manager.
@@ -503,9 +506,38 @@ abstract class EntityProcessorBase extends ProcessorBase implements EntityProces
   }
 
   /**
+   * Checks if the entity exists already.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity to check.
+   *
+   * @return bool
+   *   True if the entity already exists, false otherwise.
+   */
+  protected function entityExists(EntityInterface $entity) {
+    if ($entity->id()) {
+      $result = $this->storageController
+        ->getQuery()
+        ->condition($this->entityType->getKey('id'), $entity->id())
+        ->execute();
+      return !empty($result);
+    }
+
+    return FALSE;
+  }
+
+  /**
    * {@inheritdoc}
    */
   protected function entityValidate(EntityInterface $entity) {
+    // Check if an entity with the same ID already exists if the given entity is
+    // new.
+    if ($entity->isNew() && $this->entityExists($entity)) {
+      throw new ValidationException($this->t('An entity with ID %id already exists.', [
+        '%id' => $entity->id(),
+      ]));
+    }
+
     $violations = $entity->validate();
     if (!count($violations)) {
       return;
@@ -588,8 +620,18 @@ abstract class EntityProcessorBase extends ProcessorBase implements EntityProces
 
     // If the uid was mapped directly, rather than by email or username, it
     // could be invalid.
-    if (!$account = $entity->getOwner()) {
-      throw new EntityAccessException($this->t('Invalid user mapped to %label.', ['%label' => $entity->label()]));
+    $account = $entity->getOwner();
+    if (!$account) {
+      $owner_id = $entity->getOwnerId();
+      if ($owner_id == 0) {
+        // We don't check access for anonymous users.
+        return;
+      }
+
+      throw new EntityAccessException($this->t('Invalid user with ID %uid mapped to %label.', [
+        '%uid' => $owner_id,
+        '%label' => $entity->label(),
+      ]));
     }
 
     // We don't check access for anonymous users.
@@ -857,6 +899,90 @@ abstract class EntityProcessorBase extends ProcessorBase implements EntityProces
   /**
    * {@inheritdoc}
    */
+  public function mappingFormAlter(array &$form, FormStateInterface $form_state) {
+    $added_target = $form_state->getValue('add_target');
+    if (!$added_target) {
+      // No target was added this time around. Abort.
+      return;
+    }
+
+    // When adding a mapping target to entity ID, tick 'unique' by default.
+    $id_key = $this->entityType->getKey('id');
+
+    $mappings = $this->feedType->getMappings();
+    $last_delta = array_keys($mappings)[count($mappings) - 1];
+    $mapping = end($mappings);
+
+    if ($mapping['target'] != $added_target) {
+      return;
+    }
+
+    $target_definition = $this->feedType->getTargetPlugin($last_delta)
+      ->getTargetDefinition();
+    if (!$target_definition instanceof FieldTargetDefinition) {
+      return;
+    }
+
+    /** @var \Drupal\Core\Field\FieldDefinitionInterface $field_definition */
+    $field_definition = $target_definition->getFieldDefinition();
+    if ($field_definition->getName() != $id_key) {
+      return;
+    }
+
+    // We made it! Set property as unique.
+    $form['mappings'][$last_delta]['unique'][$field_definition->getMainPropertyName()]['#default_value'] = TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function mappingFormValidate(array &$form, FormStateInterface $form_state) {
+    // Display a warning when mapping to entity ID and having that one not set
+    // as unique.
+    $id_key = $this->entityType->getKey('id');
+    foreach ($this->feedType->getMappings() as $delta => $mapping) {
+      try {
+        $target_definition = $this->feedType->getTargetPlugin($delta)
+          ->getTargetDefinition();
+        if (!$target_definition instanceof FieldTargetDefinition) {
+          continue;
+        }
+
+        /** @var \Drupal\Core\Field\FieldDefinitionInterface $field_definition */
+        $field_definition = $target_definition->getFieldDefinition();
+        if ($field_definition->getName() != $id_key) {
+          continue;
+        }
+
+        $is_unique = $form_state->getValue([
+          'mappings',
+          $delta,
+          'unique',
+          $field_definition->getMainPropertyName(),
+        ]);
+        if (!$is_unique) {
+          // Entity ID not set as unique. Display warning.
+          $this->messenger()->addWarning($this->t('When mapping to the entity ID (@name), it is recommended to set it as unique.', [
+            '@name' => $target_definition->getLabel(),
+          ]));
+        }
+      }
+      catch (MissingTargetException $e) {
+        // Ignore missing targets.
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function mappingFormSubmit(array &$form, FormStateInterface $form_state) {
+    // The entity processor doesn't have to do anything when mappings are saved.
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function isLocked() {
     if ($this->isLocked === NULL) {
       // Look for feeds.
@@ -954,6 +1080,12 @@ abstract class EntityProcessorBase extends ProcessorBase implements EntityProces
     // Set target values.
     foreach ($mappings as $delta => $mapping) {
       $plugin = $this->feedType->getTargetPlugin($delta);
+
+      // Skip immutable targets for which the entity already has a value.
+      if (!$plugin->isMutable() && !$plugin->isEmpty($feed, $entity, $mapping['target'])) {
+        continue;
+      }
+
       if (isset($field_values[$delta])) {
         $plugin->setTarget($feed, $entity, $mapping['target'], $field_values[$delta]);
       }
@@ -973,6 +1105,11 @@ abstract class EntityProcessorBase extends ProcessorBase implements EntityProces
    *   The property to clear on the entity.
    */
   protected function clearTarget(EntityInterface $entity, TargetInterface $target, $target_name) {
+    if (!$target->isMutable()) {
+      // Don't clear immutable targets.
+      return;
+    }
+
     $entity_target = $entity;
 
     // If the target implements TranslatableTargetInterface and has a language

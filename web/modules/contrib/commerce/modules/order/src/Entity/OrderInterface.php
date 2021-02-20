@@ -6,13 +6,14 @@ use Drupal\commerce_order\EntityAdjustableInterface;
 use Drupal\commerce_price\Price;
 use Drupal\commerce_store\Entity\EntityStoreInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\profile\Entity\ProfileInterface;
 use Drupal\user\UserInterface;
 
 /**
  * Defines the interface for orders.
  */
-interface OrderInterface extends ContentEntityInterface, EntityAdjustableInterface, EntityStoreInterface {
+interface OrderInterface extends ContentEntityInterface, EntityAdjustableInterface, EntityChangedInterface, EntityStoreInterface {
 
   // Refresh states.
   const REFRESH_ON_LOAD = 'refresh_on_load';
@@ -36,24 +37,6 @@ interface OrderInterface extends ContentEntityInterface, EntityAdjustableInterfa
    * @return $this
    */
   public function setOrderNumber($order_number);
-
-  /**
-   * Gets the order version identifier.
-   *
-   * @return int
-   *   Version identifier of the order.
-   */
-  public function getVersion();
-
-  /**
-   * Sets the order version identifier.
-   *
-   * @param int $version
-   *   Version identifier of the order.
-   *
-   * @return $this
-   */
-  public function setVersion($version);
 
   /**
    * Gets the customer user.
@@ -418,24 +401,6 @@ interface OrderInterface extends ContentEntityInterface, EntityAdjustableInterfa
    * @return $this
    */
   public function setCreatedTime($timestamp);
-
-  /**
-   * Gets the timestamp of the last entity change for the current translation.
-   *
-   * @return int
-   *   The timestamp of the last entity save operation.
-   */
-  public function getChangedTime();
-
-  /**
-   * Sets the timestamp of the last entity change for the current translation.
-   *
-   * @param int $timestamp
-   *   The timestamp of the last entity save operation.
-   *
-   * @return $this
-   */
-  public function setChangedTime($timestamp);
 
   /**
    * Gets the order placed timestamp.

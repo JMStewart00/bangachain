@@ -17,11 +17,35 @@ use Drupal\Core\Link;
  */
 class HtmlMailTestForm extends FormBase {
 
-  protected $mailManager;
-  protected $accountInterface;
-
   const KEY_NAME = 'test';
   const DEFAULT_MAIL = 'user@example.com';
+
+  /**
+   * The mail manager service.
+   *
+   * @var \Drupal\Core\Mail\MailManagerInterface
+   */
+  protected $mailManager;
+
+  /**
+   * The user account service.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $accountInterface;
+
+  /**
+   * HtmlMailTestForm constructor.
+   *
+   * @param \Drupal\Core\Mail\MailManagerInterface $mail_manager
+   *   The mail manager service.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The user account service.
+   */
+  public function __construct(MailManagerInterface $mail_manager, AccountInterface $account) {
+    $this->mailManager = $mail_manager;
+    $this->accountInterface = $account;
+  }
 
   /**
    * {@inheritdoc}
@@ -34,44 +58,20 @@ class HtmlMailTestForm extends FormBase {
   }
 
   /**
-   * HtmlMailTestForm constructor.
-   *
-   * @param \Drupal\Core\Mail\MailManagerInterface $mailManager
-   *   The mail manager service.
-   * @param \Drupal\Core\Session\AccountInterface $account
-   *   The user account service.
-   */
-  public function __construct(MailManagerInterface $mailManager, AccountInterface $account) {
-    $this->mailManager = $mailManager;
-    $this->accountInterface = $account;
-  }
-
-  /**
-   * Returns a unique string identifying the form.
-   *
-   * @return string
-   *   The unique string identifying the form.
+   * {@inheritdoc}
    */
   public function getFormId() {
     return 'htmlmail_test';
   }
 
   /**
-   * Form constructor.
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   *
-   * @return array
-   *   The form structure.
+   * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
 
     $config = $this->config('htmlmail.settings');
 
-    $defaults = $config->get('htmlmail_test');
+    $defaults = $config->get('test');
     if (empty($defaults)) {
       $defaults = [
         'to' => $config->get('site_mail') ?: self::DEFAULT_MAIL,
@@ -142,19 +142,14 @@ class HtmlMailTestForm extends FormBase {
     }
 
     if (empty($list)) {
-      $list['htmlmail'] = 'HTMLMailSystem';
+      $list['htmlmail'] = 'HtmlMailSystem';
     }
 
     return $list;
   }
 
   /**
-   * Form submission handler.
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
+   * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
 
@@ -168,7 +163,7 @@ class HtmlMailTestForm extends FormBase {
 
     // Set the defaults for reuse.
     $config = $this->configFactory()->getEditable('htmlmail.settings');
-    $config->set('htmlmail_test', $defaults)->save();
+    $config->set('test', $defaults)->save();
 
     // Send the email.
     $params = [
@@ -190,12 +185,12 @@ class HtmlMailTestForm extends FormBase {
 
     $result = $this->mailManager->mail(HtmlMailHelper::getModuleName(), self::KEY_NAME, $defaults['to'], $langcode, $params, NULL, TRUE);
     if ($result['result'] === TRUE) {
-      drupal_set_message($this->t('HTML Mail test message sent.'));
+      $this->messenger()->addMessage($this->t('HTML Mail test message sent.'));
     }
     else {
-      drupal_set_message($this->t('Something went wrong. Please check @logs for details.', [
+      $this->messenger()->addError($this->t('Something went wrong. Please check @logs for details.', [
         '@logs' => Link::createFromRoute($this->t('logs'), 'dblog.overview')->toString(),
-      ]), 'error');
+      ]));
     }
   }
 

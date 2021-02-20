@@ -98,6 +98,7 @@ class FeedForm extends ContentEntityForm {
       '#type' => 'checkbox',
       '#title' => $this->t('Active'),
       '#default_value' => $feed->isActive(),
+      '#description' => $this->t('Uncheck the above checkbox to disable periodic import for this feed.'),
     ];
 
     return $form;

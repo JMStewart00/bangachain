@@ -125,23 +125,6 @@ class OrderIntegrationTest extends OrderKernelTestBase implements ServiceModifie
   }
 
   /**
-   * Tests that a log is generated for the cancel transition.
-   */
-  public function testCancelLog() {
-    // Draft -> Canceled.
-    $this->order->getState()->applyTransitionById('cancel');
-    $this->order->save();
-
-    $logs = $this->logStorage->loadMultipleByEntity($this->order);
-    $this->assertEquals(1, count($logs));
-    $log = reset($logs);
-    $build = $this->logViewBuilder->view($log);
-    $this->render($build);
-
-    $this->assertText('The order was canceled.');
-  }
-
-  /**
    * Tests that a log is generated for place, validate, and fulfill transitions.
    */
   public function testPlaceValidateFulfillLogs() {
@@ -155,7 +138,7 @@ class OrderIntegrationTest extends OrderKernelTestBase implements ServiceModifie
     $build = $this->logViewBuilder->view($log);
     $this->render($build);
 
-    $this->assertText('The order was placed.');
+    $this->assertText('Order moved from Draft to Validation by the Place order transition.');
 
     // Placed -> Validated.
     $this->order->getState()->applyTransitionById('validate');
@@ -167,7 +150,7 @@ class OrderIntegrationTest extends OrderKernelTestBase implements ServiceModifie
     $build = $this->logViewBuilder->view($log);
     $this->render($build);
 
-    $this->assertText('The order was validated.');
+    $this->assertText('Order moved from Validation to Fulfillment by the Validate order transition.');
 
     // Validated -> Fulfilled.
     $this->order->getState()->applyTransitionById('fulfill');
@@ -179,7 +162,7 @@ class OrderIntegrationTest extends OrderKernelTestBase implements ServiceModifie
     $build = $this->logViewBuilder->view($log);
     $this->render($build);
 
-    $this->assertText('The order was fulfilled.');
+    $this->assertText('Order moved from Fulfillment to Completed by the Fulfill order transition.');
   }
 
   /**

@@ -283,10 +283,19 @@ final class DeprecationAnalyzer {
     $this->logger->notice('Processing %path.', ['%path' => $project_dir]);
 
     $output = [];
-    exec($this->binPath . '/phpstan analyse --error-format=json -c ' . $this->phpstanNeonPath . ' ' . $project_dir, $output);
+    $error_filename = $this->temporaryDirectory . '/phpstan_error_output';
+    $command = $this->binPath . '/phpstan analyse --error-format=json -c ' . $this->phpstanNeonPath . ' ' . $project_dir . ' 2> ' . $error_filename;
+    exec($command, $output);
+
     $json = json_decode(implode('', $output), TRUE);
     if (!isset($json['files']) || !is_array($json['files'])) {
-       $this->logger->error('PHPStan failed: %results', ['%results' => print_r($output, TRUE)]);
+       $stdout = trim(implode('', $output)) ?: 'Empty.';
+       $stderr = trim(file_get_contents($error_filename)) ?: 'Empty.';
+       $formatted_error =
+         "<h6>PHPStan command failed:</h6> <p>" . $command .
+         "</p> <h6>Command output:</h6> <p>" . $stdout .
+         "</p> <h6>Command error:</h6> <p>" . $stderr . '</p>';
+       $this->logger->error('%phpstan_fail', ['%phpstan_fail' => strip_tags($formatted_error)]);
        $json = [
          'files' => [
            // Add a failure message with the nonexistent 'PHPStan failed'
@@ -294,7 +303,7 @@ final class DeprecationAnalyzer {
            'PHPStan failed' => [
              'messages' => [
                [
-                 'message' => 'PHP API deprecations cannot be checked. Reason: ' . print_r($output, TRUE),
+                 'message' => $formatted_error,
                  'line' => 0,
                ],
              ],

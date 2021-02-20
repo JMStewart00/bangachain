@@ -147,7 +147,7 @@ class PaymentInformation extends CheckoutPaneBase {
    * {@inheritdoc}
    */
   public function buildPaneForm(array $pane_form, FormStateInterface $form_state, array &$complete_form) {
-    if ($this->order->isPaid() || $this->order->getTotalPrice()->isZero()) {
+    if (!$this->order->getTotalPrice() || $this->order->isPaid() || $this->order->getTotalPrice()->isZero()) {
       // No payment is needed if the order is free or has already been paid.
       // In that case, collect just the billing information.
       $pane_form['#title'] = $this->t('Billing information');
@@ -339,7 +339,7 @@ class PaymentInformation extends CheckoutPaneBase {
    * {@inheritdoc}
    */
   public function validatePaneForm(array &$pane_form, FormStateInterface $form_state, array &$complete_form) {
-    if ($this->order->isPaid() || $this->order->getTotalPrice()->isZero()) {
+    if (!$this->order->getTotalPrice() || $this->order->isPaid() || $this->order->getTotalPrice()->isZero()) {
       return;
     }
 
@@ -353,7 +353,7 @@ class PaymentInformation extends CheckoutPaneBase {
    * {@inheritdoc}
    */
   public function submitPaneForm(array &$pane_form, FormStateInterface $form_state, array &$complete_form) {
-    if (isset($pane_form['billing_information'])) {
+    if (isset($pane_form['billing_information']['#inline_form'])) {
       /** @var \Drupal\commerce\Plugin\Commerce\InlineForm\EntityInlineFormInterface $inline_form */
       $inline_form = $pane_form['billing_information']['#inline_form'];
       /** @var \Drupal\profile\Entity\ProfileInterface $billing_profile */

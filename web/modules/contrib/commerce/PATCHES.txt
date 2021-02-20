@@ -5,7 +5,3 @@ Promotion without coupons is always applied
 Source: https://www.drupal.org/files/issues/promotion_without-2884888-12.patch
 
 
-Implement optimistic locking for orders
-Source: https://www.drupal.org/files/issues/2020-11-12/2656818-56.patch
-
-

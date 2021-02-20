@@ -54,7 +54,7 @@ function responsive_favicons_uninstall() {
   // Remove favicon files
   $config = \Drupal::config('responsive_favicons.settings');
   if (!empty($config->get('path'))) {
-    file_unmanaged_delete_recursive('public://' . $config->get('path'));
+    \Drupal::service('file_system')->deleteRecursive('public://' . $config->get('path'));
   }
 }
 

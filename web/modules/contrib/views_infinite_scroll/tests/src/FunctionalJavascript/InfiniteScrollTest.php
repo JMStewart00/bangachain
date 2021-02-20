@@ -105,6 +105,16 @@ class InfiniteScrollTest extends WebDriverTestBase {
     $this->getSession()->getPage()->clickLink('Load 5 more of 11');
     $this->assertSession()->waitForElement('css', '.node--type-page:nth-child(7)');
     $this->assertTotalNodes(11);
+
+    // Test @remaining_items_count token.
+    $this->createView('remaining-items-count', [
+      'button_text' => 'Load @next_page_count more of @remaining_items_count remaining',
+      'automatically_load_content' => FALSE,
+    ]);
+    $this->drupalGet('remaining-items-count');
+    $this->getSession()->getPage()->clickLink('Load 3 more of 8 remaining');
+    $this->assertSession()->waitForElement('css', '.node--type-page:nth-child(7)');
+    $this->assertTotalNodes(6);
   }
 
   /**

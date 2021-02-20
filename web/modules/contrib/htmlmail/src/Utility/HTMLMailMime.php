@@ -8,19 +8,13 @@ use Drupal\Component\Utility\UrlHelper;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface;
 
 /**
- * @file
- * Provides the MailMIME class for creating MIME-formatted email messages.
- */
-
-
-/**
- * The MailMIME class is used to create MIME email messages.
+ * Provides the HtmlMailMime class for creating MIME-formatted email messages.
  *
- * The MailMIME class extends the PEAR Mail_Mime class as follows:
+ * The HtmlMailMime class extends the PEAR \Mail_mime class as follows:
  * - All errors are routed to logger.
  * - Content-IDs are assigned based on filename, not the current timestamp.
- * - Only the first call to MailMIME::addHTMLImage() for a given filename will
- *   attach the file.  Subsequent calls with the same filename will return
+ * - Only the first call to HtmlMailMime::addHTMLImage() for a given filename
+ *   will attach the file.  Subsequent calls with the same filename will return
  *   TRUE for success but will not attach additional copies.
  * - Image references within the HTML part are auto-detected and converted
  *   to inline attachments, as long as their URLs can be resolved to files
@@ -30,24 +24,59 @@ use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface;
  * @see http://pear.php.net/package/Mail_mime
  */
 
-require_once 'Mail/mime.php';
-require_once 'Mail/mimeDecode.php';
-
 /**
- * Class HTMLMailMime.
+ * Class HtmlMailMime.
  *
  * @package Drupal\htmlmail\Utility
  */
-class HTMLMailMime extends \Mail_mime {
+class HtmlMailMime extends \Mail_mime {
+
+  /**
+   * The logger service.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
+   */
+  protected static $logger;
+
+  /**
+   * The mime type guesser service.
+   *
+   * @var \Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface
+   */
+  protected static $mimeTypeGuesser;
+
+  /**
+   * The filesystem service.
+   *
+   * @var \Drupal\Core\File\FileSystemInterface
+   */
+  protected static $fileSystem;
+
   /**
    * Holds attached content-ids to to avoid attaching the same file twice.
    *
    * @var array
    */
   protected $cids = [];
-  protected static $logger;
-  protected static $mimeTypeGuesser;
-  protected static $fileSystem;
+
+  /**
+   * HtmlMailMime constructor.
+   *
+   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger
+   *   The logger service.
+   * @param \Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface $mime_type_guesser
+   *   The mime type service.
+   * @param \Drupal\Core\File\FileSystemInterface $file_system
+   *   The filesystem service.
+   * @param array $params
+   *   The params.
+   */
+  public function __construct(LoggerChannelFactoryInterface $logger, MimeTypeGuesserInterface $mime_type_guesser, FileSystemInterface $file_system, array $params = []) {
+    self::$logger = $logger;
+    self::$mimeTypeGuesser = $mime_type_guesser;
+    self::$fileSystem = $file_system;
+    parent::__construct($params);
+  }
 
   /**
    * Holds parameters used for building the formatted message.
@@ -91,15 +120,15 @@ class HTMLMailMime extends \Mail_mime {
   ];
 
   /**
-   * Routes PEAR_Error objects to logger.
+   * Routes \PEAR_Error objects to logger.
    *
-   * Passes PEAR_Error objects to logger, and returns FALSE.
+   * Passes \PEAR_Error objects to logger, and returns FALSE.
    *
    * @param object $data
-   *   The result of another function that may return a PEAR_Error object.
+   *   The result of another function that may return a \PEAR_Error object.
    *
-   * @return bool
-   *   FALSE if $data is a PEAR_Error object; otherwise $data.
+   * @return bool|object
+   *   FALSE if $data is a \PEAR_Error object; otherwise $data.
    */
   protected static function &successful(&$data) {
     if (\PEAR::isError($data)) {
@@ -112,25 +141,6 @@ class HTMLMailMime extends \Mail_mime {
       $data = FALSE;
     }
     return $data;
-  }
-
-  /**
-   * HTMLMailMime constructor.
-   *
-   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger
-   *   The logger service.
-   * @param \Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface $mimeTypeGuesser
-   *   The mime type service.
-   * @param \Drupal\Core\File\FileSystemInterface $fileSystem
-   *   The filesystem service.
-   * @param array $params
-   *   The params.
-   */
-  public function __construct(LoggerChannelFactoryInterface $logger, MimeTypeGuesserInterface $mimeTypeGuesser, FileSystemInterface $fileSystem, array $params = []) {
-    self::$logger = $logger;
-    self::$mimeTypeGuesser = $mimeTypeGuesser;
-    self::$fileSystem = $fileSystem;
-    parent::__construct($params);
   }
 
   /**
@@ -280,7 +290,7 @@ class HTMLMailMime extends \Mail_mime {
    *   (optional) The value to use for the Content-Description header.
    * @param string $header_encoding
    *   (optional) The character set to use for this part's MIME headers.
-   * @param array $add_header
+   * @param mixed $add_header
    *   (optional) Extra headers.
    *
    * @return bool
@@ -300,7 +310,7 @@ class HTMLMailMime extends \Mail_mime {
     $filename_encoding = NULL,
     $description = '',
     $header_encoding = NULL,
-    array $add_header = []
+    $add_header = []
   ) {
     // @todo Set content_type with mimedetect if possible.
     return self::successful(
@@ -311,7 +321,7 @@ class HTMLMailMime extends \Mail_mime {
   }
 
   /**
-   * Returns the complete e-mail, ready to send.
+   * Returns the complete email, ready to send.
    *
    * @param string $separation
    *   (optional) The string used to separate header and body parts.
@@ -333,7 +343,7 @@ class HTMLMailMime extends \Mail_mime {
   }
 
   /**
-   * Appends the complete e-mail to a file.
+   * Appends the complete email to a file.
    *
    * @param string $filename
    *   The output file location.
@@ -355,7 +365,7 @@ class HTMLMailMime extends \Mail_mime {
   }
 
   /**
-   * Appends the complete e-mail body to a file.
+   * Appends the complete email body to a file.
    *
    * @param string $filename
    *   The output file location.
@@ -395,7 +405,7 @@ class HTMLMailMime extends \Mail_mime {
    *
    * @param string $params
    *   (optional) An associative array used to override the
-   *   HTMLMailMime::_build_params values for building this message.
+   *   HtmlMailMime::_build_params values for building this message.
    * @param string $filename
    *   (optional) The filename where the message data should be written. The
    *   default is to return the message data as a string.
@@ -449,7 +459,7 @@ class HTMLMailMime extends \Mail_mime {
   }
 
   /**
-   * Parse a complete message and return a MailMIME object.
+   * Parse a complete message and return a HtmlMailMime object.
    *
    * @param string $message
    *   The complete message, including headers and body.
@@ -460,9 +470,9 @@ class HTMLMailMime extends \Mail_mime {
    * @param \Drupal\Core\File\FileSystemInterface $fileSystem
    *   The file system service.
    *
-   * @return bool|\Drupal\htmlmail\Utility\HTMLMailMime
-   *   FALSE if an error occured; otherwise a new MailMIME object containing
-   *   the parsed message and its attachments, if any.
+   * @return bool|\Drupal\htmlmail\Utility\HtmlMailMime
+   *   FALSE if an error occurred; otherwise a new HtmlMailMime object
+   *   containing the parsed message and its attachments, if any.
    */
   public static function &parse(
     $message,
@@ -482,7 +492,7 @@ class HTMLMailMime extends \Mail_mime {
     if (!self::successful($decoded)) {
       return FALSE;
     }
-    $parsed = new HTMLMailMime($logger, $mimeTypeGuesser, $fileSystem);
+    $parsed = new HtmlMailMime($logger, $mimeTypeGuesser, $fileSystem);
     self::parseDecoded($parsed, $decoded);
     return $parsed;
   }
@@ -510,15 +520,15 @@ class HTMLMailMime extends \Mail_mime {
   }
 
   /**
-   * Recursively copies message parts into a MailMIME object.
+   * Recursively copies message parts into a HtmlMailMime object.
    *
-   * Copies the MIME parts from an object returned by Mail_mimeDecode->decode()
-   * into a MailMIME object, including subparts of any 'multipart' parts.
+   * Copies the MIME parts from an object returned by \Mail_mimeDecode->decode()
+   * into a HtmlMailMime object, including subparts of any 'multipart' parts.
    *
-   * @param \Drupal\htmlmail\Utility\HTMLMailMime $parsed
-   *   The target MailMIME object.
+   * @param \Drupal\htmlmail\Utility\HtmlMailMime $parsed
+   *   The target HtmlMailMime object.
    * @param object $decoded
-   *   The object returned by Mail_mimeDecode->decode() whose MIME parts
+   *   The object returned by \Mail_mimeDecode->decode() whose MIME parts
    *   are being copied.
    * @param string $parent_subtype
    *   The content-type subtype of the parent multipart MIME part.  This should
@@ -526,7 +536,7 @@ class HTMLMailMime extends \Mail_mime {
    *   string, signifying the root of the MIME tree.
    */
   protected static function parseDecoded(
-    HTMLMailMime &$parsed,
+    HtmlMailMime &$parsed,
     &$decoded,
     $parent_subtype = ''
   ) {
@@ -585,7 +595,7 @@ class HTMLMailMime extends \Mail_mime {
    * Returns an array with keys changed to match the case of email headers.
    *
    * @param string|array $input
-   *   The headers to be changed, either as a MAIL_MIME_CRLF-delimited string
+   *   The headers to be changed, either as a \Mail_mime CRLF-delimited string
    *   or as an associative array of (name => value) pairs.
    *
    * @return array

@@ -47,7 +47,10 @@ abstract class FieldTargetBase extends TargetBase implements ConfigurableTargetI
     $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions($processor->entityType(), $processor->bundle());
 
     foreach ($field_definitions as $id => $field_definition) {
-      if ($field_definition->isReadOnly() || $id === $processor->bundleKey()) {
+      if (isset($targets[$id])) {
+        continue;
+      }
+      if ($id === $processor->bundleKey()) {
         continue;
       }
       if (in_array($field_definition->getType(), $definition['field_types'])) {
@@ -97,6 +100,20 @@ abstract class FieldTargetBase extends TargetBase implements ConfigurableTargetI
         $item_list->setValue($values);
       }
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isMutable() {
+    return !$this->targetDefinition->getFieldDefinition()->isReadOnly();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isEmpty(FeedInterface $feed, EntityInterface $entity, $field_name) {
+    return $entity->get($field_name)->isEmpty();
   }
 
   /**
@@ -302,12 +319,18 @@ abstract class FieldTargetBase extends TargetBase implements ConfigurableTargetI
    */
   public function getSummary() {
     $summary = [];
+
+    if (!$this->isMutable()) {
+      $summary[] = $this->t('Read only');
+    }
+
     if ($this->isTargetTranslatable()) {
       $language = $this->getLanguageManager()->getLanguage($this->configuration['language']);
       if ($language instanceof LanguageInterface) {
         $summary[] = $this->t('Language: @language', ['@language' => $language->getName()]);
       }
     }
+
     return $summary;
   }
 

@@ -119,21 +119,21 @@ class OrderListBuilder extends EntityListBuilder {
       $operations['reassign'] = [
         'title' => $this->t('Reassign'),
         'weight' => 20,
-        'url' => $entity->toUrl('reassign-form'),
+        'url' => $this->ensureDestination($entity->toUrl('reassign-form')),
       ];
     }
     if ($entity->access('unlock')) {
       $operations['unlock'] = [
         'title' => $this->t('Unlock'),
         'weight' => 25,
-        'url' => $entity->toUrl('unlock-form'),
+        'url' => $this->ensureDestination($entity->toUrl('unlock-form')),
       ];
     }
     if ($entity->access('resend_receipt')) {
       $operations['resend_receipt'] = [
         'title' => $this->t('Resend receipt'),
         'weight' => 20,
-        'url' => $entity->toUrl('resend-receipt-form'),
+        'url' => $this->ensureDestination($entity->toUrl('resend-receipt-form')),
       ];
     }
 

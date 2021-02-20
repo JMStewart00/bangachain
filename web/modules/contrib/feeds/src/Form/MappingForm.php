@@ -7,7 +7,9 @@ use Drupal\Core\Config\Entity\ConfigEntityStorageInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
+use Drupal\feeds\Exception\MissingTargetException;
 use Drupal\feeds\FeedTypeInterface;
+use Drupal\feeds\MissingTargetDefinition;
 use Drupal\feeds\Plugin\Type\MappingPluginFormInterface;
 use Drupal\feeds\Plugin\Type\Target\ConfigurableTargetInterface;
 use Drupal\feeds\Plugin\Type\Target\TargetInterface;
@@ -198,6 +200,28 @@ class MappingForm extends FormBase {
    *   The form structure for a single mapping row.
    */
   protected function buildRow(array $form, FormStateInterface $form_state, array $mapping, $delta) {
+    try {
+      /** @var \Drupal\feeds\Plugin\Type\TargetInterface $plugin */
+      $plugin = $this->feedType->getTargetPlugin($delta);
+    }
+    catch (MissingTargetException $e) {
+      // The target plugin is missing!
+      $this->messenger()->addWarning($e->getMessage());
+      watchdog_exception('feeds', $e);
+      $plugin = NULL;
+    }
+
+    // Check if the target exists.
+    if (!empty($this->targets[$mapping['target']])) {
+      /** @var \Drupal\feeds\TargetDefinitionInterface $target_definition */
+      $target_definition = $this->targets[$mapping['target']];
+    }
+    else {
+      // The target is missing! Create a placeholder target definition, so that
+      // the mapping row is still being displayed.
+      $target_definition = MissingTargetDefinition::create();
+    }
+
     $ajax_delta = -1;
     $triggering_element = (array) $form_state->getTriggeringElement() + ['#op' => ''];
     if ($triggering_element['#op'] === 'configure') {
@@ -209,10 +233,16 @@ class MappingForm extends FormBase {
     $row['targets'] = [
       '#theme' => 'item_list',
       '#items' => [],
+      '#attributes' => ['class' => ['target']],
     ];
 
+    if ($target_definition instanceof MissingTargetDefinition) {
+      $row['#attributes']['class'][] = 'missing-target';
+      $row['#attributes']['class'][] = 'color-error';
+    }
+
     foreach ($mapping['map'] as $column => $source) {
-      if (!$this->targets[$mapping['target']]->hasProperty($column)) {
+      if (!$target_definition->hasProperty($column)) {
         unset($mapping['map'][$column]);
         continue;
       }
@@ -254,13 +284,13 @@ class MappingForm extends FormBase {
         ],
       ];
 
-      $label = Html::escape($this->targets[$mapping['target']]->getLabel() . ' (' . $mapping['target'] . ')');
+      $label = Html::escape($target_definition->getLabel() . ' (' . $mapping['target'] . ')');
 
       if (count($mapping['map']) > 1) {
-        $desc = $this->targets[$mapping['target']]->getPropertyLabel($column);
+        $desc = $target_definition->getPropertyLabel($column);
       }
       else {
-        $desc = $this->targets[$mapping['target']]->getDescription();
+        $desc = $target_definition->getDescription();
       }
       if ($desc) {
         $label .= ': ' . $desc;
@@ -280,7 +310,6 @@ class MappingForm extends FormBase {
 
     $row['settings']['#markup'] = '';
     $row['configure']['#markup'] = '';
-    $plugin = $this->feedType->getTargetPlugin($delta);
     if ($plugin && $this->pluginHasSettingsForm($plugin, $form_state)) {
       if ($delta == $ajax_delta) {
         $row['settings'] = $plugin->buildConfigurationForm([], $form_state);
@@ -315,11 +344,19 @@ class MappingForm extends FormBase {
         ];
       }
     }
+    elseif ($plugin instanceof ConfigurableTargetInterface) {
+      $summary = $this->buildSummary($plugin);
+      if (!empty($summary)) {
+        $row['settings'] = [
+          '#parents' => ['config_summary', $delta],
+        ] + $this->buildSummary($plugin);
+      }
+    }
 
     $mappings = $this->feedType->getMappings();
 
     foreach ($mapping['map'] as $column => $source) {
-      if ($this->targets[$mapping['target']]->isUnique($column)) {
+      if ($target_definition->isUnique($column)) {
         $row['unique'][$column] = [
           '#title' => $this->t('Unique'),
           '#type' => 'checkbox',

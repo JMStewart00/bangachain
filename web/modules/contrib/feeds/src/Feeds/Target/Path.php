@@ -3,9 +3,7 @@
 namespace Drupal\feeds\Feeds\Target;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\feeds\FeedTypeInterface;
 use Drupal\feeds\FieldTargetDefinition;
-use Drupal\feeds\Plugin\Type\Processor\EntityProcessorInterface;
 use Drupal\feeds\Plugin\Type\Target\FieldTargetBase;
 
 /**
@@ -20,45 +18,45 @@ class Path extends FieldTargetBase {
 
   /**
    * {@inheritdoc}
-   *
-   * This method is overridden to make the target available even when the
-   * pathauto module is enabled.
-   */
-  public static function targets(array &$targets, FeedTypeInterface $feed_type, array $definition) {
-    $processor = $feed_type->getProcessor();
-
-    if (!$processor instanceof EntityProcessorInterface) {
-      return $targets;
-    }
-
-    $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions($processor->entityType(), $processor->bundle());
-
-    foreach ($field_definitions as $id => $field_definition) {
-      if ($id === $processor->bundleKey()) {
-        continue;
-      }
-      if (in_array($field_definition->getType(), $definition['field_types'])) {
-        if ($target = static::prepareTarget($field_definition)) {
-          $target->setPluginId($definition['id']);
-          $targets[$id] = $target;
-        }
-      }
-    }
-  }
-
-  /**
-   * {@inheritdoc}
    */
   protected static function prepareTarget(FieldDefinitionInterface $field_definition) {
-    return FieldTargetDefinition::createFromFieldDefinition($field_definition)
-      ->addProperty('alias');
+    $target_definition = FieldTargetDefinition::createFromFieldDefinition($field_definition);
+    $target_definition->addProperty('alias');
+
+    if ($field_definition->getFieldStorageDefinition()->getPropertyDefinition('pathauto')) {
+      $target_definition->addProperty('pathauto');
+    }
+
+    return $target_definition;
   }
 
   /**
    * {@inheritdoc}
    */
   protected function prepareValue($delta, array &$values) {
+    if (array_key_exists('pathauto', $values)) {
+      $values['pathauto'] = (int) (bool) $values['pathauto'];
+    }
+    else {
+      $values['pathauto'] = 0;
+    }
+
     $values['alias'] = trim($values['alias']);
+
+    // Check if the alias is conform the regex.
+    if (strlen($values['alias']) && !preg_match('/^\//i', $values['alias'])) {
+      // Correct the alias by adding a slash.
+      $values['alias'] = '/' . $values['alias'];
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isMutable() {
+    // The path field is set to "computed", which evaluates to "read-only".
+    // Ignore the fact that paths are read-only and mark it as mutable.
+    return TRUE;
   }
 
 }

@@ -204,4 +204,12 @@ trait FeedsCommonTrait {
     }
   }
 
+  /**
+   * Prints messages useful for debugging.
+   */
+  protected function printMessages() {
+    $messages = \Drupal::messenger()->all();
+    print_r($messages);
+  }
+
 }

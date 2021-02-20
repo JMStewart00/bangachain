@@ -74,8 +74,11 @@ class SyndicationParser extends PluginBase implements ParserInterface {
         $item->set('author_name', $author['name'])
           ->set('author_email', $author['email']);
       }
-      if ($date = $entry->getDateModified()) {
+      if ($date = $entry->getDateCreated()) {
         $item->set('timestamp', $date->getTimestamp());
+      }
+      if ($date = $entry->getDateModified()) {
+        $item->set('updated', $date->getTimestamp());
       }
 
       if ($point = $entry->getGeoPoint()) {
@@ -151,6 +154,11 @@ class SyndicationParser extends PluginBase implements ParserInterface {
         'label' => $this->t('Published date'),
         'description' => $this->t('Published date as UNIX time GMT of the feed item.'),
         'suggestions' => ['targets' => ['created']],
+      ],
+      'updated' => [
+        'label' => $this->t('Updated date'),
+        'description' => $this->t('Updated date as UNIX time GMT of the feed item.'),
+        'suggestions' => ['targets' => ['changed']],
       ],
       'url' => [
         'label' => $this->t('Item URL (link)'),

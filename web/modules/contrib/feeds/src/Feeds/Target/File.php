@@ -237,6 +237,8 @@ class File extends EntityReference {
    */
   protected function getFileName($url) {
     $filename = trim(\Drupal::service('file_system')->basename($url), " \t\n\r\0\x0B.");
+    // Remove query string from file name, if it has one.
+    list($filename) = explode('?', $filename);
     $extension = substr($filename, strrpos($filename, '.') + 1);
 
     if (!preg_grep('/' . $extension . '/i', $this->fileExtensions)) {

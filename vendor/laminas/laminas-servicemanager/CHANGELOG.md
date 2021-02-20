@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 3.6.4 - 2021-02-03
+
+
+-----
+
+### Release Notes for [3.6.4](https://github.com/laminas/laminas-servicemanager/milestone/12)
+
+3.6.x bugfix release (patch)
+
+### 3.6.4
+
+- Total issues resolved: **1**
+- Total pull requests resolved: **1**
+- Total contributors: **1**
+
+#### Bug
+
+ - [81: Bugfix: has alias causing endless loop](https://github.com/laminas/laminas-servicemanager/pull/81) thanks to @boesing
+
 ## 3.6.3 - 2021-01-25
 
 

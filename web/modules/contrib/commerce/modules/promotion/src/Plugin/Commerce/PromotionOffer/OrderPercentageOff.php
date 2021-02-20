@@ -33,8 +33,9 @@ class OrderPercentageOff extends OrderPromotionOfferBase {
     $amount = $order->getSubtotalPrice()->multiply($percentage);
     $amount = $this->rounder->round($amount);
 
-    if ($amount->greaterThan($order->getTotalPrice())) {
-      $amount = $order->getTotalPrice();
+    $total_price = $order->getTotalPrice();
+    if ($total_price && $amount->greaterThan($total_price)) {
+      $amount = $total_price;
     }
     // Skip applying the promotion if there's no amount to discount.
     if ($amount->isZero()) {

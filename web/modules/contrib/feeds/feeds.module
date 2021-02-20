@@ -32,14 +32,17 @@ function feeds_help($route_name, RouteMatchInterface $route_match) {
         ],
       ];
 
-      return new FormattableMarkup('<p>@help1</p><p>@help2</p>', [
+      return new FormattableMarkup('<p>@help1</p><p>@help2</p><p>@help3</p>', [
         '@help1' => t('Define which elements of a single item of a feed (= %sources_label) map to which content pieces in Drupal (= %targets_label). To avoid importing duplicates, make sure that at least one definition has an %unique_target_label. An unique target means that a value for a target can only occur once. For example, only one item with the URL %example_url can exist.', [
           '%sources_label' => t('Sources'),
           '%targets_label' => t('Targets'),
           '%unique_target_label' => t('Unique target'),
           '%example_url' => 'http://example.com/content/1',
         ]),
-        '@help2' => t('See the @doc_link for more information.', [
+        '@help2' => t('On %read_only_label targets a value can only be set the first time.', [
+          '%read_only_label' => t('Read only'),
+        ]),
+        '@help3' => t('See the @doc_link for more information.', [
           '@doc_link' => \Drupal::service('renderer')->renderRoot($doc_link),
         ]),
       ]);
@@ -121,6 +124,22 @@ function feeds_theme() {
       'template' => 'feeds_feed',
     ],
   ];
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function feeds_theme_suggestions_feeds_feed(array $variables) {
+  $suggestions = [];
+  $entity = $variables['elements']['#feeds_feed'];
+  $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
+
+  $suggestions[] = 'feeds_feed__' . $sanitized_view_mode;
+  $suggestions[] = 'feeds_feed__' . $entity->bundle();
+  $suggestions[] = 'feeds_feed__' . $entity->bundle() . '__' . $sanitized_view_mode;
+  $suggestions[] = 'feeds_feed__' . $entity->id();
+  $suggestions[] = 'feeds_feed__' . $entity->id() . '__' . $sanitized_view_mode;
+  return $suggestions;
 }
 
 /**

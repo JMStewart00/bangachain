@@ -32,11 +32,11 @@ function htmlmail_theme($existing, $type, $theme, $path) {
   $items = [];
   $module_path = \Drupal::service('module_handler')->getModule(HtmlMailHelper::HTMLMAIL_MODULE_NAME)->getPath();
   $pattern = '/^htmlmail.*\.html\.twig$/';
-  $files = file_scan_directory('modules', $pattern, ['key' => 'name']);
+  $files = \Drupal::service('file_system')->scanDirectory('modules', $pattern, ['key' => 'name']);
   if ($theme = HtmlMailHelper::getSelectedTheme()) {
     $theme_path = \Drupal::service('theme_handler')->getTheme($theme)->getPath();
     $files = array_merge($files,
-      file_scan_directory($theme_path, $pattern, ['key' => 'name'])
+      \Drupal::service('file_system')->scanDirectory($theme_path, $pattern, ['key' => 'name'])
     );
   }
   else {
@@ -66,15 +66,16 @@ function htmlmail_form_user_form_alter(&$form, FormStateInterface $form_state, $
     return;
   }
 
+  $user_data_name = HtmlMailHelper::HTMLMAIL_USER_DATA_NAME;
   $account_data_plaintext = \Drupal::service('user.data')->get(
     HtmlMailHelper::HTMLMAIL_MODULE_NAME,
     $form_state->getFormObject()->getEntity()->id(),
-    'htmlmail_plaintext'
+    $user_data_name
   );
 
   $form['account']['mail'] = [
     'mail' => $form['account']['mail'],
-    'htmlmail_plaintext' => [
+    $user_data_name => [
       '#type' => 'checkbox',
       '#title' => t('Plaintext-only emails'),
       '#default_value' => empty($account_data_plaintext) ? 0 : 1,
@@ -110,7 +111,7 @@ function template_preprocess_htmlmail(array &$variables) {
   $module_handler = \Drupal::service('module_handler');
   $theme_handler = \Drupal::service('theme_handler');
 
-  $variables['debug'] = $html_settings->get('htmlmail_debug') ?: 0;
+  $variables['debug'] = $html_settings->get('debug') ?: FALSE;
   $variables['theme'] = HtmlMailHelper::getSelectedTheme($variables);
   $variables['module_path'] = $module_handler->getModule('htmlmail')->getPath() . '/templates';
   if (empty($variables['theme'])) {
@@ -139,7 +140,7 @@ function template_preprocess_htmlmail(array &$variables) {
   $variables['message_template_exists'] = file_exists("{$variables['theme_path']}/{$variables['message_template']}");
   $variables['module_template_exists'] = file_exists("{$variables['theme_path']}/{$variables['module_template']}");
 
-  $variables['pre_formatted_params'] = print_r($params, 1);
+  $variables['pre_formatted_params'] = print_r($params, TRUE);
 }
 
 /**
@@ -165,7 +166,7 @@ function htmlmail_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('<a target="blank" href=":htmlmail">HTML Mail</a> lets you theme your messages the same way you theme the rest of your website. For more information, see the <a href=":online_documentation">online documentation for the HTML Mail project.</a>',
           [
-            ':htmlmail' => 'http://drupal.org/project/htmlmail',
+            ':htmlmail' => 'https://www.drupal.org/project/htmlmail',
             ':online_documentation' => 'https://www.drupal.org/docs/8/modules/html-mail',
           ]
         ) . '</p>';

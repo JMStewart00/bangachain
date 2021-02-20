@@ -190,6 +190,8 @@ class CheckoutOrderTest extends CommerceBrowserTestBase {
     $this->assertSession()->pageTextContains('0 items');
 
     $order = Order::load(1);
+    // Confirm that the checkout completion event was fired.
+    $this->assertTrue(TRUE, $order->getData('checkout_completed'));
     // Confirm that the profile hasn't been copied to the address book yet.
     $billing_profile = $order->getBillingProfile();
     $this->assertTrue($billing_profile->getData('copy_to_address_book'));
@@ -253,6 +255,8 @@ class CheckoutOrderTest extends CommerceBrowserTestBase {
     $this->assertSession()->pageTextContains('0 items');
 
     $order = Order::load(2);
+    // Confirm that the checkout completion event was fired.
+    $this->assertTrue(TRUE, $order->getData('checkout_completed'));
     // Confirm that the billing profile has the expected address.
     $expected_address += ['country_code' => 'US'];
     $billing_profile = $order->getBillingProfile();
@@ -787,7 +791,41 @@ class CheckoutOrderTest extends CommerceBrowserTestBase {
     $this->assertSession()->pageTextNotContains("Your order number is 1. Click here you view your order: {$expected_order_url->toString()}.");
     $this->assertSession()->pageTextContains('Your order number is 1.');
     $this->assertSession()->pageTextContains("Click here you view your order: {$expected_order_url->toString()}.");
+  }
 
+  /**
+   * Tests the checkout redirect route.
+   */
+  public function testCheckoutRedirect() {
+    // Create a product that belongs to a different store to test the redirect
+    // to the cart page.
+    $another_store = $this->createStore();
+    $variation = $this->createEntity('commerce_product_variation', [
+      'type' => 'default',
+      'sku' => strtolower($this->randomMachineName()),
+      'price' => [
+        'number' => 9.99,
+        'currency_code' => 'USD',
+      ],
+    ]);
+    /** @var \Drupal\commerce_product\Entity\ProductInterface $product */
+    $product2 = $this->createEntity('commerce_product', [
+      'type' => 'default',
+      'title' => 'My product',
+      'variations' => [$variation],
+      'stores' => [$another_store],
+    ]);
+    $this->drupalGet('checkout');
+    $this->assertSession()->pageTextContains('Add some items to your cart and then try checking out.');
+    $this->assertSession()->pageTextContains('Shopping cart');
+    $this->drupalGet($this->product->toUrl());
+    $this->submitForm([], 'Add to cart');
+    $this->drupalGet('checkout');
+    $this->assertSession()->elementContains('css', 'h1.page-title', 'Order information');
+    $this->drupalGet($product2->toUrl());
+    $this->submitForm([], 'Add to cart');
+    $this->drupalGet('checkout');
+    $this->assertSession()->pageTextContains('Shopping cart');
   }
 
   /**

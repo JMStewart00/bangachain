@@ -4,6 +4,8 @@ namespace Drupal\commerce_checkout\Plugin\Commerce\CheckoutFlow;
 
 use Drupal\commerce\AjaxFormTrait;
 use Drupal\commerce\Response\NeedsRedirectException;
+use Drupal\commerce_checkout\Event\CheckoutEvents;
+use Drupal\commerce_order\Event\OrderEvent;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheableMetadata;
@@ -422,6 +424,9 @@ abstract class CheckoutFlowBase extends PluginBase implements CheckoutFlowInterf
     }
     // Place the order.
     if ($step_id == 'complete' && $this->order->getState()->getId() == 'draft') {
+      // Notify other modules.
+      $event = new OrderEvent($this->order);
+      $this->eventDispatcher->dispatch(CheckoutEvents::COMPLETION, $event);
       $this->order->getState()->applyTransitionById('place');
     }
   }

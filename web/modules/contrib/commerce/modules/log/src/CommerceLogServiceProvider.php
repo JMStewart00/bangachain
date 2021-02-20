@@ -24,6 +24,11 @@ class CommerceLogServiceProvider extends ServiceProviderBase {
         ->addTag('event_subscriber')
         ->addArgument(new Reference('entity_type.manager'));
     }
+    if (isset($modules['commerce_checkout'])) {
+      $container->register('commerce_log.checkout_subscriber', 'Drupal\commerce_log\EventSubscriber\CheckoutEventSubscriber')
+        ->addTag('event_subscriber')
+        ->addArgument(new Reference('entity_type.manager'));
+    }
     if (isset($modules['commerce_order'])) {
       $container->register('commerce_log.order_subscriber', 'Drupal\commerce_log\EventSubscriber\OrderEventSubscriber')
         ->addTag('event_subscriber')

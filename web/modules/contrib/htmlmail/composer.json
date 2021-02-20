@@ -2,7 +2,12 @@
     "name": "drupal/htmlmail",
     "description": "Enables HTML in system emails.",
     "type": "drupal-module",
+    "license": "GPL-2.0-or-later",
     "homepage": "https://www.drupal.org/project/htmlmail",
+    "support": {
+        "irc": "irc://irc.freenode.org/drupal-contribute",
+        "source": "https://git.drupalcode.org/project/htmlmail"
+    },
     "authors": [
         {
             "name": "gaurav.kapoor",
@@ -26,9 +31,7 @@
             "role": "Maintainer"
         }
     ],
-    "support": {
-        "irc": "irc://irc.freenode.org/drupal-contribute",
-        "source": "https://cgit.drupalcode.org/htmlmail"
-    },
-    "license": "GPL-2.0+"
+    "require": {
+      "drupal/mailsystem": "^4.2"
+    }
 }

@@ -45,6 +45,13 @@ class OrderRefresh implements OrderRefreshInterface {
   protected $time;
 
   /**
+   * The order preprocessors.
+   *
+   * @var \Drupal\commerce_order\OrderPreProcessorInterface[]
+   */
+  protected $preprocessors = [];
+
+  /**
    * The order processors.
    *
    * @var \Drupal\commerce_order\OrderProcessorInterface[]
@@ -68,6 +75,13 @@ class OrderRefresh implements OrderRefreshInterface {
     $this->chainPriceResolver = $chain_price_resolver;
     $this->currentUser = $current_user;
     $this->time = $time;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addPreprocessor(OrderPreprocessorInterface $processor) {
+    $this->preprocessors[] = $processor;
   }
 
   /**
@@ -132,6 +146,10 @@ class OrderRefresh implements OrderRefreshInterface {
    * {@inheritdoc}
    */
   public function refresh(OrderInterface $order) {
+    // First invoke order preprocessors if any.
+    foreach ($this->preprocessors as $processor) {
+      $processor->preprocess($order);
+    }
     $current_time = $this->time->getCurrentTime();
     $order->setChangedTime($current_time);
     $order->clearAdjustments();

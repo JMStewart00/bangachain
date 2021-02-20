@@ -19,6 +19,20 @@ class FeedDeleteForm extends ContentEntityConfirmFormBase {
 
   /**
    * {@inheritdoc}
+   */
+  public function getDescription() {
+    $item_count = $this->entity->getItemCount();
+    if (!$item_count) {
+      $message = $this->t('This feed has no imported items.');
+    }
+    else {
+      $message = $this->formatPlural($item_count, 'This feed has 1 imported item that will remain on the site.', 'This feed has @count imported items that will remain on the site.');
+    }
+    return $message . ' ' . parent::getDescription();
+  }
+
+  /**
+   * {@inheritdoc}
    *
    * @todo Set the correct route once views can override paths.
    */

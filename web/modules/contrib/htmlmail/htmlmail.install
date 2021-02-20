@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Installation for HTML Mail module.
+ * Install, update, and uninstall functions for the HTML Mail module.
  */
 
 /**
@@ -46,4 +46,52 @@ function htmlmail_uninstall() {
 
   \Drupal::configFactory()->getEditable('htmlmail.settings')
     ->delete();
+}
+
+/**
+ * Renames the HTML Mail configuration variables.
+ *
+ * @see https://www.drupal.org/project/htmlmail/issues/3168420
+ */
+function htmlmail_update_8301() {
+  $config = \Drupal::configFactory()->getEditable('htmlmail.settings');
+
+  // Copy old configuration to new configuration.
+  $config
+    ->set('debug', $config->get('htmlmail_debug'))
+    ->set('theme', $config->get('htmlmail_theme'))
+    ->set('html_with_plain', $config->get('htmlmail_html_with_plain'))
+    ->set('use_mime_mail', $config->get('htmlmail_use_mime_mail'))
+    ->set('postfilter', $config->get('htmlmail_postfilter'))
+    ->set('test', $config->get('htmlmail_test'));
+
+  // Remove old configuration.
+  $config
+    ->clear('htmlmail_debug')
+    ->clear('htmlmail_theme')
+    ->clear('htmlmail_html_with_plain')
+    ->clear('htmlmail_use_mime_mail')
+    ->clear('htmlmail_postfilter')
+    ->clear('htmlmail_test');
+
+  // Save modified configuration.
+  $config->save('TRUE');
+}
+
+/**
+ * Renames the 'use_mime_mail' configuration variable to 'use_mail_mime'.
+ *
+ * @see https://www.drupal.org/project/htmlmail/issues/3169313
+ */
+function htmlmail_update_8302() {
+  $config = \Drupal::configFactory()->getEditable('htmlmail.settings');
+
+  // Copy old configuration to new configuration.
+  $config->set('use_mail_mime', $config->get('use_mime_mail'));
+
+  // Remove old configuration.
+  $config->clear('use_mime_mail');
+
+  // Save modified configuration.
+  $config->save('TRUE');
 }

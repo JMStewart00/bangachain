@@ -17,27 +17,28 @@ abstract class ProcessorBase extends PluginBase implements ProcessorInterface {
    */
   public function postProcess(FeedInterface $feed, StateInterface $state) {
     $tokens = [
+      '@feed' => $feed->label(),
       '@item' => $this->getItemLabel(),
       '@items' => $this->getItemLabelPlural(),
     ];
 
     if ($state->created) {
-      $state->setMessage($this->formatPlural($state->created, 'Created @count @item.', 'Created @count @items.', $tokens));
+      $state->setMessage($this->formatPlural($state->created, '@feed: Created @count @item.', '@feed: Created @count @items.', $tokens));
     }
     if ($state->updated) {
-      $state->setMessage($this->formatPlural($state->updated, 'Updated @count @item.', 'Updated @count @items.', $tokens));
+      $state->setMessage($this->formatPlural($state->updated, '@feed: Updated @count @item.', '@feed: Updated @count @items.', $tokens));
     }
     if ($state->failed) {
-      $state->setMessage($this->formatPlural($state->failed, 'Failed importing @count @item.', 'Failed importing @count @items.', $tokens), 'error');
+      $state->setMessage($this->formatPlural($state->failed, '@feed: Failed importing @count @item.', '@feed: Failed importing @count @items.', $tokens), 'error');
     }
     if (!$state->created && !$state->updated && !$state->failed) {
-      $state->setMessage($this->t('There are no new @items.', $tokens));
+      $state->setMessage($this->t('@feed: There are no new @items.', $tokens));
     }
 
     // Find out how many items were cleaned.
     $clean_state = $feed->getState(StateInterface::CLEAN);
     if ($clean_state->updated) {
-      $clean_state->setMessage($this->formatPlural($clean_state->updated, 'Cleaned @count @item.', 'Cleaned @count @items.', $tokens));
+      $clean_state->setMessage($this->formatPlural($clean_state->updated, '@feed: Cleaned @count @item.', '@feed: Cleaned @count @items.', $tokens));
     }
   }
 

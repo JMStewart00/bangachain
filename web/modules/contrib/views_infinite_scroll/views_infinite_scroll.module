@@ -36,23 +36,9 @@ function views_infinite_scroll_preprocess_views_infinite_scroll_pager(&$vars) {
 }
 
 /**
- * Implements template_preprocess_eva_display_entity_view().
- */
-function views_infinite_scroll_preprocess_eva_display_entity_view(&$vars) {
-  _set_scroll_wrapper($vars);
-}
-
-/**
  * Implements hook_preprocess_views_view().
  */
 function views_infinite_scroll_preprocess_views_view(&$vars) {
-  _set_scroll_wrapper($vars);
-}
-
-/**
- * Function _set_scroll_wrapper().
- */
-function _set_scroll_wrapper(&$vars) {
   $view = $vars['view'];
   if ($view->getDisplay()->isPagerEnabled() && !empty($vars['rows'])) {
     $pager = $view->getPager();

@@ -5,6 +5,7 @@ namespace Drupal\feeds\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
+use Drupal\feeds\Exception\MissingTargetException;
 use Drupal\feeds\Feeds\FeedsSingleLazyPluginCollection;
 use Drupal\feeds\FeedTypeInterface;
 use Drupal\feeds\Plugin\DependentWithRemovalPluginInterface;
@@ -463,6 +464,12 @@ class FeedType extends ConfigEntityBundleBase implements FeedTypeInterface, Enti
     $targets = $this->getMappingTargets();
     $target = $this->mappings[$delta]['target'];
 
+    // Make sure that the target exists.
+    if (!isset($targets[$target])) {
+      // The target is missing!
+      throw new MissingTargetException(sprintf('The Feeds target "%s" does not exist.', $target));
+    }
+
     // The target is a plugin.
     $id = $targets[$target]->getPluginId();
 
@@ -645,8 +652,14 @@ class FeedType extends ConfigEntityBundleBase implements FeedTypeInterface, Enti
     // Calculate plugin dependencies for each target plugin.
     // @todo support other plugin types as well.
     foreach ($this->getMappings() as $delta => $mapping) {
-      $plugin = $this->getTargetPlugin($delta);
-      $this->calculatePluginDependencies($plugin);
+      try {
+        $plugin = $this->getTargetPlugin($delta);
+        $this->calculatePluginDependencies($plugin);
+      }
+      catch (MissingTargetException $e) {
+        // Log an error when a target is not found.
+        watchdog_exception('feeds', $e);
+      }
     }
 
     return $this;

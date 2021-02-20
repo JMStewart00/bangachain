@@ -38,4 +38,35 @@ interface TargetInterface extends DependentWithRemovalPluginInterface {
    */
   public function setTarget(FeedInterface $feed, EntityInterface $entity, $target, array $values);
 
+  /**
+   * Returns the target's definition.
+   *
+   * @return \Drupal\feeds\TargetDefinitionInterface
+   *   The definition for this target.
+   */
+  public function getTargetDefinition();
+
+  /**
+   * Returns if the target is mutable.
+   *
+   * @return bool
+   *   True if the target is mutable. False otherwise.
+   */
+  public function isMutable();
+
+  /**
+   * Returns if the value for the target is empty.
+   *
+   * @param \Drupal\feeds\FeedInterface $feed
+   *   The feed object.
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The target object.
+   * @param string $target
+   *   The name of the target to set.
+   *
+   * @return bool
+   *   True if the value on the entity is empty. False otherwise.
+   */
+  public function isEmpty(FeedInterface $feed, EntityInterface $entity, $target);
+
 }

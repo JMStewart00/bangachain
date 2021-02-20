@@ -162,6 +162,11 @@ class EditQuantity extends FieldPluginBase {
           '#max' => 9999,
           '#step' => $step,
           '#required' => TRUE,
+          '#attributes' => [
+            'class' => [
+              'quantity-edit-input',
+            ],
+          ],
         ];
       }
       else {

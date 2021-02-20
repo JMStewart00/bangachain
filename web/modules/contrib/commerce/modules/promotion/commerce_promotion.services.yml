@@ -3,16 +3,11 @@ services:
     class: Drupal\commerce_promotion\PromotionOfferManager
     arguments: ['@container.namespaces', '@cache.discovery', '@module_handler', '@entity_type.manager']
 
-  commerce_promotion.early_order_processor:
-    class: Drupal\commerce_promotion\EarlyOrderProcessor
-    arguments: ['@entity_type.manager']
-    tags:
-      - { name: commerce_order.order_processor, priority: 1000}
-
   commerce_promotion.promotion_order_processor:
     class: Drupal\commerce_promotion\PromotionOrderProcessor
     arguments: ['@entity_type.manager', '@language_manager']
     tags:
+      - { name: commerce_order.order_preprocessor, priority: 100}
       - { name: commerce_order.order_processor, priority: 100, adjustment_type: promotion }
 
   commerce_promotion.usage:

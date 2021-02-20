@@ -8,9 +8,11 @@ dependencies:
     - field.storage.commerce_product.field_default_image
     - field.storage.media.field_media_image
     - field.storage.commerce_product.body
+    - field.storage.commerce_product.field_disc_category
     - field.storage.commerce_product.field_fade
     - field.storage.commerce_product.field_glide
     - field.storage.commerce_product.field_speed
+    - field.storage.commerce_product.field_stability_category
     - field.storage.commerce_product.field_turn
     - field.storage.commerce_product_variation.field_product_image
     - search_api.server.algolia
@@ -53,6 +55,16 @@ field_settings:
     dependencies:
       config:
         - field.storage.commerce_product.body
+  disc_type:
+    label: 'Disc Type » Taxonomy term » Name'
+    datasource_id: 'entity:commerce_product'
+    property_path: 'field_disc_category:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.commerce_product.field_disc_category
+      module:
+        - taxonomy
   fade:
     label: Fade
     datasource_id: 'entity:commerce_product'
@@ -97,6 +109,16 @@ field_settings:
     dependencies:
       config:
         - field.storage.commerce_product.field_speed
+  stability:
+    label: 'Stability Category » Taxonomy term » Name'
+    datasource_id: 'entity:commerce_product'
+    property_path: 'field_stability_category:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.commerce_product.field_stability_category
+      module:
+        - taxonomy
   status:
     label: Published
     datasource_id: 'entity:commerce_product'

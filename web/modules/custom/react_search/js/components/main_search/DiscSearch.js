@@ -52,6 +52,8 @@ class DiscSearch extends Component {
     const { searchState } = this.state;
     const facets = [
       { label: 'Brand', field: 'brand', andOr: 'or', alpha: true },
+      { label: 'Stability', field: 'stability', andOr: 'or', alpha: true },
+      { label: 'Type', field: 'disc_type', andOr: 'or', alpha: true },
       { label: 'Speed', field: 'speed', andOr: 'or', alpha: true },
       { label: 'Glide', field: 'glide', andOr: 'or', alpha: true },
       { label: 'Turn', field: 'turn', andOr: 'or', alpha: true },

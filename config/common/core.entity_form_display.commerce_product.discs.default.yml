@@ -12,11 +12,13 @@ dependencies:
     - field.field.commerce_product.discs.field_fade
     - field.field.commerce_product.discs.field_glide
     - field.field.commerce_product.discs.field_meta_tags
+    - field.field.commerce_product.discs.field_restock_date
     - field.field.commerce_product.discs.field_speed
     - field.field.commerce_product.discs.field_stability_category
     - field.field.commerce_product.discs.field_turn
   module:
     - commerce
+    - datetime
     - field_group
     - media_library
     - metatag
@@ -31,7 +33,7 @@ third_party_settings:
         - field_turn
         - field_fade
       parent_name: ''
-      weight: 11
+      weight: 12
       format_type: fieldset
       region: content
       format_settings:
@@ -47,12 +49,12 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 8
+    weight: 9
     region: content
     settings: {  }
     third_party_settings: {  }
   field_brand:
-    weight: 3
+    weight: 4
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -69,7 +71,7 @@ content:
     third_party_settings: {  }
     region: content
   field_description:
-    weight: 6
+    weight: 7
     settings:
       rows: 9
       summary_rows: 3
@@ -79,13 +81,13 @@ content:
     type: text_textarea_with_summary
     region: content
   field_disc_category:
-    weight: 4
+    weight: 5
     settings: {  }
     third_party_settings: {  }
     type: options_select
     region: content
   field_fade:
-    weight: 22
+    weight: 23
     settings:
       placeholder: ''
     third_party_settings: {  }
@@ -99,11 +101,17 @@ content:
     type: number
     region: content
   field_meta_tags:
-    weight: 23
+    weight: 13
     settings:
       sidebar: true
     third_party_settings: {  }
     type: metatag_firehose
+    region: content
+  field_restock_date:
+    weight: 3
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
     region: content
   field_speed:
     weight: 19
@@ -113,13 +121,13 @@ content:
     type: number
     region: content
   field_stability_category:
-    weight: 5
+    weight: 6
     settings: {  }
     third_party_settings: {  }
     type: options_select
     region: content
   field_turn:
-    weight: 21
+    weight: 22
     settings:
       placeholder: ''
     third_party_settings: {  }
@@ -127,7 +135,7 @@ content:
     region: content
   path:
     type: path
-    weight: 9
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -135,7 +143,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 10
+    weight: 11
     region: content
     third_party_settings: {  }
   stores:
@@ -158,7 +166,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 7
+    weight: 8
     region: content
     settings:
       match_operator: CONTAINS

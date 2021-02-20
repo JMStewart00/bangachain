@@ -6,7 +6,7 @@
     'first'
     'second'
     'third';
-  padding: rvr(2);
+  padding: rvr(2) rvr(4);
   border-bottom: 2px solid white;
 
   @include media-breakpoint-up(md) {
@@ -34,20 +34,41 @@
     display: flex;
     flex-wrap: nowrap;
     position: relative;
-    justify-content: center;
-    margin-top: rvr(1);
 
     &-icon {
       font-size: rem(14);
-      margin-left: spacer(0.5);
+      margin-left: spacer(0.25);
 
       &:first-child {
         margin-left: 0;
+
+        .o-icon {
+          margin-left: 0;
+        }
       }
     }
 
     svg.ext {
       display: none;
+    }
+  }
+
+  &__menu {
+    .c-menu-main {
+      flex-direction: column;
+
+      &__item {
+        margin: 0;
+
+        a {
+          padding: 5px 0;
+
+          &::after {
+            content: none;
+          }
+        }
+      }
+
     }
   }
 }
@@ -60,7 +81,5 @@
 }
 
 .c-contact-us {
-  display: flex;
-  justify-content: center;
-  padding-top: rvr(2);
+  padding-top: rvr(1);
 }

@@ -22,15 +22,8 @@
   &__title {
     color: $brand-blue;
     text-align: center;
-
-    &::after {
-      content: '';
-      display: block;
-      height: 4px;
-      width: 44px;
-      background: $orange;
-      margin: rvr(0.75) auto;
-    }
+    text-transform: uppercase;
+    font-weight: $fw-bold;
   }
 
   &__subheading {

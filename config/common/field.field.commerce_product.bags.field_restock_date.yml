@@ -1,0 +1,21 @@
+uuid: a47a6176-773e-40a3-a2b6-2f55be90cb1a
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.bags
+    - field.storage.commerce_product.field_restock_date
+  module:
+    - datetime
+id: commerce_product.bags.field_restock_date
+field_name: field_restock_date
+entity_type: commerce_product
+bundle: bags
+label: 'Restock Date'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

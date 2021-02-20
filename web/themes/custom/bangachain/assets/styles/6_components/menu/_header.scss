@@ -1,13 +1,12 @@
 .c-header {
   position: relative;
   z-index: 10;
-  border-bottom: 2px solid white;
   box-shadow: 0 rem(12) rem(24) rem(-24) $gray-dark;
 
   &__row {
     align-items: center;
     justify-content: space-between;
-    padding: rvr(0.5) rvr(1);
+    padding: rvr(0.5) rvr(2);
   }
 
   // Logo
@@ -19,7 +18,7 @@
     }
 
     img {
-      width: rem(60);
+      width: rem(80);
 
       @include media-breakpoint-down(xl) {
         display: block;

@@ -1,0 +1,21 @@
+uuid: 99c6bce5-b680-488d-a214-d54e74d29a06
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.apparel
+    - field.storage.commerce_product.field_restock_date
+  module:
+    - datetime
+id: commerce_product.apparel.field_restock_date
+field_name: field_restock_date
+entity_type: commerce_product
+bundle: apparel
+label: 'Restock Date'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

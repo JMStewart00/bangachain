@@ -1,0 +1,20 @@
+uuid: 1cdcc9e0-5a9c-49ea-a029-04665674cba7
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_product
+    - datetime
+id: commerce_product.field_restock_date
+field_name: field_restock_date
+entity_type: commerce_product
+type: datetime
+settings:
+  datetime_type: date
+module: datetime
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

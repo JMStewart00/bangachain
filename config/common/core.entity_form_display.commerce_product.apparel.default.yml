@@ -6,8 +6,10 @@ dependencies:
     - commerce_product.commerce_product_type.apparel
     - field.field.commerce_product.apparel.body
     - field.field.commerce_product.apparel.field_meta_tags
+    - field.field.commerce_product.apparel.field_restock_date
   module:
     - commerce
+    - datetime
     - metatag
     - path
     - text
@@ -18,7 +20,7 @@ mode: default
 content:
   body:
     type: text_textarea_with_summary
-    weight: 1
+    weight: 3
     settings:
       rows: 9
       summary_rows: 3
@@ -28,20 +30,26 @@ content:
     region: content
   created:
     type: datetime_timestamp
-    weight: 10
+    weight: 5
     region: content
     settings: {  }
     third_party_settings: {  }
   field_meta_tags:
-    weight: 91
+    weight: 8
     settings:
       sidebar: true
     third_party_settings: {  }
     type: metatag_firehose
     region: content
+  field_restock_date:
+    weight: 2
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
   path:
     type: path
-    weight: 30
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -49,12 +57,12 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 90
+    weight: 7
     region: content
     third_party_settings: {  }
   stores:
     type: commerce_entity_select
-    weight: -10
+    weight: 0
     region: content
     settings:
       hide_single_entity: true
@@ -64,7 +72,7 @@ content:
     third_party_settings: {  }
   title:
     type: string_textfield
-    weight: -5
+    weight: 1
     region: content
     settings:
       size: 60
@@ -72,7 +80,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 5
+    weight: 4
     region: content
     settings:
       match_operator: CONTAINS

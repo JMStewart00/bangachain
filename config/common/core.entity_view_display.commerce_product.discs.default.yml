@@ -12,11 +12,13 @@ dependencies:
     - field.field.commerce_product.discs.field_fade
     - field.field.commerce_product.discs.field_glide
     - field.field.commerce_product.discs.field_meta_tags
+    - field.field.commerce_product.discs.field_restock_date
     - field.field.commerce_product.discs.field_speed
     - field.field.commerce_product.discs.field_stability_category
     - field.field.commerce_product.discs.field_turn
   module:
     - commerce_product
+    - datetime
     - metatag
     - text
 id: commerce_product.discs.default
@@ -85,6 +87,15 @@ content:
     third_party_settings: {  }
     type: metatag_empty_formatter
     region: content
+  field_restock_date:
+    weight: 21
+    label: above
+    settings:
+      format_type: medium
+      timezone_override: ''
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
   field_speed:
     weight: 12
     label: hidden
@@ -130,7 +141,9 @@ content:
       combine: true
     third_party_settings: {  }
 hidden:
+  add_to_cart_link: true
   created: true
   feeds_item: true
+  search_api_excerpt: true
   stores: true
   uid: true

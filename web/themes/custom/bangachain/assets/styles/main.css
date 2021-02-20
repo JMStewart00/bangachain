@@ -6884,10 +6884,10 @@ a.text-dark:hover, a.text-dark:focus {
   background-color: #fcfffc; }
 
 .t-layout-background--black a:not(.o-btn):hover, .t-layout-background--black a:not(.o-btn):focus, .t-layout-background--black a:not(.o-btn):active {
-  color: #ddd; }
+  color: #eee; }
 
 .t-layout-background--gray-light {
-  background-color: #ddd;
+  background-color: #eee;
   color: #293241; }
 
 .t-layout-background--gray-light a:not(.o-btn) {
@@ -7069,10 +7069,10 @@ a.text-dark:hover, a.text-dark:focus {
   background-color: #fcfffc; }
 
 .t-background--black a:not(.o-btn):hover, .t-background--black a:not(.o-btn):focus, .t-background--black a:not(.o-btn):active {
-  color: #ddd; }
+  color: #eee; }
 
 .t-background--gray-light {
-  background-color: #ddd;
+  background-color: #eee;
   color: #293241; }
 
 .t-background--gray-light a:not(.o-btn) {
@@ -7648,13 +7648,13 @@ body.no-scroll {
   text-decoration: none; }
 
 .o-btn.is-disabled {
-  background-color: #ddd;
+  background-color: #eee;
   color: #999;
   cursor: not-allowed;
   pointer-events: all !important; }
 
 .o-btn.is-disabled:hover, .o-btn.is-disabled:focus {
-  background-color: #ddd;
+  background-color: #eee;
   color: #999; }
 
 .button {
@@ -7903,7 +7903,7 @@ svg.ext {
   color: #E0FBFC !important; }
 
 .c-pagination__link--disabled {
-  color: #ddd; }
+  color: #eee; }
 
 @media (min-width: 768px) {
   .c-product:not(.c-product--teaser) {
@@ -8177,15 +8177,9 @@ div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
 
 .c-block__title {
   color: #3D5A80;
-  text-align: center; }
-
-.c-block__title::after {
-  content: '';
-  display: block;
-  height: 4px;
-  width: 44px;
-  background: #EE6C4D;
-  margin: calc(var(--lh__base) * 0.75 * var(--rvr-multiplier)) auto; }
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: 700; }
 
 .c-block__subheading {
   font-weight: 500;
@@ -8231,6 +8225,7 @@ div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
 .c-hero-image {
   /* Set a specific height */
   height: 80vh;
+  min-height: 400px;
   /* Position and center the image to scale nicely on all screens */
   background-position: center;
   background-repeat: no-repeat;
@@ -8240,7 +8235,8 @@ div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
 
 @media (min-width: 768px) {
   .c-hero-image {
-    height: 50vh; } }
+    height: 50vh;
+    min-height: 500px; } }
 
 .c-hero-image__content {
   text-align: center;
@@ -8838,7 +8834,7 @@ div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
   grid-template-areas: 'first' 'second' 'third';
-  padding: calc(var(--lh__base) * 2 * var(--rvr-multiplier));
+  padding: calc(var(--lh__base) * 2 * var(--rvr-multiplier)) calc(var(--lh__base) * 4 * var(--rvr-multiplier));
   border-bottom: 2px solid white; }
 
 @media (min-width: 768px) {
@@ -8865,21 +8861,35 @@ div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
   display: flex;
   -ms-flex-wrap: nowrap;
   flex-wrap: nowrap;
-  position: relative;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  margin-top: calc(var(--lh__base) * 1 * var(--rvr-multiplier)); }
+  position: relative; }
 
 .c-footer__social-icon {
   font-size: 0.875rem;
-  margin-left: 0.5rem; }
+  margin-left: 0.25rem; }
 
 .c-footer__social-icon:first-child {
   margin-left: 0; }
 
+.c-footer__social-icon:first-child .o-icon {
+  margin-left: 0; }
+
 .c-footer__social svg.ext {
   display: none; }
+
+.c-footer__menu .c-menu-main {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column; }
+
+.c-footer__menu .c-menu-main__item {
+  margin: 0; }
+
+.c-footer__menu .c-menu-main__item a {
+  padding: 5px 0; }
+
+.c-footer__menu .c-menu-main__item a::after {
+  content: none; }
 
 .c-copyright {
   max-width: none !important; }
@@ -8888,18 +8898,11 @@ div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
   width: 100%; }
 
 .c-contact-us {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  padding-top: calc(var(--lh__base) * 2 * var(--rvr-multiplier)); }
+  padding-top: calc(var(--lh__base) * 1 * var(--rvr-multiplier)); }
 
 .c-header {
   position: relative;
   z-index: 10;
-  border-bottom: 2px solid white;
   -webkit-box-shadow: 0 0.75rem 1.5rem -1.5rem #293241;
   box-shadow: 0 0.75rem 1.5rem -1.5rem #293241; }
 
@@ -8910,7 +8913,7 @@ div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
-  padding: calc(var(--lh__base) * 0.5 * var(--rvr-multiplier)) calc(var(--lh__base) * 1 * var(--rvr-multiplier)); }
+  padding: calc(var(--lh__base) * 0.5 * var(--rvr-multiplier)) calc(var(--lh__base) * 2 * var(--rvr-multiplier)); }
 
 .c-header__logo-container {
   width: 100%; }
@@ -8920,7 +8923,7 @@ div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
     width: auto; } }
 
 .c-header__logo-container img {
-  width: 3.75rem; }
+  width: 5rem; }
 
 @media (max-width: 1439.98px) {
   .c-header__logo-container img {
@@ -9032,6 +9035,15 @@ div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
 .c-menu-main__link.is-active::after,
 .c-menu-account__link.is-active::after {
   width: 100%; }
+
+.c-menu-main {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  text-transform: uppercase; }
 
 .c-mobile-menu {
   --mm-offset-top: 4.6875rem;
@@ -9610,6 +9622,25 @@ div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
 .layout-builder-configure-block .o-btn--secondary {
   text-transform: capitalize;
   margin-bottom: calc(var(--lh__base) * 1 * var(--rvr-multiplier)); }
+
+.block-local-tasks-block ul.tabs {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  margin: 0; }
+
+.block-local-tasks-block ul.tabs li {
+  -webkit-box-flex: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  text-align: center; }
+
+.block-local-tasks-block ul.tabs li a {
+  padding-top: 1rem;
+  padding-bottom: 1rem; }
 
 .c-gdpr {
   padding: calc(var(--lh__base) * 1 * var(--rvr-multiplier));

@@ -7,8 +7,10 @@ dependencies:
     - field.field.commerce_product.bags.field_brand
     - field.field.commerce_product.bags.field_description
     - field.field.commerce_product.bags.field_meta_tags
+    - field.field.commerce_product.bags.field_restock_date
   module:
     - commerce_product
+    - datetime
     - metatag
     - text
 id: commerce_product.bags.default
@@ -38,6 +40,15 @@ content:
     third_party_settings: {  }
     type: metatag_empty_formatter
     region: content
+  field_restock_date:
+    weight: 14
+    label: above
+    settings:
+      format_type: medium
+      timezone_override: ''
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
   title:
     label: hidden
     type: string
@@ -55,6 +66,8 @@ content:
       combine: true
     third_party_settings: {  }
 hidden:
+  add_to_cart_link: true
   created: true
+  search_api_excerpt: true
   stores: true
   uid: true

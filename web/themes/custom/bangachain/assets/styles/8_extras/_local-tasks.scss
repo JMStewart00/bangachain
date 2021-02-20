@@ -1,0 +1,17 @@
+.block-local-tasks-block {
+  ul.tabs {
+    display: flex;
+    justify-content: center;
+    margin: 0;
+
+    li {
+      flex-grow: 1;
+      text-align: center;
+
+      a {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+      }
+    }
+  }
+}

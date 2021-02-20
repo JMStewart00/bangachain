@@ -21,23 +21,6 @@ expression:
     conditions:
       -
         id: rules_condition
-        uuid: 9ad92d7e-2856-4e36-94aa-71cda368c8d2
-        weight: 0
-        context_values:
-          operation: '=='
-          value: fulfillment
-        context_mapping:
-          data: commerce_order.state.value
-        context_processors:
-          operation:
-            rules_tokens: {  }
-          value:
-            rules_tokens: {  }
-        provides_mapping: {  }
-        condition_id: rules_data_comparison
-        negate: false
-      -
-        id: rules_condition
         uuid: 18ec4c0e-8344-4461-880d-2f3c70381062
         weight: 0
         context_values:
@@ -50,6 +33,23 @@ expression:
             rules_tokens: {  }
         provides_mapping: {  }
         condition_id: rules_data_comparison
+        negate: false
+      -
+        id: rules_condition
+        uuid: 44a990b7-8733-4fff-b468-8cd0bc2c46b3
+        weight: 0
+        context_values:
+          operator: contains
+          match: fulfill
+        context_mapping:
+          text: commerce_order.state.value
+        context_processors:
+          operator:
+            rules_tokens: {  }
+          match:
+            rules_tokens: {  }
+        provides_mapping: {  }
+        condition_id: rules_text_comparison
         negate: false
   actions:
     id: rules_action_set

@@ -1,0 +1,68 @@
+uuid: a66ea0a9-d5a7-4479-b4f8-d00809aa49be
+langcode: en
+status: true
+dependencies: {  }
+id: shipment_update
+label: 'Shipment Update'
+events:
+  -
+    event_name: 'rules_entity_update:commerce_shipment'
+description: ''
+tags: {  }
+config_version: '3'
+expression:
+  id: rules_rule
+  uuid: ccf0c5fc-cf04-42c0-8e16-9bd676bb7caf
+  weight: 0
+  conditions:
+    id: rules_and
+    uuid: e6d3f3ad-5069-454d-95ea-e05277b0ddee
+    weight: 0
+    conditions:
+      -
+        id: rules_condition
+        uuid: dd837ab5-3943-484f-be58-6a676704bb28
+        weight: 0
+        context_values:
+          operation: '!='
+          value: 'NULL'
+        context_mapping:
+          data: commerce_shipment.tracking_code.value
+        context_processors:
+          operation:
+            rules_tokens: {  }
+          value:
+            rules_tokens: {  }
+        provides_mapping: {  }
+        condition_id: rules_data_comparison
+        negate: false
+  actions:
+    id: rules_action_set
+    uuid: a2b39e5a-879b-4ca6-8537-59d203894a55
+    weight: 0
+    actions:
+      -
+        id: rules_action
+        uuid: c7402b8d-f422-4d38-b7da-3179bf9968d5
+        weight: 0
+        context_values:
+          to:
+            - '{{ commerce_shipment.order_id.entity.uid.entity.mail.value }}'
+          subject: 'BangAChain.com | Order #{{ commerce_shipment.order_id.entity.order_id.value }} is on it''s way!'
+          message: "<p>Your package is on the way for order number {{ commerce_shipment.order_id.entity.order_id.value }}!</p>\r\n<p>Your tracking number is {{ commerce_shipment.tracking_code.value }}</p>\r\n<p>If you experience any problems please email us at <a href=\"mailto:bangachain2012@gmail.com\" target=\"_blank\">bangachain2012@gmail.com</a>.</p>\r\n<p>Thanks!</p>\r\n<p>BangAChain Team</p>"
+          reply: no-reply@bangachain.com
+          language: null
+        context_mapping: {  }
+        context_processors:
+          to:
+            rules_tokens: {  }
+          subject:
+            rules_tokens: {  }
+          message:
+            rules_tokens: {  }
+          reply:
+            rules_tokens: {  }
+          language:
+            rules_tokens: {  }
+        provides_mapping: {  }
+        action_id: rules_send_email

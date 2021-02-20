@@ -63,7 +63,8 @@ function bangachain_preprocess_form_element(&$variables) {
 
 function bangachain_preprocess_page(&$variables) {
   $current_uri = \Drupal::request()->getRequestUri();
-  if ($current_uri === '/search') {
+
+  if (str_contains($current_uri, '/search')) {
     $variables['hide_search'] = TRUE;
   }
 }

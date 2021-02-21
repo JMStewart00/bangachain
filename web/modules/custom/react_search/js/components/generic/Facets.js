@@ -102,7 +102,7 @@ class Facet extends React.Component {
             }}
             classNames="c-facet__animate-"
           >
-            <Item item={item} {...this.props} />
+            <Item item={item} {...this.props} label={label} />
           </CSSTransition>
         )
       })
@@ -149,11 +149,11 @@ class Facet extends React.Component {
 }
 
 // Individual List Item for facets rendering
-const Item = ({ item, refine }) => (
+const Item = ({ item, refine, label }) => (
   <li key={item.label} className="c-facet__item o-list__item">
     <div className="c-form__element">
       <input
-        id={item.label}
+        id={`${label}${item.label}`}
         type="checkbox"
         className="c-form__checkbox"
         onChange={() => {
@@ -161,7 +161,7 @@ const Item = ({ item, refine }) => (
         }}
         checked={item.isRefined}
       />
-      <label className="c-form__label c-form__label--checkbox" htmlFor={item.label}>
+      <label className="c-form__label c-form__label--checkbox" htmlFor={`${label}${item.label}`}>
         {item.label}{' '}<span className="c-facet__count">({item.count})</span>
       </label>
     </div>

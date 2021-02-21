@@ -99,6 +99,7 @@ export const SearchLayout = ({
           }
 
           <SearchSummary />
+          <FacetsSummary />
           <CustomHits
             Component={resultsComponent}
             classes={resultsClasses}

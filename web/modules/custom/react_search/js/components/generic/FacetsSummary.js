@@ -58,7 +58,7 @@ export const FacetsSummary = connectCurrentRefinements(({ items, refine }) => {
                           }
                         }}
                       >
-                        {nested.label}{' '}<FontAwesomeIcon icon={"times-circle"} aria-hidden />
+                        {`${facet.label[0].toUpperCase()}${facet.label.substring(1)}`} {nested.label}{' '}<FontAwesomeIcon icon={"times-circle"} aria-hidden />
                       </li>
                     ))}
 

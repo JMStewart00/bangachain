@@ -1,0 +1,16 @@
+uuid: 4a38b5e0-6376-48d2-9d79-dca1231e2976
+langcode: en
+status: true
+dependencies: {  }
+id: email_for_fulfillment
+label: 'Email for Fulfillment'
+event: order_status_updated
+targetEntityType: commerce_order
+from: no-reply@bangachain.com
+to: '[commerce_order:uid:entity:mail]'
+cc: ''
+bcc: ''
+subject: 'Bangachain.com: Order #[commerce_order:order_id:value] is Ready!'
+body: "<p>Hey [commerce_order:uid:entity:field_first_name]!</p>\r\n<p>Your order has been processed and is ready!</p>\r\n<p> If you chose local pickup for your shipping method, please arrange a time with Sam to pickup your package by contacting him at <a href=\"mailto:bangachain2012@gmail.com\" target=\"_blank\">bangachain2012@gmail.com</a> or contacting him on Facebook.</p>\r\n<p>If you selected to have your stuff shipped to you, it should be in the mail in the coming days. We're working on getting emails sent when we add tracking numbers so be on the lookout for that as well</p>\r\n<p>Thanks!</p>\r\n<p>Bang-A-Chain</p>\r\n\r\n"
+conditions: {  }
+conditionOperator: AND

@@ -6,6 +6,7 @@ module:
   ape: 0
   artwork_upload_pane: 0
   automated_cron: 0
+  bangachain_commerce_mail: 0
   bangachain_commerce_update: 0
   bangachain_layout: 0
   bangachain_menu: 0
@@ -30,6 +31,7 @@ module:
   commerce_cart_flyout: 0
   commerce_checkout: 0
   commerce_dashboard: 0
+  commerce_email: 0
   commerce_feeds: 0
   commerce_giftcard: 0
   commerce_log: 0

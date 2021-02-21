@@ -1,0 +1,8 @@
+name: Commerce Email
+type: module
+description: 'Provides a UI for defining Commerce emails.'
+package: Commerce (contrib)
+core: 8.x
+dependencies:
+  - commerce:commerce
+  - token:token

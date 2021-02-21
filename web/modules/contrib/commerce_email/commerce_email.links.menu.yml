@@ -1,0 +1,6 @@
+entity.commerce_email.collection:
+  title: Emails
+  route_name: entity.commerce_email.collection
+  parent: 'commerce.store_configuration'
+  description: 'Manage your emails.'
+  weight: -20

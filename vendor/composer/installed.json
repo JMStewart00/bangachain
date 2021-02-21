@@ -3946,6 +3946,71 @@
         }
     },
     {
+        "name": "drupal/commerce_email",
+        "version": "dev-1.x",
+        "version_normalized": "dev-1.x",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupalcode.org/project/commerce_email.git",
+            "reference": "5339b30a6525bd9870e60619b2b96e1874a0e78b"
+        },
+        "require": {
+            "drupal/commerce": "*",
+            "drupal/core": "~8.0",
+            "drupal/token": "*"
+        },
+        "time": "2020-06-05T16:08:05+00:00",
+        "type": "drupal-module",
+        "extra": {
+            "branch-alias": {
+                "dev-1.x": "1.x-dev"
+            },
+            "drupal": {
+                "version": "8.x-1.0-beta1+1-dev",
+                "datestamp": "1591373303",
+                "security-coverage": {
+                    "status": "not-covered",
+                    "message": "Dev releases are not covered by Drupal security advisories."
+                }
+            },
+            "patches_applied": {
+                "Log emails into order activity log": "https://www.drupal.org/files/issues/2020-12-24/commerce_email-log-emails-to-order-activity-log-3189770-2.patch"
+            }
+        },
+        "installation-source": "source",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0-or-later"
+        ],
+        "authors": [
+            {
+                "name": "jsacksick",
+                "homepage": "https://www.drupal.org/user/972218"
+            },
+            {
+                "name": "mglaman",
+                "homepage": "https://www.drupal.org/user/2416470"
+            },
+            {
+                "name": "paul.linney",
+                "homepage": "https://www.drupal.org/user/928636"
+            },
+            {
+                "name": "rinasek",
+                "homepage": "https://www.drupal.org/user/1245514"
+            },
+            {
+                "name": "rszrama",
+                "homepage": "https://www.drupal.org/user/49344"
+            }
+        ],
+        "description": "Provides a UI for defining Commerce emails.",
+        "homepage": "https://www.drupal.org/project/commerce_email",
+        "support": {
+            "source": "https://git.drupalcode.org/project/commerce_email"
+        }
+    },
+    {
         "name": "drupal/commerce_feeds",
         "version": "1.0.0-alpha3",
         "version_normalized": "1.0.0.0-alpha3",

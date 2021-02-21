@@ -149,6 +149,7 @@
         "drupal/commerce_autosku": "2.x-dev@dev",
         "drupal/commerce_bulk": "^1.0@beta",
         "drupal/commerce_cart_flyout": "^1.8",
+        "drupal/commerce_email": "1.x-dev@dev",
         "drupal/commerce_feeds": "^1.0@alpha",
         "drupal/commerce_giftcard": "1.0.x-dev",
         "drupal/commerce_multi_payment": "^1.0",
@@ -328,9 +329,6 @@
             "drupal/commerce_giftcard": {
                 "Gift card should generate standard commerce events": "https://www.drupal.org/files/issues/2020-11-24/commerce_giftcard-modify-giftcard-entity.patch"
             },
-            "drupal/feeds": {
-                "Cannot hold more than 1 value": "https://www.drupal.org/files/issues/2020-09-26/feeds-multivalue-3155046-19.patch"
-            },
             "drupal/rules": {
                 "Integrate Typed Data Widgets": "https://www.drupal.org/files/issues/2020-12-09/2471481-141.integrate-typed-data-widgets.patch"
             },
@@ -341,6 +339,9 @@
             },
             "drupal/commerce_pos": {
                 "Auto set register to id of 1": "./patches/specify-register-at-1.patch"
+            },
+            "drupal/commerce_email": {
+                "Log emails into order activity log": "https://www.drupal.org/files/issues/2020-12-24/commerce_email-log-emails-to-order-activity-log-3189770-2.patch"
             }
         },
         "enable-patching": true,

@@ -29,7 +29,7 @@ display:
         type: none
         options: {  }
       cache:
-        type: tag
+        type: none
         options: {  }
       query:
         type: views_query
@@ -115,7 +115,7 @@ display:
           relationship: commerce_product_variation
           group_type: group
           admin_label: ''
-          label: Image
+          label: 'Product Image'
           exclude: false
           alter:
             alter_text: false
@@ -159,7 +159,7 @@ display:
           click_sort_column: target_id
           type: entity_reference_entity_view
           settings:
-            view_mode: media_library
+            view_mode: square
           group_column: target_id
           group_columns: {  }
           group_rows: true
@@ -528,10 +528,10 @@ display:
           entity_type: commerce_order_item
           plugin_id: standard
       arguments:
-        order_id:
-          id: order_id
+        order_item_id:
+          id: order_item_id
           table: commerce_order_item
-          field: order_id
+          field: order_item_id
           relationship: none
           group_type: group
           admin_label: ''
@@ -560,12 +560,13 @@ display:
             type: none
             fail: 'not found'
           validate_options: {  }
-          break_phrase: false
+          break_phrase: true
           not: false
           entity_type: commerce_order_item
-          entity_field: order_id
+          entity_field: order_item_id
           plugin_id: numeric
-      display_extenders: {  }
+      display_extenders:
+        ajax_history: {  }
     cache_metadata:
       max-age: -1
       contexts:

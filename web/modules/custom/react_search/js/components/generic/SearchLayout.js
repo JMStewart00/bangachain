@@ -130,6 +130,7 @@ const Facets = ({ facets = [], classes = [] }) => (
         operator={andOr}
         showMore
         showMoreLimit={50}
+        transformItems={items => orderBy(items, "label", "asc")}
       />
     )
   })

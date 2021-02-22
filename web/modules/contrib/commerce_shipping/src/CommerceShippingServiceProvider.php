@@ -5,6 +5,7 @@ namespace Drupal\commerce_shipping;
 use Drupal\commerce_shipping\EventSubscriber\CartSubscriber;
 use Drupal\commerce_shipping\EventSubscriber\PromotionSubscriber;
 use Drupal\commerce_shipping\EventSubscriber\TaxSubscriber;
+use Drupal\commerce_shipping\Normalizer\ShipmentItemNormalizer;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderBase;
 use Symfony\Component\DependencyInjection\Reference;
@@ -37,6 +38,11 @@ class CommerceShippingServiceProvider extends ServiceProviderBase {
       $container->register('commerce_shipping.tax_subscriber', TaxSubscriber::class)
         ->addArgument(new Reference('commerce_shipping.order_manager'))
         ->addTag('event_subscriber');
+    }
+    if (isset($modules['serialization'])) {
+      $container->register('commerce_shipping.normalizer.shipment_item', ShipmentItemNormalizer::class)
+        // Ensure that our normalizer takes precedence.
+        ->addTag('normalizer', ['priority' => 5]);
     }
   }
 

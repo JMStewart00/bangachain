@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "76b09c2eb5acdc97700aa859850bb78e",
+    "content-hash": "7bc9a704202854afe4af31f5e31fb9c8",
     "packages": [
         {
             "name": "algolia/algoliasearch-client-php",
@@ -3786,6 +3786,9 @@
                         "status": "not-covered",
                         "message": "Dev releases are not covered by Drupal security advisories."
                     }
+                },
+                "patches_applied": {
+                    "Log emails into order activity log": "https://www.drupal.org/files/issues/2020-12-24/commerce_email-log-emails-to-order-activity-log-3189770-2.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
@@ -4516,17 +4519,11 @@
         },
         {
             "name": "drupal/commerce_shipping",
-            "version": "2.0.0-rc2",
+            "version": "dev-2.x",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/commerce_shipping.git",
-                "reference": "8.x-2.0-rc2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/commerce_shipping-8.x-2.0-rc2.zip",
-                "reference": "8.x-2.0-rc2",
-                "shasum": "9ae51f8ca5a36e0cbe2e41bef56ff0b677e70eb0"
+                "reference": "770e5c330ab2e5b0b7070ae7489983d166033101"
             },
             "require": {
                 "drupal/commerce": "^2.17",
@@ -4537,12 +4534,15 @@
             },
             "type": "drupal-module",
             "extra": {
+                "branch-alias": {
+                    "dev-2.x": "2.x-dev"
+                },
                 "drupal": {
-                    "version": "8.x-2.0-rc2",
-                    "datestamp": "1602083355",
+                    "version": "8.x-2.0-rc2+3-dev",
+                    "datestamp": "1613037536",
                     "security-coverage": {
                         "status": "not-covered",
-                        "message": "RC releases are not covered by Drupal security advisories."
+                        "message": "Dev releases are not covered by Drupal security advisories."
                     }
                 }
             },
@@ -4576,7 +4576,8 @@
             "homepage": "http://drupal.org/project/commerce_shipping",
             "support": {
                 "source": "https://git.drupalcode.org/project/commerce_shipping"
-            }
+            },
+            "time": "2021-02-15T13:25:13+00:00"
         },
         {
             "name": "drupal/commerce_smart_importer",
@@ -17950,7 +17951,7 @@
         "drupal/commerce_giftcard": 20,
         "drupal/commerce_pos": 20,
         "drupal/commerce_reports": 20,
-        "drupal/commerce_shipping": 5,
+        "drupal/commerce_shipping": 20,
         "drupal/commerce_smart_importer": 20,
         "drupal/commerce_stock": 15,
         "drupal/feeds_tamper": 10,

@@ -544,8 +544,11 @@ class Shipment extends ContentEntityBase implements ShipmentInterface {
    */
   protected function prepareFields() {
     if (empty($this->getPackageType()) && !empty($this->getShippingMethodId())) {
-      $default_package_type = $this->getShippingMethod()->getPlugin()->getDefaultPackageType();
-      $this->set('package_type', $default_package_type->getId());
+      $shipping_method = $this->getShippingMethod();
+      if ($shipping_method) {
+        $default_package_type = $shipping_method->getPlugin()->getDefaultPackageType();
+        $this->set('package_type', $default_package_type->getId());
+      }
     }
     $this->recalculateWeight();
   }

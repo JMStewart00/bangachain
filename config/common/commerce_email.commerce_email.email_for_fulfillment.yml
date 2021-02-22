@@ -11,6 +11,7 @@ to: '[commerce_order:uid:entity:mail]'
 cc: ''
 bcc: ''
 subject: 'Bangachain.com: Order #[commerce_order:order_id:value] is Ready!'
-body: "<p>Hey [commerce_order:uid:entity:field_first_name]!</p>\r\n<p>Your order has been processed and is ready!</p>\r\n<p> If you chose local pickup for your shipping method, please arrange a time with Sam to pickup your package by contacting him at <a href=\"mailto:bangachain2012@gmail.com\" target=\"_blank\">bangachain2012@gmail.com</a> or contacting him on Facebook.</p>\r\n<p>If you selected to have your stuff shipped to you, it should be in the mail in the coming days. We're working on getting emails sent when we add tracking numbers so be on the lookout for that as well</p>\r\n<p>Thanks!</p>\r\n<p>Bang-A-Chain</p>\r\n\r\n"
+body: "<p>Hey [commerce_order:uid:entity:display-name]!</p>\r\n<p>Get Excited!!! Your order has been processed and is ready!</p>\r\n<p> If you chose local pickup for your shipping method, please arrange a time with Sam to pickup your package by contacting him at <a href=\"mailto:bangachain2012@gmail.com\" target=\"_blank\">bangachain2012@gmail.com</a> or contacting him on Facebook.</p>\r\n<p>If you selected to have your stuff shipped to you, look for a followup email. There will be a separate email that should contain your tracking number. </p>\r\n<p>Thanks!</p>\r\n<p>Bang-A-Chain</p>\r\n<p>https://www.facebook.com/BangAChainDG</p>\r\n"
+logIntoOrder: true
 conditions: {  }
 conditionOperator: AND

@@ -16,8 +16,3 @@ config_devel:
     - commerce_shipping.commerce_shipment.default
   optional:
     - commerce_checkout.commerce_checkout_flow.shipping
-
-# Information added by Drupal.org packaging script on 2020-10-07
-version: '8.x-2.0-rc2'
-project: 'commerce_shipping'
-datestamp: 1602083357

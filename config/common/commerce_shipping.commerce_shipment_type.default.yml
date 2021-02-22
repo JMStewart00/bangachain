@@ -8,5 +8,5 @@ id: default
 label: Default
 profileType: customer
 traits: {  }
-sendConfirmation: null
-confirmationBcc: null
+sendConfirmation: true
+confirmationBcc: ''

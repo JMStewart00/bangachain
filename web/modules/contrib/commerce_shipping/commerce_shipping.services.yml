@@ -93,8 +93,3 @@ services:
   commerce_shipping.shipment_confirmation_mail:
     class: Drupal\commerce_shipping\Mail\ShipmentConfirmationMail
     arguments: ['@entity_type.manager', '@commerce.mail_handler']
-
-  commerce_shipping.normalizer.shipment_item:
-    class: Drupal\commerce_shipping\Normalizer\ShipmentItemNormalizer
-    tags:
-      - { name: normalizer }

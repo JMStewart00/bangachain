@@ -7,8 +7,3 @@ dependencies:
   - commerce:commerce_checkout
   - commerce:commerce_payment
   - commerce_shipping:commerce_shipping
-
-# Information added by Drupal.org packaging script on 2020-10-07
-version: '8.x-2.0-rc2'
-project: 'commerce_shipping'
-datestamp: 1602083357

@@ -32,7 +32,13 @@
     <div class="u-text-center">
 
         <div class="c-product__image">
-          {{ product.variation_field_product_image }}
+          {% if product.variation_field_product_image.0|render %}
+            {{ product.variation_field_product_image }}
+          {% else %}
+            <div class="c-field-media-image">
+              <img src="/themes/custom/bangachain/assets/images/logo-no-chains--blue.png" alt="Bang-A-Chain logo" style="width: 300px;">
+            </div>
+          {% endif %}
         </div>
 
         <div class="c-product__title u-vr__mb--1">

@@ -32,7 +32,7 @@
     <div class="u-text-center">
 
         <div class="c-product__image">
-          {% if product.variation_field_product_image|render %}
+          {% if product.variation_field_product_image.0|render %}
             {{ product.variation_field_product_image }}
           {% else %}
             <div class="c-field-media-image">

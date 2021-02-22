@@ -9586,6 +9586,10 @@ div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
 .c-search-result__footer-link:nth-of-type(2) {
   margin-left: 1rem; }
 
+.ais-PoweredBy {
+  position: absolute;
+  right: 15px; }
+
 /* views components subfolder */
 .c-view-commerce-cart-form {
   padding: calc(var(--lh__base) * 4 * var(--rvr-multiplier)) calc(var(--lh__base) * 1 * var(--rvr-multiplier)); }

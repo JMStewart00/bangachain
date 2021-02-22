@@ -22,6 +22,7 @@ import { SortBy } from './SortBy';
 
 import 'focus-visible';
 import styled from 'styled-components';
+import { PoweredBy } from 'react-instantsearch-dom';
 
 const FocusVisible = styled.div`
   &.js-focus-visible :focus:not(.focus-visible) {
@@ -100,6 +101,7 @@ export const SearchLayout = ({
 
           <SearchSummary />
           <FacetsSummary />
+          <PoweredBy />
           <CustomHits
             Component={resultsComponent}
             classes={resultsClasses}

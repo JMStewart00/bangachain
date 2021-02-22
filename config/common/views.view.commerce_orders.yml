@@ -84,6 +84,7 @@ display:
           summary: ''
           description: ''
           columns:
+            commerce_order_bulk_form: commerce_order_bulk_form
             order_number: order_number
             placed: placed
             type: type
@@ -94,6 +95,11 @@ display:
             total_price__number: total_price__number
             operations: operations
           info:
+            commerce_order_bulk_form:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
             order_number:
               sortable: true
               default_sort_order: asc
@@ -138,7 +144,7 @@ display:
               responsive: ''
             state:
               sortable: true
-              default_sort_order: asc
+              default_sort_order: desc
               align: ''
               separator: ''
               empty_column: false
@@ -151,13 +157,11 @@ display:
               empty_column: false
               responsive: ''
             operations:
-              sortable: false
-              default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false
               responsive: ''
-          default: placed
+          default: state
           empty_table: true
       row:
         type: fields
@@ -959,7 +963,8 @@ display:
     display_title: Page
     position: 1
     display_options:
-      display_extenders: {  }
+      display_extenders:
+        ajax_history: {  }
       path: admin/commerce/orders/list
       menu:
         type: 'default tab'

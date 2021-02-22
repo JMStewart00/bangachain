@@ -7,10 +7,11 @@ dependencies:
     - field.storage.commerce_product.field_category
     - field.storage.commerce_product.field_default_image
     - field.storage.media.field_media_image
-    - field.storage.commerce_product.body
+    - field.storage.commerce_product.field_description
     - field.storage.commerce_product.field_disc_category
     - field.storage.commerce_product.field_fade
     - field.storage.commerce_product.field_glide
+    - field.storage.commerce_product.field_restock_date
     - field.storage.commerce_product.field_speed
     - field.storage.commerce_product.field_stability_category
     - field.storage.commerce_product.field_turn
@@ -22,6 +23,7 @@ dependencies:
     - media
     - commerce_product
     - search_api
+    - react_search
 id: main_search
 name: 'Main Search'
 description: ''
@@ -50,11 +52,11 @@ field_settings:
   description:
     label: 'Description » Processed summary'
     datasource_id: 'entity:commerce_product'
-    property_path: 'body:summary_processed'
+    property_path: 'field_description:summary_processed'
     type: string
     dependencies:
       config:
-        - field.storage.commerce_product.body
+        - field.storage.commerce_product.field_description
   disc_type:
     label: 'Disc Type » Taxonomy term » Name'
     datasource_id: 'entity:commerce_product'
@@ -101,6 +103,14 @@ field_settings:
     dependencies:
       module:
         - commerce_product
+  restock_date:
+    label: 'Restock Date'
+    datasource_id: 'entity:commerce_product'
+    property_path: field_restock_date
+    type: date
+    dependencies:
+      config:
+        - field.storage.commerce_product.field_restock_date
   speed:
     label: Speed
     datasource_id: 'entity:commerce_product'
@@ -127,6 +137,10 @@ field_settings:
     dependencies:
       module:
         - commerce_product
+  stock_level:
+    label: stock_level
+    property_path: stock_level
+    type: integer
   title:
     label: Title
     datasource_id: 'entity:commerce_product'
@@ -175,6 +189,7 @@ processor_settings:
   aggregated_field: {  }
   language_with_fallback: {  }
   rendered_item: {  }
+  stock_level: {  }
 tracker_settings:
   default:
     indexing_order: fifo

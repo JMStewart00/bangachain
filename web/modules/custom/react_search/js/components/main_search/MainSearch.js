@@ -75,7 +75,7 @@ class MainSearch extends Component {
         */}
         <Configure
           hitsPerPage={24}
-          filters={`status:true`}
+          filters={`status:true AND stock_level > 0`}
         />
         <SearchLayout
           defaultSort={MAIN_ID}

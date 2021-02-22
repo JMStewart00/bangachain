@@ -76,7 +76,7 @@ class DiscSearch extends Component {
         */}
         <Configure
           hitsPerPage={24}
-          filters={`status:true AND product_type:discs`}
+          filters={`status:true AND product_type:discs AND stock_level > 0`}
         />
         <SearchLayout
           defaultSort={MAIN_ID}

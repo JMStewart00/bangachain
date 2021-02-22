@@ -1,5 +1,4 @@
 import React from 'react';
-import { connectHighlight } from 'react-instantsearch-dom';
 
 import { toArray } from '../../utils/helpers';
 
@@ -12,8 +11,8 @@ export const SiteWideResult = ({ hit }) => {
     turn,
     glide,
     fade,
-    product_image,
-    variation_images = []
+    variation_images = [],
+    stock_level
   } = hit;
 
   const indexedImageField = toArray(variation_images);
@@ -30,15 +29,22 @@ export const SiteWideResult = ({ hit }) => {
 
   return (
     <div className="c-search-result__inner c-search-result__inner--no-grid">
-      <div className="c-search-result__content-container--main-search">
+      <div className="c-search-result__content-container--main-search c-product c-product--teaser">
         <a href={url} className="o-link">
-          {newImageUrl ? (
-            <img src={newImageUrl} alt={title} width="200" height="200" />
-          ) : (
-            <img src={'/themes/custom/bangachain/assets/images/default-disc.png'} alt={'Default Disc Image'} width="200" height="200" />
-          )}
-          {title && <h2>{title}</h2>}
-          { (speed || glide || turn || fade) &&
+          <div class="c-product__image">
+            {newImageUrl ? (
+              <img src={newImageUrl} alt={title} width="200" height="200" />
+            ) : (
+              <img src={'/themes/custom/bangachain/assets/images/default-disc.png'} alt={'Default Disc Image'} width="200" height="200" />
+            )}
+          </div>
+
+          <div class="c-product__title">
+            <div class="u-color__blue h2">{title }</div>
+            <div class="u-color__blue-gray">{brand}</div>
+          </div>
+
+          {(speed || glide || turn || fade) &&
             <div class="c-product__flight-numbers">
               <ul class="o-list-inline">
                 <li class="c-product__speed--small o-list-inline__item" title="Speed">{speed}</li>
@@ -48,6 +54,7 @@ export const SiteWideResult = ({ hit }) => {
               </ul>
             </div>
           }
+          {stock_level && <div>Stock: {stock_level}</div>}
         </a>
       </div>
     </div>

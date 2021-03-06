@@ -12,6 +12,7 @@ dependencies:
     - field.field.node.team_member.field_photo
     - field.field.node.team_member.field_rating
     - field.field.node.team_member.field_social_media_links
+    - field.field.node.team_member.field_team_designation
     - field.field.node.team_member.field_video
     - node.type.team_member
   module:
@@ -21,6 +22,15 @@ targetEntityType: node
 bundle: team_member
 mode: teaser
 content:
+  field_pdga_number:
+    type: number_integer
+    weight: 1
+    region: content
+    label: hidden
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
   field_photo:
     type: entity_reference_entity_view
     weight: 0
@@ -35,8 +45,9 @@ hidden:
   field_favorite_discs: true
   field_handedness: true
   field_hometown: true
-  field_pdga_number: true
   field_rating: true
   field_social_media_links: true
+  field_team_designation: true
   field_video: true
   links: true
+  search_api_excerpt: true

@@ -4,6 +4,7 @@ namespace Drupal\commerce_pos\Form;
 
 use Drupal\commerce_order\Entity\OrderInterface;
 use Drupal\commerce_pos\Controller\POS;
+use Drupal\commerce_pos\Entity\Register;
 use Drupal\commerce_price\Price;
 use Drupal\commerce_store\CurrentStore;
 use Drupal\Component\Datetime\TimeInterface;
@@ -792,7 +793,8 @@ class POSForm extends ContentEntityForm {
     $form['totals'] = [
       '#type' => 'container',
     ];
-    $current_register = \Drupal::service('commerce_pos.current_register')->get()->getName();
+
+    $current_register = Register::load(1)->getName();
     $form['totals']['register'] = [
       '#markup' => '<div class="current-register">Register: ' . $current_register . '</div>',
     ];

@@ -5,6 +5,7 @@ dependencies:
   module:
     - commerce_order
     - commerce_price
+    - commerce_shipping
     - options
     - state_machine
     - user
@@ -82,19 +83,22 @@ display:
           summary: ''
           description: ''
           columns:
+            order_id: order_id
             order_number: order_number
             placed: placed
             total_price__number: total_price__number
             state: state
+            type: type
+            tracking_code: tracking_code
           info:
-            order_number:
-              sortable: true
-              default_sort_order: desc
+            order_id:
+              sortable: false
+              default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false
               responsive: ''
-            created:
+            order_number:
               sortable: true
               default_sort_order: desc
               align: ''
@@ -121,6 +125,20 @@ display:
               align: ''
               separator: ''
               empty_column: false
+              responsive: ''
+            type:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            tracking_code:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: true
               responsive: ''
           default: placed
           empty_table: false
@@ -455,6 +473,136 @@ display:
           entity_type: commerce_order
           entity_field: state
           plugin_id: field
+        type:
+          id: type
+          table: commerce_shipment
+          field: type
+          relationship: shipments
+          group_type: group
+          admin_label: ''
+          label: 'Shipment Type'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: entity_reference_label
+          settings:
+            link: false
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: commerce_shipment
+          entity_field: type
+          plugin_id: field
+        tracking_code:
+          id: tracking_code
+          table: commerce_shipment
+          field: tracking_code
+          relationship: shipments
+          group_type: group
+          admin_label: ''
+          label: 'Tracking code'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: false
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: commerce_shipment
+          entity_field: tracking_code
+          plugin_id: field
       filters:
         state:
           id: state
@@ -516,7 +664,16 @@ display:
             value: 'You have not placed any orders with us yet.'
             format: basic_html
           plugin_id: text
-      relationships: {  }
+      relationships:
+        shipments:
+          id: shipments
+          table: commerce_order__shipments
+          field: shipments
+          relationship: none
+          group_type: group
+          admin_label: 'shipments: Shipment'
+          required: false
+          plugin_id: standard
       arguments:
         uid:
           id: uid
@@ -573,7 +730,8 @@ display:
     display_title: 'User orders'
     position: 1
     display_options:
-      display_extenders: {  }
+      display_extenders:
+        ajax_history: {  }
       path: user/%user/orders
       menu:
         type: tab

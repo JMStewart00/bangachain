@@ -1,0 +1,23 @@
+uuid: e48cdb05-18a5-4d19-aea5-f1a4e66aa78b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_event_page
+    - node.type.events
+  module:
+    - link
+id: node.events.field_event_page
+field_name: field_event_page
+entity_type: node
+bundle: events
+label: 'Event Page'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 16
+  title: 0
+field_type: link

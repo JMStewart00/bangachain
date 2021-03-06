@@ -2,7 +2,6 @@
 
 namespace Drupal\commerce_pos\Controller;
 
-use Drupal\commerce_pos\Entity\Register;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Render\RendererInterface;
@@ -12,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\commerce_product\Entity\ProductVariation;
 use Drupal\search_api\Entity\Index;
+use Drupal\commerce_pos\Entity\Register;
 
 /**
  * Class PosOrderItemAutoComplete.

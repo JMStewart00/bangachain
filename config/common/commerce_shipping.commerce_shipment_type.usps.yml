@@ -1,0 +1,10 @@
+uuid: 5acfde32-a80d-4535-939e-205d44766ed5
+langcode: en
+status: true
+dependencies: {  }
+id: usps
+label: USPS
+profileType: customer
+traits: {  }
+sendConfirmation: true
+confirmationBcc: ''

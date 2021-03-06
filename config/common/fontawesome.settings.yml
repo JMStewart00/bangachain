@@ -12,3 +12,4 @@ use_duotone_file: true
 external_svg_integrity: null
 _core:
   default_config_hash: tBvH-4rFd4yx9dmyxlCjZn5HflzIVejjiSve31KN1bg
+load_assets: true

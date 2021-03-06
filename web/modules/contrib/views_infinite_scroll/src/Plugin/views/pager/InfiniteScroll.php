@@ -43,7 +43,6 @@ class InfiniteScroll extends SqlBase {
       ],
       '#element' => $this->options['id'],
       '#parameters' => $input,
-      '#view' => $this->view,
     ];
   }
 

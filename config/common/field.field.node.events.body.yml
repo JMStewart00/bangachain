@@ -1,0 +1,23 @@
+uuid: 34a4890f-53d3-414b-babd-0e465231031e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.events
+  module:
+    - text
+id: node.events.body
+field_name: body
+entity_type: node
+bundle: events
+label: Notes
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: false
+  required_summary: false
+field_type: text_with_summary

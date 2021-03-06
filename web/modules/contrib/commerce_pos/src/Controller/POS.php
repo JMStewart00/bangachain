@@ -9,6 +9,7 @@ use Drupal\commerce_order\Entity\Order;
 use Drupal\user\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
+use Drupal\commerce_pos\Entity\Register;
 
 /**
  * Provides main POS page.
@@ -71,7 +72,7 @@ class POS extends ControllerBase {
     $recent_cashiers = \Drupal::service('commerce_pos.recent_cashiers');
     $recent_cashiers->add();
 
-    $register = \Drupal::service('commerce_pos.current_register')->get();
+    $register = Register::load(1);
 
     if (empty($register) || !$register->isOpen()) {
       // If we're opening a new register, clear our current order. If it exists

@@ -8,6 +8,7 @@
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\user\Entity\User;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\commerce_pos\Entity\Register;
 
 /**
  * Implements hook_help().
@@ -35,7 +36,7 @@ function commerce_pos_customer_display_help($route_name, RouteMatchInterface $ro
 function commerce_pos_customer_display_form_commerce_pos_alter(&$form, FormStateInterface $form_state, $form_id) {
   $form['#attached']['library'][] = 'commerce_pos_customer_display/register';
 
-  $register = \Drupal::service('commerce_pos.current_register')->get();
+  $register = Register::load(1);
 
   if (isset($register)) {
     $form['#attached']['drupalSettings']['commercePOSCustomerDisplayRegisterId'] = $register->id();

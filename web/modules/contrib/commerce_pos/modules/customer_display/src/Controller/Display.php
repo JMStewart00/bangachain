@@ -5,6 +5,7 @@ namespace Drupal\commerce_pos_customer_display\Controller;
 use Drupal\commerce_store\Entity\Store;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\file\Entity\File;
+use Drupal\commerce_pos\Entity\Register;
 
 /**
  * This exists primarily as a placeholder for close functionality.
@@ -23,7 +24,7 @@ class Display extends ControllerBase {
    */
   public function content() {
     /* @var \Drupal\commerce_pos\Entity\Register $register */
-    $register = \Drupal::service('commerce_pos.current_register')->get();
+    $register = Register::load(1);
 
     if (empty($register)) {
       return $this->formBuilder()->getForm('\Drupal\commerce_pos_customer_display\Form\RegisterSelectForm');

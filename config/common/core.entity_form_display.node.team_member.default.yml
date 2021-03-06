@@ -11,6 +11,7 @@ dependencies:
     - field.field.node.team_member.field_photo
     - field.field.node.team_member.field_rating
     - field.field.node.team_member.field_social_media_links
+    - field.field.node.team_member.field_team_designation
     - field.field.node.team_member.field_video
     - node.type.team_member
   module:
@@ -89,6 +90,12 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: social_media_links_field_default
+    region: content
+  field_team_designation:
+    weight: 27
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
     region: content
   field_video:
     type: media_library_widget

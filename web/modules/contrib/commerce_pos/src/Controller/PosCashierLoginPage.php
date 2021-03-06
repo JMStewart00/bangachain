@@ -6,6 +6,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\file\Entity\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Drupal\Core\Url;
+use Drupal\commerce_pos\Entity\Register;
 
 /**
  * Provides route responses for the Cashier Login Page.
@@ -27,7 +28,7 @@ class PosCashierLoginPage extends ControllerBase {
     $recent_cashiers = \Drupal::service('commerce_pos.recent_cashiers');
 
     /* @var $register \Drupal\commerce_pos\Entity\Register */
-    $register = \Drupal::service('commerce_pos.current_register')->get();
+    $register = Register::load(1);
     if (isset($register)) {
       $store = $register->getStore();
     }

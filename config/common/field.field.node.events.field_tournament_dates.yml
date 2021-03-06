@@ -1,0 +1,21 @@
+uuid: ad75bb11-e6e5-42b9-bd05-3be92bdb9b17
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_tournament_dates
+    - node.type.events
+  module:
+    - datetime_range
+id: node.events.field_tournament_dates
+field_name: field_tournament_dates
+entity_type: node
+bundle: events
+label: 'Tournament Date(s)'
+description: 'If it''s a one day event just put the same date in both inputs'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: daterange

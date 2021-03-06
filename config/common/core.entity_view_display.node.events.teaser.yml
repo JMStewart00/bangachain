@@ -1,0 +1,33 @@
+uuid: 0b989d31-477e-42e5-bbde-5f82d2289dd9
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.events.body
+    - field.field.node.events.field_event_page
+    - field.field.node.events.field_link
+    - field.field.node.events.field_photo
+    - field.field.node.events.field_registration_opens
+    - field.field.node.events.field_tournament_dates
+    - node.type.events
+  module:
+    - user
+id: node.events.teaser
+targetEntityType: node
+bundle: events
+mode: teaser
+content:
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  body: true
+  field_event_page: true
+  field_link: true
+  field_photo: true
+  field_registration_opens: true
+  field_tournament_dates: true
+  search_api_excerpt: true

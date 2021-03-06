@@ -11,6 +11,7 @@ dependencies:
     - field.field.node.team_member.field_photo
     - field.field.node.team_member.field_rating
     - field.field.node.team_member.field_social_media_links
+    - field.field.node.team_member.field_team_designation
     - field.field.node.team_member.field_video
     - node.type.team_member
   module:
@@ -94,6 +95,13 @@ content:
     third_party_settings: {  }
     type: social_media_links_field_default
     region: content
+  field_team_designation:
+    weight: 10
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: content
   field_video:
     type: entity_reference_entity_view
     weight: 9
@@ -108,4 +116,5 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  search_api_excerpt: true

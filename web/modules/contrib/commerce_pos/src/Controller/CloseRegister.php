@@ -5,6 +5,7 @@ namespace Drupal\commerce_pos\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\commerce_pos\Entity\Register;
 
 /**
  * This exists primarily as a placeholder for close functionality.
@@ -30,7 +31,7 @@ class CloseRegister extends ControllerBase {
       return new RedirectResponse($redirect_url->toString());
     }
 
-    $register = \Drupal::service('commerce_pos.current_register')->get();
+    $register = Register::load(1);
     if($register != null) {
       $register->close();
       $register->save();

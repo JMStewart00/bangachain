@@ -5,6 +5,7 @@
     {{ content.field_photo }}
   </div>
   <div class="c-teaser-team-member__title u-fw__bold">
-    <h2>{{ label }}</h2>
+    <div class="h2">{{ label }}</div>
+    <div class="h3">PDGA #{{ content.field_pdga_number.0['#markup'] }}</div>
   </div>
 {% endblock %}

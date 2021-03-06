@@ -1,0 +1,21 @@
+uuid: 576c011e-4060-4043-b67f-586350ad89e9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_team_designation
+    - node.type.team_member
+  module:
+    - options
+id: node.team_member.field_team_designation
+field_name: field_team_designation
+entity_type: node
+bundle: team_member
+label: 'Team Designation'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

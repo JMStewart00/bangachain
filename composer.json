@@ -338,10 +338,13 @@
                 "Fix tests deprecation notices and prepare commerce_reports module for Drupal 9": "https://www.drupal.org/files/issues/2021-01-07/3167290-5.patch"
             },
             "drupal/commerce_pos": {
-                "Auto set register to id of 1": "./patches/specify-register-at-1.patch"
+                "Auto set register to id of 1": "./patches/load-only-register-1b.patch"
             },
             "drupal/commerce_email": {
                 "Log emails into order activity log": "https://www.drupal.org/files/issues/2020-12-24/commerce_email-log-emails-to-order-activity-log-3189770-2.patch"
+            },
+            "drupal/captcha": {
+                "Captcha Session ID broken with cacheable captcha backends": "https://www.drupal.org/files/issues/2020-11-17/cacheable-CAPTCHA.patch"
             }
         },
         "enable-patching": true,

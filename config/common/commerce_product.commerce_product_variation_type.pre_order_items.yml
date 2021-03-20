@@ -1,0 +1,10 @@
+uuid: be06287b-9279-4a06-bc0e-c073781668e0
+langcode: en
+status: true
+dependencies: {  }
+id: pre_order_items
+label: 'Pre Order Items'
+orderItemType: default
+generateTitle: null
+traits: {  }
+locked: false

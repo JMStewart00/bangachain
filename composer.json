@@ -293,7 +293,8 @@
                 "Break long text strings in layout edit": "https://www.drupal.org/files/issues/2020-08-10/break-long-text-strings-in-layout-3016507-32.patch",
                 "Nested Paragraphs create multiple drag handles": "https://www.drupal.org/files/issues/2019-11-13/claro-nested_paragraphs_multiple_drag_handles-3092181-5.patch",
                 "Views file name suggestions often missing from Twig debugging": "https://www.drupal.org/files/issues/views-template-suggestions-2839945-2.patch",
-                "Off-canvas style resets are overriding styles (especially SVGs) in Safari resulting in display issues": "https://www.drupal.org/files/issues/2019-05-07/off-canvas-style-resets-2958588-13.patch"
+                "Off-canvas style resets are overriding styles (especially SVGs) in Safari resulting in display issues": "https://www.drupal.org/files/issues/2019-05-07/off-canvas-style-resets-2958588-13.patch",
+                "'Negate' form value for condition plugins should be cast to boolean in validation.": "https://www.drupal.org/files/issues/2021-01-06/3114467-16.patch"
             },
             "drupal/block_class": {
                 "Integration with Drupal core's new Layout Builder": "https://www.drupal.org/files/issues/2019-06-28/block_class-support-layout-builder-2998114-45.patch"

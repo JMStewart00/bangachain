@@ -1,0 +1,17 @@
+uuid: 4e4224a1-a566-45ac-bc39-70d4f39a8c05
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_pos
+third_party_settings:
+  commerce_pos:
+    show_in_pos: true
+id: pre_order_items
+label: 'Pre Order Items'
+description: ''
+variationType: pre_order_items
+multipleVariations: true
+injectVariationFields: true
+traits: {  }
+locked: false

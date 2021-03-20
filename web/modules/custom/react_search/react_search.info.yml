@@ -2,4 +2,4 @@ name: 'React App'
 type: module
 description: 'React App Blocks for Search Components'
 core: 8.x
-package: BangAChain
+package: Bang-A-Chain

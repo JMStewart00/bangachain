@@ -8,7 +8,6 @@ description: ''
 folder: ../config/prod
 module:
   captcha: 0
-  google_tag: 0
   recaptcha: 0
   recaptcha_v3: 0
 theme: {  }

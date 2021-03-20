@@ -2,6 +2,6 @@ name: 'Soft4Net commerce_feeds'
 type: module
 description: 'Soft4Net commerce_feeds extension'
 core: 8.x
-package: 'Custom'
+package: Bang-A-Chain
 dependencies:
   - commerce_feeds

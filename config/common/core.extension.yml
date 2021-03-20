@@ -41,6 +41,7 @@ module:
   commerce_order: 0
   commerce_payment: 0
   commerce_payment_example: 0
+  commerce_paypal: 0
   commerce_pos: 0
   commerce_pos_barcode_scanning: 0
   commerce_pos_currency_denominations: 0

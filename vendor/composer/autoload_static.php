@@ -117,6 +117,7 @@ class ComposerStaticInit3d80e700841ab59d16fa8cf88fa4b442
             'SquareConnect\\' => 14,
             'SensioLabs\\Security\\' => 20,
             'SelfUpdate\\' => 11,
+            'Sainsburys\\Guzzle\\Oauth2\\' => 25,
         ),
         'R' => 
         array (
@@ -181,6 +182,10 @@ class ComposerStaticInit3d80e700841ab59d16fa8cf88fa4b442
             'GuzzleHttp\\' => 11,
             'Grasmash\\YamlExpander\\' => 22,
             'Grasmash\\Expander\\' => 18,
+        ),
+        'F' => 
+        array (
+            'Firebase\\JWT\\' => 13,
         ),
         'E' => 
         array (
@@ -412,6 +417,10 @@ class ComposerStaticInit3d80e700841ab59d16fa8cf88fa4b442
         array (
             0 => __DIR__ . '/..' . '/consolidation/self-update/src',
         ),
+        'Sainsburys\\Guzzle\\Oauth2\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/sainsburys/guzzle-oauth2-plugin/src',
+        ),
         'Robo\\' => 
         array (
             0 => __DIR__ . '/..' . '/consolidation/robo/src',
@@ -574,6 +583,10 @@ class ComposerStaticInit3d80e700841ab59d16fa8cf88fa4b442
         'Grasmash\\Expander\\' => 
         array (
             0 => __DIR__ . '/..' . '/grasmash/expander/src',
+        ),
+        'Firebase\\JWT\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
         ),
         'Egulias\\EmailValidator\\' => 
         array (

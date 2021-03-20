@@ -1,7 +1,7 @@
 # artwork_upload_pane.info.yml
 name: Artwork Upload Pane
 description: A custom pane with an upload field for dye artwork
-package: Custom
+package: Bang-A-Chain
 type: module
 core: '8.x'
 dependencies:

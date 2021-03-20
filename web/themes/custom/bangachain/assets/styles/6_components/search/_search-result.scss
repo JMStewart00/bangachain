@@ -79,5 +79,12 @@
 .ais-PoweredBy {
   position: absolute;
   right: 15px;
+  @include media-breakpoint-down(md) {
+    width: 100%;
+    align-content: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    position: relative;
+  }
 }
 

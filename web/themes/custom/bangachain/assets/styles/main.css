@@ -9590,6 +9590,17 @@ div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
   position: absolute;
   right: 15px; }
 
+@media (max-width: 991.98px) {
+  .ais-PoweredBy {
+    width: 100%;
+    -ms-flex-line-pack: center;
+    align-content: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    position: relative; } }
+
 /* views components subfolder */
 .c-view-commerce-cart-form {
   padding: calc(var(--lh__base) * 4 * var(--rvr-multiplier)) calc(var(--lh__base) * 1 * var(--rvr-multiplier)); }

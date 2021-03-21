@@ -1,5 +1,5 @@
 name: Bangachain Views
 description: Views Helpers for the bangachain site
-package: Bangachain
+package: Bang-A-Chain
 type: module
 core: 8.x

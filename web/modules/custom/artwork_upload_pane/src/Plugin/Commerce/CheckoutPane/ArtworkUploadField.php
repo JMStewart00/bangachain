@@ -21,7 +21,7 @@ class ArtworkUploadField extends CheckoutPaneBase {
    */
   public function buildPaneForm(array $pane_form, FormStateInterface $form_state, array &$complete_form) {
 
-    // Get all items in the order and loop through them adding an upload field for eacg item
+    // Get all items in the order and loop through them adding an upload field for each item
 
     foreach ($this->order->getItems() as $item) {
 
@@ -68,7 +68,7 @@ class ArtworkUploadField extends CheckoutPaneBase {
     // Check whether the order has an item that requires the disclaimer message.
     foreach ($this->order->getItems() as $order_item) {
       $purchased_entity = $order_item->getPurchasedEntity();
-      if ($purchased_entity->get('field_needs_artwork')->value == 1) {
+      if ($purchased_entity->hasField('field_needs_artwork') && $purchased_entity->get('field_needs_artwork')->value == 1) {
         return TRUE;
       }
     }

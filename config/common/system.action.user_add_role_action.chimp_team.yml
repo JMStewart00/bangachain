@@ -1,0 +1,14 @@
+uuid: f403339e-321f-4b5b-9f3b-dad5fc4b6925
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.chimp_team
+  module:
+    - user
+id: user_add_role_action.chimp_team
+label: 'Add the Chimp Team role to the selected user(s)'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: chimp_team

@@ -1,0 +1,9 @@
+uuid: 1f662d63-297b-441c-8279-fb616f13689d
+langcode: en
+status: true
+dependencies: {  }
+id: chimp_team
+label: 'Chimp Team'
+weight: 4
+is_admin: null
+permissions: {  }

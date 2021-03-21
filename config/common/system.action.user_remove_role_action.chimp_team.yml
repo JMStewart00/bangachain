@@ -1,0 +1,14 @@
+uuid: fb13bc14-f4f2-402d-a5c7-3bb22ae2b0ca
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.chimp_team
+  module:
+    - user
+id: user_remove_role_action.chimp_team
+label: 'Remove the Chimp Team role from the selected user(s)'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: chimp_team

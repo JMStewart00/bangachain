@@ -5,6 +5,6 @@ dependencies: {  }
 id: commerce_product
 label: Product
 tags:
-  description: '[node.product.field_description]'
-  image_src: '[node.product.field_image]'
+  description: '[commerce_product:field_description]'
+  image_src: '[commerce_product:field_default_image]'
   title: '[current-page:title] | [site:name]'

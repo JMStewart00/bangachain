@@ -217,6 +217,7 @@
         "drupal/user_registrationpassword": "^1.0@alpha",
         "drupal/view_unpublished": "1.x-dev",
         "drupal/views_ajax_history": "^1.2",
+        "drupal/views_data_export": "^1.0",
         "drupal/views_infinite_scroll": "1.x-dev@dev",
         "drupal/viewsreference": "^1.4",
         "drush/drush": "^9.2",

@@ -5,6 +5,7 @@ dependencies:
   config:
     - commerce_product.commerce_product_type.bags
     - field.field.commerce_product.bags.field_brand
+    - field.field.commerce_product.bags.field_default_image
     - field.field.commerce_product.bags.field_description
     - field.field.commerce_product.bags.field_meta_tags
     - field.field.commerce_product.bags.field_restock_date
@@ -35,8 +36,18 @@ content:
     third_party_settings: {  }
     type: entity_reference_autocomplete
     region: content
-  field_description:
+  field_default_image:
     weight: 8
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_description:
+    weight: 9
     settings:
       rows: 9
       summary_rows: 3
@@ -46,7 +57,7 @@ content:
     type: text_textarea_with_summary
     region: content
   field_meta_tags:
-    weight: 9
+    weight: 10
     settings:
       sidebar: true
     third_party_settings: {  }

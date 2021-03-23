@@ -6,6 +6,7 @@ dependencies:
     - commerce_product.commerce_product_type.accessories
     - field.field.commerce_product.accessories.field_brand
     - field.field.commerce_product.accessories.field_category
+    - field.field.commerce_product.accessories.field_default_image
     - field.field.commerce_product.accessories.field_description
     - field.field.commerce_product.accessories.field_meta_tags
     - field.field.commerce_product.accessories.field_restock_date
@@ -24,12 +25,12 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 4
+    weight: 8
     region: content
     settings: {  }
     third_party_settings: {  }
   field_brand:
-    weight: 8
+    weight: 3
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -39,7 +40,17 @@ content:
     type: entity_reference_autocomplete
     region: content
   field_category:
-    weight: 7
+    weight: 2
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_default_image:
+    weight: 4
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -49,7 +60,7 @@ content:
     type: entity_reference_autocomplete
     region: content
   field_description:
-    weight: 10
+    weight: 5
     settings:
       rows: 9
       summary_rows: 3
@@ -59,28 +70,28 @@ content:
     type: text_textarea_with_summary
     region: content
   field_meta_tags:
-    weight: 9
+    weight: 11
     settings:
       sidebar: true
     third_party_settings: {  }
     type: metatag_firehose
     region: content
   field_restock_date:
-    weight: 2
+    weight: 6
     settings: {  }
     third_party_settings: {  }
     type: datetime_default
     region: content
   field_video:
     type: media_library_widget
-    weight: 11
+    weight: 12
     settings:
       media_types: {  }
     third_party_settings: {  }
     region: content
   path:
     type: path
-    weight: 5
+    weight: 9
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -88,7 +99,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 6
+    weight: 10
     region: content
     third_party_settings: {  }
   stores:
@@ -111,7 +122,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 3
+    weight: 7
     region: content
     settings:
       match_operator: CONTAINS

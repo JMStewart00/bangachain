@@ -6,6 +6,7 @@ dependencies:
     - commerce_product.commerce_product_type.apparel
     - core.entity_view_mode.commerce_product.teaser
     - field.field.commerce_product.apparel.body
+    - field.field.commerce_product.apparel.field_default_image
     - field.field.commerce_product.apparel.field_meta_tags
     - field.field.commerce_product.apparel.field_restock_date
   module:
@@ -47,6 +48,7 @@ content:
 hidden:
   add_to_cart_link: true
   created: true
+  field_default_image: true
   field_meta_tags: true
   field_restock_date: true
   search_api_excerpt: true

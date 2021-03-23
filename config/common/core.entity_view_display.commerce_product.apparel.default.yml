@@ -5,6 +5,7 @@ dependencies:
   config:
     - commerce_product.commerce_product_type.apparel
     - field.field.commerce_product.apparel.body
+    - field.field.commerce_product.apparel.field_default_image
     - field.field.commerce_product.apparel.field_meta_tags
     - field.field.commerce_product.apparel.field_restock_date
   module:
@@ -23,6 +24,14 @@ content:
     weight: 11
     settings: {  }
     third_party_settings: {  }
+    region: content
+  field_default_image:
+    weight: 14
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
     region: content
   field_meta_tags:
     weight: 12

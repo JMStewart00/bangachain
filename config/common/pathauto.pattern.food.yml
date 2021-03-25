@@ -1,0 +1,23 @@
+uuid: 435f0d02-3f57-481a-b7ca-6925e74dad6c
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_product
+    - ctools
+id: food
+label: Food
+type: 'canonical_entities:commerce_product'
+pattern: '[commerce_product:title]'
+selection_criteria:
+  8940145e-0cc6-4057-9e90-0b51058d04c0:
+    id: 'entity_bundle:commerce_product'
+    bundles:
+      food: food
+    negate: false
+    context_mapping:
+      commerce_product: commerce_product
+    uuid: 8940145e-0cc6-4057-9e90-0b51058d04c0
+selection_logic: and
+weight: -5
+relationships: {  }

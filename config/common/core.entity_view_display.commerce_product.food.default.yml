@@ -6,8 +6,10 @@ dependencies:
     - commerce_product.commerce_product_type.food
     - field.field.commerce_product.food.field_default_image
     - field.field.commerce_product.food.field_description
+    - field.field.commerce_product.food.field_meta_tags
   module:
     - commerce_product
+    - metatag
     - text
 id: commerce_product.food.default
 targetEntityType: commerce_product
@@ -28,6 +30,13 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: text_default
+    region: content
+  field_meta_tags:
+    weight: 13
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: metatag_empty_formatter
     region: content
   title:
     label: hidden

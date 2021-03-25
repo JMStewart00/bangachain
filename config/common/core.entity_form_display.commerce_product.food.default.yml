@@ -6,9 +6,11 @@ dependencies:
     - commerce_product.commerce_product_type.food
     - field.field.commerce_product.food.field_default_image
     - field.field.commerce_product.food.field_description
+    - field.field.commerce_product.food.field_meta_tags
   module:
     - commerce
     - media_library
+    - metatag
     - path
     - text
 id: commerce_product.food.default
@@ -38,6 +40,13 @@ content:
       show_summary: false
     third_party_settings: {  }
     type: text_textarea_with_summary
+    region: content
+  field_meta_tags:
+    weight: 8
+    settings:
+      sidebar: true
+    third_party_settings: {  }
+    type: metatag_firehose
     region: content
   path:
     type: path

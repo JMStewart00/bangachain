@@ -12,3 +12,6 @@ entity_type_groups:
     discs:
       basic: basic
       advanced: advanced
+    food:
+      basic: basic
+      advanced: advanced

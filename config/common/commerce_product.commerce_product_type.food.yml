@@ -1,0 +1,17 @@
+uuid: 392ad865-fc2b-49da-b86d-ea5a98d4a186
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_pos
+third_party_settings:
+  commerce_pos:
+    show_in_pos: false
+id: food
+label: Food
+description: ''
+variationType: food
+multipleVariations: true
+injectVariationFields: true
+traits: {  }
+locked: false

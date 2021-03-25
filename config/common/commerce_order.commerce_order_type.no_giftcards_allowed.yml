@@ -1,0 +1,29 @@
+uuid: ba7c78ca-a83f-4a49-aea1-ea4781d52e1c
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_cart
+    - commerce_checkout
+    - commerce_shipping
+third_party_settings:
+  commerce_cart:
+    cart_form_view: commerce_cart_form
+    cart_block_view: commerce_cart_block
+    cart_expiration:
+      unit: hour
+      number: 6
+  commerce_checkout:
+    checkout_flow: no_giftcards
+  commerce_shipping:
+    shipment_type: ''
+label: 'No Giftcards Allowed'
+id: no_giftcards_allowed
+workflow: order_default_validation
+numberPattern: order_default
+refresh_mode: customer
+refresh_frequency: 300
+sendReceipt: true
+receiptBcc: bangachain2012@gmail.com
+traits: {  }
+locked: false

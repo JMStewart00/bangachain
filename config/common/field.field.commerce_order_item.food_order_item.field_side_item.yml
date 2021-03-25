@@ -1,0 +1,21 @@
+uuid: 5e11fd42-5096-4cdc-90f7-000e5258ec9c
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_order.commerce_order_item_type.food_order_item
+    - field.storage.commerce_order_item.field_side_item
+  module:
+    - options
+id: commerce_order_item.food_order_item.field_side_item
+field_name: field_side_item
+entity_type: commerce_order_item
+bundle: food_order_item
+label: 'Side Item'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

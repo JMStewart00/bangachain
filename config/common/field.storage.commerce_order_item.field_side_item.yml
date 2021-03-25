@@ -1,0 +1,30 @@
+uuid: 7b42f0e3-3ea1-41cf-97ca-fe582e812bb2
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_order
+    - options
+id: commerce_order_item.field_side_item
+field_name: field_side_item
+entity_type: commerce_order_item
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: green_beans
+      label: 'Green Beans'
+    -
+      value: mac
+      label: 'Mac and Cheese'
+    -
+      value: potato_salad
+      label: 'Potato Salad'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

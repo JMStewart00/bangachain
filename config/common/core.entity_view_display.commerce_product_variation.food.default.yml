@@ -1,0 +1,39 @@
+uuid: 2ff1a44f-7711-4d86-b075-68a73c62b1ed
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_variation_type.food
+    - field.field.commerce_product_variation.food.attribute_main_item
+  module:
+    - commerce_price
+id: commerce_product_variation.food.default
+targetEntityType: commerce_product_variation
+bundle: food
+mode: default
+content:
+  list_price:
+    label: above
+    type: commerce_price_default
+    weight: -1
+    region: content
+    settings:
+      strip_trailing_zeroes: false
+      currency_display: symbol
+    third_party_settings: {  }
+  price:
+    label: above
+    type: commerce_price_default
+    weight: 0
+    region: content
+    settings:
+      strip_trailing_zeroes: false
+      currency_display: symbol
+    third_party_settings: {  }
+hidden:
+  add_to_cart_link: true
+  attribute_main_item: true
+  product_id: true
+  search_api_excerpt: true
+  sku: true
+  title: true

@@ -1,0 +1,10 @@
+uuid: e67fb25f-071d-4d16-aa7f-ba86c20931f1
+langcode: en
+status: true
+dependencies: {  }
+id: food
+label: Food
+orderItemType: food_order_item
+generateTitle: false
+traits: {  }
+locked: false

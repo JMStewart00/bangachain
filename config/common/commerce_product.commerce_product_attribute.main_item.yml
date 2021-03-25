@@ -1,0 +1,7 @@
+uuid: 5b6058fa-dcc5-4e6f-b03e-23e8d8a2b761
+langcode: en
+status: true
+dependencies: {  }
+id: main_item
+label: 'Main Item'
+elementType: select

@@ -16,7 +16,6 @@ dependencies:
     - commerce_stock_field
     - media_library
     - physical
-    - text
 id: commerce_product_variation.apparel.default
 targetEntityType: commerce_product_variation
 bundle: apparel
@@ -49,14 +48,6 @@ content:
       step: '1'
     third_party_settings: {  }
     type: commerce_stock_level_simple_transaction
-    region: content
-  field_upc:
-    weight: 8
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: text_textfield
     region: content
   price:
     type: commerce_price_default
@@ -97,5 +88,6 @@ content:
 hidden:
   commerce_stock_always_in_stock: true
   created: true
+  field_upc: true
   list_price: true
   uid: true

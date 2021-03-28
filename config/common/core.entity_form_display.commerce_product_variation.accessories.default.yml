@@ -15,7 +15,6 @@ dependencies:
     - commerce_stock_field
     - media_library
     - physical
-    - text
 id: commerce_product_variation.accessories.default
 targetEntityType: commerce_product_variation
 bundle: accessories
@@ -23,26 +22,26 @@ mode: default
 content:
   attribute_disc_color:
     type: options_select
-    weight: 1
+    weight: 2
     settings: {  }
     third_party_settings: {  }
     region: content
   commerce_stock_always_in_stock:
     type: boolean_checkbox
-    weight: 6
+    weight: 7
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_product_image:
-    weight: 3
+    weight: 4
     settings:
       media_types: {  }
     third_party_settings: {  }
     type: media_library_widget
     region: content
   field_stock:
-    weight: 8
+    weight: 9
     settings:
       custom_transaction_note: false
       default_transaction_note: 'Transaction issued by stock level field.'
@@ -50,23 +49,15 @@ content:
     third_party_settings: {  }
     type: commerce_stock_level_simple_transaction
     region: content
-  field_upc:
-    weight: 9
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: text_textfield
-    region: content
   list_price:
     type: commerce_list_price
-    weight: 4
+    weight: 5
     region: content
     settings: {  }
     third_party_settings: {  }
   price:
     type: commerce_price_default
-    weight: 5
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -89,7 +80,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 7
+    weight: 8
     region: content
     third_party_settings: {  }
   title:
@@ -102,7 +93,7 @@ content:
     third_party_settings: {  }
   weight:
     type: physical_measurement_default
-    weight: 2
+    weight: 3
     settings:
       default_unit: g
       allow_unit_change: false
@@ -110,4 +101,5 @@ content:
     region: content
 hidden:
   created: true
+  field_upc: true
   uid: true

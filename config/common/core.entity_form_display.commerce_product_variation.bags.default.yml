@@ -15,7 +15,6 @@ dependencies:
     - commerce_stock_field
     - media_library
     - physical
-    - text
 id: commerce_product_variation.bags.default
 targetEntityType: commerce_product_variation
 bundle: bags
@@ -50,14 +49,6 @@ content:
     third_party_settings: {  }
     type: commerce_stock_level_simple_transaction
     region: content
-  field_upc:
-    weight: 10
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: text_textfield
-    region: content
   list_price:
     type: commerce_list_price
     weight: 3
@@ -77,13 +68,13 @@ content:
     settings:
       custom_label: ''
       uniqid_enabled: true
-      more_entropy: false
-      hide: false
-      prefix: sku-
+      prefix: ''
       suffix: ''
       size: 60
       placeholder: ''
       maximum: 500
+      more_entropy: false
+      hide: false
     third_party_settings: {  }
   status:
     type: boolean_checkbox
@@ -110,4 +101,5 @@ content:
     region: content
 hidden:
   created: true
+  field_upc: true
   uid: true

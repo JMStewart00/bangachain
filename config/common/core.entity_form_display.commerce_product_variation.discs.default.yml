@@ -22,7 +22,6 @@ dependencies:
     - commerce_stock_field
     - media_library
     - physical
-    - text
 id: commerce_product_variation.discs.default
 targetEntityType: commerce_product_variation
 bundle: discs
@@ -30,13 +29,13 @@ mode: default
 content:
   attribute_disc_color:
     type: options_select
-    weight: 8
+    weight: 7
     settings: {  }
     third_party_settings: {  }
     region: content
   attribute_disc_plastic:
     type: entity_reference_autocomplete
-    weight: 5
+    weight: 4
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -46,26 +45,26 @@ content:
     region: content
   attribute_disc_weight:
     type: options_select
-    weight: 9
+    weight: 8
     settings: {  }
     third_party_settings: {  }
     region: content
   commerce_stock_always_in_stock:
     type: boolean_checkbox
-    weight: 13
+    weight: 12
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_bin:
-    weight: 11
+    weight: 10
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
     region: content
   field_needs_artwork:
-    weight: 2
+    weight: 1
     settings:
       display_label: true
     third_party_settings: {  }
@@ -73,13 +72,13 @@ content:
     region: content
   field_product_image:
     type: media_library_widget
-    weight: 3
+    weight: 2
     settings:
       media_types: {  }
     third_party_settings: {  }
     region: content
   field_stock:
-    weight: 12
+    weight: 11
     settings:
       default_transaction_note: 'Transaction issued by stock level field.'
       step: '1'
@@ -87,23 +86,15 @@ content:
     third_party_settings: {  }
     type: commerce_stock_level_simple_transaction
     region: content
-  field_upc:
-    type: text_textfield
-    weight: 1
-    region: content
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
   field_used:
-    weight: 4
+    weight: 3
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_vendor_cost:
-    weight: 6
+    weight: 5
     settings:
       placeholder: ''
     third_party_settings: {  }
@@ -111,7 +102,7 @@ content:
     region: content
   price:
     type: commerce_price_default
-    weight: 7
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -122,24 +113,24 @@ content:
     settings:
       custom_label: ''
       uniqid_enabled: true
-      hide: true
       prefix: ''
       suffix: ''
       size: 60
       placeholder: ''
       maximum: 500
       more_entropy: false
+      hide: false
     third_party_settings: {  }
   status:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 14
+    weight: 13
     region: content
     third_party_settings: {  }
   weight:
     type: physical_measurement_default
-    weight: 10
+    weight: 9
     settings:
       default_unit: g
       allow_unit_change: false
@@ -148,5 +139,6 @@ content:
 hidden:
   created: true
   feeds_item: true
+  field_upc: true
   list_price: true
   uid: true

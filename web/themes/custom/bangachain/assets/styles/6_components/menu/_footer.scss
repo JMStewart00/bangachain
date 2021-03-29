@@ -16,6 +16,7 @@
 
   &__logo-container {
     grid-area: first;
+    margin-bottom: rvr(2);
 
     img {
       max-width: 200px;
@@ -39,6 +40,10 @@
     flex-wrap: nowrap;
     position: relative;
 
+    @include media-breakpoint-down(md) {
+      justify-content: center;
+    }
+
     &-icon {
       font-size: rem(14);
       margin-left: spacer(0.25);
@@ -57,7 +62,25 @@
     }
   }
 
+  &__address {
+    display: flex;
+    margin-bottom: rvr(1);
+
+    @include media-breakpoint-down(md) {
+      justify-content: center;
+    }
+
+    svg {
+      margin-left: 0 !important;
+      margin-right: 12px;
+    }
+  }
+
   &__menu {
+    @include media-breakpoint-down(md) {
+      margin-bottom: rvr(2);
+    }
+
     .c-menu-main {
       flex-direction: column;
 

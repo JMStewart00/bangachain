@@ -40,6 +40,8 @@
   justify-content: center;
   text-transform: uppercase;
   @include media-breakpoint-down(lg) {
-    display: none;
+    #block-bangachain-main-menu & {
+      display: none;
+    }
   }
 }

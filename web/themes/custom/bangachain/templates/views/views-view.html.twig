@@ -47,6 +47,12 @@
   {% endif %}
   {{ title_suffix }}
 
+  {% if feed_icons %}
+    <div class="feed-icons">
+      {{ feed_icons }}
+    </div>
+  {% endif %}
+
   {% if attachment_before %}
     {{ attachment_before }}
   {% endif %}

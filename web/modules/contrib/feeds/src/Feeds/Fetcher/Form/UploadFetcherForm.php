@@ -82,7 +82,9 @@ class UploadFetcherForm extends ExternalPluginFormBase implements ContainerInjec
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
     $values =& $form_state->getValues();
 
-    $values['allowed_extensions'] = preg_replace('/\s+/', ' ', trim($values['allowed_extensions']));
+    if (isset($values['allowed_extensions'])) {
+      $values['allowed_extensions'] = preg_replace('/\s+/', ' ', trim($values['allowed_extensions']));
+    }
 
     // Ensure that the upload directory exists.
     if (!empty($form['directory']) && !$this->fileSystem->prepareDirectory($values['directory'], FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS)) {

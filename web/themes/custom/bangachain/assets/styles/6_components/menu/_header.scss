@@ -50,6 +50,9 @@
   &__account-menu {
     display: flex;
     margin: 0;
+    @include media-breakpoint-down(lg) {
+      margin: auto;
+    }
 
     .region-header {
       display: flex;

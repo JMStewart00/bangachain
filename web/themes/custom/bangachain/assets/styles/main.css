@@ -9042,6 +9042,10 @@ div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
   display: flex;
   margin: 0; }
 
+@media (max-width: 1199.98px) {
+  .c-header__account-menu {
+    margin: auto; } }
+
 .c-header__account-menu .region-header {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -9136,6 +9140,10 @@ div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
   -ms-flex-pack: center;
   justify-content: center;
   text-transform: uppercase; }
+
+@media (max-width: 1199.98px) {
+  .c-menu-main {
+    display: none; } }
 
 .c-mobile-menu {
   --mm-offset-top: 4.6875rem;

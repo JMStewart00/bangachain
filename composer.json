@@ -348,6 +348,9 @@
             },
             "drupal/captcha": {
                 "Captcha Session ID broken with cacheable captcha backends": "https://www.drupal.org/files/issues/2020-11-17/cacheable-CAPTCHA.patch"
+            },
+            "drupal/feeds": {
+                "Undefined Index: allowed_extensions AJAX error when creating feed types.": "https://www.drupal.org/files/issues/2019-02-06/3031019-undefined-index-ajax-2.patch"
             }
         },
         "enable-patching": true,

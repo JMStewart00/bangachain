@@ -39,4 +39,7 @@
   display: flex;
   justify-content: center;
   text-transform: uppercase;
+  @include media-breakpoint-down(lg) {
+    display: none;
+  }
 }

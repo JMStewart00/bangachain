@@ -85,7 +85,7 @@ export const SearchLayout = ({
                   className="o-btn o-btn--secondary"
                   onClick={() => setMobileFiltersActive(true)}
                 >
-                  <i className="fas fa-sliders-h" aria-hidden="true"></i>{' '}FILTERS
+                  <i className="fas fa-sliders-h" aria-hidden="true"></i>{' '}ADVANCED SEARCH
                   </button>
               </div>
 

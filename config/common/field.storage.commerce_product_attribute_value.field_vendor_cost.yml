@@ -1,0 +1,20 @@
+uuid: d179bfd0-0a70-49d6-9f5a-0e4d164ba198
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_product
+id: commerce_product_attribute_value.field_vendor_cost
+field_name: field_vendor_cost
+entity_type: commerce_product_attribute_value
+type: decimal
+settings:
+  precision: 10
+  scale: 2
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,47 @@
+uuid: d1fb8a94-8e55-41c3-8a88-f568c3f4438b
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_attribute.disc_plastic
+    - field.field.commerce_product_attribute_value.disc_plastic.feeds_item
+    - field.field.commerce_product_attribute_value.disc_plastic.field_price
+    - field.field.commerce_product_attribute_value.disc_plastic.field_vendor_cost
+id: commerce_product_attribute_value.disc_plastic.default
+targetEntityType: commerce_product_attribute_value
+bundle: disc_plastic
+mode: default
+content:
+  field_price:
+    weight: -3
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_decimal
+    region: content
+  field_vendor_cost:
+    weight: -4
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_decimal
+    region: content
+  name:
+    label: hidden
+    type: string
+    weight: -5
+    region: content
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+hidden:
+  feeds_item: true
+  search_api_excerpt: true

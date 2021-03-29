@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a0d2f7e88c911deafd908fb81f858d7d",
+    "content-hash": "19410116bd28c7995d0f99169378d2da",
     "packages": [
         {
             "name": "algolia/algoliasearch-client-php",
@@ -161,7 +161,7 @@
             "version": "1.12.4",
             "source": {
                 "type": "git",
-                "url": "https://github.com/jquery/jquery-dist.git",
+                "url": "git@github.com:jquery/jquery-dist.git",
                 "reference": "5e89585e0121e72ff47de177c5ef604f3089a53d"
             },
             "dist": {
@@ -6320,7 +6320,9 @@
                         "message": "Project has not opted into security advisory coverage!"
                     }
                 },
-                "patches_applied": []
+                "patches_applied": {
+                    "Undefined Index: allowed_extensions AJAX error when creating feed types.": "https://www.drupal.org/files/issues/2019-02-06/3031019-undefined-index-ajax-2.patch"
+                }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
             "license": [

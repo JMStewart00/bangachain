@@ -17,7 +17,7 @@ third_party_settings:
     checkout_flow: no_giftcards
   commerce_shipping:
     shipment_type: ''
-label: 'No Giftcards Allowed'
+label: 'Food Order'
 id: no_giftcards_allowed
 workflow: order_default_validation
 numberPattern: order_default

@@ -1,0 +1,19 @@
+uuid: 4a93b60a-640d-40a8-bd06-13f7e5656786
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_content
+    - iframe
+id: block_content.field_iframe
+field_name: field_iframe
+entity_type: block_content
+type: iframe
+settings: {  }
+module: iframe
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

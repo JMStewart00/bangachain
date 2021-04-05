@@ -1,0 +1,137 @@
+grants:
+  view: 1
+  edit: 0
+  delete: 0
+priority: 0
+preserve: 1
+_core:
+  default_config_hash: Zno4MMkbreZeJZgnY0DXCPksXkuYye3MyIFlVuh-xLc
+events:
+  anonymous:
+    grant_view: '1'
+    grant_update: 0
+    grant_delete: 0
+  authenticated:
+    grant_view: '1'
+    grant_update: 0
+    grant_delete: 0
+  administrator:
+    grant_view: 0
+    grant_update: 0
+    grant_delete: 0
+  pos_cashier:
+    grant_view: 0
+    grant_update: 0
+    grant_delete: 0
+  team_member:
+    grant_view: 0
+    grant_update: 0
+    grant_delete: 0
+  chimp_team:
+    grant_view: 0
+    grant_update: 0
+    grant_delete: 0
+  author:
+    grant_view: 0
+    grant_update: 0
+    grant_delete: 0
+page:
+  anonymous:
+    grant_view: '1'
+    grant_update: 0
+    grant_delete: 0
+  authenticated:
+    grant_view: '1'
+    grant_update: 0
+    grant_delete: 0
+  administrator:
+    grant_view: 0
+    grant_update: 0
+    grant_delete: 0
+  pos_cashier:
+    grant_view: 0
+    grant_update: 0
+    grant_delete: 0
+  team_member:
+    grant_view: 0
+    grant_update: 0
+    grant_delete: 0
+  chimp_team:
+    grant_view: 0
+    grant_update: 0
+    grant_delete: 0
+  author:
+    grant_view: 0
+    grant_update: 0
+    grant_delete: 0
+team_member:
+  anonymous:
+    grant_view: '1'
+    grant_update: 0
+    grant_delete: 0
+  authenticated:
+    grant_view: '1'
+    grant_update: 0
+    grant_delete: 0
+  administrator:
+    grant_view: 0
+    grant_update: 0
+    grant_delete: 0
+  pos_cashier:
+    grant_view: 0
+    grant_update: 0
+    grant_delete: 0
+  team_member:
+    grant_view: 0
+    grant_update: 0
+    grant_delete: 0
+  chimp_team:
+    grant_view: 0
+    grant_update: 0
+    grant_delete: 0
+  author:
+    grant_view: 0
+    grant_update: 0
+    grant_delete: 0
+role_alias:
+  anonymous:
+    allow: '1'
+    alias: 'Anonymous user'
+    weight: '0'
+    name: 'Anonymous user'
+  authenticated:
+    allow: '1'
+    alias: 'Authenticated user'
+    weight: '0'
+    name: 'Authenticated user'
+  administrator:
+    alias: Administrator
+    weight: '0'
+    name: Administrator
+    allow: 0
+  pos_cashier:
+    alias: Cashier
+    weight: '0'
+    name: Cashier
+    allow: 0
+  team_member:
+    alias: 'Champ Team Member'
+    weight: '0'
+    name: 'Champ Team Member'
+    allow: 0
+  chimp_team:
+    alias: 'Chimp Team'
+    weight: '0'
+    name: 'Chimp Team'
+    allow: 0
+role_map:
+  anonymous: 1
+  authenticated: 2
+  administrator: 3
+  pos_cashier: 4
+  team_member: 5
+  chimp_team: 6
+allowed_types:
+  events: 0
+  page: 1
+  team_member: 0

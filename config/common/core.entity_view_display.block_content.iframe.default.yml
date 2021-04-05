@@ -1,0 +1,33 @@
+uuid: ccb1f256-9fff-42b9-9ada-2fd0a251610f
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.iframe
+    - field.field.block_content.iframe.field_iframe
+  module:
+    - iframe
+id: block_content.iframe.default
+targetEntityType: block_content
+bundle: iframe
+mode: default
+content:
+  field_iframe:
+    weight: 0
+    label: above
+    settings:
+      url: ''
+      title: ''
+      width: ''
+      height: ''
+      class: ''
+      frameborder: '0'
+      scrolling: ''
+      transparency: '0'
+      tokensupport: '0'
+      allowfullscreen: '0'
+    third_party_settings: {  }
+    type: iframe_default
+    region: content
+hidden:
+  search_api_excerpt: true

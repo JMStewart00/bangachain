@@ -74,15 +74,21 @@ display:
           description: ''
           columns:
             field_photo: field_photo
+            field_event_page: field_event_page
             title: title
             field_tournament_dates: field_tournament_dates
-            field_registration_opens: field_registration_opens
             field_link: field_link
+            field_registration_opens: field_registration_opens
             body: body
           info:
             field_photo:
               sortable: false
               default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_event_page:
               align: ''
               separator: ''
               empty_column: false
@@ -101,17 +107,17 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
+            field_link:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
             field_registration_opens:
               sortable: false
               default_sort_order: asc
               align: ''
               separator: ''
-              empty_column: false
-              responsive: ''
-            field_link:
-              align: ''
-              separator: ''
-              empty_column: false
+              empty_column: true
               responsive: ''
             body:
               sortable: false
@@ -266,7 +272,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: '<a href="{{ field_event_page }}" class="o-btn o-btn--secondary o-btn--large o-btn--square" target="_blank">{{ title }}</a>'
+            text: '{% if field_event_page %}<a href="{{ field_event_page }}" class="o-btn o-btn--secondary o-btn--large o-btn--square" target="_blank">{% endif %}{{ title }}{% if field_event_page %}</a>{% endif %}'
             make_link: false
             path: ''
             absolute: false
@@ -459,7 +465,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          label: Registration
+          label: 'Registration Opens'
           exclude: false
           alter:
             alter_text: true

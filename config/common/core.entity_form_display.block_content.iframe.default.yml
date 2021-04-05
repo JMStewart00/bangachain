@@ -1,0 +1,38 @@
+uuid: f59551ad-26d1-4606-8816-bf6341d0b75a
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.iframe
+    - field.field.block_content.iframe.field_iframe
+  module:
+    - iframe
+id: block_content.iframe.default
+targetEntityType: block_content
+bundle: iframe
+mode: default
+content:
+  field_iframe:
+    weight: 26
+    settings:
+      width: ''
+      height: ''
+      class: ''
+      expose_class: false
+      frameborder: '0'
+      scrolling: auto
+      transparency: '0'
+      tokensupport: '0'
+      allowfullscreen: '0'
+    third_party_settings: {  }
+    type: iframe_urlwidthheight
+    region: content
+  info:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }

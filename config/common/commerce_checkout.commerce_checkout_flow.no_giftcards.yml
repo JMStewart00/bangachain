@@ -19,8 +19,8 @@ configuration:
   display_checkout_progress_breadcrumb_links: false
   panes:
     login:
-      allow_guest_checkout: true
-      allow_registration: false
+      allow_guest_checkout: false
+      allow_registration: true
       step: login
       weight: 0
     contact_information:

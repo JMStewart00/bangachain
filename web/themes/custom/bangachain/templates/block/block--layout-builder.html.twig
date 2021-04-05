@@ -39,8 +39,8 @@
 {% set cta_url = elements['#primary_cta_url'] %}
 
 <div{{attributes.addClass(classes)}}>
+  {{ title_prefix }}
   {% block title %}
-    {{ title_prefix }}
 
     {% if heading %} {# if the heading is filled in and there #}
       <h2{{ title_attributes.addClass('c-block__title', 'h1') }}>{{ heading }}</h2>
@@ -48,8 +48,8 @@
       <h2>{{ label }}</h2>
     {% endif %}
 
-    {{ title_suffix }}
   {% endblock %}
+  {{ title_suffix }}
 
   {% block subheading %}
     {% if subheading %}

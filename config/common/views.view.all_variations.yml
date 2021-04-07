@@ -2294,8 +2294,8 @@ display:
         title: 'Inventory Management'
         description: ''
         expanded: false
-        parent: commerce.admin_commerce
-        weight: -50
+        parent: 'menu_link_content:942bded5-1853-4272-afb5-9162f90ab30f'
+        weight: 1
         context: '0'
         menu_name: admin
     cache_metadata:

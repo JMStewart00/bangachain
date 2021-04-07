@@ -127,8 +127,8 @@ class POSForm extends ContentEntityForm {
       $form = $this->buildPaymentForm($form, $form_state);
     }
 
-    // Add order note form.
-    $form = $this->buildOrderCommentForm($form, $form_state);
+    // // Add order note form.
+    // $form = $this->buildOrderCommentForm($form, $form_state);
 
     $this->addTotalsDisplay($form, $form_state);
 

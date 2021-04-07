@@ -11,5 +11,71 @@ definitions:
     parent: ''
     expanded: false
     weight: -50
+  commerce_dashboard__dashboard:
+    weight: 2
+    parent: 'menu_link_content:942bded5-1853-4272-afb5-9162f90ab30f'
+    menu_name: admin
+    expanded: false
+    enabled: true
+  entity__commerce_giftcard__collection:
+    weight: 3
+    menu_name: admin
+    parent: commerce.admin_commerce
+    expanded: false
+    enabled: true
+  entity__commerce_order__collection:
+    weight: 4
+    menu_name: admin
+    parent: commerce.admin_commerce
+    expanded: false
+    enabled: true
+  commerce_pos__base:
+    weight: 6
+    menu_name: admin
+    parent: commerce.admin_commerce
+    expanded: false
+    enabled: true
+  entity__commerce_product_attribute__collection:
+    weight: 7
+    menu_name: admin
+    parent: commerce.admin_commerce
+    expanded: false
+    enabled: true
+  entity__commerce_product__collection:
+    weight: 8
+    menu_name: admin
+    parent: commerce.admin_commerce
+    expanded: false
+    enabled: true
+  entity__commerce_promotion__collection:
+    weight: 9
+    menu_name: admin
+    parent: commerce.admin_commerce
+    expanded: false
+    enabled: true
+  entity__commerce_shipping_method__collection:
+    weight: 10
+    menu_name: admin
+    parent: commerce.admin_commerce
+    expanded: false
+    enabled: true
+  commerce__configuration:
+    weight: 11
+    menu_name: admin
+    parent: commerce.admin_commerce
+    expanded: false
+    enabled: true
+  commerce_reports__overview:
+    weight: 12
+    menu_name: admin
+    parent: commerce.admin_commerce
+    expanded: false
+    enabled: true
+  commerce_smart_importer__csv:
+    weight: 13
+    menu_name: admin
+    parent: commerce.admin_commerce
+    expanded: false
+    enabled: true
 _core:
   default_config_hash: o4bYR9ZupWb3AsOIizTUG4g-nu1mdJqA59UB7QT-ifQ

@@ -54,7 +54,6 @@ export const SiteWideResult = ({ hit }) => {
               </ul>
             </div>
           }
-          {stock_level && <div>Stock: {stock_level}</div>}
         </a>
       </div>
     </div>

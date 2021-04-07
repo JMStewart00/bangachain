@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "040c0a4bb235f628e519cbf932b338a4",
+    "content-hash": "9cf9770d581fa10149baed7577255036",
     "packages": [
         {
             "name": "algolia/algoliasearch-client-php",
@@ -3289,17 +3289,11 @@
         },
         {
             "name": "drupal/commerce",
-            "version": "2.24.0",
+            "version": "dev-2.x",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/commerce.git",
-                "reference": "8.x-2.24"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/commerce-8.x-2.24.zip",
-                "reference": "8.x-2.24",
-                "shasum": "ebe1b58bc87446ad1edbfd62ed8fffb8583b68fb"
+                "reference": "fa05805b213c3f07033c8e58bbd91fc3bc63c548"
             },
             "require": {
                 "commerceguys/intl": "^1.0.0",
@@ -3330,12 +3324,15 @@
             },
             "type": "drupal-module",
             "extra": {
+                "branch-alias": {
+                    "dev-2.x": "2.x-dev"
+                },
                 "drupal": {
-                    "version": "8.x-2.24",
-                    "datestamp": "1612808406",
+                    "version": "8.x-2.x-dev",
+                    "datestamp": "1615204870",
                     "security-coverage": {
-                        "status": "covered",
-                        "message": "Covered by Drupal's security advisory policy"
+                        "status": "not-covered",
+                        "message": "Dev releases are not covered by Drupal security advisories."
                     }
                 },
                 "patches_applied": {
@@ -3368,7 +3365,8 @@
             "homepage": "http://drupal.org/project/commerce",
             "support": {
                 "source": "https://git.drupalcode.org/project/commerce"
-            }
+            },
+            "time": "2021-03-22T10:49:33+00:00"
         },
         {
             "name": "drupal/commerce_add_to_cart_link",
@@ -3926,7 +3924,8 @@
             "homepage": "http://drupal.org/project/commerce_giftcard",
             "support": {
                 "source": "https://git.drupalcode.org/project/commerce_giftcard"
-            }
+            },
+            "time": "2020-10-07T12:41:20+00:00"
         },
         {
             "name": "drupal/commerce_log",
@@ -18385,6 +18384,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "drupal/better_exposed_filters": 10,
+        "drupal/commerce": 20,
         "drupal/commerce_autosku": 20,
         "drupal/commerce_bulk": 10,
         "drupal/commerce_email": 20,

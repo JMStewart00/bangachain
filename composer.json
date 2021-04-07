@@ -144,7 +144,7 @@
         "drupal/coffee": "^1.0",
         "drupal/color_field": "^2.4",
         "drupal/colorbox": "^1.6",
-        "drupal/commerce": "^2.20",
+        "drupal/commerce": "2.x-dev@dev",
         "drupal/commerce_add_to_cart_link": "^2.0",
         "drupal/commerce_autosku": "2.x-dev@dev",
         "drupal/commerce_bulk": "^1.0@beta",

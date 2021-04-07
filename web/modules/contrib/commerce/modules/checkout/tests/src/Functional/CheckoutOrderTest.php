@@ -7,6 +7,7 @@ use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\commerce\Functional\CommerceBrowserTestBase;
 
 /**
@@ -263,6 +264,45 @@ class CheckoutOrderTest extends CommerceBrowserTestBase {
     $this->assertEquals($expected_address, array_filter($billing_profile->get('address')->first()->toArray()));
     $this->assertEmpty($billing_profile->getData('copy_to_address_book'));
     $this->assertNotEmpty($billing_profile->getData('address_book_profile_id'));
+  }
+
+  /**
+   * Tests the user gets created during registration in the current language.
+   */
+  public function testMultilingualRegisterOrderCheckout() {
+    \Drupal::service('module_installer')->install(['language']);
+    ConfigurableLanguage::createFromLangcode('fr')->save();
+    $config = \Drupal::configFactory()->getEditable('commerce_checkout.commerce_checkout_flow.default');
+    $config->set('configuration.panes.login.allow_guest_checkout', FALSE);
+    $config->set('configuration.panes.login.allow_registration', TRUE);
+    $config->save();
+
+    $this->drupalLogout();
+    $this->drupalGet('/fr/product/' . $this->product->id());
+    $this->submitForm([], 'Add to cart');
+    $cart_link = $this->getSession()->getPage()->findLink('your cart');
+    $cart_link->click();
+    $this->submitForm([], 'Checkout');
+    $this->assertSession()->pageTextContains('New Customer');
+    $this->submitForm([
+      'login[register][name]' => 'User name',
+      'login[register][mail]' => 'guest@example.com',
+      'login[register][password][pass1]' => 'pass',
+      'login[register][password][pass2]' => 'pass',
+    ], 'Create account and continue');
+    $this->assertSession()->pageTextContains('Billing information');
+    // Check breadcrumbs are not links. (the default setting)
+    $this->assertSession()->elementNotExists('css', '.block-commerce-checkout-progress li.checkout-progress--step > a');
+
+    // Assert created user account values.
+    $users = \Drupal::entityTypeManager()->getStorage('user')->loadByProperties(['mail' => 'guest@example.com']);
+    /** @var \Drupal\user\UserInterface $user */
+    $user = reset($users);
+
+    $this->assertEquals('User name', $user->label());
+    $this->assertEquals('fr', $user->language()->getId());
+    $this->assertEquals('fr', $user->getPreferredLangcode());
+    $this->assertEquals('fr', $user->getPreferredAdminLangcode());
   }
 
   /**

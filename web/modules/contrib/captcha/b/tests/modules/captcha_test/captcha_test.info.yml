@@ -1,5 +1,0 @@
-name: 'Captcha Test'
-type: module
-description: 'Provides captcha types for tests.'
-package: Testing
-core: 8.x

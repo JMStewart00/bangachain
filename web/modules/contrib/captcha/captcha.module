@@ -611,16 +611,6 @@ function captcha_validate($element, FormStateInterface &$form_state) {
         ['%csid' => var_export($csid, TRUE)]);
     }
   }
-  else {
-    // If the session is gone and we can't confirm a solution error.
-    // Note: _captcha_get_posted_captcha_info() validates and triggers session
-    // rebuilds for re-use attacks during element processing so this should be
-    // rare if it ever happens.
-    $form_state->setErrorByName('captcha', t('CAPTCHA validation error: unknown CAPTCHA session ID. Contact the site administrator if this problem persists.'));
-    \Drupal::logger('CAPTCHA')->error(
-      'CAPTCHA validation error: unknown CAPTCHA session ID (%csid).',
-      ['%csid' => var_export($csid, TRUE)]);
-  }
 }
 
 /**

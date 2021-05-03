@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7900eadbe2915cc81d712e1594325478",
+    "content-hash": "c8eab8d61b631d85362e098911d8c5ba",
     "packages": [
         {
             "name": "algolia/algoliasearch-client-php",
@@ -2879,28 +2879,33 @@
         },
         {
             "name": "drupal/captcha",
-            "version": "dev-1.x",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/captcha.git",
-                "reference": "ae73e6e3e688d5d20acb81aba0644e83735a7397"
+                "reference": "8.x-1.2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/captcha-8.x-1.2.zip",
+                "reference": "8.x-1.2",
+                "shasum": "e35a2ce42b652f833d140f7571d1eef0e06b0edc"
             },
             "require": {
                 "drupal/core": "^8.8 || ^9"
             },
             "type": "drupal-module",
             "extra": {
-                "branch-alias": {
-                    "dev-1.x": "1.x-dev",
-                    "dev-8.x-1.x": "1.x-dev"
-                },
                 "drupal": {
-                    "version": "8.x-1.1+12-dev",
-                    "datestamp": "1619673090",
+                    "version": "8.x-1.2",
+                    "datestamp": "1619673374",
                     "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Dev releases are not covered by Drupal security advisories."
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
                     }
+                },
+                "branch-alias": {
+                    "dev-8.x-1.x": "1.x-dev"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
@@ -2942,8 +2947,7 @@
             "support": {
                 "source": "https://git.drupalcode.org/project/captcha",
                 "issues": "https://www.drupal.org/project/issues/captcha"
-            },
-            "time": "2021-04-29T05:10:53+00:00"
+            }
         },
         {
             "name": "drupal/ckeditor_font",
@@ -18380,7 +18384,6 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "drupal/better_exposed_filters": 10,
-        "drupal/captcha": 20,
         "drupal/commerce": 20,
         "drupal/commerce_autosku": 20,
         "drupal/commerce_bulk": 10,

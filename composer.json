@@ -139,7 +139,7 @@
         "drupal/ape": "^1.5",
         "drupal/better_exposed_filters": "^5.0@beta",
         "drupal/block_class": "^1.1",
-        "drupal/captcha": "1.x-dev@dev",
+        "drupal/captcha": "1.2",
         "drupal/ckeditor_font": "^1.0",
         "drupal/coder": "^8.3",
         "drupal/coffee": "^1.0",

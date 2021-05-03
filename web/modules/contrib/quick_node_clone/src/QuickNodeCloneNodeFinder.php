@@ -66,7 +66,7 @@ class QuickNodeCloneNodeFinder {
    *   Either returns an entity, or null if none found.
    */
   public function findNodeFromCurrentPath() {
-    $path = $this->requestStack->getRequestUri();
+    $path = $this->requestStack->getCurrentRequest()->getRequestUri();
     $path_data = explode('/', $path);
 
     if ($this->currentPathIsValidClonePath()) {
@@ -140,7 +140,7 @@ class QuickNodeCloneNodeFinder {
    *   TRUE if valid, FALSE if invalid.
    */
   public function currentPathIsValidClonePath() {
-    $path = $this->requestStack->getRequestUri();
+    $path = $this->requestStack->getCurrentRequest()->getRequestUri();
     $path_data = explode('/', $path);
 
     if (!isset($path_data[1]) || $path_data[1] != 'clone') {

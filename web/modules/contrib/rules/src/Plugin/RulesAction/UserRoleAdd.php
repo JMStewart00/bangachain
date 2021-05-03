@@ -41,22 +41,22 @@ class UserRoleAdd extends RulesActionBase {
   /**
    * Assign role to a user.
    *
-   * @param \Drupal\user\UserInterface $account
+   * @param \Drupal\user\UserInterface $user
    *   User object.
    * @param \Drupal\user\RoleInterface[] $roles
    *   Array of UserRoles to assign.
    *
    * @throws \Drupal\rules\Exception\InvalidArgumentException
    */
-  protected function doExecute(UserInterface $account, array $roles) {
+  protected function doExecute(UserInterface $user, array $roles) {
     foreach ($roles as $role) {
       // Skip adding the role to the user if they already have it.
-      if (!$account->hasRole($role->id())) {
+      if (!$user->hasRole($role->id())) {
         // If you try to add anonymous or authenticated role to user, Drupal
         // will throw an \InvalidArgumentException. Anonymous or authenticated
         // role ID must not be assigned manually.
         try {
-          $account->addRole($role->id());
+          $user->addRole($role->id());
         }
         catch (\InvalidArgumentException $e) {
           throw new InvalidArgumentException($e->getMessage());

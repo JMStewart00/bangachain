@@ -11,6 +11,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\group\Entity\GroupContent;
 use Drupal\node\Entity\Node;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
@@ -131,6 +132,17 @@ class QuickNodeCloneEntityFormBuilder extends EntityFormBuilder {
     $new_node->set('changed', time());
     $new_node->set('revision_timestamp', time());
 
+    // Get and store groups of original entity, if any.
+    $groups = [];
+    if (\Drupal::moduleHandler()->moduleExists('gnode')) {
+      /** @var \Drupal\Core\Entity\ContentEntityInterface $original_entity */
+      $group_contents = GroupContent::loadByEntity($original_entity);
+      foreach ($group_contents as $group_content) {
+        $groups[] = $group_content->getGroup();
+      }
+    }
+    $form_state_additions['quick_node_clone_groups_storage'] = $groups;
+
     // Get default status value of node bundle.
     $default_bundle_status = $this->entityTypeManager->getStorage('node')->create(['type' => $new_node->bundle()])->status->value;
 
@@ -159,7 +171,16 @@ class QuickNodeCloneEntityFormBuilder extends EntityFormBuilder {
         $translated_node->setPublished($default_bundle_status);
       }
 
-      $translated_node->setTitle($this->t('@prepend_text@title', ['@prepend_text' => $prepend_text, '@title' => $translated_node->getTitle()], ['langcode' => $langcode]));
+      $translated_node->setTitle($this->t('@prepend_text@title',
+        [
+          '@prepend_text' => $prepend_text,
+          '@title' => $translated_node->getTitle(),
+        ],
+        [
+          'langcode' => $langcode,
+        ]
+      )
+      );
     }
 
     // Get the form object for the entity defined in entity definition.

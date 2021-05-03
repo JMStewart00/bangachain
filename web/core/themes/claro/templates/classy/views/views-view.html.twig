@@ -45,11 +45,6 @@
     {{ title }}
   {% endif %}
   {{ title_suffix }}
-  {% if feed_icons %}
-    <div class="feed-icons">
-      {{ feed_icons }}
-    </div>
-  {% endif %}
   {% if header %}
     <div class="view-header">
       {{ header }}
@@ -90,6 +85,11 @@
   {% if footer %}
     <div class="view-footer">
       {{ footer }}
+    </div>
+  {% endif %}
+  {% if feed_icons %}
+    <div class="feed-icons">
+      {{ feed_icons }}
     </div>
   {% endif %}
 </div>

@@ -284,6 +284,12 @@ class CheckoutPaneTest extends CommerceWebDriverTestBase {
       'type' => 'basic_string',
     ]);
     $view_display->save();
+
+    $checkout_flow = CheckoutFlow::load('shipping');
+    $checkout_flow_configuration = $checkout_flow->get('configuration');
+    $checkout_flow_configuration['panes']['shipping_information']['auto_recalculate'] = FALSE;
+    $checkout_flow->set('configuration', $checkout_flow_configuration);
+    $checkout_flow->save();
   }
 
   /**
@@ -485,6 +491,9 @@ class CheckoutPaneTest extends CommerceWebDriverTestBase {
     $checkout_flow = CheckoutFlow::load('shipping');
     $checkout_flow_configuration = $checkout_flow->get('configuration');
     $checkout_flow_configuration['panes']['shipping_information']['require_shipping_profile'] = FALSE;
+    // Confirm that enabling the auto recalculation doesn't have any effect
+    // when a shipping profile is not required.
+    $checkout_flow_configuration['panes']['shipping_information']['auto_recalculate'] = TRUE;
     $checkout_flow->set('configuration', $checkout_flow_configuration);
     $checkout_flow->save();
 
@@ -721,8 +730,34 @@ class CheckoutPaneTest extends CommerceWebDriverTestBase {
 
   /**
    * Tests the change of shipping rate options on checkout.
+   *
+   * @dataProvider shippingMethodOptionChangeProvider
    */
-  public function testShippingMethodOptionChanges() {
+  public function testShippingMethodOptionChanges($auto_recalculate) {
+    $checkout_flow = CheckoutFlow::load('shipping');
+    $checkout_flow_configuration = $checkout_flow->get('configuration');
+    $checkout_flow_configuration['panes']['shipping_information']['auto_recalculate'] = $auto_recalculate;
+    $checkout_flow->set('configuration', $checkout_flow_configuration);
+    $checkout_flow->save();
+    $address_fr = [
+      'given_name' => 'John',
+      'family_name' => 'Smith',
+      'address_line1' => '38 rue du sentier',
+      'locality' => 'Paris',
+      'postal_code' => '75002',
+      'country_code' => 'FR',
+    ];
+    $default_profile = $this->createEntity('profile', [
+      'type' => 'customer',
+      'uid' => $this->adminUser->id(),
+      'address' => $this->defaultAddress,
+      'is_default' => TRUE,
+    ]);
+    $another_profile = $this->createEntity('profile', [
+      'type' => 'customer',
+      'uid' => $this->adminUser->id(),
+      'address' => $address_fr,
+    ]);
     $conditions = [
       'target_plugin_id' => 'shipment_address',
       'target_plugin_configuration' => [
@@ -741,8 +776,25 @@ class CheckoutPaneTest extends CommerceWebDriverTestBase {
 
     $this->drupalGet($this->firstProduct->toUrl()->toString());
     $this->submitForm([], 'Add to cart');
-
     $this->drupalGet('checkout/1');
+    $page = $this->getSession()->getPage();
+    $this->assertRenderedAddress($this->defaultAddress, 'shipping_information[shipping_profile]');
+    $this->assertSession()->pageTextContains('Overnight shipping: $19.99 $16.99');
+    $this->assertSession()->pageTextNotContains('Standard shipping');
+    $this->getSession()->getPage()->fillField('shipping_information[shipping_profile][select_address]', 2);
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertRenderedAddress($address_fr, 'shipping_information[shipping_profile]');
+
+    if (!$auto_recalculate) {
+      $this->assertSession()->pageTextNotContains('An illegal choice has been detected. Please contact the site administrator.');
+      $page->findButton('Recalculate shipping')->click();
+      $this->assertSession()->assertWaitOnAjaxRequest();
+    }
+    else {
+      $this->assertSession()->waitForText('Standard shipping');
+    }
+    $this->getSession()->getPage()->fillField('shipping_information[shipping_profile][select_address]', '_new');
+    $this->assertSession()->assertWaitOnAjaxRequest();
 
     $address_de = [
       'given_name' => 'John',
@@ -752,14 +804,18 @@ class CheckoutPaneTest extends CommerceWebDriverTestBase {
       'postal_code' => '75002',
     ];
     $address_prefix = 'shipping_information[shipping_profile][address][0][address]';
-    $page = $this->getSession()->getPage();
     $page->fillField($address_prefix . '[country_code]', 'DE');
     $this->assertSession()->assertWaitOnAjaxRequest();
     foreach ($address_de as $property => $value) {
       $page->fillField($address_prefix . '[' . $property . ']', $value);
     }
-    $page->findButton('Recalculate shipping')->click();
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    if (!$auto_recalculate) {
+      $page->findButton('Recalculate shipping')->click();
+      $this->assertSession()->assertWaitOnAjaxRequest();
+    }
+    else {
+      $this->assertSession()->waitForText('There are no shipping rates available for this address.');
+    }
     $this->assertSession()->pageTextContains('There are no shipping rates available for this address.');
     $this->assertSession()->pageTextNotContains('An illegal choice has been detected. Please contact the site administrator.');
 
@@ -778,8 +834,13 @@ class CheckoutPaneTest extends CommerceWebDriverTestBase {
     foreach ($address_us as $property => $value) {
       $page->fillField($address_prefix . '[' . $property . ']', $value);
     }
-    $page->findButton('Recalculate shipping')->click();
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    if (!$auto_recalculate) {
+      $page->findButton('Recalculate shipping')->click();
+      $this->assertSession()->assertWaitOnAjaxRequest();
+    }
+    else {
+      $this->assertSession()->waitForText('Overnight shipping');
+    }
     $this->assertSession()->pageTextNotContains('An illegal choice has been detected. Please contact the site administrator.');
     $first_radio_button = $page->findField('Standard shipping: $9.99');
     $second_radio_button = $page->findField('Overnight shipping: $19.99 $16.99');
@@ -790,22 +851,21 @@ class CheckoutPaneTest extends CommerceWebDriverTestBase {
     // bug.
     $this->assertSession()->pageTextNotContains('At your door tomorrow morning');
 
-    $address_fr = [
-      'given_name' => 'John',
-      'family_name' => 'Smith',
-      'address_line1' => '38 rue du sentier',
-      'locality' => 'Paris',
-      'postal_code' => '75002',
-    ];
     $address_prefix = 'shipping_information[shipping_profile][address][0][address]';
     $page = $this->getSession()->getPage();
     $page->fillField($address_prefix . '[country_code]', 'FR');
     $this->assertSession()->assertWaitOnAjaxRequest();
+    unset($address_fr['country_code']);
     foreach ($address_fr as $property => $value) {
       $page->fillField($address_prefix . '[' . $property . ']', $value);
     }
-    $page->findButton('Recalculate shipping')->click();
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    if (!$auto_recalculate) {
+      $page->findButton('Recalculate shipping')->click();
+      $this->assertSession()->assertWaitOnAjaxRequest();
+    }
+    else {
+      $this->assertSession()->waitForText('Standard shipping');
+    }
     $this->assertSession()->pageTextNotContains('An illegal choice has been detected. Please contact the site administrator.');
     $first_radio_button = $page->findField('Standard shipping: $9.99');
     $second_radio_button = $page->findField('Overnight shipping: $19.99 $16.99');
@@ -813,6 +873,19 @@ class CheckoutPaneTest extends CommerceWebDriverTestBase {
     $this->assertNull($second_radio_button);
     $this->assertNotEmpty($first_radio_button->getAttribute('checked'));
     $this->assertSession()->pageTextNotContains('At your door tomorrow morning');
+  }
+
+  /**
+   * Data provider for ::testShippingMethodOptionChanges.
+   *
+   * @return array
+   *   A list of testShippingMethodOptionChanges function arguments.
+   */
+  public function shippingMethodOptionChangeProvider() {
+    return [
+      [FALSE],
+      [TRUE],
+    ];
   }
 
   /**

@@ -9,6 +9,7 @@ dependencies:
     - field.field.user.user.field_commerce_pos_phone_number
     - field.field.user.user.field_first_name
     - field.field.user.user.field_last_name
+    - field.field.user.user.field_pdga_number
     - field.field.user.user.user_picture
   module:
     - user
@@ -38,6 +39,13 @@ content:
     region: content
     settings:
       size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_pdga_number:
+    type: number
+    weight: 3
+    region: content
+    settings:
       placeholder: ''
     third_party_settings: {  }
 hidden:

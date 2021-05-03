@@ -3,6 +3,7 @@
 namespace Drupal\commerce_shipping\Plugin\Field\FieldFormatter;
 
 use Drupal\commerce_shipping\Plugin\Commerce\ShippingMethod\SupportsTrackingInterface;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
@@ -31,12 +32,12 @@ class TrackingLinkFormatter extends FormatterBase {
     $shipment = $items[0]->getEntity();
     $shipping_method = $shipment->getShippingMethod();
     if (!$shipping_method) {
-      return [];
+      return [['#markup' => Xss::filterAdmin((string) $shipment->getTrackingCode())]];
     }
     /** @var \Drupal\commerce_shipping\Plugin\Commerce\ShippingMethod\SupportsTrackingInterface $shipping_method_plugin */
     $shipping_method_plugin = $shipment->getShippingMethod()->getPlugin();
     if (!($shipping_method_plugin instanceof SupportsTrackingInterface)) {
-      return [];
+      return [['#markup' => Xss::filterAdmin((string) $shipment->getTrackingCode())]];
     }
     $tracking_url = $shipping_method_plugin->getTrackingUrl($shipment);
     if (!$tracking_url) {
@@ -45,7 +46,7 @@ class TrackingLinkFormatter extends FormatterBase {
     $elements = [];
     $elements[] = [
       '#type' => 'link',
-      '#title' => $this->t('Tracking link'),
+      '#title' => $shipment->getTrackingCode(),
       '#url' => $tracking_url,
     ];
 

@@ -9,6 +9,7 @@ dependencies:
     - field.field.user.user.field_commerce_pos_phone_number
     - field.field.user.user.field_first_name
     - field.field.user.user.field_last_name
+    - field.field.user.user.field_pdga_number
     - field.field.user.user.user_picture
     - image.style.thumbnail
   module:
@@ -37,5 +38,6 @@ hidden:
   field_commerce_pos_phone_number: true
   field_first_name: true
   field_last_name: true
+  field_pdga_number: true
   member_for: true
   search_api_excerpt: true

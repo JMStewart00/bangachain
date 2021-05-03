@@ -3,7 +3,7 @@ name: Bang-A-Chain
 mail: bangachain2012@gmail.com
 slogan: ''
 page:
-  403: ''
+  403: /node/46
   404: /node/17
   front: /node/1
 admin_compact_mode: false

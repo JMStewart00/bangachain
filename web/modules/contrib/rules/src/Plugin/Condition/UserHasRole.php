@@ -40,7 +40,7 @@ class UserHasRole extends RulesConditionBase {
   /**
    * Evaluate if user has role(s).
    *
-   * @param \Drupal\user\UserInterface $account
+   * @param \Drupal\user\UserInterface $user
    *   The account to check.
    * @param \Drupal\user\RoleInterface[] $roles
    *   Array of user roles.
@@ -52,7 +52,7 @@ class UserHasRole extends RulesConditionBase {
    * @return bool
    *   TRUE if the user has the role(s).
    */
-  protected function doEvaluate(UserInterface $account, array $roles, $operation = 'AND') {
+  protected function doEvaluate(UserInterface $user, array $roles, $operation = 'AND') {
 
     $rids = array_map(function ($role) {
       return $role->id();
@@ -60,10 +60,10 @@ class UserHasRole extends RulesConditionBase {
 
     switch ($operation) {
       case 'OR':
-        return (bool) array_intersect($rids, $account->getRoles());
+        return (bool) array_intersect($rids, $user->getRoles());
 
       case 'AND':
-        return (bool) !array_diff($rids, $account->getRoles());
+        return (bool) !array_diff($rids, $user->getRoles());
 
       default:
         throw new InvalidArgumentException('Either use "AND" or "OR". Leave empty for default "AND" behavior.');

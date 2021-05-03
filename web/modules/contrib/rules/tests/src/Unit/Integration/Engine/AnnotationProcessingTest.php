@@ -137,7 +137,7 @@ class AnnotationProcessingTest extends RulesIntegrationTestBase {
       [
         'action',
         'rules_list_item_add',
-        'pos',
+        'position',
         'string',
       ],
     ];

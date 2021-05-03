@@ -335,7 +335,7 @@
                 "Gift card should generate standard commerce events": "https://www.drupal.org/files/issues/2020-11-24/commerce_giftcard-modify-giftcard-entity.patch"
             },
             "drupal/rules": {
-                "Integrate Typed Data Widgets": "https://www.drupal.org/files/issues/2020-12-09/2471481-141.integrate-typed-data-widgets.patch"
+                "Integrate Typed Data Widgets": "https://www.drupal.org/files/issues/2021-04-23/2471481-145.integrate-typed-data-widgets.patch"
             },
             "drupal/commerce_reports": {
                 "Anonymous users can see Purchased Items Report": "https://www.drupal.org/files/issues/2019-06-07/3004989-17.patch",
@@ -347,9 +347,6 @@
             },
             "drupal/commerce_email": {
                 "Log emails into order activity log": "https://www.drupal.org/files/issues/2020-12-24/commerce_email-log-emails-to-order-activity-log-3189770-2.patch"
-            },
-            "drupal/captcha": {
-                "Captcha Session ID broken with cacheable captcha backends": "https://www.drupal.org/files/issues/2020-11-17/cacheable-CAPTCHA.patch"
             },
             "drupal/feeds": {
                 "Undefined Index: allowed_extensions AJAX error when creating feed types.": "https://www.drupal.org/files/issues/2019-02-06/3031019-undefined-index-ajax-2.patch"

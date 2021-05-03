@@ -136,12 +136,20 @@ class ShippingRateWidget extends WidgetBase implements ContainerFactoryPluginInt
     $parents = array_merge($form['#parents'], [$field_name, 0]);
     $element = NestedArray::getValue($form, [$field_name, 'widget', 0]);
     $selected_value = NestedArray::getValue($form_state->getValues(), $parents, $key_exists);
-    if ($selected_value) {
+
+    // Fallback to the default rate if the selected rate is no longer valid.
+    if (!isset($element[$selected_value]) && isset($element[$element['#default_value']])) {
+      $selected_value = $element['#default_value'];
+    }
+
+    if ($selected_value && isset($element[$selected_value])) {
       /** @var \Drupal\commerce_shipping\ShippingRate $rate */
       $rate = $element[$selected_value]['#rate'];
       /** @var \Drupal\commerce_shipping\Entity\ShipmentInterface $shipment */
       $shipment = $items[0]->getEntity();
-      $this->shipmentManager->applyRate($shipment, $rate);
+      if ($rate) {
+        $this->shipmentManager->applyRate($shipment, $rate);
+      }
       // Put delta mapping in $form_state, so that flagErrors() can use it.
       $field_state = static::getWidgetState($form['#parents'], $field_name, $form_state);
       foreach ($items as $delta => $item) {

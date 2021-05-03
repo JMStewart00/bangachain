@@ -25,9 +25,8 @@ class QuickNodeCloneNodeAccess {
    */
   public function cloneNode(AccountInterface $account, $node) {
     $node = Node::load($node);
-    $node_type = $node->bundle();
 
-    if (_quick_node_clone_has_clone_permission($node_type)) {
+    if (_quick_node_clone_has_clone_permission($node)) {
       $result = AccessResult::allowed();
     }
     else {

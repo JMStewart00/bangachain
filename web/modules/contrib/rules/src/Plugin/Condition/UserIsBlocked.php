@@ -27,14 +27,14 @@ class UserIsBlocked extends RulesConditionBase {
   /**
    * Check if user is blocked.
    *
-   * @param \Drupal\user\UserInterface $account
+   * @param \Drupal\user\UserInterface $user
    *   The account to check.
    *
    * @return bool
    *   TRUE if the account is blocked.
    */
-  protected function doEvaluate(UserInterface $account) {
-    return $account->isBlocked();
+  protected function doEvaluate(UserInterface $user) {
+    return $user->isBlocked();
   }
 
 }

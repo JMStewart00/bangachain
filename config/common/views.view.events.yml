@@ -272,7 +272,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: '{% if field_event_page %}<a href="{{ field_event_page }}" class="o-btn o-btn--secondary o-btn--large o-btn--square" target="_blank">{% endif %}{{ title }}{% if field_event_page %}</a>{% endif %}'
+            text: '{% if field_event_page %}<a href="{{ field_event_page }}" class="o-link" target="_blank">{% endif %}{{ title }}{% if field_event_page %}</a>{% endif %}'
             make_link: false
             path: ''
             absolute: false
@@ -469,7 +469,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "{% if \"now\"|date('m/d/y g:ia T') > field_registration_opens|date('m/d/y g:ia T') %}\r\n<a href=\"{{ field_link }}\" class=\"o-btn o-btn--secondary o-btn--large o-btn--square\" target=\"_blank\">Registration Open</a>\r\n{% else %}\r\nOpens on {{ field_registration_opens }}\r\n{% endif %}\r\n"
+            text: "{% if \"now\"|date('m/d/y g:ia T') > field_registration_opens|date('m/d/y g:ia T') %}\r\n<a href=\"{{ field_link }}\" class=\"o-link\" target=\"_blank\">Registration Open</a>\r\n{% else %}\r\nOpens on {{ field_registration_opens }}\r\n{% endif %}\r\n"
             make_link: false
             path: ''
             absolute: false
@@ -618,7 +618,7 @@ display:
       relationships: {  }
       arguments: {  }
       display_extenders: {  }
-      css_class: bangachain-table
+      css_class: ''
     cache_metadata:
       max-age: -1
       contexts:

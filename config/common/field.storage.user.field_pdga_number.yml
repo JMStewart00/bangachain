@@ -1,0 +1,20 @@
+uuid: 287752fd-905e-437f-86c1-2f6089a6e7c4
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: user.field_pdga_number
+field_name: field_pdga_number
+entity_type: user
+type: integer
+settings:
+  unsigned: false
+  size: normal
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -36,6 +36,9 @@ commerce_order.commerce_order_type.*.third_party.commerce_shipping:
 commerce_checkout.commerce_checkout_pane.shipping_information:
   type: commerce_checkout_pane_configuration
   mapping:
+    auto_recalculate:
+      type: boolean
+      label: 'Auto recalculate shipping costs when the shipping address changes'
     require_shipping_profile:
       type: boolean
       label: 'Hide shipping costs until an address is entered'

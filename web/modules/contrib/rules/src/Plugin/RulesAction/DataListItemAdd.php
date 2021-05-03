@@ -27,7 +27,7 @@ use Drupal\rules\Core\RulesActionBase;
  *       default_value = FALSE,
  *       required = FALSE
  *     ),
- *     "pos" = @ContextDefinition("string",
+ *     "position" = @ContextDefinition("string",
  *       label = @Translation("Insert position"),
  *       description = @Translation("Position to insert the item."),
  *       default_value = "end",

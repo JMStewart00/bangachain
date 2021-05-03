@@ -8,6 +8,7 @@ dependencies:
     - field.field.user.user.field_commerce_pos_phone_number
     - field.field.user.user.field_first_name
     - field.field.user.user.field_last_name
+    - field.field.user.user.field_pdga_number
     - field.field.user.user.user_picture
   module:
     - telephone
@@ -46,6 +47,13 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
+    region: content
+  field_pdga_number:
+    weight: 4
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
     region: content
 hidden:
   commerce_remote_id: true

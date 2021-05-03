@@ -92,10 +92,19 @@ class EntityFetchByField extends RulesActionBase implements ContainerFactoryPlug
   }
 
   /**
-   * Execute the action within the given context.
+   * Executes the action with the given context.
+   *
+   * @param string $type
+   *   The entity type id.
+   * @param string $field_name
+   *   Name of the field by which the entity is to be selected.
+   * @param mixed $field_value
+   *   The field value of the entity to be fetched.
+   * @param int $limit
+   *   Limit on the maximum number of fetched entities.
    */
-  protected function doExecute($entity_type, $field_name, $field_value, $limit = NULL) {
-    $storage = $this->entityTypeManager->getStorage($entity_type);
+  protected function doExecute($type, $field_name, $field_value, $limit = NULL) {
+    $storage = $this->entityTypeManager->getStorage($type);
 
     // When retrieving entities, if $limit is not set there is no need to use
     // the query object directly.

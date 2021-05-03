@@ -1,0 +1,24 @@
+uuid: 7c436a48-8079-4ea4-919a-181a0da7684b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_pdga_number
+  module:
+    - user
+id: user.user.field_pdga_number
+field_name: field_pdga_number
+entity_type: user
+bundle: user
+label: 'PDGA Number'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 0
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

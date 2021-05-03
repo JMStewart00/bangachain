@@ -65,7 +65,8 @@ class QuickNodeCloneExcludeNodeFieldsTest extends BrowserTestBase {
       'bundle_names[page]' => TRUE,
       'page[body]' => TRUE,
     ];
-    $this->drupalPostForm('admin/config/quick-node-clone', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/quick-node-clone');
+    $this->submitForm($edit, 'Save');
 
     // Create a basic page.
     $title_value = $this->randomGenerator->word(10);
@@ -74,7 +75,8 @@ class QuickNodeCloneExcludeNodeFieldsTest extends BrowserTestBase {
       'title[0][value]' => $title_value,
       'body[0][value]' => $body_value,
     ];
-    $this->drupalPostForm('node/add/page', $edit, 'Save');
+    $this->drupalGet('node/add/page');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->responseContains($title_value);
     $this->assertSession()->responseContains($body_value);
 
@@ -82,7 +84,7 @@ class QuickNodeCloneExcludeNodeFieldsTest extends BrowserTestBase {
     $this->clickLink('Clone');
     $node = $this->getNodeByTitle($title_value);
     $this->drupalGet('clone/' . $node->id() . '/quick_clone');
-    $this->drupalPostForm('clone/' . $node->id() . '/quick_clone', [], 'Save');
+    $this->submitForm([], 'Save');
     $this->assertSession()->responseContains('Cloned from ' . $title_value);
     $this->assertSession()->responseNotContains($body_value);
   }

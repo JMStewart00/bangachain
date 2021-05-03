@@ -8,6 +8,7 @@ dependencies:
     - field.field.user.user.field_commerce_pos_phone_number
     - field.field.user.user.field_first_name
     - field.field.user.user.field_last_name
+    - field.field.user.user.field_pdga_number
     - field.field.user.user.user_picture
     - image.style.thumbnail
   module:
@@ -35,6 +36,15 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     type: string
+    region: content
+  field_pdga_number:
+    weight: 8
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_integer
     region: content
   member_for:
     weight: 5

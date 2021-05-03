@@ -19,6 +19,7 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
+use Drupal\Core\Site\Settings;
 
 /**
  * Constants for CAPTCHA persistence.
@@ -288,6 +289,22 @@ function captcha_form_alter(array &$form, FormStateInterface $form_state, $form_
       '#markup' => '<div class="messages messages--warning">' . t('Most CAPTCHA methods will disable the caching of pages that contain a CAPTCHA element. Check the different implementations to know more about how it affects caching.') . '</div>',
     ];
   }
+
+  // Disable captcha if override is set.
+  if (Settings::get('disable_captcha', FALSE) === TRUE) {
+    $override_notice = [
+      '#type' => 'html_tag',
+      '#tag' => 'strong',
+      '#value' => t('Captcha is currently disabled via settings.php.'),
+    ];
+    if (isset($form['elements']['captcha'])) {
+      $form['elements']['captcha'] = $override_notice;
+    }
+    if (isset($form['captcha'])) {
+      $form['captcha'] = $override_notice;
+    }
+  }
+
 }
 
 /**
@@ -475,8 +492,8 @@ function captcha_validate($element, FormStateInterface &$form_state) {
   $is_cacheable = (bool) $form_state->getValue('captcha_cacheable', FALSE);
 
   if ($is_cacheable) {
-    // Completely ignore the captcha_sessions table, since the captcha_sid can get reused by the cache.
-
+    // Completely ignore the captcha_sessions table,
+    // since the captcha_sid can get reused by the cache.
     $solution = FALSE;
     $captcha_validate = $element['#captcha_validate'];
     if (!function_exists($captcha_validate)) {
@@ -492,7 +509,7 @@ function captcha_validate($element, FormStateInterface &$form_state) {
     // arrays for more advanced use cases.
     if (!$captcha_validate($solution, $captcha_response, $element, $form_state)) {
       // Wrong answer.
-      $form_state->setErrorByName('captcha_response', t('The answer you entered for the CAPTCHA was not correct.'));
+      $form_state->setErrorByName('captcha_response', _captcha_get_error_message());
       // Update wrong response counter.
       if (\Drupal::config('captcha.settings')->get('enable_stats', FALSE)) {
         Drupal::state()->set('captcha.wrong_response_counter', Drupal::state()
@@ -561,7 +578,7 @@ function captcha_validate($element, FormStateInterface &$form_state) {
           ->expression('attempts', 'attempts + 1')
           ->execute();
 
-        $form_state->setErrorByName('captcha_response', t('The answer you entered for the CAPTCHA was not correct.'));
+        $form_state->setErrorByName('captcha_response', _captcha_get_error_message());
         // Update wrong response counter.
         if (\Drupal::config('captcha.settings')->get('enable_stats', FALSE)) {
           Drupal::state()->set('captcha.wrong_response_counter', Drupal::state()
@@ -593,6 +610,16 @@ function captcha_validate($element, FormStateInterface &$form_state) {
         'CAPTCHA validation error: unknown CAPTCHA session ID (%csid).',
         ['%csid' => var_export($csid, TRUE)]);
     }
+  }
+  else {
+    // If the session is gone and we can't confirm a solution error.
+    // Note: _captcha_get_posted_captcha_info() validates and triggers session
+    // rebuilds for re-use attacks during element processing so this should be
+    // rare if it ever happens.
+    $form_state->setErrorByName('captcha', t('CAPTCHA validation error: unknown CAPTCHA session ID. Contact the site administrator if this problem persists.'));
+    \Drupal::logger('CAPTCHA')->error(
+      'CAPTCHA validation error: unknown CAPTCHA session ID (%csid).',
+      ['%csid' => var_export($csid, TRUE)]);
   }
 }
 

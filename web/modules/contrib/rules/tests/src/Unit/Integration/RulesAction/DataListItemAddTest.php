@@ -71,7 +71,7 @@ class DataListItemAddTest extends RulesIntegrationTestBase {
     $this->action
       ->setContextValue('list', $list)
       ->setContextValue('item', 'Four')
-      ->setContextValue('pos', 'end');
+      ->setContextValue('position', 'end');
 
     $this->action->execute();
 
@@ -96,7 +96,7 @@ class DataListItemAddTest extends RulesIntegrationTestBase {
     $this->action
       ->setContextValue('list', $list)
       ->setContextValue('item', 'Zero')
-      ->setContextValue('pos', 'start');
+      ->setContextValue('position', 'start');
 
     $this->action->execute();
 
@@ -147,7 +147,7 @@ class DataListItemAddTest extends RulesIntegrationTestBase {
       ->setContextValue('list', $list)
       ->setContextValue('item', 'Four')
       ->setContextValue('unique', FALSE)
-      ->setContextValue('pos', 'end');
+      ->setContextValue('position', 'end');
 
     $this->action->execute();
 

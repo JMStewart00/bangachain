@@ -611,10 +611,12 @@ class ShipmentAdminTest extends CommerceWebDriverTestBase {
           'declared_value' => new Price('1', 'USD'),
         ]),
       ],
+      'tracking_code' => 'CODE',
     ]);
     $this->getSession()->reload();
     $this->assertSession()->pageTextNotContains('There are no shipments yet.');
     $this->assertSession()->pageTextContains($shipment->label());
+    $this->assertSession()->pageTextContains($shipment->getTrackingCode());
 
     // Ensure the listing works without the view.
     View::load('order_shipments')->delete();

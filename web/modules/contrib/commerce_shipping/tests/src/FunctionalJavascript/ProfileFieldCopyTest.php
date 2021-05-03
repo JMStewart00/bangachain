@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\commerce_shipping\FunctionalJavascript;
 
+use Drupal\commerce_checkout\Entity\CheckoutFlow;
 use Drupal\commerce_order\Entity\OrderType;
 use Drupal\commerce_payment\Entity\PaymentGateway;
 use Drupal\commerce_price\Price;
@@ -249,6 +250,12 @@ class ProfileFieldCopyTest extends CommerceWebDriverTestBase {
     ]);
 
     $this->shippingOrderManager = $this->container->get('commerce_shipping.order_manager');
+
+    $checkout_flow = CheckoutFlow::load('shipping');
+    $checkout_flow_configuration = $checkout_flow->get('configuration');
+    $checkout_flow_configuration['panes']['shipping_information']['auto_recalculate'] = FALSE;
+    $checkout_flow->set('configuration', $checkout_flow_configuration);
+    $checkout_flow->save();
   }
 
   /**

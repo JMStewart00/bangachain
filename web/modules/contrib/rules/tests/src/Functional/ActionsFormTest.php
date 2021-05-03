@@ -219,7 +219,7 @@ class ActionsFormTest extends RulesBrowserTestBase {
         ],
         [
           'unique' => TRUE,
-          'pos' => 'validated? start',
+          'position' => 'validated? start',
         ],
       ],
       'List item remove' => [

@@ -41,8 +41,7 @@ function coffee_page_attachments(array &$attachments) {
     $cache_tags = isset($attachments['#cache']['tags']) ? $attachments['#cache']['tags'] : [];
     $attachments['#cache']['tags'] = Cache::mergeTags($cache_tags, $config->getCacheTags());
 
-    $data_path = Url::fromRoute('coffee.get_data')->toString();
-    $data_path = ltrim($data_path, '/');
+    $data_path = Url::fromRoute('coffee.get_data')->getInternalPath();
 
     $attachments['#attached']['library'][] = 'coffee/drupal.coffee';
     $attachments['#attached']['drupalSettings']['coffee'] = [

@@ -242,7 +242,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          label: 'Tracking code'
+          label: 'Tracking link'
           exclude: false
           alter:
             alter_text: false
@@ -284,9 +284,8 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: value
-          type: string
-          settings:
-            link_to_entity: false
+          type: commerce_tracking_link
+          settings: {  }
           group_column: value
           group_columns: {  }
           group_rows: true

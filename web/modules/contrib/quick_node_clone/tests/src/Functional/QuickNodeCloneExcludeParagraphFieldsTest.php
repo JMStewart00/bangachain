@@ -57,7 +57,8 @@ class QuickNodeCloneExcludeParagraphFieldsTest extends ParagraphsTestBase {
     // Add two text fields to the text_paragraph type.
     static::fieldUIAddNewField('admin/structure/paragraphs_type/' . $paragraph_type, 'text1', 'Text 1', 'string', [], []);
     static::fieldUIAddNewField('admin/structure/paragraphs_type/' . $paragraph_type, 'text2', 'Text 2', 'string', [], []);
-    $this->drupalPostForm('node/add/paragraphed_test', [], 'field_paragraphs_text_paragraph_add_more');
+    $this->drupalGet('node/add/paragraphed_test');
+    $this->submitForm([], 'field_paragraphs_text_paragraph_add_more');
 
     // Add config to exclude text 2 field.
     \Drupal::configFactory()->getEditable('quick_node_clone.settings')
@@ -91,14 +92,14 @@ class QuickNodeCloneExcludeParagraphFieldsTest extends ParagraphsTestBase {
       'field_paragraphs[0][subform][field_text1][0][value]' => $text1,
       'field_paragraphs[0][subform][field_text2][0][value]' => $text2,
     ];
-    $this->drupalPostForm(NULL, [], 'field_paragraphs_text_paragraph_add_more');
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm([], 'field_paragraphs_text_paragraph_add_more');
+    $this->submitForm($edit, 'Save');
     $node = $this->drupalGetNodeByTitle($title_value);
 
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->assertSession()->fieldValueEquals('field_paragraphs[0][subform][field_text1][0][value]', $text1);
     $this->assertSession()->fieldValueEquals('field_paragraphs[0][subform][field_text2][0][value]', $text2);
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
     $this->assertSession()->pageTextContains($text1);
     $this->assertSession()->pageTextContains($text2);
 
@@ -107,7 +108,8 @@ class QuickNodeCloneExcludeParagraphFieldsTest extends ParagraphsTestBase {
     $this->drupalGet('clone/' . $node->id() . '/quick_clone');
     $this->assertSession()->fieldValueEquals('field_paragraphs[0][subform][field_text1][0][value]', $text1);
     $this->assertSession()->fieldValueEquals('field_paragraphs[0][subform][field_text2][0][value]', '');
-    $this->drupalPostForm('clone/' . $node->id() . '/quick_clone', [], 'Save');
+    $this->drupalGet('clone/' . $node->id() . '/quick_clone');
+    $this->submitForm([], 'Save');
     $this->assertSession()->responseContains('Clone of ' . $title_value);
 
     // Make sure text_2 paragraph was cloned.

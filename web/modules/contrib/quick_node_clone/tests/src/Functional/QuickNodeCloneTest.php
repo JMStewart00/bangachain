@@ -55,7 +55,8 @@ class QuickNodeCloneTest extends BrowserTestBase {
     $edit = [
       'text_to_prepend_to_title' => 'Cloned from',
     ];
-    $this->drupalPostForm('admin/config/quick-node-clone', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/quick-node-clone');
+    $this->submitForm($edit, 'Save configuration');
 
     // Create a basic page.
     $title_value = $this->randomGenerator->word(10);
@@ -64,14 +65,16 @@ class QuickNodeCloneTest extends BrowserTestBase {
       'title[0][value]' => $title_value,
       'body[0][value]' => $body_value,
     ];
-    $this->drupalPostForm('node/add/page', $edit, 'Save');
+    $this->drupalGet('node/add/page');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->responseContains($title_value);
     $this->assertSession()->responseContains($body_value);
 
     // Clone node.
     $this->clickLink('Clone');
     $node = $this->getNodeByTitle($title_value);
-    $this->drupalPostForm('clone/' . $node->id() . '/quick_clone', [], 'Save');
+    $this->drupalGet('clone/' . $node->id() . '/quick_clone');
+    $this->submitForm([], 'Save');
     $this->assertSession()->responseContains('Cloned from ' . $title_value);
     $this->assertSession()->responseContains($body_value);
   }

@@ -12,6 +12,7 @@ label: Cashier
 weight: 3
 is_admin: null
 permissions:
+  - 'access checkout'
   - 'access commerce administration pages'
   - 'access commerce pos order lookup'
   - 'access commerce pos pages'

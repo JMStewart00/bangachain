@@ -8,7 +8,7 @@ dependencies:
 test_dependencies:
   - paragraphs:paragraphs
 
-# Information added by Drupal.org packaging script on 2020-09-07
-version: '8.x-1.13'
+# Information added by Drupal.org packaging script on 2021-03-09
+version: '8.x-1.14'
 project: 'quick_node_clone'
-datestamp: 1599502487
+datestamp: 1615309330

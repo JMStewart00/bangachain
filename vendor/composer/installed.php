@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => 'bdf2fe9f2011d358e78e31896e123150258d35e1',
+    'reference' => '3614a3c638069d120033d4a9f9b6c78748730f0c',
     'name' => 'oomphinc/drupal-scaffold',
   ),
   'versions' => 
@@ -2028,12 +2028,12 @@
     ),
     'drupal/simple_image_rotate' => 
     array (
-      'pretty_version' => '1.0.0-alpha1',
-      'version' => '1.0.0.0-alpha1',
+      'pretty_version' => '2.1.0',
+      'version' => '2.1.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '8.x-1.0-alpha1',
+      'reference' => '2.1.0',
     ),
     'drupal/simple_sitemap' => 
     array (
@@ -2678,7 +2678,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => 'bdf2fe9f2011d358e78e31896e123150258d35e1',
+      'reference' => '3614a3c638069d120033d4a9f9b6c78748730f0c',
     ),
     'orno/di' => 
     array (

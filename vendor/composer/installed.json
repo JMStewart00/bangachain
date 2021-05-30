@@ -9718,30 +9718,30 @@
         },
         {
             "name": "drupal/simple_image_rotate",
-            "version": "1.0.0-alpha1",
-            "version_normalized": "1.0.0.0-alpha1",
+            "version": "2.1.0",
+            "version_normalized": "2.1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/simple_image_rotate.git",
-                "reference": "8.x-1.0-alpha1"
+                "reference": "2.1.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/simple_image_rotate-8.x-1.0-alpha1.zip",
-                "reference": "8.x-1.0-alpha1",
-                "shasum": "1847825b22010e5dbe9e89c5fb005e0d17a6964e"
+                "url": "https://ftp.drupal.org/files/projects/simple_image_rotate-2.1.0.zip",
+                "reference": "2.1.0",
+                "shasum": "47469625229367a79eb41f5d66fb17cb2494535c"
             },
             "require": {
-                "drupal/core": "^8"
+                "drupal/core": "^8 || ^9"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.0-alpha1",
-                    "datestamp": "1582787933",
+                    "version": "2.1.0",
+                    "datestamp": "1614860623",
                     "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Alpha releases are not covered by Drupal security advisories."
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
                     }
                 },
                 "patches_applied": {
@@ -9754,6 +9754,10 @@
                 "GPL-2.0-or-later"
             ],
             "authors": [
+                {
+                    "name": "afagioli",
+                    "homepage": "https://www.drupal.org/user/50680"
+                },
                 {
                     "name": "khoomy",
                     "homepage": "https://www.drupal.org/user/135921"

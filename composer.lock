@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7233a4c657be5c29e07f5b344f32e1e4",
+    "content-hash": "bf1a4ebd71596fc8c56bc11f85428333",
     "packages": [
         {
             "name": "algolia/algoliasearch-client-php",
@@ -9275,29 +9275,29 @@
         },
         {
             "name": "drupal/simple_image_rotate",
-            "version": "1.0.0-alpha1",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/simple_image_rotate.git",
-                "reference": "8.x-1.0-alpha1"
+                "reference": "2.1.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/simple_image_rotate-8.x-1.0-alpha1.zip",
-                "reference": "8.x-1.0-alpha1",
-                "shasum": "1847825b22010e5dbe9e89c5fb005e0d17a6964e"
+                "url": "https://ftp.drupal.org/files/projects/simple_image_rotate-2.1.0.zip",
+                "reference": "2.1.0",
+                "shasum": "47469625229367a79eb41f5d66fb17cb2494535c"
             },
             "require": {
-                "drupal/core": "^8"
+                "drupal/core": "^8 || ^9"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.0-alpha1",
-                    "datestamp": "1582787933",
+                    "version": "2.1.0",
+                    "datestamp": "1614860623",
                     "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Alpha releases are not covered by Drupal security advisories."
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
                     }
                 }
             },
@@ -19048,7 +19048,6 @@
         "drupal/rabbit_hole": 10,
         "drupal/rules": 20,
         "drupal/search_api_algolia": 15,
-        "drupal/simple_image_rotate": 15,
         "drupal/swiftmailer": 10,
         "drupal/user_registrationpassword": 15,
         "drupal/view_unpublished": 20,

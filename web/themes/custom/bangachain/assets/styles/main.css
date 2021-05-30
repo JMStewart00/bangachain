@@ -9355,7 +9355,8 @@ div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
 .c-column-item__header {
   color: #3D5A80;
   margin: calc(var(--lh__base) * 1 * var(--rvr-multiplier)) 0 calc(var(--lh__base) * 0.5 * var(--rvr-multiplier));
-  font-weight: 900;
+  font-family: 'badaboom', sans-serif;
+  font-weight: 400;
   font-size: 2.5rem; }
 
 .c-column-item .c-link {

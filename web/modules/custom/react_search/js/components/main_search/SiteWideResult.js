@@ -44,7 +44,7 @@ export const SiteWideResult = ({ hit }) => {
             <div class="u-color__blue-gray">{brand}</div>
           </div>
 
-          {(speed || glide || turn || fade) &&
+          {speed &&
             <div class="c-product__flight-numbers">
               <ul class="o-list-inline">
                 <li class="c-product__speed--small o-list-inline__item" title="Speed">{speed}</li>

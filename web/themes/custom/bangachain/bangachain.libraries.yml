@@ -83,3 +83,8 @@ view-filters-toggle:
   dependencies:
     - core/drupal
     - core/jquery
+
+elfsight:
+  version: 1.0
+  js:
+    assets/js/elfsight.js: {}

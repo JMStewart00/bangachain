@@ -8,6 +8,7 @@ module:
   automated_cron: 0
   bangachain_commerce_mail: 0
   bangachain_commerce_update: 0
+  bangachain_custom_blocks: 0
   bangachain_layout: 0
   bangachain_menu: 0
   bangachain_views: 0

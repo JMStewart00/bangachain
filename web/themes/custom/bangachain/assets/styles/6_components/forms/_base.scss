@@ -62,6 +62,8 @@
       input {
         width: 100%;
         min-width: 0; // prevent firefox overflow issue.
+        border: none;
+        border-bottom: 1px solid $gray-medium;
       }
     }
 
@@ -115,7 +117,6 @@
 
   &__text {
     box-sizing: border-box !important;
-    border: $border;
     font-weight: $fw-medium;
     color: $gray-800;
     line-height: 1.5;
@@ -124,10 +125,6 @@
     max-width: 100%;
     min-width: 0;
     padding: spacer(0.5) spacer(1);
-
-    &--has-addon {
-      border-radius: $border-radius 0 0 $border-radius;
-    }
   }
 
   // styles implemented from https://css-tricks.com/the-checkbox-hack/

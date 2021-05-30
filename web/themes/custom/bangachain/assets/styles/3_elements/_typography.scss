@@ -2,11 +2,18 @@
   Elements - Typography
  */
 
+ @font-face {
+  font-family: "badaboom";
+  src: url('../../fonts/font.woff');
+}
+
 h1,
 .h1 {
-  font-size: font-size(36);
+  font-size: font-size(42);
   line-height: (46/36);
-  font-weight: $fw-semi-bold;
+  font-weight: 400;
+  font-style: normal;
+  font-family: 'badaboom';
 }
 
 h2,

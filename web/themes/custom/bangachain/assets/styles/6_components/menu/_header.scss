@@ -18,7 +18,7 @@
     }
 
     img {
-      width: rem(120);
+      width: rem(325);
 
       @include media-breakpoint-down(xl) {
         display: block;
@@ -30,10 +30,14 @@
   // Menu
   &__main-menu {
     flex: 2;
-    margin-left: rvr(0.5);
+    position: relative;
 
     @include media-breakpoint-down(lg) {
       display: hidden;
+    }
+
+    @include media-breakpoint-up(md) {
+      padding-left: rvr(2);
     }
   }
 
@@ -78,5 +82,26 @@
       border-radius: 0;
     }
 
+  }
+
+  &__hours {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    line-height: rem(16);
+    padding: rem(16);
+
+    @include media-breakpoint-up(md) {
+      position: absolute;
+      right: rvr(2);
+      top: rem(11);
+      padding: 0;
+    }
+
+    .o-icon {
+      margin-right: rem(8);
+    }
   }
 }

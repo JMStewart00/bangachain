@@ -14,6 +14,10 @@
     grid-template-areas: 'first second third';
   }
 
+  h3 {
+    font-size: rem(32);
+  }
+
   &__logo-container {
     grid-area: first;
     margin-bottom: rvr(2);
@@ -33,33 +37,6 @@
 
   @include media-breakpoint-down(xs) {
     text-align: center;
-  }
-
-  &__social {
-    display: flex;
-    flex-wrap: nowrap;
-    position: relative;
-
-    @include media-breakpoint-down(md) {
-      justify-content: center;
-    }
-
-    &-icon {
-      font-size: rem(14);
-      margin-left: spacer(0.25);
-
-      &:first-child {
-        margin-left: 0;
-
-        .o-icon {
-          margin-left: 0;
-        }
-      }
-    }
-
-    svg.ext {
-      display: none;
-    }
   }
 
   &__address {
@@ -82,6 +59,7 @@
     }
 
     .c-menu-main {
+      display: flex;
       flex-direction: column;
 
       &__item {
@@ -98,12 +76,44 @@
 
     }
   }
+
+  &__social {
+    display: flex;
+    flex-wrap: nowrap;
+    position: relative;
+    margin-left: rem(16);
+
+    @include media-breakpoint-down(md) {
+      margin-left: 0;
+      justify-content: center;
+    }
+
+    svg.ext {
+      display: none;
+    }
+  }
 }
 
 .c-copyright {
   max-width: none !important;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+
+  @include media-breakpoint-up(md) {
+    flex-direction: row;
+  }
+
   p {
+    margin-bottom: rem(16);
+    line-height: rem(32);
     width: 100%;
+
+    @include media-breakpoint-up(md) {
+      width: auto;
+      margin-bottom: 0;
+      margin-right: rem(16);
+    }
   }
 }
 

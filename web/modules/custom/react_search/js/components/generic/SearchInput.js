@@ -14,7 +14,7 @@ const SearchBox = ({ currentRefinement, refine, placeholder = "Search..." }) => 
         placeholder={placeholder}
       />
       <button className="o-btn o-btn--input-addon" aria-label="Search" id="search-addon">
-        Search
+        <i class="fas fa-search 0-icon o-icon--white"></i>
       </button>
     </div>
   );

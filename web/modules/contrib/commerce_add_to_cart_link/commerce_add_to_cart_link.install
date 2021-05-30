@@ -16,3 +16,13 @@ function commerce_add_to_cart_link_update_8101() {
     ->set('csrf_token.roles', array_keys($roles))
     ->save();
 }
+
+/**
+ * Set initial value for the new redirect_back setting.
+ */
+function commerce_add_to_cart_link_update_8102() {
+  \Drupal::configFactory()
+    ->getEditable('commerce_add_to_cart_link.settings')
+    ->set('redirect_back', FALSE)
+    ->save();
+}

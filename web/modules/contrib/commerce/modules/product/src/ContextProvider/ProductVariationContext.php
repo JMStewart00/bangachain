@@ -57,8 +57,15 @@ class ProductVariationContext implements ContextProviderInterface {
     $context_definition = new EntityContextDefinition('entity:commerce_product_variation', new TranslatableMarkup('Product variation'));
     $value = $this->routeMatch->getParameter('commerce_product_variation');
     if ($value === NULL) {
-      if ($product = $this->routeMatch->getParameter('commerce_product')) {
+      $product = $this->routeMatch->getParameter('commerce_product');
+      if ($product instanceof ProductInterface) {
         $value = $this->productVariationStorage->loadFromContext($product);
+        if ($value === NULL) {
+          $product_type = ProductType::load($product->bundle());
+          $value = $this->productVariationStorage->create([
+            'type' => $product_type->getVariationTypeId(),
+          ]);
+        }
       }
       /** @var \Drupal\commerce_product\Entity\ProductTypeInterface $product_type */
       elseif ($product_type = $this->routeMatch->getParameter('commerce_product_type')) {

@@ -355,6 +355,9 @@ class ShippingInformation extends CheckoutPaneBase implements ContainerFactoryPl
     $form_state->set('shipping_profile', $inline_form->getEntity());
 
     foreach ($shipment_indexes as $index) {
+      if (!isset($pane_form['shipments'][$index]['#shipment'])) {
+        continue;
+      }
       $shipment = clone $pane_form['shipments'][$index]['#shipment'];
       $form_display = EntityFormDisplay::collectRenderDisplay($shipment, 'checkout');
       $form_display->removeComponent('shipping_profile');

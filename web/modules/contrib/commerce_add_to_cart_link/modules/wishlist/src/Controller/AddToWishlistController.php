@@ -9,7 +9,9 @@ use Drupal\commerce_wishlist\WishlistManagerInterface;
 use Drupal\commerce_wishlist\WishlistProviderInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Path\PathValidatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -41,6 +43,13 @@ class AddToWishlistController extends ControllerBase {
   protected $wishlistProvider;
 
   /**
+   * The path validator.
+   *
+   * @var \Drupal\Core\Path\PathValidatorInterface
+   */
+  protected $pathValidator;
+
+  /**
    * Constructs a new AddToWishlistController object.
    *
    * @param \Drupal\commerce_add_to_cart_link\CartLinkTokenInterface $cart_link_token
@@ -49,11 +58,14 @@ class AddToWishlistController extends ControllerBase {
    *   The wishlist manager.
    * @param \Drupal\commerce_wishlist\WishlistProviderInterface $wishlist_provider
    *   The wishlist provider.
+   * @param \Drupal\Core\Path\PathValidatorInterface $path_validator
+   *   The path validator.
    */
-  public function __construct(CartLinkTokenInterface $cart_link_token, WishlistManagerInterface $wishlist_manager, WishlistProviderInterface $wishlist_provider) {
+  public function __construct(CartLinkTokenInterface $cart_link_token, WishlistManagerInterface $wishlist_manager, WishlistProviderInterface $wishlist_provider, PathValidatorInterface $path_validator) {
     $this->cartLinkToken = $cart_link_token;
     $this->wishlistManager = $wishlist_manager;
     $this->wishlistProvider = $wishlist_provider;
+    $this->pathValidator = $path_validator;
   }
 
   /**
@@ -63,7 +75,8 @@ class AddToWishlistController extends ControllerBase {
     return new static(
       $container->get('commerce_add_to_cart_link.token'),
       $container->get('commerce_wishlist.wishlist_manager'),
-      $container->get('commerce_wishlist.wishlist_provider')
+      $container->get('commerce_wishlist.wishlist_provider'),
+      $container->get('path.validator')
     );
   }
 
@@ -96,7 +109,17 @@ class AddToWishlistController extends ControllerBase {
     if (!$wishlist) {
       $wishlist = $this->wishlistProvider->createWishlist($wishlist_type);
     }
-    $this->wishlistManager->addEntity($wishlist, $commerce_product_variation);
+    $this->wishlistManager->addEntity($wishlist, $commerce_product_variation, $quantity);
+
+    if ($this->config('commerce_add_to_cart_link.settings')->get('redirect_back')) {
+      $referer = $request->server->get('HTTP_REFERER');
+      $fake_request = Request::create($referer);
+      $referer_url = $this->pathValidator->getUrlIfValid($fake_request->getRequestUri());
+      if ($referer_url && $referer_url->isRouted() && $referer_url->getRouteName() !== 'user.login') {
+        $referer_url->setAbsolute();
+        return new RedirectResponse($referer_url->toString());
+      }
+    }
 
     return $this->redirect('commerce_wishlist.page');
   }

@@ -3,6 +3,7 @@
 namespace Drupal\Tests\commerce_promotion\FunctionalJavascript;
 
 use Drupal\commerce_promotion\Entity\Promotion;
+use Drupal\commerce_promotion\Plugin\Commerce\PromotionOffer\CombinationOffer;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\Tests\commerce\FunctionalJavascript\CommerceWebDriverTestBase;
@@ -164,7 +165,7 @@ class PromotionTest extends CommerceWebDriverTestBase {
       'name[0][value]' => $name,
       'offer[0][target_plugin_configuration][order_percentage_off][percentage]' => '10.0',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->submitForm($edit, t('Save'));
     $this->assertSession()->pageTextContains("Saved the $name promotion.");
 
     $rows = $this->getSession()->getPage()->findAll('xpath', '//table/tbody/tr/td[text()="' . $name . '"]');
@@ -378,6 +379,58 @@ class PromotionTest extends CommerceWebDriverTestBase {
     $this->assertSession()->pageTextContains('There are no enabled promotions yet.');
     $this->assertSession()->pageTextNotContains('There are no disabled promotions.');
     $this->assertTrue($this->getSession()->getPage()->hasLink('Enable'));
+  }
+
+  /**
+   * Tests creating a combination offer promotion.
+   */
+  public function testCombinationOffer() {
+    $this->drupalGet('admin/commerce/promotions');
+    $this->getSession()->getPage()->clickLink('Add promotion');
+
+    // Check the integrity of the form.
+    $this->assertSession()->fieldExists('name[0][value]');
+    $this->assertSession()->fieldExists('display_name[0][value]');
+    $name = $this->randomMachineName(8);
+    $this->getSession()->getPage()->fillField('name[0][value]', $name);
+    $this->getSession()->getPage()->fillField('display_name[0][value]', 'Discount');
+    $this->getSession()->getPage()->selectFieldOption('offer[0][target_plugin_id]', 'combination_offer');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->getSession()->getPage()->selectFieldOption('offer[0][target_plugin_configuration][combination_offer][offers][0][target_plugin_id]', 'order_item_percentage_off');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->buttonNotExists('remove_offer0');
+    $this->getSession()->getPage()->fillField('offer[0][target_plugin_configuration][combination_offer][offers][0][target_plugin_configuration][order_item_percentage_off][percentage]', 10);
+    $this->getSession()->getPage()->pressButton('Add another offer');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->buttonExists('remove_offer1');
+    $this->getSession()->getPage()->selectFieldOption('offer[0][target_plugin_configuration][combination_offer][offers][1][target_plugin_id]', 'order_percentage_off');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->getSession()->getPage()->fillField('offer[0][target_plugin_configuration][combination_offer][offers][1][target_plugin_configuration][order_percentage_off][percentage]', 10);
+    $this->getSession()->getPage()->pressButton('Add another offer');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->fieldExists('offer[0][target_plugin_configuration][combination_offer][offers][2][target_plugin_id]');
+    $this->getSession()->getPage()->pressButton('remove_offer2');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->fieldNotExists('offer[0][target_plugin_configuration][combination_offer][offers][2][target_plugin_id]');
+    $this->submitForm([], t('Save'));
+    $this->assertSession()->pageTextContains("Saved the $name promotion.");
+
+    /** @var \Drupal\commerce_promotion\Entity\PromotionInterface $promotion */
+    $promotion = Promotion::load(1);
+    $this->assertEquals($name, $promotion->getName());
+    $this->assertEquals('Discount', $promotion->getDisplayName());
+    $offer = $promotion->getOffer();
+    $this->assertInstanceOf(CombinationOffer::class, $offer);
+    $configuration = $offer->getConfiguration();
+    $this->assertCount(2, $configuration['offers']);
+    $this->assertEquals('order_item_percentage_off', $configuration['offers'][0]['target_plugin_id']);
+    $this->assertEquals([
+      'display_inclusive' => TRUE,
+      'percentage' => '0.1',
+      'conditions' => [],
+    ], $configuration['offers'][0]['target_plugin_configuration']);
+    $this->assertEquals('order_percentage_off', $configuration['offers'][1]['target_plugin_id']);
+    $this->assertEquals(['percentage' => '0.1'], $configuration['offers'][1]['target_plugin_configuration']);
   }
 
 }

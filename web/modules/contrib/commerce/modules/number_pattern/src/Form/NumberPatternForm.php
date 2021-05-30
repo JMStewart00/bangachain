@@ -101,6 +101,7 @@ class NumberPatternForm extends EntityForm {
       $option_ids = array_keys($options);
       $target_entity_type_id = reset($option_ids);
     }
+    $form_state->set('target_entity_type', $target_entity_type_id);
 
     $form['label'] = [
       '#type' => 'textfield',

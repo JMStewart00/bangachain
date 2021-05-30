@@ -19,10 +19,10 @@ configuration:
   display_checkout_progress_breadcrumb_links: false
   panes:
     login:
-      allow_guest_checkout: false
-      allow_registration: true
-      step: login
-      weight: 0
+      allow_guest_checkout: true
+      allow_registration: false
+      step: _disabled
+      weight: 10
     contact_information:
       double_entry: true
       step: order_information
@@ -62,23 +62,24 @@ configuration:
     commerce_giftcard_redemption:
       allow_multiple: false
       step: _disabled
-      weight: 10
+      weight: 11
     coupon_redemption:
       allow_multiple: false
       step: _disabled
-      weight: 11
+      weight: 12
     artwork_upload_pane_file_upload:
       step: _disabled
-      weight: 12
+      weight: 13
     shipping_information:
+      auto_recalculate: true
       require_shipping_profile: true
       step: _disabled
-      weight: 13
+      weight: 14
     email_registration_completion_registration:
       step: _disabled
-      weight: 14
+      weight: 15
     email_registration_login:
       allow_guest_checkout: true
-      allow_registration: false
-      step: _disabled
-      weight: 15
+      allow_registration: true
+      step: login
+      weight: 0

@@ -65,7 +65,8 @@ class CartEntityAccessTest extends CartBrowserTestBase {
     $this->assertSession()->statusCodeEquals(403);
 
     // Anonymous active cart.
-    $this->drupalPostForm('product/' . $this->variation->getProductId(), [], 'Add to cart');
+    $this->drupalGet('product/' . $this->variation->getProductId());
+    $this->submitForm([], 'Add to cart');
 
     $this->mink->setDefaultSessionName('default');
     $this->drupalGet('user/0/orders/3');
@@ -125,7 +126,8 @@ class CartEntityAccessTest extends CartBrowserTestBase {
     $this->assertSession()->statusCodeEquals(403);
 
     // Anonymous active cart.
-    $this->drupalPostForm('product/' . $this->variation->getProductId(), [], 'Add to cart');
+    $this->drupalGet('product/' . $this->variation->getProductId());
+    $this->submitForm([], 'Add to cart');
 
     $this->mink->setDefaultSessionName('default');
     $this->drupalGet('user/0/orders/3');
@@ -202,7 +204,8 @@ class CartEntityAccessTest extends CartBrowserTestBase {
 
     // Anonymous active cart.
     $this->switchSession('anonymous');
-    $this->drupalPostForm('product/' . $this->variation->getProductId(), [], 'Add to cart');
+    $this->drupalGet('product/' . $this->variation->getProductId());
+    $this->submitForm([], 'Add to cart');
     $cart = Order::load(3);
     foreach ($cart->getEntityType()->getLinkTemplates() as $rel => $link_template) {
       $this->drupalGet($cart->toUrl($rel));

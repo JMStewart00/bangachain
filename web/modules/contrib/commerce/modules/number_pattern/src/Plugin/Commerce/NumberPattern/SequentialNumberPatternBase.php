@@ -134,7 +134,7 @@ abstract class SequentialNumberPatternBase extends NumberPatternBase implements 
         ],
       ],
     ];
-    $entity_type_id = $form_state->getValue('targetEntityType');
+    $entity_type_id = $form_state->get('target_entity_type');
     if (!empty($entity_type_id)) {
       $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
       if ($entity_type->entityClassImplements(EntityStoreInterface::class)) {

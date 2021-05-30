@@ -84,6 +84,23 @@ class ProductLayoutBuilderIntegrationTest extends ProductWebDriverTestBase {
   }
 
   /**
+   * Make sure products without a variation do not crash.
+   */
+  public function testProductWithoutVariationsDoesNotCrash() {
+    $this->enableLayoutsForBundle('default', TRUE);
+    $this->configureDefaultLayout('default');
+
+    $product = $this->createEntity('commerce_product', [
+      'type' => 'default',
+      'title' => $this->randomMachineName(),
+      'stores' => $this->stores,
+      'body' => ['value' => 'Testing product does not crash!'],
+    ]);
+    $this->drupalGet($product->toUrl());
+    $this->assertSession()->pageTextContains('Testing product does not crash!');
+  }
+
+  /**
    * Tests configuring a layout override for a product.
    */
   public function testConfiguringOverrideLayout() {

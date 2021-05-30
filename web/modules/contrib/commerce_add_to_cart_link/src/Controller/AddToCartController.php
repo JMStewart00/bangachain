@@ -13,6 +13,7 @@ use Drupal\commerce_product\Entity\ProductVariationInterface;
 use Drupal\commerce_store\CurrentStoreInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Path\PathValidatorInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -74,6 +75,13 @@ class AddToCartController extends ControllerBase {
   protected $currentUser;
 
   /**
+   * The path validator.
+   *
+   * @var \Drupal\Core\Path\PathValidatorInterface
+   */
+  protected $pathValidator;
+
+  /**
    * Constructs a new AddToCartController object.
    *
    * @param \Drupal\commerce_add_to_cart_link\CartLinkTokenInterface $cart_link_token
@@ -90,8 +98,10 @@ class AddToCartController extends ControllerBase {
    *   The chain base price resolver.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
+   * @param \Drupal\Core\Path\PathValidatorInterface $path_validator
+   *   The path validator.
    */
-  public function __construct(CartLinkTokenInterface $cart_link_token, CartManagerInterface $cart_manager, CartProviderInterface $cart_provider, OrderTypeResolverInterface $order_type_resolver, CurrentStoreInterface $current_store, ChainPriceResolverInterface $chain_price_resolver, AccountInterface $current_user) {
+  public function __construct(CartLinkTokenInterface $cart_link_token, CartManagerInterface $cart_manager, CartProviderInterface $cart_provider, OrderTypeResolverInterface $order_type_resolver, CurrentStoreInterface $current_store, ChainPriceResolverInterface $chain_price_resolver, AccountInterface $current_user, PathValidatorInterface $path_validator) {
     $this->cartLinkToken = $cart_link_token;
     $this->cartManager = $cart_manager;
     $this->cartProvider = $cart_provider;
@@ -99,6 +109,7 @@ class AddToCartController extends ControllerBase {
     $this->currentStore = $current_store;
     $this->chainPriceResolver = $chain_price_resolver;
     $this->currentUser = $current_user;
+    $this->pathValidator = $path_validator;
   }
 
   /**
@@ -112,7 +123,8 @@ class AddToCartController extends ControllerBase {
       $container->get('commerce_order.chain_order_type_resolver'),
       $container->get('commerce_store.current_store'),
       $container->get('commerce_price.chain_price_resolver'),
-      $container->get('current_user')
+      $container->get('current_user'),
+      $container->get('path.validator')
     );
   }
 
@@ -153,6 +165,16 @@ class AddToCartController extends ControllerBase {
       $cart = $this->cartProvider->createCart($order_type_id, $store);
     }
     $this->cartManager->addOrderItem($cart, $order_item, $combine);
+
+    if ($this->config('commerce_add_to_cart_link.settings')->get('redirect_back')) {
+      $referer = $request->server->get('HTTP_REFERER');
+      $fake_request = Request::create($referer);
+      $referer_url = $this->pathValidator->getUrlIfValid($fake_request->getRequestUri());
+      if ($referer_url && $referer_url->isRouted() && $referer_url->getRouteName() !== 'user.login') {
+        $referer_url->setAbsolute();
+        return new RedirectResponse($referer_url->toString());
+      }
+    }
 
     return $this->redirect('commerce_cart.page');
   }

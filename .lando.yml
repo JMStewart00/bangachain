@@ -5,7 +5,6 @@ config:
   php: "7.3"
   webroot: web
   xdebug: false
-  composer_version: '1.10.1'
 
 events:
   # Clear cache after a database import

@@ -8,14 +8,12 @@ The Commerce Add To Cart Link module extends Commerce product displays with an
 
 Primary use case is to use this on listings such as overview pages or blocks
 displaying related products, bestsellers, etc. Currently, building product
-listing blocks is often accompanied with some headache due to existing Drupal
+listing blocks is often accompanied by some headache due to existing Drupal
 Core limitations described below.
 
-The links can be optionally secured with a CSRF token, so that users can't be
-tricked into clicking a link and adding products to cart they don't want. In
-order to have these tokens working accordingly, a session for anonymous user
-will be enforced, if there isn't one existing already - but only if the
-anonymous user role is configured to use CSRF protected links.
+The links can be optionally secured with a token, so that the links cannot be
+guessed, hence reduces problems with bots and reduces risks of tricking users
+into clicking a link and adding products to cart they don't want.
 
 The link itself is rendered via Twig template to enable full customization
 possibilities for themers, enabling to change texts, add additional markup, etc.
@@ -109,17 +107,13 @@ If you want to customize the markup and/or text of the link, copy the
 this module into your theme and customize it like you want. You can provide
 different templates per variation type or ID.
 
-### CSRF protection
+### Token protection
 
 Visit /admin/commerce/config/add-to-cart-link to configure, which user roles
-should have the add to cart and add to wishlinks protected with a session based
-CSRF token. By default, this is disabled for any role. Users with multiple roles
-will be CSRF protected, as soon as a single of his/her attached roles is enabled
-for CSRF protection.
-
-Please note, that enabling CSRF protection for anonymous users may cause
-problems, if you have the static page cache module enabled, as well as if you
-are using a reverse proxy like Varnish.
+should have the add to cart and add to wishlist links protected with a token.
+By default, this is disabled for any role. Users with multiple roles will be
+protected, as soon as a single of his/her attached roles is enabled for token
+protection.
 
 ## Maintainers
 

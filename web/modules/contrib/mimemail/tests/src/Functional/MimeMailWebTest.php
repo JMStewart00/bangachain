@@ -54,11 +54,8 @@ class MimeMailWebTest extends BrowserTestBase {
    * Tests that spaces in attachment filenames are properly URL-encoded.
    */
   public function testUrl() {
-    $this->drupalPostForm(
-      'admin/config/system/mimemail',
-      ['linkonly' => TRUE],
-      'Save configuration'
-    );
+    $this->drupalGet('admin/config/system/mimemail');
+    $this->submitForm(['linkonly' => TRUE], 'Save configuration');
 
     $url = 'public://' . $this->randomMachineName() . ' ' . $this->randomMachineName() . '.jpg';
     $result = MimeMailFormatHelper::mimeMailUrl($url, TRUE);

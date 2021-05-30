@@ -62,7 +62,7 @@ class ProductTranslationTest extends ProductBrowserTestBase {
       'entity_types[commerce_product_variation]' => TRUE,
       'settings[commerce_product_variation][default][translatable]' => TRUE,
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save configuration'));
+    $this->submitForm($edit, t('Save configuration'));
     // Adding languages requires a container rebuild in the test running
     // environment so that multilingual services are used.
     $this->resetAll();

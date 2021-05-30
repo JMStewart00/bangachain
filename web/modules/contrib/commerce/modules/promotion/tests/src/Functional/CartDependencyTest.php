@@ -35,7 +35,8 @@ class CartDependencyTest extends CommerceBrowserTestBase {
   public function testDidNotCrash() {
     $edit = [];
     $edit['modules[commerce_promotion][enable]'] = TRUE;
-    $this->drupalPostForm('admin/modules', $edit, 'Install');
+    $this->drupalGet('admin/modules');
+    $this->submitForm($edit, 'Install');
     $this->assertText('Module Commerce Promotion has been enabled.');
   }
 

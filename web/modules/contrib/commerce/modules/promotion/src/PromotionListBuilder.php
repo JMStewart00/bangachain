@@ -190,12 +190,6 @@ class PromotionListBuilder extends EntityListBuilder implements FormInterface {
    */
   public function render() {
     $build = $this->formBuilder->getForm($this);
-    // Only add the pager if a limit is specified.
-    if ($this->limit) {
-      $build['pager'] = [
-        '#type' => 'pager',
-      ];
-    }
     $build['#attached']['library'][] = 'commerce_promotion/admin_list';
 
     return $build;
@@ -225,6 +219,14 @@ class PromotionListBuilder extends EntityListBuilder implements FormInterface {
       '#caption' => $this->t('Enabled'),
     ];
 
+    // Only add the pager if a limit is specified.
+    if ($this->limit) {
+      $form['pager_enabled_promotions'] = [
+        '#type' => 'pager',
+        '#element' => 0,
+      ];
+    }
+
     // Now load the disabled promotions.
     $this->statusCondition = FALSE;
     $this->disabledEntities = $this->load();
@@ -236,6 +238,14 @@ class PromotionListBuilder extends EntityListBuilder implements FormInterface {
       '#empty' => $this->t('There are no disabled @label.', ['@label' => $this->entityType->getPluralLabel()]),
       '#caption' => $this->t('Disabled'),
     ];
+
+    // Only add the pager if a limit is specified.
+    if ($this->limit) {
+      $form['pager_disabled_promotions'] = [
+        '#type' => 'pager',
+        '#element' => 1,
+      ];
+    }
 
     $entities = array_merge($this->enabledEntities, $this->disabledEntities);
     foreach ($entities as $entity) {

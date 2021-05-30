@@ -40,11 +40,13 @@ class PromotionForm extends ContentEntityForm {
     $form['#tree'] = TRUE;
     // By default an offer is preselected on the add form because the field
     // is required. Select an empty value instead, to force the user to choose.
-    if ($this->operation == 'add' && $this->entity->get('offer')->isEmpty()) {
+    $user_input = $form_state->getUserInput();
+    if ($this->operation == 'add' &&
+      $this->entity->get('offer')->isEmpty()) {
       if (!empty($form['offer']['widget'][0]['target_plugin_id'])) {
         $form['offer']['widget'][0]['target_plugin_id']['#empty_value'] = '';
-        $form['offer']['widget'][0]['target_plugin_id']['#default_value'] = '';
-        if (empty($form_state->getValue(['offer', 0, 'target_plugin_id']))) {
+        if (empty($user_input['offer'][0]['target_plugin_id'])) {
+          $form['offer']['widget'][0]['target_plugin_id']['#default_value'] = '';
           unset($form['offer']['widget'][0]['target_plugin_configuration']);
         }
       }

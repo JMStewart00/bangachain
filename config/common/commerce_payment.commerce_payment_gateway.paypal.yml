@@ -20,7 +20,7 @@ configuration:
   update_shipping_profile: true
   style:
     layout: vertical
-    color: gold
+    color: blue
     shape: rect
     label: paypal
     tagline: false
@@ -31,4 +31,4 @@ configuration:
   payment_method_types:
     - paypal_checkout
 conditions: {  }
-conditionOperator: AND
+conditionOperator: OR

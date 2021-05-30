@@ -1,0 +1,17 @@
+--- commerce_giftcard.module
++++ commerce_giftcard.module
+@@ -37,3 +37,14 @@ function commerce_giftcard_entity_base_field_info(EntityTypeInterface $entity_ty
+   }
+ }
+ 
++/**
++ * Implements hook_theme().
++ */
++function commerce_giftcard_theme() {
++  return [
++    'commerce_giftcard_redemption_form' => [
++      'render element' => 'form',
++    ],
++  ];
++}
++

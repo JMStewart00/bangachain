@@ -90,12 +90,9 @@ class AddToCartLink {
    *   The metadata object.
    */
   public function metadata() {
-    /** @var \Drupal\commerce_add_to_cart_link\CartLinkTokenInterface $cart_link_token_service */
-    $cart_link_token_service = \Drupal::service('commerce_add_to_cart_link.token');
-    $contexts = $cart_link_token_service->needsCsrfProtection() ? ['session'] : [];
     return BubbleableMetadata::createFromRenderArray([
       '#cache' => [
-        'contexts' => $contexts,
+        'contexts' => ['user.roles'],
         'tags' => ['config:commerce_add_to_cart_link.settings'],
       ],
     ]);

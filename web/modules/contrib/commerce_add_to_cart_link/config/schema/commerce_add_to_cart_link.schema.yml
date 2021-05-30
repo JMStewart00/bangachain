@@ -8,3 +8,6 @@ commerce_add_to_cart_link.settings:
       roles:
         type: sequence
         label: 'User roles to protect links with CSRF token'
+  redirect_back:
+    type: boolean
+    label: 'Redirect back to referer'

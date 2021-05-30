@@ -317,6 +317,39 @@ class ShipmentManagerTest extends ShippingKernelTestBase {
     $this->assertEquals('Standard shipping', $second_rate->getService()->getLabel());
     $this->assertEquals(new Price('5.00', 'USD'), $second_rate->getOriginalAmount());
     $this->assertEquals(new Price('4.00', 'USD'), $second_rate->getAmount());
+
+    // Test applying a combination offer.
+    $second_promotion->set('offer', [
+      'target_plugin_id' => 'combination_offer',
+      'target_plugin_configuration' => [
+        'offers' => [
+          [
+            'target_plugin_id' => 'shipment_percentage_off',
+            'target_plugin_configuration' => [
+              'display_inclusive' => TRUE,
+              'filter' => 'include',
+              'shipping_methods' => [
+                ['shipping_method' => $this->shippingMethods[1]->uuid()],
+              ],
+              'percentage' => '0.2',
+            ],
+          ]
+        ],
+      ],
+    ]);
+    $second_promotion->save();
+
+    $rates = $this->shipmentManager->calculateRates($this->shipment);
+    $this->assertCount(2, $rates);
+    $first_rate = reset($rates);
+
+    // The first rate should be reduced by the 20% off coupon.
+    $this->assertArrayHasKey($first_rate->getId(), $rates);
+    $this->assertEquals('2', $first_rate->getShippingMethodId());
+    $this->assertEquals('default', $first_rate->getService()->getId());
+    $this->assertEquals('Overnight shipping', $first_rate->getService()->getLabel());
+    $this->assertEquals(new Price('20.00', 'USD'), $first_rate->getOriginalAmount());
+    $this->assertEquals(new Price('16.00', 'USD'), $first_rate->getAmount());
   }
 
   /**

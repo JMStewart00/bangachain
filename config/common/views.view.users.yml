@@ -9,7 +9,11 @@ dependencies:
     - system.menu.admin
     - user.role.administrator
   module:
+    - csv_serialization
+    - rest
+    - serialization
     - user
+    - views_data_export
 id: users
 label: Users
 module: views
@@ -573,6 +577,69 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
+        - user.roles
+      tags:
+        - 'config:field.storage.user.field_first_name'
+        - 'config:field.storage.user.field_last_name'
+        - 'config:field.storage.user.field_pdga_number'
+  data_export_1:
+    display_plugin: data_export
+    id: data_export_1
+    display_title: 'Data export'
+    position: 1
+    display_options:
+      display_extenders:
+        ajax_history: {  }
+      path: admin/users/download
+      filename: users.csv
+      automatic_download: true
+      store_in_public_file_directory: true
+      redirect_to_display: page_1
+      custom_redirect_path: false
+      include_query_params: false
+      style:
+        type: data_export
+        options:
+          formats:
+            csv: csv
+          csv_settings:
+            delimiter: ','
+            enclosure: '"'
+            escape_char: \
+            strip_tags: true
+            trim: true
+            encoding: utf8
+            utf8_bom: '0'
+            use_serializer_encode_only: false
+      row:
+        type: data_field
+        options:
+          field_options:
+            name:
+              alias: ''
+              raw_output: false
+            mail:
+              alias: ''
+              raw_output: false
+            field_first_name:
+              alias: ''
+              raw_output: false
+            field_last_name:
+              alias: ''
+              raw_output: false
+            field_pdga_number:
+              alias: ''
+              raw_output: false
+      displays:
+        page_1: page_1
+        default: '0'
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - request_format
+        - url
         - user.roles
       tags:
         - 'config:field.storage.user.field_first_name'

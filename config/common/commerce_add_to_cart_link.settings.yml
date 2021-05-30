@@ -3,3 +3,4 @@ csrf_token:
   roles: {  }
 _core:
   default_config_hash: xCbzGW7Cq269rvzB6la865rtNHLd75njWgK-1Y7cYVc
+redirect_back: false

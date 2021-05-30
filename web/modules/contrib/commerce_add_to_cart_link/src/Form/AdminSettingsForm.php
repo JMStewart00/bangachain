@@ -67,7 +67,7 @@ class AdminSettingsForm extends ConfigFormBase {
 
     $form['csrf_token'] = [
       '#type' => 'details',
-      '#title' => $this->t('CSRF token'),
+      '#title' => $this->t('Token protection'),
       '#open' => TRUE,
       '#tree' => TRUE,
     ];
@@ -91,9 +91,16 @@ class AdminSettingsForm extends ConfigFormBase {
     $form['csrf_token']['roles'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Roles'),
-      '#description' => $this->t('Add to cart and add to wishlist links will be protected with a session based CSRF token for users having at least one role checked here. Enabling CSRF tokens for anonymous user role can cause problems with static page cache and reverse proxies, as the tokens vary by user session.'),
+      '#description' => $this->t('Add to cart and add to wishlist links will be protected with a CSRF token for users having at least one role checked here.'),
       '#options' => $role_options,
       '#default_value' => $config->get('csrf_token.roles'),
+    ];
+
+    $form['redirect_back'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Redirect back to referer'),
+      '#description' => $this->t('If checked, the user will be redirected back to the referer instead of the cart/wishlist page, if the referer is a valid internal url.'),
+      '#default_value' => $config->get('redirect_back'),
     ];
 
     return parent::buildForm($form, $form_state);

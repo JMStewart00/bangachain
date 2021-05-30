@@ -7,6 +7,7 @@ dependencies:
     - commerce_giftcard
     - commerce_multi_payment
     - commerce_payment
+    - commerce_paypal
     - commerce_promotion
     - commerce_shipping
     - email_registration
@@ -19,7 +20,7 @@ configuration:
   display_checkout_progress: true
   display_checkout_progress_breadcrumb_links: false
   panes:
-    login:
+    email_registration_login:
       allow_guest_checkout: true
       allow_registration: true
       step: login
@@ -29,6 +30,7 @@ configuration:
       step: order_information
       weight: 1
     shipping_information:
+      auto_recalculate: true
       require_shipping_profile: false
       step: order_information
       weight: 2
@@ -47,35 +49,39 @@ configuration:
       capture: true
       step: payment
       weight: 6
+    paypal_checkout_payment_process:
+      capture: true
+      step: payment
+      weight: 7
     completion_message:
       message:
         value: "Your order number is [commerce_order:order_number].\r\nYou can view your order on your account page when logged in."
         format: plain_text
       step: complete
-      weight: 7
+      weight: 8
     completion_register:
       step: complete
-      weight: 8
-    artwork_upload_pane_file_upload:
-      step: _disabled
-      weight: 12
+      weight: 9
     order_summary:
       view: commerce_checkout_order_summary
       step: _sidebar
-      weight: 9
+      weight: 10
     commerce_giftcard_redemption:
       allow_multiple: true
       step: _sidebar
-      weight: 10
+      weight: 11
     coupon_redemption:
       allow_multiple: true
       step: _sidebar
-      weight: 11
-    email_registration_completion_registration:
-      step: _disabled
-      weight: 13
-    email_registration_login:
+      weight: 12
+    login:
       allow_guest_checkout: true
       allow_registration: false
       step: _disabled
+      weight: 13
+    artwork_upload_pane_file_upload:
+      step: _disabled
       weight: 14
+    email_registration_completion_registration:
+      step: _disabled
+      weight: 15

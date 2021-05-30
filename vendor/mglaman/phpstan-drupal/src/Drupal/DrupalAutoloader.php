@@ -91,8 +91,7 @@ class DrupalAutoloader
 
         $this->moduleData = array_merge($this->extensionDiscovery->scan('module'), $profiles);
         usort($this->moduleData, static function (Extension $a, Extension $b) {
-            // blazy_test causes errors, ensure it is loaded last.
-            return $a->getName() === 'blazy_test' ? 10 : 0;
+            return strpos($a->getName(), '_test') !== false ? 10 : 0;
         });
         $this->themeData = $this->extensionDiscovery->scan('theme');
         $this->addTestNamespaces();
@@ -100,14 +99,18 @@ class DrupalAutoloader
         $this->addThemeNamespaces();
         $this->registerPs4Namespaces($this->namespaces);
         $this->loadLegacyIncludes();
-        require_once $this->drupalRoot . '/core/tests/bootstrap.php';
 
-        // class_alias is not supported by OptimizedDirectorySourceLocator or AutoloadSourceLocator,
-        // so we manually load this PHPUnit compatibility trait that exists in Drupal 8.
-        $phpunitCompatTraitFilepath = $this->drupalRoot . '/core/tests/Drupal/Tests/PhpunitCompatibilityTrait.php';
-        if (file_exists($phpunitCompatTraitFilepath)) {
-            require_once $phpunitCompatTraitFilepath;
-            $this->autoloader->addClassMap(['Drupal\\Tests\\PhpunitCompatibilityTrait' => $phpunitCompatTraitFilepath]);
+        // @todo stop requiring the bootstrap.php and just copy what is needed.
+        if (interface_exists(\PHPUnit\Framework\Test::class)) {
+            require_once $this->drupalRoot . '/core/tests/bootstrap.php';
+
+            // class_alias is not supported by OptimizedDirectorySourceLocator or AutoloadSourceLocator,
+            // so we manually load this PHPUnit compatibility trait that exists in Drupal 8.
+            $phpunitCompatTraitFilepath = $this->drupalRoot . '/core/tests/Drupal/Tests/PhpunitCompatibilityTrait.php';
+            if (file_exists($phpunitCompatTraitFilepath)) {
+                require_once $phpunitCompatTraitFilepath;
+                $this->autoloader->addClassMap(['Drupal\\Tests\\PhpunitCompatibilityTrait' => $phpunitCompatTraitFilepath]);
+            }
         }
 
         foreach ($this->moduleData as $extension) {

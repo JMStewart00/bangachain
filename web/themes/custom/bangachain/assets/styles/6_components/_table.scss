@@ -92,6 +92,10 @@ div:not(.bangachain-table) {
         flex-shrink: 0;
       }
 
+      td[headers=view-field-product-image-table-column] {
+        height: 125px;
+      }
+
       tbody tr:nth-of-type(even) {
         background-color: transparent !important;
       }

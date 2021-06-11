@@ -35,7 +35,7 @@
     grid-area: third;
   }
 
-  @include media-breakpoint-down(xs) {
+  @include media-breakpoint-down(md) {
     text-align: center;
   }
 

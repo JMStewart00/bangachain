@@ -7473,7 +7473,7 @@ body.no-scroll {
   display: grid; }
 
 .l-grid__sidebar {
-  -ms-grid-row: 2;
+  -ms-grid-row: 1;
   -ms-grid-column: 1;
   grid-area: sidebar;
   max-width: 100%; }
@@ -7915,9 +7915,6 @@ svg.ext {
 .checkout-pane-commerce-giftcard-redemption input[name^="remove_giftcard"]:hover, .checkout-pane-commerce-giftcard-redemption input[name^="remove_giftcard"]:focus {
   color: #c23413; }
 
-.block-views-blockgift-card-balances-block-1 {
-  margin: calc(var(--lh__base) * 3 * var(--rvr-multiplier)) 0; }
-
 .c-pagination {
   height: 3rem; }
 
@@ -8144,6 +8141,8 @@ div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
     min-width: min-content;
     -ms-flex-negative: 0;
     flex-shrink: 0; }
+  .bangachain-table table td[headers=view-field-product-image-table-column] {
+    height: 125px; }
   .bangachain-table table tbody tr:nth-of-type(even) {
     background-color: transparent !important; }
   .bangachain-table table th,
@@ -8202,6 +8201,78 @@ div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
   .c-node-team-member__favorite-discs {
     -ms-grid-columns: 1fr [3];
     grid-template-columns: repeat(3, 1fr); } }
+
+.path-user .region-content {
+  display: -ms-grid;
+  display: grid;
+  grid-template-areas: 'sidebar' 'main1' 'main2' 'main2';
+  -ms-grid-columns: minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr); }
+
+@media (min-width: 992px) {
+  .path-user .region-content {
+    -ms-grid-rows: auto 30px auto 30px auto;
+    grid-template-areas: 'sidebar main1' 'sidebar main2' 'sidebar main2';
+    -ms-grid-columns: 275px 30px minmax(0, 1fr);
+    grid-template-columns: 275px minmax(0, 1fr);
+    grid-gap: 30px; } }
+
+.path-user .region-content .block-local-tasks-block {
+  -ms-grid-row: 1;
+  -ms-grid-column: 1;
+  grid-area: sidebar;
+  max-width: 100%; }
+
+.path-user .region-content .block-local-tasks-block .tabs {
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap; }
+
+@media (min-width: 992px) {
+  .path-user .region-content .block-local-tasks-block .tabs {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column; } }
+
+.path-user .region-content .block-local-tasks-block .tabs li {
+  text-align: left;
+  margin-right: 0;
+  -webkit-box-flex: 0;
+  -ms-flex-positive: 0;
+  flex-grow: 0; }
+
+.path-user .region-content .block-local-tasks-block .tabs li a {
+  padding: 0.5rem; }
+
+.path-user .region-content .block-system-main-block {
+  -ms-grid-row: 2;
+  -ms-grid-column: 1;
+  grid-area: main1;
+  max-width: 100%; }
+
+@media (min-width: 992px) {
+  .l-grid__sidebar {
+    -ms-grid-row: 1;
+    -ms-grid-row-span: 5;
+    -ms-grid-column: 1; }
+  .path-user .region-content .block-local-tasks-block {
+    -ms-grid-row: 1;
+    -ms-grid-row-span: 5;
+    -ms-grid-column: 1; }
+  .path-user .region-content .block-system-main-block {
+    -ms-grid-row: 1;
+    -ms-grid-column: 3; } }
+
+.path-user .region-content .block-views-blockgift-card-balances-block-1 {
+  -ms-grid-row: 3;
+  -ms-grid-row-span: 2;
+  -ms-grid-column: 1;
+  grid-area: main2;
+  max-width: 100%; }
 
 /* forms components subfolder */
 .c-block--border::before {
@@ -8961,7 +9032,7 @@ div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
     -ms-grid-row: 1;
     -ms-grid-column: 3; } }
 
-@media (max-width: 575.98px) {
+@media (max-width: 991.98px) {
   .c-footer {
     text-align: center; } }
 

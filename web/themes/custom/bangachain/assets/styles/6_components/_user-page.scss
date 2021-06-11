@@ -1,0 +1,55 @@
+.path-user {
+  .region-content {
+    display: grid;
+    grid-template-areas:
+    'sidebar'
+    'main1'
+    'main2'
+    'main2';
+    grid-template-columns: minmax(0, 1fr);
+
+    @include media-breakpoint-up(lg) {
+      grid-template-areas:
+        'sidebar main1'
+        'sidebar main2'
+        'sidebar main2';
+      grid-template-columns: $sidebar-size-small minmax(0, 1fr);
+      grid-gap: 30px;
+    }
+
+    // Layouts
+    .block-local-tasks-block {
+      grid-area: sidebar;
+      max-width: 100%;
+
+      .tabs {
+        flex-direction: row;
+        flex-wrap: wrap;
+
+        @include media-breakpoint-up(lg) {
+          flex-direction: column;
+        }
+
+        li {
+          text-align: left;
+          margin-right: 0;
+          flex-grow: 0;
+
+          a {
+            padding: rem(8);
+          }
+        }
+      }
+    }
+
+    .block-system-main-block {
+      grid-area: main1;
+      max-width: 100%;
+    }
+
+    .block-views-blockgift-card-balances-block-1 {
+      grid-area: main2;
+      max-width: 100%;
+    }
+  }
+}

@@ -152,6 +152,7 @@
         "drupal/commerce_email": "1.x-dev@dev",
         "drupal/commerce_feeds": "^1.0@alpha",
         "drupal/commerce_giftcard": "1.0.x-dev",
+        "drupal/commerce_loyalty_points": "^1.0",
         "drupal/commerce_multi_payment": "^1.0",
         "drupal/commerce_paypal": "^1.0",
         "drupal/commerce_pos": "2.x-dev",

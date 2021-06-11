@@ -1,0 +1,11 @@
+{
+  "name": "drupal/commerce_loyalty_points",
+  "type": "drupal-module",
+  "description": "Provide loyalty points to users.",
+  "homepage": "https://www.drupal.org/project/commerce_loyalty_points",
+  "license": "GPL-2.0+",
+  "require": {
+    "drupal/commerce": "^2.0"
+  },
+  "minimum-stability": "dev"
+}

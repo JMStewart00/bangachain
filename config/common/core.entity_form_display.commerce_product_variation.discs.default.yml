@@ -9,6 +9,7 @@ dependencies:
     - field.field.commerce_product_variation.discs.attribute_disc_weight
     - field.field.commerce_product_variation.discs.feeds_item
     - field.field.commerce_product_variation.discs.field_bin
+    - field.field.commerce_product_variation.discs.field_loyalty_points
     - field.field.commerce_product_variation.discs.field_needs_artwork
     - field.field.commerce_product_variation.discs.field_product_image
     - field.field.commerce_product_variation.discs.field_stock
@@ -27,6 +28,12 @@ targetEntityType: commerce_product_variation
 bundle: discs
 mode: default
 content:
+  'Loyalty points offered per unit of currency':
+    type: number_decimal
+    weight: 14
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   attribute_disc_color:
     type: options_select
     weight: 7
@@ -139,6 +146,7 @@ content:
 hidden:
   created: true
   feeds_item: true
+  field_loyalty_points: true
   field_upc: true
   list_price: true
   uid: true

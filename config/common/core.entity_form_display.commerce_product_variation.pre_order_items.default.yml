@@ -1,0 +1,74 @@
+uuid: 090ee9ed-dc3c-4cf8-8757-625c29e1e87f
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_variation_type.pre_order_items
+    - field.field.commerce_product_variation.pre_order_items.field_loyalty_points
+  module:
+    - commerce_bulk
+    - commerce_price
+id: commerce_product_variation.pre_order_items.default
+targetEntityType: commerce_product_variation
+bundle: pre_order_items
+mode: default
+content:
+  'Loyalty points offered per unit of currency':
+    type: number_decimal
+    weight: 91
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  commerce_stock_always_in_stock:
+    type: boolean_checkbox
+    weight: 5
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  list_price:
+    type: commerce_list_price
+    weight: -1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  price:
+    type: commerce_price_default
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  sku:
+    type: commerce_bulk_sku
+    weight: -4
+    region: content
+    settings:
+      custom_label: ''
+      uniqid_enabled: true
+      more_entropy: false
+      hide: false
+      prefix: sku-
+      suffix: ''
+      size: 60
+      placeholder: ''
+      maximum: 500
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 90
+    region: content
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  field_loyalty_points: true
+  uid: true

@@ -1,0 +1,66 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for the Commerce loyalty points module.
+ */
+
+use Drupal\commerce_product\Entity\ProductVariationType;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\user\Entity\Role;
+use Drupal\Core\Config\FileStorage;
+
+/**
+ * Implements hook_install().
+ */
+function commerce_loyalty_points_install() {
+  // Import the field storage manually coz we need fields to be created right away.
+  \Drupal::service('config.installer')->installDefaultConfig('module', 'commerce_loyalty_points');
+
+  // Create user role.
+  $role_name = t('Loyalty points subscriber');
+  $role = Role::create([
+    'id' => 'loyalty_points_subscriber',
+    'label' => $role_name,
+  ]);
+  $role->save();
+
+  // Grant permission to this role.
+  user_role_grant_permissions('loyalty_points_subscriber', ['access loyalty points overview']);
+
+  // Create and attach field_loyalty_points field with existing commerce_product_variations.
+  $entity_bundles = \Drupal::entityManager()->getBundleInfo('commerce_product_variation');
+  foreach ($entity_bundles as $entity_bundle_id => $entity_bundle_info) {
+    $entity = ProductVariationType::load($entity_bundle_id);
+    commerce_loyalty_points_add_loyalty_field($entity);
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function commerce_loyalty_points_uninstall() {
+  // Remove field storage.
+  if ($field_storage = FieldStorageConfig::loadByName('commerce_product_variation', 'field_loyalty_points')) {
+    $field_storage->delete();
+  }
+
+  // Remove user role.
+  $role = Role::load('loyalty_points_subscriber');
+  $role->delete();
+
+  // Remove user's data.
+  \Drupal::service('user.data')->delete('commerce_loyalty_points');
+}
+
+/**
+ * Update loyalty points admin View.
+ */
+function commerce_loyalty_points_update_8002() {
+  $config_name = 'views.view.loyalty_points_offered';
+  $config_path = drupal_get_path('module', 'commerce_loyalty_points') . '/config/install';
+  $source = new FileStorage($config_path);
+
+  $active_storage = \Drupal::service('config.storage');
+  $active_storage->write($config_name, $source->read($config_name));
+}

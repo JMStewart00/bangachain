@@ -5,6 +5,7 @@ dependencies:
   config:
     - commerce_product.commerce_product_variation_type.accessories
     - field.field.commerce_product_variation.accessories.attribute_disc_color
+    - field.field.commerce_product_variation.accessories.field_loyalty_points
     - field.field.commerce_product_variation.accessories.field_product_image
     - field.field.commerce_product_variation.accessories.field_stock
     - field.field.commerce_product_variation.accessories.field_upc
@@ -20,6 +21,12 @@ targetEntityType: commerce_product_variation
 bundle: accessories
 mode: default
 content:
+  'Loyalty points offered per unit of currency':
+    type: number_decimal
+    weight: 10
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   attribute_disc_color:
     type: options_select
     weight: 2
@@ -101,5 +108,6 @@ content:
     region: content
 hidden:
   created: true
+  field_loyalty_points: true
   field_upc: true
   uid: true

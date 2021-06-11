@@ -1,0 +1,5 @@
+entity.commerce_loyalty_points.add_points:
+  route_name: commerce_loyalty_points.add_form
+  title: 'Add loyalty points'
+  appears_on:
+    - entity.commerce_loyalty_points.collection

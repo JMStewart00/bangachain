@@ -5,6 +5,7 @@ dependencies:
   config:
     - commerce_product.commerce_product_variation_type.accessories
     - field.field.commerce_product_variation.accessories.attribute_disc_color
+    - field.field.commerce_product_variation.accessories.field_loyalty_points
     - field.field.commerce_product_variation.accessories.field_product_image
     - field.field.commerce_product_variation.accessories.field_stock
     - field.field.commerce_product_variation.accessories.field_upc
@@ -18,6 +19,17 @@ targetEntityType: commerce_product_variation
 bundle: accessories
 mode: default
 content:
+  field_loyalty_points:
+    type: number_decimal
+    weight: 4
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    region: content
   field_product_image:
     weight: 1
     label: hidden

@@ -36,6 +36,7 @@ module:
   commerce_feeds: 0
   commerce_giftcard: 0
   commerce_log: 0
+  commerce_loyalty_points: 0
   commerce_multi_payment: 0
   commerce_number_pattern: 0
   commerce_order: 0

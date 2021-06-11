@@ -1,0 +1,4 @@
+entity.commerce_loyalty_points.user_view:
+  route_name: view.loyalty_points_offered.user_view
+  base_route: entity.user.canonical
+  title: Loyalty points

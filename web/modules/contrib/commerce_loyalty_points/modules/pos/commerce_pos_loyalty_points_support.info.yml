@@ -1,0 +1,13 @@
+name: Commerce loyalty points support for POS
+type: module
+package: Loyalty points
+# core: 8.x
+dependencies:
+  - drupal:commerce_pos
+  - drupal:commerce_loyalty_points
+
+# Information added by Drupal.org packaging script on 2018-02-26
+version: '8.x-1.0'
+core: '8.x'
+project: 'commerce_loyalty_points'
+datestamp: 1519655587

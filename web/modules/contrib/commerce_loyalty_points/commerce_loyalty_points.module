@@ -1,0 +1,165 @@
+<?php
+
+/**
+ * @file
+ * Module file to hook into Drupal's functionality.
+ */
+
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Create a loyalty points field for a new commerce_product_variation_type.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   EntityInterface object.
+ */
+function commerce_loyalty_points_add_loyalty_field(EntityInterface $entity) {
+  $label = 'Loyalty points offered per unit of currency';
+  $field_name = 'field_loyalty_points';
+  $field_storage = FieldStorageConfig::loadByName('commerce_product_variation', $field_name);
+  $field = FieldConfig::loadByName('commerce_product_variation', $entity->id(), $field_name);
+
+  if (empty($field)) {
+    $field = FieldConfig::create([
+      'field_storage' => $field_storage,
+      'bundle' => $entity->id(),
+      'label' => $label,
+      'description' => t('For example, Loyalty points offered a to customer per dollar spent on this product. This value will be multiplied with price of product on successful checkout and the resulting points offered to customer as loyalty points.'),
+      'settings' => ['default_value' => 0.1],
+    ]);
+    $field->save();
+  }
+
+  // Assign widget settings for the 'default' form mode.
+  $view_display = commerce_get_entity_display('commerce_product_variation', $entity->id(), 'view');
+  $view_display->setComponent($field_name, [
+    'type' => 'number_decimal',
+  ]);
+  $view_display->save();
+
+  // Assign display settings for the 'default' and 'teaser' view modes.
+  $form_display = commerce_get_entity_display('commerce_product_variation', $entity->id(), 'form');
+  $form_display->setComponent($label, [
+    'type' => 'number_decimal',
+  ]);
+  $form_display->save();
+}
+
+/**
+ * Implements hook_entity_insert().
+ *
+ * @param Drupal\Core\Entity\EntityInterface $entity
+ *   EntityInterface object.
+ */
+function commerce_loyalty_points_entity_insert(EntityInterface $entity) {
+  if ($entity->getEntityType()->id() == 'commerce_product_variation_type') {
+    commerce_loyalty_points_add_loyalty_field($entity);
+  }
+}
+
+/**
+ * Implements hook_theme_registry_alter().
+ */
+function commerce_loyalty_points_theme_registry_alter(&$theme_registry) {
+  $theme_registry['views_view__loyalty_points_offered__user_view']['template'] = 'views-view--loyalty-points-offered--user-view';
+  $theme_registry['views_view__loyalty_points_offered__user_view']['path'] = drupal_get_path('module', 'commerce_loyalty_points') . '/templates';
+}
+
+/**
+ * Implements template_preprocess_views_view__loyalty_points_offered__user_view().
+ */
+function commerce_loyalty_points_preprocess_views_view__loyalty_points_offered__user_view(&$vars) {
+  $view = $vars['view'];
+  if ($view->id() == 'loyalty_points_offered' && $view->current_display == 'user_view') {
+    $total_rows = $view->total_rows;
+
+    if ($total_rows > 0) {
+      $uid = $view->args[0];
+      /** @var \Drupal\commerce_loyalty_points\LoyaltyPointsStorageInterface $loyalty_points_storage */
+      $loyalty_points_storage = \Drupal::entityTypeManager()->getStorage('commerce_loyalty_points');
+      $loyalty_points = $loyalty_points_storage->loadAndAggregateUserLoyaltyPoints($uid);
+      $key = 'table_aggregate';
+      \Drupal::moduleHandler()->alter('loyalty_points_view', $loyalty_points, $key);
+      $vars['available_loyalty_points'] = $loyalty_points;
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for \Drupal\user\AccountForm.
+ */
+function commerce_loyalty_points_form_user_form_alter(&$form, FormStateInterface $form_state) {
+  $account = $form_state->getFormObject()->getEntity();
+  if (!\Drupal::currentUser()->isAnonymous() && $account->id()) {
+    $account_data = \Drupal::service('user.data')->get('commerce_loyalty_points', $account->id(), 'enabled');
+  }
+
+  $form['loyalty_points'] = [
+    '#type' => 'details',
+    '#title' => t('Loyalty points subscription'),
+    '#open' => TRUE,
+    '#weight' => 7,
+  ];
+  $form['loyalty_points']['loyalty_points'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Sign me up for loyalty points program'),
+    '#default_value' => isset($account_data) ? $account_data : 0,
+    '#description' => t('Subscribe to loyalty points program to get benefits like discounted products, and so on.'),
+  ];
+  $form['actions']['submit']['#submit'][] = 'commerce_loyalty_points_user_profile_form_submit';
+}
+
+/**
+ * Submit callback for the user profile form to save the loyalty points subscription setting.
+ */
+function commerce_loyalty_points_user_profile_form_submit($form, FormStateInterface $form_state) {
+  $account = $form_state->getFormObject()->getEntity();
+  if ($account->id() && $form_state->hasValue('loyalty_points')) {
+    $value = (int) $form_state->getValue('loyalty_points');
+    \Drupal::service('user.data')->set('commerce_loyalty_points', $account->id(), 'enabled', $value);
+
+    // Assign role to current user.
+    if ($value) {
+      $account->addRole('loyalty_points_subscriber');
+      drupal_set_message(t('This account has been enrolled into Loyalty points program successfully.'), 'status');
+    }
+    else {
+      $account->removeRole('loyalty_points_subscriber');
+      drupal_set_message(t('Subscription for loyalty points program has been suspended for this account.'), 'status');
+    }
+    $account->save();
+  }
+}
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function commerce_loyalty_points_views_data_alter(array &$data) {
+  $data['commerce_loyalty_points']['aggregate_loyalty_points'] = [
+    'title' => t('Aggregate loyalty points'),
+    'help' => t('Aggregate Loyalty points for a user.'),
+    'field' => [
+      'title' => t('Aggregate loyalty points for a user'),
+      'id' => 'aggregate_loyalty_points',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function commerce_loyalty_points_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (isset($form_state->getStorage('view')['view'])) {
+    $view = $form_state->getStorage('view')['view'];
+    if ($form_id == 'views_exposed_form' && $view->id() == 'loyalty_points_offered' && $view->current_display == 'admin_view') {
+      $form['uid']['#type'] = 'entity_autocomplete';
+      $form['uid']['#target_type'] = 'user';
+      $form['uid']['#selection_settings'] = [
+        'include_anonymous' => FALSE,
+      ];
+    }
+  }
+}

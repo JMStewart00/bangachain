@@ -1,0 +1,20 @@
+uuid: b302004e-8c52-4118-b420-efc57b195772
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_product
+_core:
+  default_config_hash: NeXy0ONKEx2Etbl9n8h_08YwMJC3g4E_WaHLQh1op1Q
+id: commerce_product_variation.field_loyalty_points
+field_name: field_loyalty_points
+entity_type: commerce_product_variation
+type: float
+settings: {  }
+module: core
+locked: true
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -7,6 +7,7 @@ dependencies:
     - core.entity_view_mode.commerce_product_variation.summary
     - field.field.commerce_product_variation.apparel.attribute_disc_color
     - field.field.commerce_product_variation.apparel.attribute_size
+    - field.field.commerce_product_variation.apparel.field_loyalty_points
     - field.field.commerce_product_variation.apparel.field_product_image
     - field.field.commerce_product_variation.apparel.field_stock
     - field.field.commerce_product_variation.apparel.field_upc
@@ -30,6 +31,7 @@ content:
 hidden:
   attribute_disc_color: true
   attribute_size: true
+  field_loyalty_points: true
   field_product_image: true
   field_stock: true
   field_upc: true

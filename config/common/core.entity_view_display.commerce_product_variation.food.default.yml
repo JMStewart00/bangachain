@@ -5,6 +5,7 @@ dependencies:
   config:
     - commerce_product.commerce_product_variation_type.food
     - field.field.commerce_product_variation.food.attribute_main_item
+    - field.field.commerce_product_variation.food.field_loyalty_points
   module:
     - commerce_price
 id: commerce_product_variation.food.default
@@ -12,6 +13,17 @@ targetEntityType: commerce_product_variation
 bundle: food
 mode: default
 content:
+  field_loyalty_points:
+    type: number_decimal
+    weight: 1
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    region: content
   list_price:
     label: above
     type: commerce_price_default

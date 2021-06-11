@@ -6,6 +6,7 @@ dependencies:
     - commerce_product.commerce_product_variation_type.apparel
     - field.field.commerce_product_variation.apparel.attribute_disc_color
     - field.field.commerce_product_variation.apparel.attribute_size
+    - field.field.commerce_product_variation.apparel.field_loyalty_points
     - field.field.commerce_product_variation.apparel.field_product_image
     - field.field.commerce_product_variation.apparel.field_stock
     - field.field.commerce_product_variation.apparel.field_upc
@@ -21,6 +22,12 @@ targetEntityType: commerce_product_variation
 bundle: apparel
 mode: default
 content:
+  'Loyalty points offered per unit of currency':
+    type: number_decimal
+    weight: 8
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   attribute_disc_color:
     type: options_select
     weight: 2
@@ -88,6 +95,7 @@ content:
 hidden:
   commerce_stock_always_in_stock: true
   created: true
+  field_loyalty_points: true
   field_upc: true
   list_price: true
   uid: true

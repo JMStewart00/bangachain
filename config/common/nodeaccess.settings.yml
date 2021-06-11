@@ -124,6 +124,11 @@ role_alias:
     weight: '0'
     name: 'Chimp Team'
     allow: 0
+  loyalty_points_subscriber:
+    alias: 'Loyalty points subscriber'
+    name: 'Loyalty points subscriber'
+    weight: 0
+    allow: 0
 role_map:
   anonymous: 1
   authenticated: 2
@@ -131,6 +136,7 @@ role_map:
   pos_cashier: 4
   team_member: 5
   chimp_team: 6
+  loyalty_points_subscriber: 7
 allowed_types:
   events: 0
   page: 1

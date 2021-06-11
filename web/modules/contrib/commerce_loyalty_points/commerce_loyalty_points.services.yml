@@ -1,0 +1,6 @@
+services:
+  commerce_loyalty_points.adjustLoyaltyPoints:
+    class: \Drupal\commerce_loyalty_points\EventSubscriber\AddUserLoyaltyPoints
+    arguments: ['@entity_type.manager', '@module_handler']
+    tags:
+      - { name: event_subscriber }

@@ -1,0 +1,14 @@
+uuid: c2d035ba-bf0d-4f00-92c6-7b911d85a494
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.loyalty_points_subscriber
+  module:
+    - user
+id: user_remove_role_action.loyalty_points_subscriber
+label: 'Remove the Loyalty points subscriber role from the selected user(s)'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: loyalty_points_subscriber

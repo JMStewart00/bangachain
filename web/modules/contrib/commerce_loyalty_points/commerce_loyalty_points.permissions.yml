@@ -1,0 +1,7 @@
+administer loyalty points entities:
+  title: 'Administer Loyalty Point entities'
+  description: 'Allow to access the administration form to configure Loyalty point entities.'
+  restrict access: true
+
+access loyalty points overview:
+  title: 'Access the Loyalty point overview page'

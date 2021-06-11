@@ -1,0 +1,9 @@
+commerce.commerce_condition.plugin.order_loyalty_points:
+  type: commerce_condition_configuration
+  mapping:
+    min_loyalty_points:
+      type: string
+      label: 'Minimum Loyalty points'
+    loyalty_points_usage_interval:
+      type: string
+      label: 'Loyalty points usage interval'

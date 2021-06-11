@@ -5,6 +5,7 @@ dependencies:
   config:
     - commerce_product.commerce_product_variation_type.bags
     - field.field.commerce_product_variation.bags.attribute_disc_color
+    - field.field.commerce_product_variation.bags.field_loyalty_points
     - field.field.commerce_product_variation.bags.field_product_image
     - field.field.commerce_product_variation.bags.field_stock
     - field.field.commerce_product_variation.bags.field_upc
@@ -26,6 +27,17 @@ content:
     settings:
       link: true
     third_party_settings: {  }
+  field_loyalty_points:
+    type: number_decimal
+    weight: 7
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    region: content
   field_product_image:
     type: entity_reference_entity_view
     weight: 2

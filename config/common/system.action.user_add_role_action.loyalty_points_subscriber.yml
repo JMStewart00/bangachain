@@ -1,0 +1,14 @@
+uuid: 4f37e0b7-9392-48fd-81ec-a9e6d34a3b9a
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.loyalty_points_subscriber
+  module:
+    - user
+id: user_add_role_action.loyalty_points_subscriber
+label: 'Add the Loyalty points subscriber role to the selected user(s)'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: loyalty_points_subscriber

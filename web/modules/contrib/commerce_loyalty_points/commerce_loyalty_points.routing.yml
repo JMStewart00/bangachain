@@ -1,0 +1,15 @@
+entity.commerce_loyalty_points.canonical:
+  path: '/loyalty-points/{commerce_loyalty_points}'
+  defaults:
+    _entity_view: 'commerce_loyalty_points'
+    _title: 'Loyalty Points'
+  requirements:
+    _entity_access: 'commerce_loyalty_points.view'
+
+commerce_loyalty_points.add_form:
+  path: '/loyalty-points/add'
+  defaults:
+    _entity_form: commerce_loyalty_points.add
+    _title: 'Add loyalty points'
+  requirements:
+    _permission: 'administer loyalty points entities'

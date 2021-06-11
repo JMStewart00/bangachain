@@ -1,0 +1,10 @@
+uuid: 36e8823f-1a2f-4205-8f44-83d67db9ab15
+langcode: en
+status: true
+dependencies: {  }
+id: loyalty_points_subscriber
+label: 'Loyalty points subscriber'
+weight: 5
+is_admin: null
+permissions:
+  - 'access loyalty points overview'

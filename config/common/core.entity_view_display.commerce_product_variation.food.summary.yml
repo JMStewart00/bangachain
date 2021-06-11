@@ -6,6 +6,7 @@ dependencies:
     - commerce_product.commerce_product_variation_type.food
     - core.entity_view_mode.commerce_product_variation.summary
     - field.field.commerce_product_variation.food.attribute_main_item
+    - field.field.commerce_product_variation.food.field_loyalty_points
   module:
     - layout_builder
 third_party_settings:
@@ -24,6 +25,7 @@ content:
     third_party_settings: {  }
 hidden:
   attribute_main_item: true
+  field_loyalty_points: true
   list_price: true
   price: true
   product_id: true

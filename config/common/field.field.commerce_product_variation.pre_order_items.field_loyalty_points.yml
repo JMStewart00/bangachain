@@ -1,0 +1,23 @@
+uuid: b8838980-c4d4-4c35-ade4-2069ae8c51df
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_variation_type.pre_order_items
+    - field.storage.commerce_product_variation.field_loyalty_points
+id: commerce_product_variation.pre_order_items.field_loyalty_points
+field_name: field_loyalty_points
+entity_type: commerce_product_variation
+bundle: pre_order_items
+label: 'Loyalty points offered per unit of currency'
+description: 'For example, Loyalty points offered a to customer per dollar spent on this product. This value will be multiplied with price of product on successful checkout and the resulting points offered to customer as loyalty points.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: float

@@ -1,0 +1,49 @@
+uuid: b35bbeb6-7fd1-4aa5-9255-1d731a897323
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_variation_type.pre_order_items
+    - field.field.commerce_product_variation.pre_order_items.field_loyalty_points
+  module:
+    - commerce_price
+id: commerce_product_variation.pre_order_items.default
+targetEntityType: commerce_product_variation
+bundle: pre_order_items
+mode: default
+content:
+  field_loyalty_points:
+    type: number_decimal
+    weight: 1
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    region: content
+  list_price:
+    label: above
+    type: commerce_price_default
+    weight: -1
+    region: content
+    settings:
+      strip_trailing_zeroes: false
+      currency_display: symbol
+    third_party_settings: {  }
+  price:
+    label: above
+    type: commerce_price_default
+    weight: 0
+    region: content
+    settings:
+      strip_trailing_zeroes: false
+      currency_display: symbol
+    third_party_settings: {  }
+hidden:
+  add_to_cart_link: true
+  product_id: true
+  search_api_excerpt: true
+  sku: true
+  title: true

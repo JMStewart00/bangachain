@@ -6,6 +6,7 @@ dependencies:
     - commerce_product.commerce_product_variation_type.bags
     - core.entity_view_mode.commerce_product_variation.commerce_pos_product_select
     - field.field.commerce_product_variation.bags.attribute_disc_color
+    - field.field.commerce_product_variation.bags.field_loyalty_points
     - field.field.commerce_product_variation.bags.field_product_image
     - field.field.commerce_product_variation.bags.field_stock
     - field.field.commerce_product_variation.bags.field_upc
@@ -82,6 +83,7 @@ content:
     third_party_settings: {  }
 hidden:
   add_to_cart_link: true
+  field_loyalty_points: true
   list_price: true
   product_id: true
   search_api_excerpt: true

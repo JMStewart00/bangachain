@@ -19,7 +19,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '3614a3c638069d120033d4a9f9b6c78748730f0c',
+    'reference' => '8e6d20aa9f30a0d9c57a08b6630beae60259e3e6',
     'name' => 'oomphinc/drupal-scaffold',
   ),
   'versions' => 
@@ -754,6 +754,15 @@ private static $installed = array (
       array (
       ),
       'reference' => NULL,
+    ),
+    'drupal/commerce_loyalty_points' => 
+    array (
+      'pretty_version' => '1.0.0',
+      'version' => '1.0.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8.x-1.0',
     ),
     'drupal/commerce_multi_payment' => 
     array (
@@ -2691,7 +2700,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '3614a3c638069d120033d4a9f9b6c78748730f0c',
+      'reference' => '8e6d20aa9f30a0d9c57a08b6630beae60259e3e6',
     ),
     'orno/di' => 
     array (

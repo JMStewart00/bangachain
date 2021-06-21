@@ -43,7 +43,7 @@ class AddUserLoyaltyPoints implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
-    $events['commerce_order.place.post_transition'] = ['adjustLoyaltyPointsOnOrderComplete'];
+    $events['commerce_order.post_transition'] = ['adjustLoyaltyPointsOnOrderComplete'];
 
     return $events;
   }
@@ -67,6 +67,7 @@ class AddUserLoyaltyPoints implements EventSubscriberInterface {
       // Only continue if this is a subscribed user.
       if ($subscribed) {
         \Drupal::logger('loyalty')->notice('is subscribed');
+        \Drupal::logger('loyalty')->notice($item->getOrder()->getState()->getValue()['value']);
         if ($item->getOrder()->getState()->getValue()['value'] == 'completed') {
           $purchased_entity = $item->getPurchasedEntity();
           $quantity = $item->getQuantity();

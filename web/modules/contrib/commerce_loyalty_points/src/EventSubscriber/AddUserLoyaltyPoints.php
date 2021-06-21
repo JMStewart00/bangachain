@@ -66,6 +66,7 @@ class AddUserLoyaltyPoints implements EventSubscriberInterface {
 
       // Only continue if this is a subscribed user.
       if ($subscribed) {
+        \Drupal::logger('loyalty')->notice('is subscribed');
         if ($item->getOrder()->getState()->getValue()['value'] == 'completed') {
           $purchased_entity = $item->getPurchasedEntity();
           $quantity = $item->getQuantity();
@@ -75,6 +76,7 @@ class AddUserLoyaltyPoints implements EventSubscriberInterface {
           // Continue only if loyalty points are given by the admin.
           $loyalty_points_multiplier = $purchased_entity->field_loyalty_points->value;
           if (!empty($loyalty_points_multiplier)) {
+            \Drupal::logger('loyalty')->notice('!empty($loyalty_points_multiplier');
             $reason = t('Purchased @quantity @unit of @product with @points loyalty @point_unit for every @currency spent. Order ID: @order_id', [
               '@quantity' => $quantity,
               '@unit' => ($quantity == 1) ? 'unit' : 'units',
@@ -92,6 +94,7 @@ class AddUserLoyaltyPoints implements EventSubscriberInterface {
             }
             $actual_price = $total_price->subtract($total_adjustments);
             $loyalty_points = $actual_price->multiply($loyalty_points_multiplier);
+            \Drupal::logger('loyalty')->notice('LOYALTY POINTS: '.$loyalty_points);
 
             // Allow other modules to alter loyalty points.
             $operation = 'add';
@@ -104,6 +107,7 @@ class AddUserLoyaltyPoints implements EventSubscriberInterface {
               'created' => time(),
             ]);
             $add_loyalty_points->save();
+            \Drupal::logger('loyalty')->notice('end');
           }
         }
       }

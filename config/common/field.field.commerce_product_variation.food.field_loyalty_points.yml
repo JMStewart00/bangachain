@@ -11,9 +11,11 @@ entity_type: commerce_product_variation
 bundle: food
 label: 'Loyalty points offered per unit of currency'
 description: 'For example, Loyalty points offered a to customer per dollar spent on this product. This value will be multiplied with price of product on successful checkout and the resulting points offered to customer as loyalty points.'
-required: false
+required: true
 translatable: true
-default_value: {  }
+default_value:
+  -
+    value: !!float 1
 default_value_callback: ''
 settings:
   min: null

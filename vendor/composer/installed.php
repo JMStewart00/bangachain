@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '8e6d20aa9f30a0d9c57a08b6630beae60259e3e6',
+    'reference' => '552756ea9a5be028d4a30624c4a151026d2e76a5',
     'name' => 'oomphinc/drupal-scaffold',
   ),
   'versions' => 
@@ -1202,12 +1202,12 @@
     ),
     'drupal/ctools' => 
     array (
-      'pretty_version' => '3.6.0',
-      'version' => '3.6.0.0',
+      'pretty_version' => '3.7.0',
+      'version' => '3.7.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '8.x-3.6',
+      'reference' => '8.x-3.7',
     ),
     'drupal/datetime' => 
     array (
@@ -2687,7 +2687,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '8e6d20aa9f30a0d9c57a08b6630beae60259e3e6',
+      'reference' => '552756ea9a5be028d4a30624c4a151026d2e76a5',
     ),
     'orno/di' => 
     array (

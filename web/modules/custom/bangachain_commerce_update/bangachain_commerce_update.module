@@ -6,6 +6,7 @@
  * Contains bangachain_commerce_update.module.
  */
 
+use Drupal\commerce_product\Entity\ProductVariation;
 use Drupal\commerce_stock\StockTransactionsInterface;
 
 /**
@@ -65,5 +66,18 @@ function bangachain_commerce_update_commerce_bulk_variation_alter(array &$variat
       $variation->set('field_bin', $array_data['bin']);
       $variation->save();
     }
+  }
+}
+
+/**
+ * Set all variations to have a loyalty points of 1.
+ */
+function bangachain_commerce_update_update_8001() {
+  $product_variation_ids = \Drupal::entityQuery('commerce_product_variation')->execute();
+
+  foreach ($product_variation_ids as $product_variation_id) {
+    $variation = ProductVariation::load($product_variation_id);
+    $variation->set('field_loyalty_points', 1);
+    $variation->save();
   }
 }

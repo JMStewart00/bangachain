@@ -40,6 +40,13 @@ content:
     settings:
       display_label: true
     third_party_settings: {  }
+  field_loyalty_points:
+    type: number
+    weight: 10
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
   field_product_image:
     weight: 1
     settings:
@@ -108,6 +115,5 @@ content:
     region: content
 hidden:
   created: true
-  field_loyalty_points: true
   field_upc: true
   uid: true

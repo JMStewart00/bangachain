@@ -70,6 +70,13 @@ content:
     third_party_settings: {  }
     type: number
     region: content
+  field_loyalty_points:
+    type: number
+    weight: 14
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
   field_needs_artwork:
     weight: 1
     settings:
@@ -146,7 +153,6 @@ content:
 hidden:
   created: true
   feeds_item: true
-  field_loyalty_points: true
   field_upc: true
   list_price: true
   uid: true

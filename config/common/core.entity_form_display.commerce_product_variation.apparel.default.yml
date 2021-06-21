@@ -40,6 +40,13 @@ content:
     settings: {  }
     third_party_settings: {  }
     region: content
+  field_loyalty_points:
+    type: number
+    weight: 8
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
   field_product_image:
     weight: 0
     settings:
@@ -95,7 +102,6 @@ content:
 hidden:
   commerce_stock_always_in_stock: true
   created: true
-  field_loyalty_points: true
   field_upc: true
   list_price: true
   uid: true

@@ -12,9 +12,9 @@ entity_type: commerce_product_variation
 type: float
 settings: {  }
 module: core
-locked: true
+locked: false
 cardinality: 1
-translatable: true
+translatable: false
 indexes: {  }
 persist_with_no_fields: false
 custom_storage: false

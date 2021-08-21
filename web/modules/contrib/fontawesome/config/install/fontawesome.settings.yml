@@ -11,3 +11,4 @@ use_light_file: true
 use_brands_file: true
 use_duotone_file: true
 external_svg_integrity: null
+bypass_validation: false

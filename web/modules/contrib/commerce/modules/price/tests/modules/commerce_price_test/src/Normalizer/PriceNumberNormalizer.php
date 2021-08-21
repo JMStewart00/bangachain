@@ -32,7 +32,7 @@ class PriceNumberNormalizer extends PrimitiveDataNormalizer {
    * {@inheritdoc}
    */
   public function normalize($object, $format = NULL, array $context = []) {
-    $data = parent::normalize($object, $format, $context);;
+    $data = parent::normalize($object, $format, $context);
     return number_format($data, 2);
   }
 

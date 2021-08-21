@@ -9,6 +9,7 @@ use Drupal\Component\Utility\Tags;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\fontawesome\FontAwesomeManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Config\ConfigFactory;
 
 /**
  * Defines a route controller for entity autocomplete form elements.
@@ -23,18 +24,27 @@ class AutocompleteController extends ControllerBase {
   protected $fontAwesomeManager;
 
   /**
+   * Drupal configuration service container.
+   *
+   * @var \Drupal\Core\Config\ConfigFactory
+   */
+  protected $configFactory;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     $fontAwesomeManager = $container->get('fontawesome.font_awesome_manager');
-    return new static($fontAwesomeManager);
+    $configFactory = $container->get('config.factory');
+    return new static($fontAwesomeManager, $configFactory);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function __construct(FontAwesomeManagerInterface $fontAwesomeManager) {
+  public function __construct(FontAwesomeManagerInterface $fontAwesomeManager, ConfigFactory $config_factory) {
     $this->fontAwesomeManager = $fontAwesomeManager;
+    $this->configFactory = $config_factory;
   }
 
   /**
@@ -51,6 +61,18 @@ class AutocompleteController extends ControllerBase {
       // Load the icon data so we can check for a valid icon.
       $iconData = $this->fontAwesomeManager->getIconsWithCategories();
 
+      // Load the configuration settings.
+      $configuration_settings = $this->configFactory->get('fontawesome.settings');
+
+      // Determine which files we are using.
+      $activeFiles = [
+        'use_solid_file' => is_null($configuration_settings->get('use_solid_file')) === TRUE ? TRUE : $configuration_settings->get('use_solid_file'),
+        'use_regular_file' => is_null($configuration_settings->get('use_regular_file')) === TRUE ? TRUE : $configuration_settings->get('use_regular_file'),
+        'use_light_file' => is_null($configuration_settings->get('use_light_file')) === TRUE ? TRUE : $configuration_settings->get('use_light_file'),
+        'use_brands_file' => is_null($configuration_settings->get('use_brands_file')) === TRUE ? TRUE : $configuration_settings->get('use_brands_file'),
+        'use_duotone_file' => is_null($configuration_settings->get('use_duotone_file')) === TRUE ? TRUE : $configuration_settings->get('use_duotone_file'),
+      ];
+
       // Check each icon to see if it starts with the typed string.
       foreach ($iconData as $thisIcon) {
         // If the string is found.
@@ -60,34 +82,66 @@ class AutocompleteController extends ControllerBase {
           foreach ($thisIcon['styles'] as $style) {
 
             // Determine the prefix.
+            $iconPrefix = '';
             switch ($style) {
 
               case 'brands':
+                // Don't show if unavailable.
+                if (!$activeFiles['use_brands_file']) {
+                  break;
+                }
                 $iconPrefix = 'fab';
                 break;
 
               case 'light':
+                // Don't show if unavailable.
+                if (!$activeFiles['use_light_file']) {
+                  break;
+                }
                 $iconPrefix = 'fal';
                 break;
 
               case 'regular':
+                // Don't show if unavailable.
+                if (!$activeFiles['use_regular_file']) {
+                  break;
+                }
                 $iconPrefix = 'far';
                 break;
 
               case 'duotone':
+                // Don't show if unavailable.
+                if (!$activeFiles['use_duotone_file']) {
+                  break;
+                }
                 $iconPrefix = 'fad';
+                break;
+
+              case 'kit_uploads':
+                $iconPrefix = 'fak';
                 break;
 
               default:
               case 'solid':
+                // Don't show if unavailable.
+                if (!$activeFiles['use_solid_file']) {
+                  break;
+                }
                 $iconPrefix = 'fas';
                 break;
             }
             // Render the icon.
-            $iconRenders[] = new FormattableMarkup('<i class=":prefix fa-:icon fa-fw fa-2x"></i> ', [
-              ':prefix' => $iconPrefix,
-              ':icon' => $thisIcon['name'],
-            ]);
+            if (!empty($iconPrefix)) {
+              $iconRenders[] = new FormattableMarkup('<i class=":prefix fa-:icon fa-fw fa-2x"></i> ', [
+                ':prefix' => $iconPrefix,
+                ':icon' => $thisIcon['name'],
+              ]);
+            }
+          }
+
+          // Don't show if we have no available icons.
+          if (count($iconRenders) == 0) {
+            continue;
           }
 
           $results[] = [

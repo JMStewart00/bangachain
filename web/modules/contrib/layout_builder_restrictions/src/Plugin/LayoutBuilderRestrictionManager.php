@@ -40,6 +40,7 @@ class LayoutBuilderRestrictionManager extends DefaultPluginManager {
     parent::__construct('Plugin/LayoutBuilderRestriction', $namespaces, $module_handler, 'Drupal\layout_builder_restrictions\Plugin\LayoutBuilderRestrictionInterface', 'Drupal\layout_builder_restrictions\Annotation\LayoutBuilderRestriction');
     $this->configFactory = $config_factory;
     $this->alterInfo('layout_builder_restrictions_layout_builder_restriction_info');
+    $this->setCacheBackend($cache_backend, 'layout_builder_restriction_plugins');
   }
 
   /**

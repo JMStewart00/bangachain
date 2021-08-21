@@ -90,6 +90,7 @@ function media_library_theme_reset_form_alter(&$form, FormStateInterface $form_s
   $applicable_forms = [
     'layout_builder_add_block',
     'layout_builder_update_block',
+    'layout_builder_configure_section',
   ];
   if (in_array($form_id, $applicable_forms)) {
     $form['#attached']['library'][] = 'media_library_theme_reset/seven';
@@ -106,21 +107,6 @@ function media_library_theme_reset_form_alter(&$form, FormStateInterface $form_s
   // Add after build to add a CSS class to the form actions.
   if ($form_id === 'views_exposed_form' && strpos($form['#id'], 'views-exposed-form-media-library-widget') === 0) {
     $form['actions']['#attributes']['class'][] = 'media-library-view--form-actions';
-  }
-}
-
-/**
- * Implements hook_form_BASE_FORM_ID_alter() for \Drupal\media\MediaForm.
- */
-function media_library_theme_reset_form_media_form_alter(&$form, FormStateInterface $form_state) {
-  // Only attach CSS from core if this form comes from Media core, and not from
-  // the contrib Media Entity 1.x branch.
-  if (\Drupal::moduleHandler()->moduleExists('media') && $form_state->getFormObject() instanceof MediaForm) {
-    // @todo Revisit after https://www.drupal.org/node/2892304 is in. It
-    // introduces a footer region to these forms which will allow for us to
-    // display a top border over the published checkbox by defining a
-    // media-edit-form.html.twig template the same way node does.
-    $form['#attached']['library'][] = 'seven/media-form';
   }
 }
 
@@ -158,7 +144,6 @@ function media_library_theme_reset_preprocess_views_view_fields__media_library(a
  */
 function media_library_theme_reset_form_media_library_add_form_alter(array &$form, FormStateInterface $form_state) {
   $form['#attributes']['class'][] = 'media-library-add-form';
-  $form['#attached']['library'][] = 'seven/media_library';
 
   // If there are unsaved media items, apply styling classes to various parts
   // of the form.

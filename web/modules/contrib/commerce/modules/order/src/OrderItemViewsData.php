@@ -20,7 +20,7 @@ class OrderItemViewsData extends CommerceEntityViewsData {
     unset($data['commerce_order_item']['purchased_entity']['relationship']);
 
     // Collect all purchasable entity types.
-    $order_item_types = $this->getEntityTypeManager()->getStorage('commerce_order_item_type')->loadMultiple();
+    $order_item_types = $this->entityTypeManager->getStorage('commerce_order_item_type')->loadMultiple();
     $entity_type_ids = [];
     /** @var \Drupal\commerce_order\Entity\OrderItemTypeInterface $order_item_type */
     foreach ($order_item_types as $order_item_type) {
@@ -33,11 +33,11 @@ class OrderItemViewsData extends CommerceEntityViewsData {
 
     // Provide a relationship for each entity type found.
     foreach ($entity_type_ids as $entity_type_id) {
-      if (!$this->getEntityTypeManager()->hasDefinition($entity_type_id)) {
+      if (!$this->entityTypeManager->hasDefinition($entity_type_id)) {
         continue;
       }
       /** @var \Drupal\Core\Entity\EntityTypeInterface $entity_type */
-      $entity_type = $this->getEntityTypeManager()->getDefinition($entity_type_id);
+      $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
       $data['commerce_order_item'][$entity_type_id] = [
         'relationship' => [
           'title' => $entity_type->getLabel(),

@@ -4,7 +4,7 @@ iframe.field.schema:
   mapping:
     url:
       type: string
-      labe: URL
+      label: URL
     title:
       type: label
       label: Title

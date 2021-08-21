@@ -75,9 +75,9 @@ class PaymentGatewayFormTest extends CommerceWebDriverTestBase {
     $entity_type_manager = $this->container->get('entity_type.manager');
     /** @var \Drupal\commerce_payment\Entity\PaymentGatewayInterface $onsite_payment_gateway */
     $onsite_payment_gateway = $entity_type_manager->getStorage('commerce_payment_gateway')->load('my_onsite_name');
-    $this->assertEqual($onsite_payment_gateway->getPluginConfiguration()['api_key'], 'MyAPIKey');
-    $this->assertEqual($onsite_payment_gateway->label(), 'My onsite name');
-    $this->assertEqual($onsite_payment_gateway->getPlugin()->getMode(), 'test');
+    $this->assertEquals('MyAPIKey', $onsite_payment_gateway->getPluginConfiguration()['api_key']);
+    $this->assertEquals('My onsite name', $onsite_payment_gateway->label());
+    $this->assertEquals('test', $onsite_payment_gateway->getPlugin()->getMode());
   }
 
   /**
@@ -121,9 +121,9 @@ class PaymentGatewayFormTest extends CommerceWebDriverTestBase {
     $entity_type_manager = $this->container->get('entity_type.manager');
     /** @var \Drupal\commerce_payment\Entity\PaymentGatewayInterface $onsite_payment_gateway */
     $onsite_payment_gateway = $entity_type_manager->getStorage('commerce_payment_gateway')->load('onsite');
-    $this->assertEqual($onsite_payment_gateway->getPluginConfiguration()['api_key'], $edit['configuration[example_onsite][api_key]']);
-    $this->assertEqual($onsite_payment_gateway->label(), $edit['label']);
-    $this->assertEqual($onsite_payment_gateway->getPlugin()->getMode(), $edit['configuration[example_onsite][mode]']);
+    $this->assertEquals($edit['configuration[example_onsite][api_key]'], $onsite_payment_gateway->getPluginConfiguration()['api_key']);
+    $this->assertEquals($edit['label'], $onsite_payment_gateway->label());
+    $this->assertEquals($edit['configuration[example_onsite][mode]'], $onsite_payment_gateway->getPlugin()->getMode());
   }
 
 }

@@ -20,6 +20,7 @@ class IconManagerService implements IconManagerServiceInterface {
    * Constructs a new IconManagerService object.
    *
    * @param Drupal\fontawesome\FontAwesomeManagerInterface $font_awesome_manager
+   *   The font awesome manager interface.
    */
   public function __construct(FontAwesomeManagerInterface $font_awesome_manager) {
     $this->fontAwesomeManager = $font_awesome_manager;
@@ -55,6 +56,10 @@ class IconManagerService implements IconManagerServiceInterface {
             $iconPrefix = 'fad';
             break;
 
+          case 'kit_uploads':
+            $iconPrefix = 'fak';
+            break;
+
           default:
           case 'solid':
             $iconPrefix = 'fas';
@@ -82,8 +87,8 @@ class IconManagerService implements IconManagerServiceInterface {
    *   A formatted icon list.
    */
   public function formatIconList(array $icons) {
-    $icons_list = [];
-    foreach ($icons as $name => $properties) {
+    $icon_list = [];
+    foreach ($icons as $properties) {
       $icon_list[] = implode(', ', $properties['classes']);
     }
     $formatted_icon_list = explode(', ', implode(', ', $icon_list));
@@ -101,7 +106,7 @@ class IconManagerService implements IconManagerServiceInterface {
    */
   public function formatSearchTerms(array $icons) {
     $terms_list = [];
-    foreach ($icons as $name => $properties) {
+    foreach ($icons as $properties) {
       foreach ($properties['classes'] as $item) {
         array_push($properties['search_terms'], $properties['name']);
         $terms_list[] = $properties['search_terms'];

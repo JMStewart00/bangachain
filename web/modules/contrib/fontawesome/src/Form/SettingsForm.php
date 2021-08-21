@@ -238,6 +238,13 @@ class SettingsForm extends ConfigFormBase {
       ],
     ];
 
+    $form['bypass_validation'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Bypass Font Awesome icon validation?'),
+      '#default_value' => $fontawesome_config->get('bypass_validation'),
+      '#description' => $this->t("If enabled, icon name validation will not take place. This is useful when using custom icons from Font Awesome's hosted kits."),
+    ];
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -300,6 +307,7 @@ class SettingsForm extends ConfigFormBase {
       ->set('use_light_file', $values['use_light_file'])
       ->set('use_brands_file', $values['use_brands_file'])
       ->set('use_duotone_file', $values['use_duotone_file'])
+      ->set('bypass_validation', $values['bypass_validation'])
       ->save();
 
     parent::submitForm($form, $form_state);

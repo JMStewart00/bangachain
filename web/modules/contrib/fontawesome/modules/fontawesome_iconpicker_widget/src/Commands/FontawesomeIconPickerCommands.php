@@ -2,9 +2,9 @@
 
 namespace Drupal\fontawesome_iconpicker_widget\Commands;
 
+use Drupal\Core\File\FileSystemInterface;
 use Drush\Commands\DrushCommands;
 use Drupal\Core\Asset\LibraryDiscoveryInterface;
-use Drupal\Core\File\FileSystem;
 use Drupal\Core\Archiver\ArchiverManager;
 
 /**
@@ -22,7 +22,7 @@ class FontawesomeIconPickerCommands extends DrushCommands {
   /**
    * File system service.
    *
-   * @var \Drupal\Core\File\FileSystem
+   * @var \Drupal\Core\File\FileSystemInterface
    */
   protected $fileSystem;
 
@@ -36,7 +36,7 @@ class FontawesomeIconPickerCommands extends DrushCommands {
   /**
    * {@inheritdoc}
    */
-  public function __construct(LibraryDiscoveryInterface $library_discovery, FileSystem $file_system, ArchiverManager $archiver_manager) {
+  public function __construct(LibraryDiscoveryInterface $library_discovery, FileSystemInterface $file_system, ArchiverManager $archiver_manager) {
     parent::__construct();
 
     $this->libraryDiscovery = $library_discovery;

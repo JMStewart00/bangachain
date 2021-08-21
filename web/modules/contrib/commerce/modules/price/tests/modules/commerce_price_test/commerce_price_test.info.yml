@@ -1,7 +1,6 @@
 name: Commerce Price Test
 type: module
 package: Testing
-core_version_requirement: ^8.8 || ^9
 dependencies:
   - commerce:commerce_store
   - commerce:commerce_price

@@ -98,6 +98,13 @@ class AllowedBlocksForm extends FormBase {
   protected $blacklistedBlocks;
 
   /**
+   * An array of restricted block categories.
+   *
+   * @var array
+   */
+  protected $restrictedCategories;
+
+  /**
    * The machine name of the layout plugin.
    *
    * @var string
@@ -154,6 +161,7 @@ class AllowedBlocksForm extends FormBase {
     $third_party_settings = $display->getThirdPartySetting('layout_builder_restrictions', 'entity_view_mode_restriction_by_region', []);
     $this->whitelistedBlocks = (isset($third_party_settings['whitelisted_blocks'][$this->layoutPluginId][$this->regionId])) ? $third_party_settings['whitelisted_blocks'][$this->layoutPluginId][$this->regionId] : [];
     $this->blacklistedBlocks = (isset($third_party_settings['blacklisted_blocks'][$this->layoutPluginId][$this->regionId])) ? $third_party_settings['blacklisted_blocks'][$this->layoutPluginId][$this->regionId] : [];
+    $this->restrictedCategories = (isset($third_party_settings['restricted_categories'][$this->layoutPluginId][$this->regionId])) ? $third_party_settings['restricted_categories'][$this->layoutPluginId][$this->regionId] : [];
   }
 
   /**
@@ -203,7 +211,10 @@ class AllowedBlocksForm extends FormBase {
     $layout_label = $layout_definition->getLabel();
 
     $form['config_context_markup'] = [
-      '#markup' => $this->t('<strong>Layout:</strong> @layout_label<br><strong>Region:</strong> @region_label', ['@layout_label' => $layout_label, '@region_label' => $region_label]),
+      '#markup' => $this->t('<strong>Layout:</strong> @layout_label<br><strong>Region:</strong> @region_label', [
+        '@layout_label' => $layout_label,
+        '@region_label' => $region_label,
+      ]),
     ];
 
     foreach ($this->getBlockDefinitions($display) as $category => $data) {
@@ -219,6 +230,7 @@ class AllowedBlocksForm extends FormBase {
         '#type' => 'radios',
         '#options' => [
           "all" => $this->t('Allow all existing & new %category blocks.', ['%category' => $data['label']]),
+          "restrict_all" => $this->t('Restrict all existing & new %category blocks.', ['%category' => $data['label']]),
           "whitelisted" => $this->t('Allow specific %category blocks:', ['%category' => $data['label']]),
           "blacklisted" => $this->t('Restrict specific %category blocks:', ['%category' => $data['label']]),
         ],
@@ -233,7 +245,8 @@ class AllowedBlocksForm extends FormBase {
         '#type' => 'container',
         '#states' => [
           'invisible' => [
-            ':input[name="allowed_blocks[' . $category . '][restriction]"]' => ['value' => "all"],
+            [':input[name="allowed_blocks[' . $category . '][restriction]"]' => ['value' => "all"]],
+            [':input[name="allowed_blocks[' . $category . '][restriction]"]' => ['value' => "restrict_all"]],
           ],
         ],
       ];
@@ -318,7 +331,6 @@ class AllowedBlocksForm extends FormBase {
     $layout_plugin = $values['layout_plugin'];
     $region_id = $values['region_id'];
     $categories = $values['allowed_blocks'];
-
     $block_restrictions = [];
     if (!empty($categories)) {
       foreach ($categories as $category => $category_setting) {
@@ -384,7 +396,7 @@ class AllowedBlocksForm extends FormBase {
    *   The data stored between AJAX submits or null.
    *
    * @return string
-   *   The value 'all', 'whitelisted' or 'blacklisted'.
+   *   The value 'all', 'whitelisted', 'blacklisted', or 'restrict_all'.
    */
   protected function getCategoryBehavior($category, $temp_data) {
     // Check whether this is a newly available category that has been
@@ -402,10 +414,13 @@ class AllowedBlocksForm extends FormBase {
       elseif (isset($this->blacklistedBlocks) && in_array($category, array_keys($this->blacklistedBlocks))) {
         return "blacklisted";
       }
+      elseif (in_array($category, $this->restrictedCategories)) {
+        return 'restrict_all';
+      }
       elseif ($category_is_restricted) {
         // If there is no configuration, but the category hasn't been 'allowed',
         // use 'whitelisted' to preset this as if all blocks were restricted.
-        return "whitelisted";
+        return "restrict_all";
       }
       else {
         return 'all';

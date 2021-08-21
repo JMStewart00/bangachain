@@ -45,10 +45,11 @@ class ShipmentPercentageOffTest extends ShippingKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installEntitySchema('commerce_promotion');
+    $this->installSchema('commerce_promotion', ['commerce_promotion_usage']);
 
     $first_variation = ProductVariation::create([
       'type' => 'default',

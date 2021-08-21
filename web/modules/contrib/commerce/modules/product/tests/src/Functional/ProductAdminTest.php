@@ -42,7 +42,7 @@ class ProductAdminTest extends ProductBrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     FieldStorageConfig::create([
@@ -87,8 +87,9 @@ class ProductAdminTest extends ProductBrowserTestBase {
     }
     $this->submitForm($edit, 'Save');
 
-    $result = \Drupal::entityQuery('commerce_product')
+    $result = \Drupal::entityTypeManager()->getStorage('commerce_product')->getQuery()
       ->condition("title", $edit['title[0][value]'])
+      ->accessCheck(FALSE)
       ->range(0, 1)
       ->execute();
     $product_id = reset($result);

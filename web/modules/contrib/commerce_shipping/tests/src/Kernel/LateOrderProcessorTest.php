@@ -35,7 +35,7 @@ class LateOrderProcessorTest extends ShippingKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->processor = $this->container->get('commerce_shipping.late_order_processor');

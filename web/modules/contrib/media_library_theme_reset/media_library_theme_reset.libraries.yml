@@ -13,6 +13,7 @@ seven:
       theme/seven/css/media_library.css: {}
       theme/seven/css/tables.css: {}
       theme/seven/css/form.css: {}
+      theme/seven/css/pager.css: {}
     theme:
       theme/seven/css/icons.css: {}
       theme/seven/css/overrides.css: {}

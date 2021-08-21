@@ -34,18 +34,6 @@
 
         _this.onChange($(currentTarget));
       });
-
-      var $selectAddress = $(Drupal.shippingRecalculate.wrapper).find("select[name$='[shipping_profile][select_address]']");
-
-      if ($selectAddress.length) {
-        $selectAddress.once('shipping-recalculate').on('change', function (_ref2) {
-          var currentTarget = _ref2.currentTarget;
-
-          if ($(currentTarget).val() !== '_new') {
-            _this.onChange($(currentTarget));
-          }
-        });
-      }
     },
     canRecalculateRates: function canRecalculateRates() {
       var canRecalculate = true;

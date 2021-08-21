@@ -72,7 +72,7 @@ class CustomerProfileTest extends OrderWebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->store->set('address', [

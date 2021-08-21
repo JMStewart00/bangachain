@@ -119,6 +119,7 @@ class EditorIconDialog extends FormBase {
         'far' => $this->t('Regular'),
         'fal' => $this->t('Light'),
         'fad' => $this->t('Duotone'),
+        'fak' => $this->t('Kit Uploads'),
       ],
       '#default_value' => 'fas',
     ];
@@ -368,6 +369,13 @@ class EditorIconDialog extends FormBase {
    * Validate the Font Awesome icon name.
    */
   public static function validateIconName($element, FormStateInterface $form_state) {
+    // Load the configuration settings.
+    $configuration_settings = \Drupal::config('fontawesome.settings');
+    // Check if we need to bypass.
+    if ($configuration_settings->get('bypass_validation')) {
+      return;
+    }
+
     $value = $element['#value'];
     if (strlen($value) == 0) {
       $form_state->setValueForElement($element, '');

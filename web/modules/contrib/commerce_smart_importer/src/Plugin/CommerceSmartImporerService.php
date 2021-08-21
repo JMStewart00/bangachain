@@ -1196,7 +1196,7 @@ class CommerceSmartImporerService extends ControllerBase {
 
     while (($line = fgetcsv($handle)) !== FALSE) {
       $linecount++;
-      if (!empty($line[0])) {
+      if (!empty($line[0]) || $linecount === 1 || $linecount === 2) {
         $productCount++;
       }
     }

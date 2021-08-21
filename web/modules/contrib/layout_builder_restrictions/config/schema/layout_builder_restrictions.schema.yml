@@ -32,6 +32,13 @@ layout_builder_restrictions.entity_view_mode_restriction:
         sequence:
           type: string
           label: 'Block ID'
+    restricted_categories:
+      type: sequence
+      label: 'Categories which disallow all blocks'
+      sequence:
+        type: string
+        label: 'Category ID'
+
 
 layout_builder_restrictions.allowed_block_categories:
   type: sequence

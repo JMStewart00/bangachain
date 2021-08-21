@@ -354,6 +354,12 @@ class Shipping extends TaxTypeBase {
     $subtotal = $order->getSubtotalPrice()->getNumber();
     foreach ($groups as $percentage => $group) {
       $order_item_total = $group['order_item_total'];
+      // If the order item total is zero, the group ratio cannot be
+      // properly calculated.
+      if ($order_item_total->isZero()) {
+        $groups[$percentage]['ratio'] = '0';
+        continue;
+      }
       $groups[$percentage]['ratio'] = $order_item_total->divide($subtotal)->getNumber();
     }
 

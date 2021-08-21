@@ -18,6 +18,7 @@ Download or clone the
     * Commerce Stock Field
     * Commerce Stock Local Storage
     * Commerce Stock UI
+    * Commerce Stock Enforcement (optional)
 
 2. Commerce >> Configuration >> Stock >> Stock configuration
     * Set Default service to "Local stock" (optionally select Local stock only
@@ -30,8 +31,11 @@ Download or clone the
     * Select "Stock Level" under the "General" section and name the field "stock
      level"
     * Save and continue
-    * Set "Allowed number of values" to 1 and "Save field settings"
+    * "Allowed number of values" is set to 1 - "Save field settings"
     * "Save settings" one last time
+If you have more product variation types:
+   * Reuse the field that was created for the Default Product variation type:
+     "field_stock_level"
 
 ### Other configuration
 
@@ -88,5 +92,15 @@ types (we may automate this later on):
   reference to stock location - unlimited
   *  Stock allocation location (field_stock_allocation_location) - Entity
   reference to stock location - 1
+
+How to add a stock locations reference field.
+1. Add a new field
+2. Select Reference: Other.
+3. Enter the label and make sure the machine name is correct.
+4. Set the "Type of item to reference" to "Stock Location" and the "Allowed number of values"
+5. Press Save Field settings
+6. Set the "Stock location type"
+7. Press Save Setting
+
 
 You can then edit each of the stores and set the locations.

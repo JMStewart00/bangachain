@@ -113,6 +113,7 @@ class AdminSettingsForm extends ConfigFormBase {
     $roles = array_values(array_filter($form_state->getValue(['csrf_token', 'roles'])));
     $this->config('commerce_add_to_cart_link.settings')
       ->set('csrf_token.roles', $roles)
+      ->set('redirect_back', $form_state->getValue('redirect_back'))
       ->save();
 
     parent::submitForm($form, $form_state);

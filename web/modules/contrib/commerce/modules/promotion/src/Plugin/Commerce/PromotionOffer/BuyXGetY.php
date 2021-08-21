@@ -304,7 +304,7 @@ class BuyXGetY extends OrderPromotionOfferBase {
 
       // Ensure that the offer is a 100% discount.
       if ($values['offer']['type'] === 'fixed_amount' || ($values['offer']['type'] === 'percentage' && $values['offer']['percentage'] != '100')) {
-        $form_state->setError($form['offer'], $this->t('The "auto-add" offer can only be enabled for products that discounted 100%.'));
+        $form_state->setError($form['offer'], $this->t('The "auto-add" offer can only be enabled for fully discounted products (i.e with a 100% discount).'));
       }
     }
   }

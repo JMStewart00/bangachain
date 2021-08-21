@@ -131,7 +131,7 @@ class SerializationTest extends ShippingKernelTestBase {
    * @param iterable $traversable
    *   The data.
    */
-  private function assertAllPrimitives($traversable) {
+  private function assertAllPrimitives(iterable $traversable) {
     assert(is_array($traversable) || $traversable instanceof \Traversable);
     foreach ($traversable as $value) {
       if (is_array($value) || $value instanceof \Traversable) {

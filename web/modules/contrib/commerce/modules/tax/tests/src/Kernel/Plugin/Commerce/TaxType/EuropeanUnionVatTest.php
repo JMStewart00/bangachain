@@ -45,7 +45,7 @@ class EuropeanUnionVatTest extends OrderKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installConfig('commerce_tax');
@@ -116,6 +116,13 @@ class EuropeanUnionVatTest extends OrderKernelTestBase {
     $adjustment = reset($adjustments);
     $this->assertCount(1, $adjustments);
     $this->assertEquals('european_union_vat|fr|standard', $adjustment->getSourceId());
+
+    // GB customer, French store, no VAT.
+    $order = $this->buildOrder('GB', 'FR');
+    $this->assertTrue($plugin->applies($order));
+    $plugin->apply($order);
+    $adjustments = $order->collectAdjustments();
+    $this->assertCount(0, $adjustments);
 
     // German customer, French store registered for German VAT, physical product.
     $order = $this->buildOrder('DE', 'FR', '', ['DE']);

@@ -2,12 +2,12 @@
 
 namespace Drupal\fontawesome;
 
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Extension\ThemeHandlerInterface;
+use Drupal\Core\File\FileSystemInterface;
 use Symfony\Component\Yaml\Yaml;
 use Drupal\Component\Discovery\YamlDiscovery;
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Extension\ModuleHandler;
-use Drupal\Core\Extension\ThemeHandler;
-use Drupal\Core\File\FileSystem;
 
 /**
  * Icon Manager Service for Font Awesome.
@@ -15,30 +15,30 @@ use Drupal\Core\File\FileSystem;
 class FontAwesomeManager implements FontAwesomeManagerInterface {
 
   /**
-   * Drupal\Core\Cache\CacheBackendInterface definition.
+   * The data cache.
    *
    * @var \Drupal\Core\Cache\CacheBackendInterface
    */
   protected $dataCache;
 
   /**
-   * Drupal\Core\Extension\ModuleHandler definition.
+   * The module handler.
    *
-   * @var \Drupal\Core\Extension\ModuleHandler
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
   protected $moduleHandler;
 
   /**
-   * Drupal\Core\Extension\ThemeHandler definition.
+   * The theme handler.
    *
-   * @var \Drupal\Core\Extension\ThemeHandler
+   * @var \Drupal\Core\Extension\ThemeHandlerInterface
    */
   protected $themeHandler;
 
   /**
-   * Drupal\Core\File\FileSystem definion.
+   * The file system helper.
    *
-   * @var \Drupal\Core\File\FileSystem
+   * @var \Drupal\Core\File\FileSystemInterface
    */
   protected $fileSystem;
 
@@ -47,14 +47,14 @@ class FontAwesomeManager implements FontAwesomeManagerInterface {
    *
    * @param \Drupal\Core\Cache\CacheBackendInterface $data_cache
    *   The data cache.
-   * @param \Drupal\Core\Extension\ModuleHandler $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param \Drupal\Core\Extension\ThemeHandler $theme_handler
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
    *   The theme handler.
-   * @param \Drupal\Core\File\FileSystem $file_system
+   * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The file system helper.
    */
-  public function __construct(CacheBackendInterface $data_cache, ModuleHandler $module_handler, ThemeHandler $theme_handler, FileSystem $file_system) {
+  public function __construct(CacheBackendInterface $data_cache, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, FileSystemInterface $file_system) {
     $this->dataCache = $data_cache;
     $this->moduleHandler = $module_handler;
     $this->themeHandler = $theme_handler;
@@ -173,7 +173,7 @@ class FontAwesomeManager implements FontAwesomeManagerInterface {
     if (!$icons = $this->dataCache->get('fontawesome.iconlist')) {
       // Parse the metadata file and use it to generate the icon list.
       $icons = [];
-      foreach ($this->getMetadata() as $name => $icon) {
+      foreach ($this->getMetadata() as $icon) {
         // Determine the icon type - brands behave differently.
         $type = 'solid';
         foreach ($icon['styles'] as $style) {
@@ -182,8 +182,8 @@ class FontAwesomeManager implements FontAwesomeManagerInterface {
             break;
           }
         }
-        $icons[$name] = [
-          'name' => $name,
+        $icons[$icon['name']] = [
+          'name' => $icon['name'],
           'type' => $type,
           'label' => $icon['label'],
           'styles' => $icon['styles'],
@@ -212,8 +212,8 @@ class FontAwesomeManager implements FontAwesomeManagerInterface {
    */
   public function getIconMetadata($findIcon) {
     // Parse the metadata file and use it to generate the icon list.
-    foreach ($this->getMetadata() as $name => $icon) {
-      if ($name == $findIcon) {
+    foreach ($this->getMetadata() as $icon) {
+      if ($icon['name'] === $findIcon) {
         // Determine the icon type - brands behave differently.
         $type = 'solid';
         foreach ($icon['styles'] as $style) {
@@ -223,7 +223,7 @@ class FontAwesomeManager implements FontAwesomeManagerInterface {
           }
         }
         return [
-          'name' => $name,
+          'name' => $icon['name'],
           'type' => $type,
           'label' => $icon['label'],
           'styles' => $icon['styles'],
@@ -314,6 +314,10 @@ class FontAwesomeManager implements FontAwesomeManagerInterface {
     }
     else {
       $metadata = Yaml::parse(file_get_contents($this->getMetadataFilepath()));
+    }
+    // Store the name in the metadata.
+    foreach ($metadata as $name => &$data) {
+      $data['name'] = $name;
     }
 
     $this->moduleHandler->alter('fontawesome_metadata', $metadata);

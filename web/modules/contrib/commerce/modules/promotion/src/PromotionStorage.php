@@ -91,7 +91,8 @@ class PromotionStorage extends CommerceContentEntityStorage implements Promotion
       ->condition('order_types', [$order->bundle()], 'IN')
       ->condition('start_date', $date, '<=')
       ->condition('status', TRUE)
-      ->condition($or_condition);
+      ->condition($or_condition)
+      ->accessCheck(FALSE);
     if ($offer_ids) {
       $query->condition('offer.target_plugin_id', $offer_ids, 'IN');
     }

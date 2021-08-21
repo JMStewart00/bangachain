@@ -14,6 +14,7 @@ class ProductAttributeValueStorage extends CommerceContentEntityStorage implemen
    */
   public function loadMultipleByAttribute($attribute_id) {
     $entity_query = $this->getQuery();
+    $entity_query->accessCheck(FALSE);
     $entity_query->condition('attribute', $attribute_id);
     $entity_query->sort('weight');
     $entity_query->sort('name');

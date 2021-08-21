@@ -9,7 +9,7 @@ dependencies:
   - drupal:link
 required: false
 
-# Information added by Drupal.org packaging script on 2021-03-24
-version: '8.x-2.10'
+# Information added by Drupal.org packaging script on 2021-06-19
+version: '8.x-2.11'
 project: 'iframe'
-datestamp: 1616612958
+datestamp: 1624093908

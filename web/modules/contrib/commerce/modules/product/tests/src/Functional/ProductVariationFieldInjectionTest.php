@@ -19,7 +19,7 @@ class ProductVariationFieldInjectionTest extends ProductBrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create an attribute, so we can test it displays, too.

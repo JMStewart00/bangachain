@@ -146,6 +146,11 @@ interface PaymentGatewayInterface extends PluginWithFormsInterface, Configurable
    *
    * @return int
    *   The amount in minor units, as an integer.
+   *
+   * @deprecated
+   *   This method was replaced with MinorUnitsConverter::toMinorUnits().
+   *
+   * @see \Drupal\commerce_price\MinorUnitsConverter::toMinorUnits()
    */
   public function toMinorUnits(Price $amount);
 

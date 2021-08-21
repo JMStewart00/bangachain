@@ -5,7 +5,7 @@
     "homepage": "http://drupal.org/project/commerce_shipping",
     "license": "GPL-2.0+",
     "require": {
-        "drupal/commerce": "2.x-dev",
+        "drupal/commerce": "^2.25",
         "drupal/physical": "^1.0"
     },
     "minimum-stability": "dev"

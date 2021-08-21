@@ -36,7 +36,7 @@ class ProductTest extends CommerceKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installEntitySchema('commerce_product_variation');
@@ -105,9 +105,9 @@ class ProductTest extends CommerceKernelTestBase {
 
     // Ensure that we don't store a broken reference to the product owner.
     $product->setOwnerId(900);
-    $this->assertEqual($product->getOwnerId(), 900);
+    $this->assertEquals(900, $product->getOwnerId());
     $product->save();
-    $this->assertEqual($product->getOwnerId(), 0);
+    $this->assertEquals(0, $product->getOwnerId());
   }
 
   /**

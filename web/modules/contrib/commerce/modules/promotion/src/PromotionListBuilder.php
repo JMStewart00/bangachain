@@ -130,6 +130,7 @@ class PromotionListBuilder extends EntityListBuilder implements FormInterface {
    */
   protected function getEntityIds() {
     $query = $this->getStorage()->getQuery()
+      ->accessCheck(FALSE)
       ->condition('status', $this->statusCondition)
       ->sort($this->entityType->getKey('id'));
 

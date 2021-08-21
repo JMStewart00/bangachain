@@ -53,7 +53,7 @@ class ShippingOrderManagerTest extends ShippingKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $shipping_method = ShippingMethod::create([

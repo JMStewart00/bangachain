@@ -50,7 +50,7 @@ class OrderAdminTest extends OrderWebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->store->set('billing_countries', ['FR', 'US']);
@@ -105,13 +105,13 @@ class OrderAdminTest extends OrderWebDriverTestBase {
     $page = $this->getSession()->getPage();
 
     // First item with overriding the price.
-    $page->checkField('Override the unit price');
+    $this->getSession()->getPage()->checkField('Override the unit price');
     $purchased_entity_field = $this->assertSession()->waitForElement('css', '[name="order_items[form][0][purchased_entity][0][target_id]"].ui-autocomplete-input');
     $purchased_entity_field->setValue(substr($this->variation->getSku(), 0, 4));
     $this->getSession()->getDriver()->keyDown($purchased_entity_field->getXpath(), ' ');
     $this->assertSession()->waitOnAutocomplete();
     $this->assertSession()->pageTextContains($this->variation->getSku());
-    $this->assertCount(1, $page->findAll('css', '.ui-autocomplete li'));
+    $this->assertCount(1, $this->getSession()->getPage()->findAll('css', '.ui-autocomplete li'));
     $this->getSession()->getPage()->find('css', '.ui-autocomplete li:first-child a')->click();
     $this->assertSession()->fieldValueEquals('order_items[form][0][purchased_entity][0][target_id]', $this->variation->getSku() . ': ' . $this->variation->label() . ' (' . $this->variation->id() . ')');
 
@@ -150,7 +150,7 @@ class OrderAdminTest extends OrderWebDriverTestBase {
     $this->submitForm([], 'Save');
     $this->assertSession()->pageTextContains('The order has been successfully saved.');
     $order = Order::load(1);
-    $this->assertNull($order->getBillingProfile());;
+    $this->assertNull($order->getBillingProfile());
 
     // Use an adjustment that is not locked by default.
     $this->drupalGet($order->toUrl('edit-form'));
@@ -425,11 +425,21 @@ class OrderAdminTest extends OrderWebDriverTestBase {
     $workflow = $order->getState()->getWorkflow();
     $transitions = $workflow->getAllowedTransitions($order->getState()->getId(), $order);
     foreach ($transitions as $transition) {
-      $this->assertSession()->buttonExists($transition->getLabel());
+      $this->assertSession()->linkExists($transition->getLabel());
     }
-    $this->click('input.js-form-submit#edit-place');
-    $this->assertSession()->buttonNotExists('Place order');
-    $this->assertSession()->buttonNotExists('Cancel order');
+    $this->click('a.button#edit-place');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->pageTextContains('Are you sure you want to apply this transition?');
+    $this->assertSession()->linkExists('Cancel');
+    $this->assertSession()->buttonExists('Confirm');
+    // Note, there is some odd behavior calling the `press()` method on the
+    // button, so after asserting it exists, click via this method.
+    $this->click('button:contains("Confirm")');
+    $this->assertSession()->linkNotExists('Place order');
+    $this->assertSession()->linkNotExists('Cancel order');
+
+    // The order was modified and needs to be reloaded.
+    $order = $this->reloadEntity($order);
 
     // Add an order item, confirm that it is displayed.
     $order_item = $this->createEntity('commerce_order_item', [

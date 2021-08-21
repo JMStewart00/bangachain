@@ -115,6 +115,7 @@ class ProductVariationStorage extends CommerceContentEntityStorage implements Pr
     }
     // Speed up loading by filtering out the IDs of disabled variations.
     $query = $this->getQuery()
+      ->accessCheck(TRUE)
       ->addTag('entity_access')
       ->condition('status', TRUE)
       ->condition('variation_id', $ids, 'IN');

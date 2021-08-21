@@ -9,7 +9,3 @@ Generating Order Reports throws toArray() error
 Source: https://www.drupal.org/files/issues/2019-10-18/3088183-3.patch
 
 
-Fix tests deprecation notices and prepare commerce_reports module for Drupal 9
-Source: https://www.drupal.org/files/issues/2021-01-07/3167290-5.patch
-
-

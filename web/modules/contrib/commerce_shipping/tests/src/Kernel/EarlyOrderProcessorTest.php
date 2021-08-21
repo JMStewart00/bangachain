@@ -56,7 +56,7 @@ class EarlyOrderProcessorTest extends ShippingKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->processor = $this->container->get('commerce_shipping.early_order_processor');

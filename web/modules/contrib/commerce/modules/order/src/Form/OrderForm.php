@@ -56,7 +56,7 @@ class OrderForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
-    /* @var \Drupal\commerce_order\Entity\Order $order */
+    /** @var \Drupal\commerce_order\Entity\OrderInterface $order */
     $order = $this->entity;
     $form = parent::form($form, $form_state);
 
@@ -67,6 +67,11 @@ class OrderForm extends ContentEntityForm {
     $form['changed'] = [
       '#type' => 'hidden',
       '#default_value' => $order->getChangedTime(),
+    ];
+    // Version must be sent to the client, for later overwrite error checking.
+    $form['version'] = [
+      '#type' => 'hidden',
+      '#default_value' => $order->getVersion(),
     ];
 
     $last_saved = $this->dateFormatter->format($order->getChangedTime(), 'short');
@@ -109,7 +114,7 @@ class OrderForm extends ContentEntityForm {
       $form['meta']['date'] = $this->fieldAsReadOnly($this->t('Placed'), $date);
     }
     // Show the order's store only if there are multiple available.
-    $store_query = $this->entityTypeManager->getStorage('commerce_store')->getQuery();
+    $store_query = $this->entityTypeManager->getStorage('commerce_store')->getQuery()->accessCheck(TRUE);
     $store_count = $store_query->count()->execute();
     if ($store_count > 1) {
       $store_link = $order->getStore()->toLink()->toString();

@@ -15,20 +15,6 @@ use Drupal\Tests\UnitTestCase;
 class ShippingRateTest extends UnitTestCase {
 
   /**
-   * The shipping rate.
-   *
-   * @var \Drupal\commerce_shipping\ShippingRate
-   */
-  protected $rate;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
-  }
-
-  /**
    * Tests the constructor and definition checks.
    *
    * @covers ::__construct

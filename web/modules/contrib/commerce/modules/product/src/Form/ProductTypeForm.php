@@ -77,7 +77,7 @@ class ProductTypeForm extends CommerceBundleEntityFormBase {
     else {
       $storage = $this->entityTypeManager->getStorage('commerce_product');
       $product = $storage->create(['type' => $product_type->id()]);
-      $products_exist = $storage->getQuery()->condition('type', $product_type->id())->execute();
+      $products_exist = $storage->getQuery()->accessCheck(FALSE)->condition('type', $product_type->id())->execute();
     }
     $form_state->set('original_entity', $this->entity->createDuplicate());
 

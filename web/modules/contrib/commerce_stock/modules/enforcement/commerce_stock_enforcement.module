@@ -117,10 +117,16 @@ function commerce_stock_enforcement_add_to_cart_form_validate(
   else {
     $quantity = 1;
   }
+
   // Load the product variation.
-  $variation_id = $values['purchased_entity'][0]['variation'];
-  /** @var \Drupal\commerce\PurchasableEntityInterface $purchased_entity */
-  $purchased_entity = ProductVariation::load($variation_id);
+  if (isset($values['purchased_entity'][0]['variation'])) {
+    $variation_id = $values['purchased_entity'][0]['variation'];
+    /** @var \Drupal\commerce\PurchasableEntityInterface $purchased_entity */
+    $purchased_entity = ProductVariation::load($variation_id);
+  }
+  else {
+    $purchased_entity = ProductVariation::load($values['purchased_entity'][0]['target_id']);
+  }
 
   // ** @var Drupal\Core\Form\FormInterface $form_object */
   // $entity_form = $form_state->getFormObject();
@@ -254,9 +260,10 @@ function commerce_stock_enforcement_checkout_form_validate(
   /** @var \Drupal\commerce_order\Entity\OrderInterface $order */
   $order = $form_object->getOrder();
 
-  if (!commerce_stock_enforcement_is_order_in_stock($order, FALSE)) {
+  if ($form['#step_id'] != 'complete' && !commerce_stock_enforcement_is_order_in_stock($order, FALSE)) {
     $cart_page = Url::fromRoute('commerce_cart.page', [], ['absolute' => TRUE]);
-    \Drupal::messenger()->addError('One or more Items are out of stock. Checkout canceled!');
+    \Drupal::messenger()
+      ->addError('One or more Items are out of stock. Checkout canceled!');
     throw new NeedsRedirectException($cart_page->toString());
   }
 }

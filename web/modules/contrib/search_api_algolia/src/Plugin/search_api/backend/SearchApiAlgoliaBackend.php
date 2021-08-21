@@ -2,23 +2,25 @@
 
 namespace Drupal\search_api_algolia\Plugin\search_api\backend;
 
-use AlgoliaSearch\AlgoliaException;
-use AlgoliaSearch\Client;
+use Algolia\AlgoliaSearch\SearchClient;
+use Algolia\AlgoliaSearch\Exceptions\AlgoliaException;
+use Algolia\AlgoliaSearch\SearchIndex;
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\search_api\Backend\BackendPluginBase;
-use Drupal\search_api\Item\ItemInterface;
 use Drupal\search_api\IndexInterface;
+use Drupal\search_api\Item\ItemInterface;
 use Drupal\search_api\Plugin\PluginFormTrait;
 use Drupal\search_api\Query\ConditionGroupInterface;
 use Drupal\search_api\Query\QueryInterface;
-use Drupal\search_api_autocomplete\SearchInterface;
-use Drupal\search_api_autocomplete\Suggestion\SuggestionFactory;
+use Drupal\search_api\Utility\Utility;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
 
 /**
  * Class SearchApiAlgoliaBackend.
@@ -36,14 +38,14 @@ class SearchApiAlgoliaBackend extends BackendPluginBase implements PluginFormInt
   /**
    * Algolia Index.
    *
-   * @var \AlgoliaSearch\Index
+   * @var \Algolia\AlgoliaSearch\SearchIndex
    */
   protected $algoliaIndex = NULL;
 
   /**
    * A connection to the Algolia server.
    *
-   * @var \AlgoliaSearch\Client
+   * @var \Algolia\AlgoliaSearch\SearchClient
    */
   protected $algoliaClient;
 
@@ -69,14 +71,23 @@ class SearchApiAlgoliaBackend extends BackendPluginBase implements PluginFormInt
   protected $languageManager;
 
   /**
+   * The Config factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(array $configuration,
-                              $plugin_id,
-                              $plugin_definition,
-                              LanguageManagerInterface $language_manager) {
+    $plugin_id,
+    $plugin_definition,
+    LanguageManagerInterface $language_manager,
+    ConfigFactoryInterface $config_factory) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->languageManager = $language_manager;
+    $this->configFactory = $config_factory;
   }
 
   /**
@@ -87,7 +98,8 @@ class SearchApiAlgoliaBackend extends BackendPluginBase implements PluginFormInt
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('language_manager')
+      $container->get('language_manager'),
+      $container->get('config.factory')
     );
 
     /** @var \Drupal\Core\Extension\ModuleHandlerInterface $module_handler */
@@ -108,6 +120,7 @@ class SearchApiAlgoliaBackend extends BackendPluginBase implements PluginFormInt
     return [
       'application_id' => '',
       'api_key' => '',
+      'disable_truncate' => FALSE,
     ];
   }
 
@@ -118,6 +131,7 @@ class SearchApiAlgoliaBackend extends BackendPluginBase implements PluginFormInt
     $form['help'] = [
       '#markup' => '<p>' . $this->t('The application ID and API key an be found and configured at <a href="@link" target="blank">@link</a>.', ['@link' => 'https://www.algolia.com/licensing']) . '</p>',
     ];
+
     $form['application_id'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Application ID'),
@@ -127,6 +141,7 @@ class SearchApiAlgoliaBackend extends BackendPluginBase implements PluginFormInt
       '#size' => 60,
       '#maxlength' => 128,
     ];
+
     $form['api_key'] = [
       '#type' => 'textfield',
       '#title' => $this->t('API Key'),
@@ -136,6 +151,14 @@ class SearchApiAlgoliaBackend extends BackendPluginBase implements PluginFormInt
       '#size' => 60,
       '#maxlength' => 128,
     ];
+
+    $form['disable_truncate'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Disable truncation'),
+      '#description' => $this->t('If checked, fields of type text and strong will not be truncated at 10000 characters. It will be site owner or developer responsibility to limit the characters.'),
+      '#default_value' => $this->configuration['disable_truncate'],
+    ];
+
     return $form;
   }
 
@@ -164,7 +187,7 @@ class SearchApiAlgoliaBackend extends BackendPluginBase implements PluginFormInt
     ];
 
     // Available indexes.
-    $indexes = $this->getAlgolia()->listIndexes();
+    $indexes = $this->getAlgolia()->listIndices();
     $indexes_list = [];
     if (isset($indexes['items'])) {
       foreach ($indexes['items'] as $index) {
@@ -181,6 +204,8 @@ class SearchApiAlgoliaBackend extends BackendPluginBase implements PluginFormInt
 
   /**
    * {@inheritdoc}
+   *
+   * @throws \Drupal\search_api\SearchApiException
    */
   public function removeIndex($index) {
     // Only delete the index's data if the index isn't read-only.
@@ -195,7 +220,7 @@ class SearchApiAlgoliaBackend extends BackendPluginBase implements PluginFormInt
   public function indexItems(IndexInterface $index, array $items) {
     $objects = [];
 
-    /** @var \Drupal\search_api\Item\ItemInterface[] $items */
+    /** @var \Drupal\search_api\Item\ItemInterface $item */
     foreach ($items as $id => $item) {
       $objects[$id] = $this->prepareItem($index, $item);
     }
@@ -216,6 +241,16 @@ class SearchApiAlgoliaBackend extends BackendPluginBase implements PluginFormInt
       }
 
       foreach ($itemsToIndex as $language => $items) {
+        // Allow adding objects to logs for investigation.
+        if ($this->isDebugActive()) {
+          foreach ($items as $item) {
+            $this->getLogger()->notice('Data pushed to Algolia for Language @language : @data', [
+              '@data' => json_encode($item),
+              '@language' => $language,
+            ]);
+          }
+        }
+
         try {
           $this->connect($index, '', $language);
           $this->getAlgoliaIndex()->saveObjects($items);
@@ -238,7 +273,7 @@ class SearchApiAlgoliaBackend extends BackendPluginBase implements PluginFormInt
    *   The item to index.
    */
   protected function indexItem(IndexInterface $index, ItemInterface $item) {
-    $this->indexItems([$item->getId() => $item]);
+    $this->indexItems($index, [$item->getId() => $item]);
   }
 
   /**
@@ -250,14 +285,17 @@ class SearchApiAlgoliaBackend extends BackendPluginBase implements PluginFormInt
    *   Index.
    * @param \Drupal\search_api\Item\ItemInterface $item
    *   The item to index.
+   *
+   * @return array
    */
   protected function prepareItem(IndexInterface $index, ItemInterface $item) {
     $item_id = $item->getId();
     $item_to_index = ['objectID' => $item_id];
 
-    /** @var \Drupal\search_api\Item\FieldInterface $field */
     $item_fields = $item->getFields();
     $item_fields += $this->getSpecialFields($index, $item);
+
+    /** @var \Drupal\search_api\Item\FieldInterface $field */
     foreach ($item_fields as $field) {
       $type = $field->getType();
       $values = NULL;
@@ -266,15 +304,19 @@ class SearchApiAlgoliaBackend extends BackendPluginBase implements PluginFormInt
         continue;
       }
       foreach ($field_values as $field_value) {
-        if (!$field_value) {
-          continue;
-        }
         switch ($type) {
-          case 'text':
-          case 'string':
           case 'uri':
             $field_value .= '';
             if (mb_strlen($field_value) > 10000) {
+              $field_value = mb_substr(trim($field_value), 0, 10000);
+            }
+            $values[] = $field_value;
+            break;
+
+          case 'text':
+          case 'string':
+            $field_value .= '';
+            if (empty($this->configuration['disable_truncate']) && mb_strlen($field_value) > 10000) {
               $field_value = mb_substr(trim($field_value), 0, 10000);
             }
             $values[] = $field_value;
@@ -335,37 +377,33 @@ class SearchApiAlgoliaBackend extends BackendPluginBase implements PluginFormInt
    */
   public function deleteItems(IndexInterface $index, array $ids) {
     // Deleting all items included in the $ids array.
-    if ($this->languageManager->isMultilingual()) {
-      foreach ($this->languageManager->getLanguages() as $language) {
-        try {
-          // Connect to the Algolia index for specific language.
-          $this->connect($index, '', $language->getId());
-        }
-        catch (\Exception $e) {
-          $this->getLogger()->error('Failed to connect to Algolia index while deleting indexed items, Error: @message', [
-            '@message' => $e->getMessage(),
-          ]);
-
-          return;
-        }
-
-        $this->getAlgoliaIndex()->deleteObjects($ids);
-      }
-    }
-    else {
-      // Connect to the Algolia index.
+    foreach ($this->getLanguages($index) as $key) {
       try {
-        $this->connect($index);
+        // Connect to the Algolia index for specific language.
+        $this->connect($index, '', $key);
       }
       catch (\Exception $e) {
         $this->getLogger()->error('Failed to connect to Algolia index while deleting indexed items, Error: @message', [
           '@message' => $e->getMessage(),
         ]);
 
-        return;
+        continue;
       }
 
-      $this->getAlgoliaIndex()->deleteObjects($ids);
+      $response = $this->getAlgoliaIndex()->deleteObjects($ids);
+
+      if ($this->isDebugActive()) {
+        $this->getLogger()->notice('Deletion requested for IDs: @ids on Algolia for Index: @index, Response: @response.', [
+          '@response' => json_encode($response),
+          '@index' => $this->getAlgoliaIndex()->getIndexName(),
+          '@ids' => implode(',', $ids),
+        ]);
+      }
+
+      // Wait for the deletion to be completed.
+      if ($this->shouldWaitForDeleteToFinish()) {
+        $response->wait();
+      }
     }
   }
 
@@ -373,22 +411,27 @@ class SearchApiAlgoliaBackend extends BackendPluginBase implements PluginFormInt
    * {@inheritdoc}
    */
   public function deleteAllIndexItems(IndexInterface $index = NULL, $datasource_id = NULL) {
-    if ($index) {
-      if ($this->languageManager->isMultilingual()) {
-        foreach ($this->languageManager->getLanguages() as $language) {
-          // Connect to the Algolia service.
-          $this->connect($index, '', $language->getId());
+    if (empty($index)) {
+      return;
+    }
 
-          // Clearing the full index.
-          $this->getAlgoliaIndex()->clearIndex();
-        }
+    foreach ($this->getLanguages($index) as $key) {
+      // Connect to the Algolia service.
+      $this->connect($index, '', $key);
+
+      // Clearing the full index.
+      $response = $this->getAlgoliaIndex()->clearObjects();
+
+      if ($this->isDebugActive()) {
+        $this->getLogger()->notice('Deletion requested for full index on Algolia Index: @index, Response: @response.', [
+          '@response' => json_encode($response),
+          '@index' => $this->getAlgoliaIndex()->getIndexName(),
+        ]);
       }
-      else {
-        // Connect to the Algolia service.
-        $this->connect($index);
 
-        // Clearing the full index.
-        $this->getAlgoliaIndex()->clearIndex();
+      // Wait for the deletion to be completed.
+      if ($this->shouldWaitForDeleteToFinish()) {
+        $response->wait();
       }
     }
   }
@@ -444,6 +487,11 @@ class SearchApiAlgoliaBackend extends BackendPluginBase implements PluginFormInt
       $algolia_options['offset'] = $options['offset'];
     }
 
+    // Allow Algolia specific options to be set dynamically.
+    if (isset($options['algolia_options']) && is_array($options['algolia_options'])) {
+      $algolia_options += $options['algolia_options'];
+    }
+
     $this->extractConditions($query->getConditionGroup(), $algolia_options, $facets);
 
     // Algolia expects indexed arrays, remove the keys.
@@ -466,6 +514,9 @@ class SearchApiAlgoliaBackend extends BackendPluginBase implements PluginFormInt
     $results->setResultCount($data['nbHits']);
     foreach ($data['hits'] ?? [] as $row) {
       $item = $this->getFieldsHelper()->createItem($query->getIndex(), $row['search_api_id']);
+      if (!empty($row['_snippetResult'])) {
+        $item->setExcerpt(implode('&hellip;', array_column($row['_snippetResult'], 'value')));
+      }
       $results->addResultItem($item);
     }
 
@@ -489,12 +540,10 @@ class SearchApiAlgoliaBackend extends BackendPluginBase implements PluginFormInt
    * @param string $langcode
    *   Language code to connect to.
    *   Specified when doing operations on both languages together.
-   *
-   * @throws \AlgoliaSearch\AlgoliaException
    */
   protected function connect(?IndexInterface $index = NULL, $index_suffix = '', $langcode = '') {
-    if (!$this->getAlgolia()) {
-      $this->algoliaClient = new Client($this->getApplicationId(), $this->getApiKey());
+    if (!($this->getAlgolia() instanceof SearchClient)) {
+      $this->algoliaClient = SearchClient::create($this->getApplicationId(), $this->getApiKey());
     }
 
     if ($index && $index instanceof IndexInterface) {
@@ -502,7 +551,7 @@ class SearchApiAlgoliaBackend extends BackendPluginBase implements PluginFormInt
         ? $index->getOption('algolia_index_name')
         : $index->get('id');
 
-      if ($this->languageManager->isMultilingual()) {
+      if ($this->isLanguageSuffixEnabled($index)) {
         $langcode = $langcode ?: $this->languageManager->getCurrentLanguage()->getId();
         $indexId .= '_' . $langcode;
       }
@@ -519,9 +568,9 @@ class SearchApiAlgoliaBackend extends BackendPluginBase implements PluginFormInt
    *   List of indexes on Algolia.
    */
   public function listIndexes() {
-    $algoliaClient = new Client($this->getApplicationId(), $this->getApiKey());
+    $algoliaClient = SearchClient::create($this->getApplicationId(), $this->getApiKey());
 
-    $indexes = $algoliaClient->listIndexes();
+    $indexes = $algoliaClient->listIndices();
     $indexes_list = [];
     if (isset($indexes['items'])) {
       foreach ($indexes['items'] as $index) {
@@ -562,7 +611,7 @@ class SearchApiAlgoliaBackend extends BackendPluginBase implements PluginFormInt
    *   The module handler.
    */
   public function getModuleHandler() {
-    return $this->moduleHandler ?: \Drupal::moduleHandler();
+    return $this->moduleHandler ?? Drupal::moduleHandler();
   }
 
   /**
@@ -581,7 +630,7 @@ class SearchApiAlgoliaBackend extends BackendPluginBase implements PluginFormInt
   /**
    * Returns the AlgoliaSearch client.
    *
-   * @return \AlgoliaSearch\Client
+   * @return \Algolia\AlgoliaSearch\SearchClient
    *   The algolia instance object.
    */
   public function getAlgolia() {
@@ -591,7 +640,7 @@ class SearchApiAlgoliaBackend extends BackendPluginBase implements PluginFormInt
   /**
    * Get the Algolia index.
    *
-   * @returns \AlgoliaSearch\Index
+   * @returns \Algolia\AlgoliaSearch\SearchIndex
    *   Index.
    */
   protected function getAlgoliaIndex() {
@@ -601,7 +650,7 @@ class SearchApiAlgoliaBackend extends BackendPluginBase implements PluginFormInt
   /**
    * Set the Algolia index.
    */
-  protected function setAlgoliaIndex($index) {
+  protected function setAlgoliaIndex(SearchIndex $index) {
     $this->algoliaIndex = $index;
   }
 
@@ -677,7 +726,6 @@ class SearchApiAlgoliaBackend extends BackendPluginBase implements PluginFormInt
         continue;
       }
 
-
       $field = $condition->getField();
 
       /** @var \Drupal\search_api\Query\Condition $condition */
@@ -724,11 +772,17 @@ class SearchApiAlgoliaBackend extends BackendPluginBase implements PluginFormInt
    *
    * @see \Drupal\search_api_autocomplete\AutocompleteBackendInterface
    */
-  public function getAutocompleteSuggestions(QueryInterface $query, SearchInterface $search, $incomplete_key, $user_input) {
+  public function getAutocompleteSuggestions(QueryInterface $query, \Drupal\search_api_autocomplete\SearchInterface $search, $incomplete_key, $user_input) {
+    // This function will be used only is search_api_autocomplete is enabled
+    // and used. We have it here to add the support but it might never be used
+    // in normal cases.
     $suggestions = [];
 
-    if (class_exists(SuggestionFactory::class)) {
-      $factory = new SuggestionFactory($user_input);
+    try {
+      $factory = new \Drupal\search_api_autocomplete\Suggestion\SuggestionFactory($user_input);
+    }
+    catch (\Exception $e) {
+      return $suggestions;
     }
 
     $search_api_index = $query->getIndex();
@@ -770,6 +824,92 @@ class SearchApiAlgoliaBackend extends BackendPluginBase implements PluginFormInt
     }
 
     return $suggestions;
+  }
+
+  /**
+   * Wrapper function to check if debug mode is active or not as per config.
+   *
+   * @return bool
+   *   TRUE if debug mode is active.
+   */
+  protected function isDebugActive() {
+    static $debug_active = NULL;
+
+    if (is_null($debug_active)) {
+      $debug_active = $this->configFactory
+          ->get('search_api_algolia.settings')
+          ->get('debug') ?? FALSE;
+    }
+
+    return $debug_active;
+  }
+
+  /**
+   * Wrapper to check if we need to wait for delete operation to finish.
+   *
+   * @return bool
+   *   TRUE if we should wait.
+   */
+  protected function shouldWaitForDeleteToFinish() {
+    static $should_wait = NULL;
+
+    if (is_null($should_wait)) {
+      $should_wait = $this->configFactory
+          ->get('search_api_algolia.settings')
+          ->get('wait_for_delete') ?? FALSE;
+    }
+
+    return $should_wait;
+  }
+
+  /**
+   * Wrapper function to check if multi-lingual language suffix is enabled.
+   *
+   * @param \Drupal\search_api\IndexInterface $index
+   *   Index to check for.
+   *
+   * @return bool
+   *   If language suffix is enabled.
+   */
+  protected function isLanguageSuffixEnabled(IndexInterface $index) {
+    return $this->languageManager->isMultilingual() && $index->getOption('algolia_index_apply_suffix');
+  }
+
+  /**
+   * Get all the languages supported by the Index.
+   *
+   * @param \Drupal\search_api\IndexInterface $index
+   *   Index.
+   *
+   * @return array
+   *   Supported languages for the index.
+   */
+  protected function getLanguages(IndexInterface $index) {
+    $languages = [];
+
+    if (!($this->isLanguageSuffixEnabled($index))) {
+      // If not multi-lingual or suffix not supported, we simply do it once
+      // with empty language code.
+      return [''];
+    }
+
+    foreach ($index->getDatasources() as $datasource) {
+      $config = $datasource->getConfiguration();
+
+      $always_valid = [
+        LanguageInterface::LANGCODE_NOT_SPECIFIED,
+        LanguageInterface::LANGCODE_NOT_APPLICABLE,
+      ];
+
+      foreach ($this->languageManager->getLanguages() as $language) {
+        if (Utility::matches($language->getId(), $config['languages'])
+          || in_array($language->getId(), $always_valid)) {
+          $languages[$language->getId()] = $language->getId();
+        }
+      }
+    }
+
+    return $languages;
   }
 
 }

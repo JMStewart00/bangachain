@@ -2,15 +2,15 @@
 
 namespace Drupal\commerce_tax\Event;
 
+use Drupal\commerce\EventBase;
 use Drupal\commerce_tax\Plugin\Commerce\TaxType\LocalTaxTypeInterface;
-use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Defines the build zones event.
  *
  * @see \Drupal\commerce_tax\Event\TaxEvents
  */
-class BuildZonesEvent extends Event {
+class BuildZonesEvent extends EventBase {
 
   /**
    * The tax zones.

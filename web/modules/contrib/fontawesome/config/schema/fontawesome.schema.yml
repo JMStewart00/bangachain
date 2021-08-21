@@ -44,6 +44,9 @@ fontawesome.settings:
     external_svg_integrity:
       type: string
       label: 'Integrity value of the external CDN for Font Awesome'
+    bypass_validation:
+      type: boolean
+      label: 'Bypass Font Awesome validation'
 
 field.formatter.settings.fontawesome_icon_formatter:
   type: mapping

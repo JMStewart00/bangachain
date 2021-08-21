@@ -1,7 +1,7 @@
 name: Commerce Payment Test
 description: Provides testing items for Payment
-core_version_requirement: ^8.8 || ^9
 type: module
+package: Testing
 dependencies:
   - commerce:commerce_payment
   - commerce:commerce_payment_example

@@ -56,7 +56,7 @@ class PromotionSubscriberTest extends ShippingKernelTestBase implements ServiceM
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installEntitySchema('commerce_promotion');

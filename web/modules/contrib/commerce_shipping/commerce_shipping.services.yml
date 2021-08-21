@@ -88,7 +88,8 @@ services:
     class: Drupal\commerce_shipping\EventSubscriber\ShipmentSubscriber
     arguments: ['@entity_type.manager', '@commerce_shipping.shipment_confirmation_mail']
     tags:
-      - { name: 'event_subscriber' }
+      - { name: event_subscriber }
+      - { name: needs_destruction }
 
   commerce_shipping.shipment_confirmation_mail:
     class: Drupal\commerce_shipping\Mail\ShipmentConfirmationMail

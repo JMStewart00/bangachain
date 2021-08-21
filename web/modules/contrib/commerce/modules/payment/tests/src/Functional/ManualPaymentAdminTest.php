@@ -59,7 +59,7 @@ class ManualPaymentAdminTest extends CommerceBrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->paymentGateway = $this->createEntity('commerce_payment_gateway', [
@@ -105,7 +105,7 @@ class ManualPaymentAdminTest extends CommerceBrowserTestBase {
    */
   public function testPaymentCreation() {
     $this->drupalGet($this->paymentUri . '/add');
-    $this->assertSession()->pageTextContains('Manual example');
+    $this->assertSession()->pageTextContains('Cash on delivery');
     $this->getSession()->getPage()->pressButton('Continue');
     $this->submitForm(['payment[amount][number]' => '100'], 'Add payment');
     $this->assertSession()->addressEquals($this->paymentUri);
@@ -119,7 +119,7 @@ class ManualPaymentAdminTest extends CommerceBrowserTestBase {
     $this->assertEquals('Pending', $payment->getState()->getLabel());
 
     $this->drupalGet($this->paymentUri . '/add');
-    $this->assertSession()->pageTextContains('Manual example');
+    $this->assertSession()->pageTextContains('Cash on delivery');
     $this->getSession()->getPage()->pressButton('Continue');
     $this->submitForm(['payment[amount][number]' => '100', 'payment[received]' => TRUE], 'Add payment');
     $this->assertSession()->addressEquals($this->paymentUri);

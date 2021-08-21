@@ -35,7 +35,7 @@ class ProductLazyBuilders implements TrustedCallbackInterface {
   protected $entityRepository;
 
   /**
-   * Constructs a new CartLazyBuilders object.
+   * Constructs a new ProductLazyBuilders object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.

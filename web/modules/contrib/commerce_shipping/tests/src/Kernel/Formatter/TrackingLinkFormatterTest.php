@@ -23,7 +23,7 @@ class TrackingLinkFormatterTest extends ShippingKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->display = commerce_get_entity_display('commerce_shipment', 'default', 'view');

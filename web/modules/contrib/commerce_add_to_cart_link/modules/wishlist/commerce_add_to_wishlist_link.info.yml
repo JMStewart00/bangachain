@@ -9,7 +9,7 @@ dependencies:
   - commerce_add_to_cart_link:commerce_add_to_cart_link
   - commerce_wishlist:commerce_wishlist
 
-# Information added by Drupal.org packaging script on 2021-05-26
-version: '2.0.2'
+# Information added by Drupal.org packaging script on 2021-08-17
+version: '2.0.3'
 project: 'commerce_add_to_cart_link'
-datestamp: 1622012457
+datestamp: 1629188502

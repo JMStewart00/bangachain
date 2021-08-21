@@ -67,19 +67,17 @@ class ShipmentTest extends ShippingKernelTestBase {
    * @covers ::getShippedTime
    * @covers ::setShippedTime
    * @covers ::recalculateWeight
-   * @covers ::postDelete
    */
   public function testShipment() {
     $user = $this->createUser(['mail' => $this->randomString() . '@example.com']);
     /** @var \Drupal\commerce_order\Entity\OrderInterface $order */
     $order = Order::create([
       'type' => 'default',
-      'state' => 'draft',
+      'state' => 'completed',
       'mail' => $user->getEmail(),
       'uid' => $user->id(),
       'store_id' => $this->store->id(),
     ]);
-    $order->setRefreshState(Order::REFRESH_SKIP);
     $order->save();
     $order = $this->reloadEntity($order);
 
@@ -174,6 +172,7 @@ class ShipmentTest extends ShippingKernelTestBase {
       'type' => 'custom',
       'label' => '10% off',
       'amount' => new Price('-1.00', 'USD'),
+      'locked' => FALSE,
     ]);
     $adjustments[] = new Adjustment([
       'type' => 'fee',
@@ -215,14 +214,36 @@ class ShipmentTest extends ShippingKernelTestBase {
       'amount' => $shipment->getAmount(),
       'source_id' => $shipment->id(),
     ]));
-    $order->setRefreshState(Order::REFRESH_SKIP);
+    // Transfer the shipment adjustments to the order, to ensure they're
+    // cleared on destruct() after deleting the shipment.
+    foreach ($shipment->getAdjustments() as $adjustment) {
+      $order->addAdjustment($adjustment);
+    }
+    // Add a random adjustment that isn't related to a shipment, to ensure it's
+    // kept after the shipments are cleared.
+    $order->addAdjustment(new Adjustment([
+      'type' => 'custom',
+      'label' => t('Custom'),
+      'amount' => new Price('12', 'USD'),
+      'locked' => FALSE,
+    ]));
+
     $order->save();
     $order = $this->reloadEntity($order);
-    $this->assertCount(1, $order->getAdjustments());
+    $this->assertCount(4, $order->getAdjustments());
     $this->assertCount(1, $order->get('shipments')->referencedEntities());
     $shipment->delete();
+    // The order shipments are cleared on destruct by the shipment subscriber.
+    $this->container->get('commerce_shipping.shipment_subscriber')->destruct();
     $order = $this->reloadEntity($order);
-    $this->assertCount(0, $order->getAdjustments());
+    $adjustments = $order->getAdjustments();
+    $this->assertCount(1, $adjustments);
+    $this->assertEquals(new Adjustment([
+      'type' => 'custom',
+      'label' => t('Custom'),
+      'amount' => new Price('12', 'USD'),
+      'locked' => FALSE,
+    ]), reset($adjustments));
     $this->assertCount(0, $order->get('shipments')->referencedEntities());
   }
 

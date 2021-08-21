@@ -269,3 +269,30 @@ function commerce_order_update_8213() {
     $default_display->save();
   }
 }
+
+/**
+ * Add the 'version' field to 'commerce_order' entities.
+ */
+function commerce_order_update_8214() {
+  $storage_definition = BaseFieldDefinition::create('integer')
+    ->setLabel(t('Version'))
+    ->setDescription(t('The order version number, it gets incremented on each save.'))
+    ->setReadOnly(TRUE)
+    ->setSetting('unsigned', TRUE)
+    ->setDefaultValue(0)
+    // Ensure any existing orders get set to version 1.
+    ->setInitialValue(1);
+
+  $update_manager = \Drupal::entityDefinitionUpdateManager();
+  $update_manager->installFieldStorageDefinition('version', 'commerce_order', 'commerce_order', $storage_definition);
+
+  return t('The order version number field was created.');
+}
+
+/**
+ * Update the state field definition.
+ */
+function commerce_order_update_8215() {
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $definition_update_manager->updateFieldStorageDefinition($definition_update_manager->getFieldStorageDefinition('state', 'commerce_order'));
+}

@@ -21,7 +21,7 @@ class ShippingServiceTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->service = new ShippingService('test', 'Test');

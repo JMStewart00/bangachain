@@ -225,6 +225,26 @@ function commerce_order_entity_type_build(array &$entity_types) {
 }
 
 /**
+ * Implements hook_entity_type_alter().
+ */
+function commerce_order_entity_type_alter(array &$entity_types) {
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
+  // During tests, always have order versioning throw an exception.
+  if (drupal_valid_test_ua()) {
+    $entity_types['commerce_order']->set('log_version_mismatch', FALSE);
+  }
+  else {
+    $config = \Drupal::config('commerce_order.settings');
+    $entity_types['commerce_order']->set('log_version_mismatch', $config->get('log_version_mismatch'));
+  }
+  // Remove the "EntityChanged" constraint, our "OrderVersion" constraint
+  // replaces it.
+  $constraints = $entity_types['commerce_order']->getConstraints();
+  unset($constraints['EntityChanged']);
+  $entity_types['commerce_order']->setConstraints($constraints);
+}
+
+/**
  * Implements hook_local_tasks_alter().
  *
  * Removes profile tabs for profile types managed through the address book tab.
@@ -403,4 +423,15 @@ function commerce_order_jsonapi_commerce_order_filter_access(EntityTypeInterface
   return ([
     JSONAPI_FILTER_AMONG_ALL => AccessResult::allowed(),
   ]);
+}
+
+/**
+ * Implements hook_theme_registry_alter().
+ */
+function commerce_order_theme_registry_alter(&$theme_registry) {
+  $theme_registry['commerce_price_calculated']['variables'] += [
+    'result' => NULL,
+    'base_price' => NULL,
+    'adjustments' => [],
+  ];
 }

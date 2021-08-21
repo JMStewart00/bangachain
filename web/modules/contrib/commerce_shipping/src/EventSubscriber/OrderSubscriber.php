@@ -53,8 +53,10 @@ class OrderSubscriber implements EventSubscriberInterface {
 
     /** @var \Drupal\commerce_shipping\Entity\ShipmentInterface $shipment */
     foreach ($order->get('shipments')->referencedEntities() as $shipment) {
-      $transition = $shipment->getState()->getWorkflow()->getTransition('cancel');
-      $shipment->getState()->applyTransition($transition);
+      if (!$shipment->getState()->isTransitionAllowed('cancel')) {
+        continue;
+      }
+      $shipment->getState()->applyTransitionById('cancel');
       $shipment->save();
     }
   }
@@ -78,8 +80,10 @@ class OrderSubscriber implements EventSubscriberInterface {
 
     /** @var \Drupal\commerce_shipping\Entity\ShipmentInterface $shipment */
     foreach ($order->get('shipments')->referencedEntities() as $shipment) {
-      $transition = $shipment->getState()->getWorkflow()->getTransition('finalize');
-      $shipment->getState()->applyTransition($transition);
+      if (!$shipment->getState()->isTransitionAllowed('finalize')) {
+        continue;
+      }
+      $shipment->getState()->applyTransitionById('finalize');
       $shipment->save();
     }
   }
@@ -99,8 +103,10 @@ class OrderSubscriber implements EventSubscriberInterface {
 
     /** @var \Drupal\commerce_shipping\Entity\ShipmentInterface $shipment */
     foreach ($order->get('shipments')->referencedEntities() as $shipment) {
-      $transition = $shipment->getState()->getWorkflow()->getTransition('finalize');
-      $shipment->getState()->applyTransition($transition);
+      if (!$shipment->getState()->isTransitionAllowed('finalize')) {
+        continue;
+      }
+      $shipment->getState()->applyTransitionById('finalize');
       $shipment->save();
     }
   }
@@ -120,8 +126,10 @@ class OrderSubscriber implements EventSubscriberInterface {
 
     /** @var \Drupal\commerce_shipping\Entity\ShipmentInterface $shipment */
     foreach ($order->get('shipments')->referencedEntities() as $shipment) {
-      $transition = $shipment->getState()->getWorkflow()->getTransition('ship');
-      $shipment->getState()->applyTransition($transition);
+      if (!$shipment->getState()->isTransitionAllowed('ship')) {
+        continue;
+      }
+      $shipment->getState()->applyTransitionById('ship');
       $shipment->save();
     }
   }

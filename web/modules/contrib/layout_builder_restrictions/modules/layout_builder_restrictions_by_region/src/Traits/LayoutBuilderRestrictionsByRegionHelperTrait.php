@@ -50,6 +50,9 @@ trait LayoutBuilderRestrictionsByRegionHelperTrait {
         ->load($entity_view_display_id);
 
       $third_party_settings = $display->getThirdPartySetting('layout_builder_restrictions', 'entity_view_mode_restriction_by_region', []);
+      if (isset($third_party_settings['restricted_categories'][$layout_plugin][$region_id])) {
+        return TRUE;
+      }
       if (isset($third_party_settings['whitelisted_blocks'][$layout_plugin][$region_id])) {
         return TRUE;
       }

@@ -104,7 +104,7 @@ class Conditions extends FormElement {
     $definitions = $plugin_manager->getFilteredDefinitions($element['#parent_entity_type'], $element['#entity_types']);
     $grouped_definitions = [];
     foreach ($definitions as $plugin_id => $definition) {
-      $category = (string) $definition['category'];
+      $category = $definition['category']->getUntranslatedString();
       $grouped_definitions[$category][$plugin_id] = $definition;
     }
     ksort($grouped_definitions);
@@ -134,11 +134,12 @@ class Conditions extends FormElement {
 
     foreach ($grouped_definitions as $category => $definitions) {
       $category_id = preg_replace('/[^a-zA-Z\-]/', '_', strtolower($category));
+      $category_label = (string) current($definitions)['category'];
       $element['#categories'][] = $category_id;
 
       $element[$category_id] = [
         '#type' => $render_vertical_tabs ? 'details' : 'container',
-        '#title' => $category,
+        '#title' => $category_label,
         '#group' => $tab_group,
       ];
       foreach ($definitions as $plugin_id => $definition) {

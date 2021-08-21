@@ -61,7 +61,7 @@ class ProductForm extends ContentEntityForm {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     // Skip building the form if there are no available stores.
-    $store_query = $this->entityTypeManager->getStorage('commerce_store')->getQuery();
+    $store_query = $this->entityTypeManager->getStorage('commerce_store')->getQuery()->accessCheck(TRUE);
     if ($store_query->count()->execute() == 0) {
       $link = Link::createFromRoute('Add a new store.', 'entity.commerce_store.add_page');
       $form['warning'] = [
@@ -77,7 +77,7 @@ class ProductForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
-    /* @var \Drupal\commerce_product\Entity\Product $product */
+    /** @var \Drupal\commerce_product\Entity\ProductInterface $product */
     $product = $this->entity;
     $form = parent::form($form, $form_state);
 

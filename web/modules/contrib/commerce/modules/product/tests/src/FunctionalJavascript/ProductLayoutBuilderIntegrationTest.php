@@ -5,6 +5,8 @@ namespace Drupal\Tests\commerce_product\FunctionalJavascript;
 use Drupal\commerce_product\Entity\ProductVariationType;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Url;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * @group commerce
@@ -19,6 +21,7 @@ class ProductLayoutBuilderIntegrationTest extends ProductWebDriverTestBase {
     'layout_discovery',
     'layout_builder',
     'commerce_cart',
+    'image',
   ];
 
   /**
@@ -81,6 +84,40 @@ class ProductLayoutBuilderIntegrationTest extends ProductWebDriverTestBase {
   public function testConfiguringDefaultLayout() {
     $this->enableLayoutsForBundle('default');
     $this->configureDefaultLayout('default');
+  }
+
+  /**
+   * Tests that configuring the default layout doesn't generate multiple images.
+   *
+   * @link https://www.drupal.org/project/commerce/issues/3190799
+   */
+  public function testSampleValuesGeneratedImages() {
+    // Add an image field to the  variation.
+    FieldStorageConfig::create([
+      'entity_type' => 'commerce_product_variation',
+      'field_name' => 'field_images',
+      'type' => 'image',
+      'cardinality' => 1,
+    ])->save();
+    $field_config = FieldConfig::create([
+      'entity_type' => 'commerce_product_variation',
+      'field_name' => 'field_images',
+      'bundle' => 'default',
+    ]);
+    $field_config->save();
+
+    $file_storage = \Drupal::entityTypeManager()->getStorage('file');
+    // Assert the baseline file count.
+    $this->assertEquals(0, $file_storage->getQuery()->accessCheck(FALSE)->count()->execute());
+
+    $this->enableLayoutsForBundle('default');
+    $this->configureDefaultLayout('default');
+
+    // We should have one randomly generated image, for the variation.
+    // @todo we end up with 5. I think it's due to the sample generated Product
+    //   having sample variations also referenced.
+    $files = $file_storage->loadMultiple();
+    $this->assertCount(5, $files);
   }
 
   /**

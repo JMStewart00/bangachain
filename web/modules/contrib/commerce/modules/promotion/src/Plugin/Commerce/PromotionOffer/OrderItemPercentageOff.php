@@ -38,27 +38,15 @@ class OrderItemPercentageOff extends OrderItemPromotionOfferBase {
         return;
       }
       // Display-inclusive promotions must first be applied to the unit price.
-      $unit_price = $order_item->getUnitPrice();
-      $amount = $unit_price->multiply($percentage);
+      $amount = $adjusted_unit_price->multiply($percentage);
       $amount = $this->rounder->round($amount);
-
-      // Don't reduce the unit price past 0.
-      if ($amount->greaterThan($adjusted_unit_price)) {
-        $amount = $adjusted_unit_price;
-      }
-
-      $new_unit_price = $unit_price->subtract($amount);
+      $new_unit_price = $order_item->getUnitPrice()->subtract($amount);
       $order_item->setUnitPrice($new_unit_price);
       $adjustment_amount = $amount->multiply($order_item->getQuantity());
     }
     else {
-      $adjustment_amount = $order_item->getTotalPrice()->multiply($percentage);
       $adjusted_total_price = $order_item->getAdjustedTotalPrice(['promotion']);
-
-      // Don't reduce the order item total price past zero.
-      if ($adjustment_amount->greaterThan($adjusted_total_price)) {
-        $adjustment_amount = $adjusted_total_price;
-      }
+      $adjustment_amount = $adjusted_total_price->multiply($percentage);
     }
     $adjustment_amount = $this->rounder->round($adjustment_amount);
 

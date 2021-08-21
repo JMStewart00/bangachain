@@ -6,12 +6,24 @@
  */
 
 /**
+ * Implements hook_update_N().
+ *
+ * Add configuration to allow setting debug mode.
+ */
+function search_api_algolia_update_8001() {
+  $config = \Drupal::configFactory()->getEditable('search_api_algolia.settings');
+  // By default debug mode is disabled.
+  $config->set('debug', FALSE);
+  $config->save();
+}
+
+/**
  * Implements hook_requirements().
  */
 function search_api_algolia_requirements($phase) {
   $requirements = [];
   if ($phase == 'install') {
-    if (!class_exists('\AlgoliaSearch\Version')) {
+    if (!class_exists('\Algolia\AlgoliaSearch\Algolia')) {
       $requirements['search_api_algolia_library'] = [
         'description' => t('Algolia Search requires the algolia/algoliasearch-client-php library.'),
         'severity' => REQUIREMENT_ERROR,

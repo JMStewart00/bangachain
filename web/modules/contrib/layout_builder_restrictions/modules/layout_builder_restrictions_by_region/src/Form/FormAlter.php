@@ -232,6 +232,9 @@ class FormAlter implements ContainerInjectionInterface {
         if (isset($third_party_settings['blacklisted_blocks'][$section]) && !isset($third_party_settings['blacklisted_blocks'][$section]['all_regions'])) {
           $default_restriction_behavior = 'per-region';
         }
+        if (isset($third_party_settings['restricted_categories'][$section]) && !isset($third_party_settings['restricted_categories'][$section]['all_regions'])) {
+          $default_restriction_behavior = 'per-region';
+        }
         $form['layout'][$section]['restriction_behavior'] = [
           '#type' => 'radios',
           '#options' => [
@@ -376,14 +379,21 @@ class FormAlter implements ContainerInjectionInterface {
         if (isset($third_party_settings['blacklisted_blocks'][$section]['all_regions'])) {
           $all_regions_blacklisted = $third_party_settings['blacklisted_blocks'][$section]['all_regions'];
         }
+        if (isset($third_party_settings['restricted_categories'][$section]['all_regions'])) {
+          $all_regions_restricted_categories = $third_party_settings['restricted_categories'][$section]['all_regions'];
+        }
         foreach ($restriction_types as $logic_type) {
           unset($third_party_settings[$logic_type . '_blocks'][$section]);
         }
+        unset($third_party_settings['restricted_categories'][$section]);
         if (isset($all_regions_whitelisted)) {
           $third_party_settings['whitelisted_blocks'][$section]['all_regions'] = $all_regions_whitelisted;
         }
         if (isset($all_regions_blacklisted)) {
           $third_party_settings['blacklisted_blocks'][$section]['all_regions'] = $all_regions_blacklisted;
+        }
+        if (isset($all_regions_restricted_categories)) {
+          $third_party_settings['restricted_categories'][$section]['all_regions'] = $all_regions_restricted_categories;
         }
       }
       else {
@@ -391,6 +401,7 @@ class FormAlter implements ContainerInjectionInterface {
         foreach ($restriction_types as $logic_type) {
           unset($third_party_settings[$logic_type . '_blocks'][$section]['all_regions']);
         }
+        unset($third_party_settings['restricted_categories'][$section]);
         foreach ($regions as $region_id => $region) {
           $categories = $store->get($static_id . ':' . $section . ':' . $region_id);
           if (!is_null($categories)) {
@@ -401,7 +412,10 @@ class FormAlter implements ContainerInjectionInterface {
             foreach ($categories as $category => $settings) {
               $restriction_type = $settings['restriction_type'];
               // Category is restricted.
-              if (in_array($restriction_type, $restriction_types)) {
+              if ($restriction_type == 'restrict_all') {
+                $third_party_settings['restricted_categories'][$section][$region_id][] = $category;
+              }
+              elseif (in_array($restriction_type, $restriction_types)) {
                 if (empty($settings['restrictions'])) {
                   $third_party_settings[$restriction_type . '_blocks'][$section][$region_id][$category] = [];
                 }

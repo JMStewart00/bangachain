@@ -16,7 +16,7 @@ class BlacklistedRestrictionsTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'block',
     'layout_builder',
     'layout_builder_restrictions',
@@ -35,7 +35,7 @@ class BlacklistedRestrictionsTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create a node bundle.

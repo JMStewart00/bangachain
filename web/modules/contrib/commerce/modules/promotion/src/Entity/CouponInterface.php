@@ -4,11 +4,12 @@ namespace Drupal\commerce_promotion\Entity;
 
 use Drupal\commerce_order\Entity\OrderInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityChangedInterface;
 
 /**
  * Provides an interface for defining coupon entities.
  */
-interface CouponInterface extends ContentEntityInterface {
+interface CouponInterface extends ContentEntityInterface, EntityChangedInterface {
 
   /**
    * Gets the parent promotion.
@@ -43,6 +44,24 @@ interface CouponInterface extends ContentEntityInterface {
    * @return $this
    */
   public function setCode($code);
+
+  /**
+   * Gets the coupon creation timestamp.
+   *
+   * @return int
+   *   Creation timestamp of the coupon.
+   */
+  public function getCreatedTime();
+
+  /**
+   * Sets the coupon creation timestamp.
+   *
+   * @param int $timestamp
+   *   The coupon creation timestamp.
+   *
+   * @return $this
+   */
+  public function setCreatedTime($timestamp);
 
   /**
    * Gets the coupon usage limit.

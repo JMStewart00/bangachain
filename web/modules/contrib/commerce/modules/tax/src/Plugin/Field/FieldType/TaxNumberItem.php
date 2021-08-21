@@ -273,7 +273,7 @@ class TaxNumberItem extends FieldItemBase implements TaxNumberItemInterface {
       // Same list as in the european_union_vat tax number plugin.
       $eu_countries = [
         'AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI',
-        'FR', 'GB', 'GR', 'HR', 'HU', 'IE', 'IM', 'IT', 'LT', 'LU',
+        'FR', 'GR', 'HR', 'HU', 'IE', 'IM', 'IT', 'LT', 'LU',
         'LV', 'MC', 'MT', 'NL', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK',
       ];
       $countries = array_diff($countries, ['EU']);

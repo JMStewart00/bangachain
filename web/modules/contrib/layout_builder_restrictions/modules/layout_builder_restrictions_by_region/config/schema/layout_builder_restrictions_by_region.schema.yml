@@ -38,3 +38,16 @@ layout_builder_restrictions.entity_view_mode_restriction_by_region:
             sequence:
               type: string
               label: Category
+    restricted_categories:
+      type: sequence
+      label: 'Layouts to be restricted'
+      sequence:
+        type: sequence
+        label: 'Layout restrictions'
+        sequence:
+          type: sequence
+          label: 'Regions to be restricted'
+          sequence:
+            type: string
+            label: 'Region restrictions'
+

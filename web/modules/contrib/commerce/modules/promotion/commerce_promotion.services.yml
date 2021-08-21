@@ -30,3 +30,8 @@ services:
   commerce_promotion.coupon_code_generator:
     class: Drupal\commerce_promotion\CouponCodeGenerator
     arguments: ['@database']
+
+  commerce_promotion.route_subscriber:
+    class: Drupal\commerce_promotion\EventSubscriber\RouteSubscriber
+    tags:
+      - { name: event_subscriber }

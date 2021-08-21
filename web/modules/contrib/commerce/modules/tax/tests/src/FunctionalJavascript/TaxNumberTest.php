@@ -62,7 +62,7 @@ class TaxNumberTest extends CommerceWebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->store->set('billing_countries', ['RS', 'ME', 'MK']);

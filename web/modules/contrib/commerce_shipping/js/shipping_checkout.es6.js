@@ -31,18 +31,6 @@
       $(this.wrapper).find(':input.required', context).once('shipping-recalculate').on('change', ({currentTarget}) => {
         this.onChange($(currentTarget));
       });
-
-      const $selectAddress = $(Drupal.shippingRecalculate.wrapper).find("select[name$='[shipping_profile][select_address]']");
-      // When the address selection changes, check to see if we can
-      // recalculate shipping rates.
-      if ($selectAddress.length) {
-        $selectAddress.once('shipping-recalculate').on('change', ({currentTarget}) => {
-          // Wait until the ajax address update is complete.
-          if ($(currentTarget).val() !== '_new') {
-            this.onChange($(currentTarget));
-          }
-        })
-      }
     },
     // Determines whether the shipping rates can be recalculated.
     canRecalculateRates() {

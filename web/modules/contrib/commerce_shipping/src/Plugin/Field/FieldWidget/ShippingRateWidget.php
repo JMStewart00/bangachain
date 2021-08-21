@@ -3,9 +3,12 @@
 namespace Drupal\commerce_shipping\Plugin\Field\FieldWidget;
 
 use CommerceGuys\Intl\Formatter\CurrencyFormatterInterface;
+use Drupal\commerce_checkout\Plugin\Commerce\CheckoutFlow\CheckoutFlowWithPanesInterface;
 use Drupal\commerce_shipping\ShipmentManagerInterface;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
@@ -89,7 +92,14 @@ class ShippingRateWidget extends WidgetBase implements ContainerFactoryPluginInt
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     /** @var \Drupal\commerce_shipping\Entity\ShipmentInterface $shipment */
     $shipment = $items[$delta]->getEntity();
-    $rates = $this->shipmentManager->calculateRates($shipment);
+    $parents = array_merge($form['#parents'], [$this->fieldDefinition->getName(), 0]);
+    $rates_key = implode('_', $parents);
+    // Store the calculated rates in form state, so we don't have to fetch those
+    // on each ajax refresh.
+    if (!$form_state->has($rates_key) || $form_state->get('recalculate_shipping')) {
+      $form_state->set($rates_key, $this->shipmentManager->calculateRates($shipment));
+    }
+    $rates = $form_state->get($rates_key);
     if (!$rates) {
       $element = [
         '#markup' => $this->t('There are no shipping rates available for this address.'),
@@ -98,6 +108,21 @@ class ShippingRateWidget extends WidgetBase implements ContainerFactoryPluginInt
     }
 
     $default_rate = $this->shipmentManager->selectDefaultRate($shipment, $rates);
+    // If we're in checkout, add an ajax callback to the radios so that
+    // the order summary is refreshed when selecting a different rate.
+    if ($form_state->getFormObject() instanceof CheckoutFlowWithPanesInterface) {
+      $element['#ajax'] = [
+        'callback' => [get_called_class(), 'ajaxRefresh'],
+      ];
+
+      $parents = array_merge($form['#parents'], [$this->fieldDefinition->getName(), 0]);
+      $user_input = (array) NestedArray::getValue($form_state->getUserInput(), $parents);
+      // Apply the default rate when no rate is selected.
+      if (empty($user_input)) {
+        $this->shipmentManager->applyRate($shipment, $default_rate);
+      }
+    }
+
     $element['#type'] = 'radios';
     $element['#default_value'] = $default_rate->getId();
     $element['#options'] = [];
@@ -146,7 +171,7 @@ class ShippingRateWidget extends WidgetBase implements ContainerFactoryPluginInt
       /** @var \Drupal\commerce_shipping\ShippingRate $rate */
       $rate = $element[$selected_value]['#rate'];
       /** @var \Drupal\commerce_shipping\Entity\ShipmentInterface $shipment */
-      $shipment = $items[0]->getEntity();
+      $shipment = $items->getEntity();
       if ($rate) {
         $this->shipmentManager->applyRate($shipment, $rate);
       }
@@ -192,6 +217,21 @@ class ShippingRateWidget extends WidgetBase implements ContainerFactoryPluginInt
       }
     }
     return parent::flagErrors($items, $violations, $form, $form_state);
+  }
+
+  /**
+   * Ajax callback.
+   */
+  public static function ajaxRefresh(array &$form, FormStateInterface $form_state) {
+    $response = new AjaxResponse();
+
+    // Refresh the order summary if present.
+    if (isset($form['sidebar']['order_summary'])) {
+      $selector = sprintf('[data-drupal-selector="%s"]', $form['sidebar']['order_summary']['#attributes']['data-drupal-selector']);
+      $response->addCommand(new ReplaceCommand($selector, $form['sidebar']['order_summary']));
+    }
+
+    return $response;
   }
 
 }

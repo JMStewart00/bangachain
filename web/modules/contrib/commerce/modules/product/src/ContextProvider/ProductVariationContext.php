@@ -4,20 +4,23 @@ namespace Drupal\commerce_product\ContextProvider;
 
 use Drupal\commerce_product\Entity\ProductInterface;
 use Drupal\commerce_product\Entity\ProductType;
+use Drupal\commerce_product\ProductVariationStorageInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextProviderInterface;
+use Drupal\Core\Plugin\Context\EntityContext;
 use Drupal\Core\Plugin\Context\EntityContextDefinition;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\layout_builder\DefaultsSectionStorageInterface;
+use Drupal\layout_builder\Entity\SampleEntityGeneratorInterface;
 use Drupal\layout_builder\OverridesSectionStorageInterface;
 
 /**
- * @todo
+ * Provides a product variation context.
  */
 class ProductVariationContext implements ContextProviderInterface {
 
@@ -31,14 +34,21 @@ class ProductVariationContext implements ContextProviderInterface {
   protected $routeMatch;
 
   /**
-   * The product variation storage.
+   * The entity type manager.
    *
-   * @var \Drupal\commerce_product\ProductVariationStorageInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $productVariationStorage;
+  protected $entityTypeManager;
 
   /**
-   * Constructs a new ProductRouteContext object.
+   * The sample entity generator.
+   *
+   * @var \Drupal\layout_builder\Entity\SampleEntityGeneratorInterface|null
+   */
+  protected $sampleEntityGenerator;
+
+  /**
+   * Constructs a new ProductVariationContext object.
    *
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The route match.
@@ -47,7 +57,17 @@ class ProductVariationContext implements ContextProviderInterface {
    */
   public function __construct(RouteMatchInterface $route_match, EntityTypeManagerInterface $entity_type_manager) {
     $this->routeMatch = $route_match;
-    $this->productVariationStorage = $entity_type_manager->getStorage('commerce_product_variation');
+    $this->entityTypeManager = $entity_type_manager;
+  }
+
+  /**
+   * Set the sample entity generator.
+   *
+   * @param \Drupal\layout_builder\Entity\SampleEntityGeneratorInterface $sample_entity_generator
+   *   The sample entity generator.
+   */
+  public function setSampleEntityGenerator(SampleEntityGeneratorInterface $sample_entity_generator) {
+    $this->sampleEntityGenerator = $sample_entity_generator;
   }
 
   /**
@@ -59,20 +79,15 @@ class ProductVariationContext implements ContextProviderInterface {
     if ($value === NULL) {
       $product = $this->routeMatch->getParameter('commerce_product');
       if ($product instanceof ProductInterface) {
-        $value = $this->productVariationStorage->loadFromContext($product);
+        $product_variation_storage = $this->entityTypeManager->getStorage('commerce_product_variation');
+        assert($product_variation_storage instanceof ProductVariationStorageInterface);
+        $value = $product_variation_storage->loadFromContext($product);
         if ($value === NULL) {
           $product_type = ProductType::load($product->bundle());
-          $value = $this->productVariationStorage->create([
+          $value = $product_variation_storage->create([
             'type' => $product_type->getVariationTypeId(),
           ]);
         }
-      }
-      /** @var \Drupal\commerce_product\Entity\ProductTypeInterface $product_type */
-      elseif ($product_type = $this->routeMatch->getParameter('commerce_product_type')) {
-        if (is_string($product_type)) {
-          $product_type = ProductType::load($product_type);
-        }
-        $value = $this->productVariationStorage->createWithSampleValues($product_type->getVariationTypeId());
       }
       // @todo Simplify this logic once EntityTargetInterface is available
       // @see https://www.drupal.org/project/drupal/issues/3054490
@@ -84,7 +99,7 @@ class ProductVariationContext implements ContextProviderInterface {
           assert($context instanceof EntityDisplayInterface);
           if ($context->getTargetEntityTypeId() === 'commerce_product') {
             $product_type = ProductType::load($context->getTargetBundle());
-            $value = $this->productVariationStorage->createWithSampleValues($product_type->getVariationTypeId());
+            $value = $this->sampleEntityGenerator->get('commerce_product_variation', $product_type->getVariationTypeId());
           }
         }
         elseif ($section_storage instanceof OverridesSectionStorageInterface) {
@@ -93,7 +108,7 @@ class ProductVariationContext implements ContextProviderInterface {
             $value = $context->getDefaultVariation();
             if ($value === NULL) {
               $product_type = ProductType::load($context->bundle());
-              $value = $this->productVariationStorage->createWithSampleValues($product_type->getVariationTypeId());
+              $value = $this->sampleEntityGenerator->get('commerce_product_variation', $product_type->getVariationTypeId());
             }
           }
         }
@@ -112,7 +127,24 @@ class ProductVariationContext implements ContextProviderInterface {
    * {@inheritdoc}
    */
   public function getAvailableContexts() {
-    return $this->getRuntimeContexts([]);
+    // @todo Remove this route name check once Layout Builder is fixed.
+    if ($this->routeMatch->getRouteName() !== NULL) {
+      // This handles when the context is called via getAvailableContexts in
+      // the entity param converter while route negotiation is being handled.
+      //
+      // This is a pretty big hack to workaround the fact Layout Builder does
+      // not properly invoke getRuntimeContexts but assumes getAvailableContexts
+      // will have populated values in the contexts returned.
+      //
+      // @see https://www.drupal.org/project/drupal/issues/3099968
+      // @see \Drupal\Core\ParamConverter\EntityConverter::convert
+      return $this->getRuntimeContexts([]);
+    }
+    $context = EntityContext::fromEntityTypeId(
+      'commerce_product_variation',
+      $this->t('Product variation from current product.')
+    );
+    return ['commerce_product_variation' => $context];
   }
 
 }

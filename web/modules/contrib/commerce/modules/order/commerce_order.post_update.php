@@ -233,3 +233,13 @@ function commerce_order_post_update_14() {
 
   return $message;
 }
+
+/**
+ * Import `commerce_order.settings` configuration.
+ */
+function commerce_order_post_update_15(&$sandbox) {
+  $config_factory = \Drupal::configFactory();
+  $config = $config_factory->getEditable('commerce_order.settings');
+  $config->set('log_version_mismatch', TRUE);
+  $config->save();
+}

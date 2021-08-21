@@ -61,11 +61,12 @@ class ShipmentManagerTest extends ShippingKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installEntitySchema('commerce_promotion');
     $this->installEntitySchema('commerce_promotion_coupon');
+    $this->installSchema('commerce_promotion', ['commerce_promotion_usage']);
 
     ConfigurableLanguage::createFromLangcode('fr')->save();
     $this->container->get('content_translation.manager')->setEnabled('commerce_shipping_method', 'commerce_shipping_method', TRUE);
@@ -333,7 +334,7 @@ class ShipmentManagerTest extends ShippingKernelTestBase {
               ],
               'percentage' => '0.2',
             ],
-          ]
+          ],
         ],
       ],
     ]);

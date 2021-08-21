@@ -52,7 +52,7 @@ class ProfileFieldCopy implements ProfileFieldCopyInterface {
     if (!isset($inline_form['#profile_scope']) || $inline_form['#profile_scope'] != 'billing') {
       return FALSE;
     }
-    $order = self::getOrder($form_state);
+    $order = static::getOrder($form_state);
     if (!$order) {
       // The inline form is being used outside of an order context
       // (e.g. the payment method add/edit screen).
@@ -70,13 +70,13 @@ class ProfileFieldCopy implements ProfileFieldCopyInterface {
    * {@inheritdoc}
    */
   public function alterForm(array &$inline_form, FormStateInterface $form_state) {
-    $shipping_profile = self::getShippingProfile($form_state);
+    $shipping_profile = static::getShippingProfile($form_state);
     if (!$shipping_profile) {
       // No source information is available.
       return;
     }
-    $billing_profile = self::getBillingProfile($inline_form);
-    $shipping_form_display = self::getFormDisplay($shipping_profile, 'shipping');
+    $billing_profile = static::getBillingProfile($inline_form);
+    $shipping_form_display = static::getFormDisplay($shipping_profile, 'shipping');
     $shipping_fields = array_keys($shipping_form_display->getComponents());
     $user_input = (array) NestedArray::getValue($form_state->getUserInput(), $inline_form['#parents']);
     // Copying is enabled by default for new billing profiles.
@@ -123,7 +123,7 @@ class ProfileFieldCopy implements ProfileFieldCopyInterface {
         }
       }
       // Add field widgets for any non-copied billing fields.
-      $form_display = self::getFormDisplay($billing_profile, 'billing', $shipping_fields);
+      $form_display = static::getFormDisplay($billing_profile, 'billing', $shipping_fields);
       $billing_fields = array_keys($form_display->getComponents());
       if ($billing_fields) {
         $form_display->buildForm($billing_profile, $inline_form['copy_fields'], $form_state);
@@ -196,8 +196,8 @@ class ProfileFieldCopy implements ProfileFieldCopyInterface {
   public static function validateForm(array &$inline_form, FormStateInterface $form_state) {
     $shipping_fields = $inline_form['copy_fields']['#shipping_fields'];
     if ($inline_form['copy_fields']['#has_form']) {
-      $billing_profile = self::getBillingProfile($inline_form);
-      $form_display = self::getFormDisplay($billing_profile, 'billing', $shipping_fields);
+      $billing_profile = static::getBillingProfile($inline_form);
+      $form_display = static::getFormDisplay($billing_profile, 'billing', $shipping_fields);
       $form_display->extractFormValues($billing_profile, $inline_form['copy_fields'], $form_state);
       $form_display->validateFormValues($billing_profile, $inline_form['copy_fields'], $form_state);
     }
@@ -213,12 +213,12 @@ class ProfileFieldCopy implements ProfileFieldCopyInterface {
    */
   public static function submitForm(array &$inline_form, FormStateInterface $form_state) {
     $shipping_fields = $inline_form['copy_fields']['#shipping_fields'];
-    $shipping_profile = self::getShippingProfile($form_state);
-    $billing_profile = self::getBillingProfile($inline_form);
+    $shipping_profile = static::getShippingProfile($form_state);
+    $billing_profile = static::getBillingProfile($inline_form);
 
     $billing_profile->populateFromProfile($shipping_profile, $shipping_fields);
     if ($inline_form['copy_fields']['#has_form']) {
-      $form_display = self::getFormDisplay($billing_profile, 'billing', $shipping_fields);
+      $form_display = static::getFormDisplay($billing_profile, 'billing', $shipping_fields);
       $form_display->extractFormValues($billing_profile, $inline_form['copy_fields'], $form_state);
     }
     $billing_profile->setData('copy_fields', TRUE);
@@ -265,7 +265,7 @@ class ProfileFieldCopy implements ProfileFieldCopyInterface {
       $shipping_profile = $form_state->get('shipping_profile');
     }
     else {
-      $order = self::getOrder($form_state);
+      $order = static::getOrder($form_state);
       $profiles = $order->collectProfiles();
       $shipping_profile = $profiles['shipping'] ?? NULL;
     }

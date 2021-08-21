@@ -45,7 +45,7 @@ class OrderShipmentSummaryTest extends ShippingKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->orderShipmentSummary = $this->container->get('commerce_shipping.order_shipment_summary');

@@ -13,7 +13,7 @@ class NorwegianVatTest extends EuropeanUnionVatTest {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->taxType = TaxType::create([

@@ -2,7 +2,6 @@
 
 namespace Drupal\commerce_shipping\Entity;
 
-use Drupal\commerce_order\Entity\OrderInterface;
 use Drupal\commerce_price\Calculator;
 use Drupal\commerce_shipping\Plugin\Commerce\PackageType\PackageTypeInterface as PackageTypePluginInterface;
 use Drupal\commerce_shipping\ProposedShipment;
@@ -33,6 +32,7 @@ use Drupal\profile\Entity\ProfileInterface;
  *   ),
  *   bundle_label = @Translation("Shipment type"),
  *   handlers = {
+ *     "event" = "Drupal\commerce_shipping\Event\ShipmentEvent",
  *     "list_builder" = "Drupal\commerce_shipping\ShipmentListBuilder",
  *     "storage" = "Drupal\commerce_shipping\ShipmentStorage",
  *     "access" = "Drupal\commerce_shipping\ShipmentAccessControlHandler",
@@ -46,7 +46,6 @@ use Drupal\profile\Entity\ProfileInterface;
  *       "resend-confirmation" = "Drupal\commerce_shipping\Form\ShipmentConfirmationResendForm",
  *     },
  *     "inline_form" = "Drupal\commerce_shipping\Form\ShipmentInlineForm",
- *     "views_data" = "Drupal\views\EntityViewsData",
  *     "route_provider" = {
  *       "default" = "Drupal\commerce_shipping\ShipmentRouteProvider",
  *     },
@@ -67,7 +66,8 @@ use Drupal\profile\Entity\ProfileInterface;
  *     "add-form" = "/admin/commerce/orders/{commerce_order}/shipments/add/{commerce_shipment_type}",
  *     "edit-form" = "/admin/commerce/orders/{commerce_order}/shipments/{commerce_shipment}/edit",
  *     "delete-form" = "/admin/commerce/orders/{commerce_order}/shipments/{commerce_shipment}/delete",
- *     "resend-confirmation-form" = "/admin/commerce/orders/{commerce_order}/shipments/{commerce_shipment}/resend-confirmation"
+ *     "resend-confirmation-form" = "/admin/commerce/orders/{commerce_order}/shipments/{commerce_shipment}/resend-confirmation",
+ *     "state-transition-form" = "/admin/commerce/orders/{commerce_order}/shipments/{commerce_shipment}/{field_name}/{transition_id}"
  *   },
  *   bundle_entity_type = "commerce_shipment_type",
  *   field_ui_base_route = "entity.commerce_shipment_type.edit_form",
@@ -506,40 +506,6 @@ class Shipment extends ContentEntityBase implements ShipmentInterface {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function postDelete(EntityStorageInterface $storage, array $entities) {
-    parent::postDelete($storage, $entities);
-
-    /** @var \Drupal\commerce_shipping\ShippingOrderManagerInterface $shipping_order_manager */
-    $shipping_order_manager = \Drupal::service('commerce_shipping.order_manager');
-    // When shipments are being deleted, we need to make sure the parent order
-    // is refreshed so that the corresponding shipping adjustment is removed.
-    $orders_to_refresh = [];
-    /** @var \Drupal\commerce_shipping\Entity\ShipmentInterface[] $entities */
-    foreach ($entities as $shipment) {
-      $order = $shipment->getOrder();
-      if (empty($order) || !$shipping_order_manager->hasShipments($order)) {
-        continue;
-      }
-      $order_shipments = $order->get('shipments');
-      // Make sure the shipment is not being referenced by the order anymore.
-      /** @var \Drupal\Core\Field\FieldItemListInterface $order_shipments */
-      foreach ($order_shipments as $delta => $item) {
-        if ($item->target_id == $shipment->id()) {
-          $order_shipments->removeItem($delta);
-        }
-      }
-      $orders_to_refresh[$order->id()] = $order;
-    }
-
-    foreach ($orders_to_refresh as $order) {
-      $order->setRefreshState(OrderInterface::REFRESH_ON_SAVE);
-      $order->save();
-    }
-  }
-
-  /**
    * Ensures that the package_type and weight fields are populated.
    */
   protected function prepareFields() {
@@ -627,7 +593,7 @@ class Shipment extends ContentEntityBase implements ShipmentInterface {
       ->setRequired(TRUE)
       ->setSetting('target_type', 'profile')
       ->setSetting('handler', 'default')
-      ->setSetting('handler_settings', ['target_bundles' => ['customer']])
+      ->setSetting('handler_settings', ['target_bundles' => ['customer' => 'customer']])
       ->setDisplayOptions('form', [
         'type' => 'commerce_shipping_profile',
         'weight' => -10,
@@ -702,6 +668,10 @@ class Shipment extends ContentEntityBase implements ShipmentInterface {
       ->setDisplayOptions('view', [
         'label' => 'hidden',
         'type' => 'state_transition_form',
+        'settings' => [
+          'require_confirmation' => TRUE,
+          'use_modal' => TRUE,
+        ],
         'weight' => 10,
       ])
       ->setDisplayConfigurable('form', TRUE)
@@ -741,7 +711,7 @@ class Shipment extends ContentEntityBase implements ShipmentInterface {
     $fields['shipping_profile'] = clone $base_field_definitions['shipping_profile'];
     $fields['shipping_profile']->setSetting('handler_settings', [
       'target_bundles' => [
-        $shipment_type->getProfileTypeId(),
+        $shipment_type->getProfileTypeId() => $shipment_type->getProfileTypeId(),
       ],
     ]);
 

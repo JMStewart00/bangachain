@@ -12,20 +12,28 @@
     query: window.location.search || ''
   };
 
+ window.onpageshow = function (event) {
+   if (event.persisted) {
+     window.location.reload()
+   }
+ };
+
+  Drupal.ViewsAjaxHistory = Drupal.ViewsAjaxHistory || {};
+
   /**
    * Keep the original beforeSubmit method to use it later.
    */
-  var beforeSubmit = Drupal.Ajax.prototype.beforeSubmit;
+  Drupal.ViewsAjaxHistory.beforeSubmit = Drupal.Ajax.prototype.beforeSubmit;
 
   /**
    * Keep the original beforeSerialize method to use it later.
    */
-  var beforeSerialize = Drupal.Ajax.prototype.beforeSerialize;
+  Drupal.ViewsAjaxHistory.beforeSerialize = Drupal.Ajax.prototype.beforeSerialize;
 
   /**
    * Keep the original beforeSend method to use it later.
    */
-  var beforeSend = Drupal.Ajax.prototype.beforeSend;
+  Drupal.ViewsAjaxHistory.beforeSend = Drupal.Ajax.prototype.beforeSend;
 
   Drupal.behaviors.viewsAjaxHistory = {
     attach: function (context, drupalSettings) {
@@ -195,6 +203,29 @@
   };
 
   /**
+   * Check to see if facets are enabled for the view.
+   *
+   * @param viewName string
+   *
+   * return bool
+   *   Whether the view has facets.
+   */
+  var hasFacets = function (viewName) {
+    var hasFacets = false;
+    if (drupalSettings.facets_views_ajax) {
+      // Loop through the facets.
+      $.each(drupalSettings.facets_views_ajax, function (facetId, facetSettings) {
+        if (facetSettings.view_id === viewName) {
+          // Yes, facets are enabled for this view.
+          hasFacets = true;
+        }
+      });
+    }
+
+    return hasFacets;
+  }
+
+  /**
    * Override beforeSerialize to handle click on pager links.
    *
    * @param $element
@@ -208,7 +239,7 @@
     }
 
     // Call the original Drupal method with the right context.
-    beforeSerialize.apply(this, arguments);
+    Drupal.ViewsAjaxHistory.beforeSerialize.apply(this, arguments);
   };
 
   /**
@@ -279,7 +310,7 @@
       addState(options, url);
     }
     // Call the original Drupal method with the right context.
-    beforeSubmit.apply(this, arguments);
+    Drupal.ViewsAjaxHistory.beforeSubmit.apply(this, arguments);
   };
 
   /**
@@ -294,12 +325,18 @@
     var data = (typeof options.data === 'string') ? parseQuery(options.data) : {};
 
     if (data.view_name && options.type !== 'GET') {
-      // Override the URL to not contain any fields that were submitted.
-      var delimiter = drupalSettings.views.ajax_path.indexOf('?') === -1 ? '?' : '&';
-      options.url = drupalSettings.views.ajax_path + delimiter + Drupal.ajax.WRAPPER_FORMAT + '=drupal_ajax';
+      if (hasFacets(data.view_name) === true) {
+        var currentQuery = parseQueryString(window.location.href);
+        options.url = drupalSettings.views.ajax_path + '?' + $.param(currentQuery) + '&' + Drupal.ajax.WRAPPER_FORMAT + '=drupal_ajax';
+      }
+      else {
+        // Override the URL to not contain any fields that were submitted.
+        var delimiter = drupalSettings.views.ajax_path.indexOf('?') === -1 ? '?' : '&';
+        options.url = drupalSettings.views.ajax_path + delimiter + Drupal.ajax.WRAPPER_FORMAT + '=drupal_ajax';
+      }
     }
     // Call the original Drupal method with the right context.
-    beforeSend.apply(this, arguments);
+    Drupal.ViewsAjaxHistory.beforeSend.apply(this, arguments);
   }
 
 })(jQuery, Drupal, drupalSettings);

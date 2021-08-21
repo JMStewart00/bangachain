@@ -32,6 +32,8 @@ services:
   commerce_product.product_variation_route_context:
     class: Drupal\commerce_product\ContextProvider\ProductVariationContext
     arguments: ['@current_route_match', '@entity_type.manager']
+    calls:
+      - [ setSampleEntityGenerator, [ '@?layout_builder.sample_entity_generator' ] ]
     tags:
       - { name: 'context_provider' }
 

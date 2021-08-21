@@ -29,7 +29,7 @@ class ProductDefaultVariationEventTest extends CommerceKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installConfig('user');
     $this->installEntitySchema('commerce_product_variation');

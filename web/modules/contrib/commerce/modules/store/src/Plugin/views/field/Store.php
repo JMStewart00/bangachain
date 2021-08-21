@@ -2,7 +2,6 @@
 
 namespace Drupal\commerce_store\Plugin\views\field;
 
-use Drupal\commerce\EntityManagerBridgeTrait;
 use Drupal\views\Plugin\views\field\EntityField;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -17,8 +16,6 @@ use Drupal\Core\Session\AccountInterface;
  * @ViewsField("commerce_store")
  */
 class Store extends EntityField {
-
-  use EntityManagerBridgeTrait;
 
   /**
    * {@inheritdoc}
@@ -47,8 +44,8 @@ class Store extends EntityField {
    * {@inheritdoc}
    */
   public function access(AccountInterface $account) {
-    $store_query = $this->getEntityTypeManager()->getStorage('commerce_store')->getQuery();
-    $store_count = $store_query->count()->execute();
+    $store_query = $this->entityTypeManager->getStorage('commerce_store')->getQuery();
+    $store_count = $store_query->count()->accessCheck(TRUE)->execute();
     if ($this->options['hide_single_store'] && $store_count <= 1) {
       return FALSE;
     }

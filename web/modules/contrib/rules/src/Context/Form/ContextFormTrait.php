@@ -51,87 +51,17 @@ trait ContextFormTrait {
     else {
       $default_value = $context_definition->getDefaultValue();
     }
-
-    // Temporary fix: Cast default value to an array if context definition has
-    // 'multiple = TRUE' so that the action can be edited without a fatal error.
-    // @todo Remove when integrity check prevents the wrong type being saved.
-    // @see https://www.drupal.org/project/rules/issues/2723259
-    if ($context_definition->isMultiple() && is_scalar($default_value)) {
-      $default_value = [$default_value];
-    }
-
-    // Derive the widget id using the context definition data type. Take only
-    // the first word before : so that entity:user gives entity.
-    $dataType = explode(':', $context_definition->getDataType())[0];
-    $widget_id = $context_definition->getWidgetId($dataType);
-
-    if ($widget_id === ContextDefinitionInterface::BROKEN_WIDGET_ID) {
-      // The datatype is unknown and/or the typed-data widget has not been coded
-      // yet, so use the 'broken' widget which by design has no input field.
-      \Drupal::messenger()->addError($this->t('No form widget is defined for %label (context name %context_name, data type %dataType). Modules can implement hook_typed_data_widgetlist_alter() to declare which form widget to use. See getWidgetId() and getStandardWidgetList().', [
-        '%context_name' => $context_name,
-        '%dataType' => $dataType,
-        '%label' => is_object($context_definition->getLabel()) ? $context_definition->getLabel()->getUntranslatedString() : '* no label *',
-      ]));
-    }
-
-    // Create the widget using the widget_id.
-    $widget = $this->getFormWidgetManager()->createInstance($widget_id);
-
-    $dataManager = $context_definition->getTypedDataManager();
-    $dataDefinition = $context_definition->getDataDefinition();
-    $typed_data = $dataManager->create($dataDefinition);
-
-    // Set default before building the form, so that widget->form() can use it.
-    $typed_data->setValue($default_value);
-
-    // Create the widget sub-form.
-    $sub_form = [];
-    $sub_form_state = SubformState::createForSubform($sub_form, $form, $form_state);
-    $widget_form = $widget->form($typed_data, $sub_form_state);
-
-    // Add the widget form into the full $form and save the widget_id.
-    $form['context_definitions'][$context_name] = $widget_form + [
-      '#widget_id' => $widget_id,
+    $form['context_definitions'][$context_name]['setting'] = [
+      '#type' => 'textfield',
+      '#title' => $title,
+      '#required' => $context_definition->isRequired(),
+      '#default_value' => $default_value,
     ];
-    // If mode is input (not selector) then add a widget class.
-    if ($mode == ContextDefinitionInterface::ASSIGNMENT_RESTRICTION_INPUT) {
-      $form['context_definitions'][$context_name]['#attributes']['class'][] = 'widget-' . str_replace('_', '-', $widget_id);
-    }
 
-    // Get the names of the data item input fields in the widget. Mostly there
-    // is only one input field and often it will be called 'value', but some
-    // datatypes, for example timespan, define two inputs. Remove all array keys
-    // that start with # and this will leave just the input field names.
-    // @todo Could this information be provided more easily, say by calling
-    // $widget->getInputNames() ?
-    $widget_input_names = array_keys($widget_form);
-    $widget_input_names = array_filter($widget_input_names, function ($k) {
-      return substr($k, 0, 1) !== '#';
-    });
-
-    if (isset($widget_form['#theme_wrappers']) && $widget_form['#theme_wrappers'][0] == 'fieldset') {
-      // @todo Is checking #theme_wrappers = fieldset the best way to do it?
-      // Should we count the number of input items? What if the widget had two
-      // or more inputs but was badly formed with no fieldset theme_wrapper?
-      $input_name = end($widget_input_names);
-    }
-    else {
-      // The widget form is simple, so we need to add more of the form here.
-      $form['context_definitions'][$context_name] += [
-        '#type' => 'fieldset',
-        '#title' => $context_definition->getLabel(),
-      ];
-      $input_name = reset($widget_input_names);
-      $form['context_definitions'][$context_name][$input_name]['#title'] = $title;
-    }
-
-    // Extract the (last) element we have just added.
-    $element = &$form['context_definitions'][$context_name][$input_name];
+    $element = &$form['context_definitions'][$context_name]['setting'];
 
     if ($mode == ContextDefinitionInterface::ASSIGNMENT_RESTRICTION_SELECTOR) {
-      $element['#type'] = 'textfield';
-      $element['#description'] .= ' ' . $this->t("The data selector helps you drill down into the available data. <em>To make entity fields appear in the data selector, you may have to use the condition 'entity has field' (or 'content is of type').</em> More useful tips about data selection is available in <a href=':url'>the online documentation</a>.", [
+      $element['#description'] = $this->t("The data selector helps you drill down into the available data. <em>To make entity fields appear in the data selector, you may have to use the condition 'Entity is of bundle'.</em> More useful tips about data selection are available in <a href=':url'>the online documentation</a>.", [
         ':url' => 'https://www.drupal.org/node/1300042',
       ]);
 

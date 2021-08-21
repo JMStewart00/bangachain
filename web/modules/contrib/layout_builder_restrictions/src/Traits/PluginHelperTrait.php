@@ -105,7 +105,7 @@ trait PluginHelperTrait {
    *   The categorized definitions.
    */
   protected function getDefinitionsByUntranslatedCategory(array $definitions) {
-    $definitions = $this->GetGroupedDefinitions($definitions, 'admin_label');
+    $definitions = $this->getGroupedDefinitions($definitions, 'admin_label');
     // Do not display the 'broken' plugin in the UI.
     unset($definitions[$this->t('Block')->render()]['definitions']['broken']);
     return $definitions;

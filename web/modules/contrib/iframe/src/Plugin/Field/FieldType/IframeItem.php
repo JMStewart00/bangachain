@@ -43,7 +43,8 @@ class IframeItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
-    $properties['url'] = DataDefinition::create('uri')
+    // url as 'string' for token support. Validation of url will occur later
+    $properties['url'] = DataDefinition::create('string')
       ->setLabel(t('URL'));
 
     $properties['title'] = DataDefinition::create('string')

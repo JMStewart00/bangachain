@@ -25,7 +25,7 @@ class ProposedShipmentTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $shipping_profile = $this->prophesize(ProfileInterface::class);

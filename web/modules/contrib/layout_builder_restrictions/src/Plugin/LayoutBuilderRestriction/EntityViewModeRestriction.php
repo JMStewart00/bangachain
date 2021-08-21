@@ -12,7 +12,7 @@ use Drupal\layout_builder_restrictions\Traits\PluginHelperTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * EntityViewModeRestriction Plugin.
+ * Controls behavior of the per-view mode plugin.
  *
  * @LayoutBuilderRestriction(
  *   id = "entity_view_mode_restriction",
@@ -85,10 +85,12 @@ class EntityViewModeRestriction extends LayoutBuilderRestrictionBase {
         $allowed_block_categories = $default->getThirdPartySetting('layout_builder_restrictions', 'allowed_block_categories', []);
         $whitelisted_blocks = (isset($third_party_settings['whitelisted_blocks'])) ? $third_party_settings['whitelisted_blocks'] : [];
         $blacklisted_blocks = (isset($third_party_settings['blacklisted_blocks'])) ? $third_party_settings['blacklisted_blocks'] : [];
+        $restricted_categories = (isset($third_party_settings['restricted_categories'])) ? $third_party_settings['restricted_categories'] : [];
       }
       else {
         $whitelisted_blocks = [];
         $blacklisted_blocks = [];
+        $restricted_categories = [];
       }
 
       if (empty($third_party_settings)) {
@@ -116,7 +118,10 @@ class EntityViewModeRestriction extends LayoutBuilderRestrictionBase {
             $delta = $content_block_types_by_uuid[$uuid];
           }
         }
-        if (in_array($category, array_keys($whitelisted_blocks))) {
+        if (in_array($category, $restricted_categories)) {
+          unset($definitions[$original_delta]);
+        }
+        elseif (in_array($category, array_keys($whitelisted_blocks))) {
           if (!in_array($delta, $whitelisted_blocks[$category])) {
             // The current block is not whitelisted. Remove it.
             unset($definitions[$original_delta]);
@@ -170,6 +175,7 @@ class EntityViewModeRestriction extends LayoutBuilderRestrictionBase {
 
     $whitelisted_blocks = (isset($third_party_settings['whitelisted_blocks'])) ? $third_party_settings['whitelisted_blocks'] : [];
     $blacklisted_blocks = (isset($third_party_settings['blacklisted_blocks'])) ? $third_party_settings['blacklisted_blocks'] : [];
+    $restricted_categories = (isset($third_party_settings['restricted_categories'])) ? $third_party_settings['restricted_categories'] : [];
     $bundle = $this->getValuefromSectionStorage([$section_storage], 'bundle');
 
     // Get "from" section and layout id. (not needed?)
@@ -187,15 +193,14 @@ class EntityViewModeRestriction extends LayoutBuilderRestrictionBase {
     // Load the plugin definition.
     if ($definition = $this->blockManager()->getDefinition($block_id)) {
       $category = $this->getUntranslatedCategory($definition['category']);
-
-      if (isset($whitelisted_blocks[$category]) || isset($blacklisted_blocks[$category])) {
+      if (isset($whitelisted_blocks[$category]) || isset($blacklisted_blocks[$category]) || isset($restricted_categories[$category])) {
         // If there is a restriction, assume this block is restricted.
         // If the block is whitelisted or NOT blacklisted,
         // the restriction will be removed, below.
         $has_restrictions = TRUE;
       }
 
-      if (!isset($whitelisted_blocks[$category]) && !isset($blacklisted_blocks[$category]) && $category != "Custom blocks") {
+      if (!isset($restricted_categories[$category]) && !isset($whitelisted_blocks[$category]) && !isset($blacklisted_blocks[$category]) && $category != "Custom blocks") {
         // No restrictions have been placed on this category.
         $has_restrictions = FALSE;
       }
@@ -242,7 +247,7 @@ class EntityViewModeRestriction extends LayoutBuilderRestrictionBase {
           $block_bundle = $content_block_types_by_uuid[end($block_id_parts)];
           if (in_array($block_bundle, $blacklisted_blocks['Custom block types'])) {
             // There are block type restrictions AND
-            // this block type has been blacklostlisted.
+            // this block type has been blacklisted.
             $has_restrictions = TRUE;
           }
           else {
@@ -274,9 +279,13 @@ class EntityViewModeRestriction extends LayoutBuilderRestrictionBase {
     $third_party_settings = $view_display->getThirdPartySetting('layout_builder_restrictions', 'entity_view_mode_restriction', []);
     $whitelisted_blocks = (isset($third_party_settings['whitelisted_blocks'])) ? $third_party_settings['whitelisted_blocks'] : [];
     $blacklisted_blocks = (isset($third_party_settings['blacklisted_blocks'])) ? $third_party_settings['blacklisted_blocks'] : [];
-
+    $restricted_categories = (isset($third_party_settings['restricted_categories'])) ? $third_party_settings['restricted_categories'] : [];
+    if (in_array('Inline blocks', $restricted_categories)) {
+      // All inline blocks have been restricted.
+      return [];
+    }
     // Check if allowed inline blocks are defined in config.
-    if (isset($whitelisted_blocks['Inline blocks'])) {
+    elseif (isset($whitelisted_blocks['Inline blocks'])) {
       return $whitelisted_blocks['Inline blocks'];
     }
     // If not, then allow all inline blocks.

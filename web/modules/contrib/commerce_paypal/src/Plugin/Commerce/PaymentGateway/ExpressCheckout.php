@@ -7,19 +7,9 @@ use Drupal\commerce_paypal\Event\PayPalEvents;
 use Drupal\commerce_order\Entity\OrderInterface;
 use Drupal\commerce_payment\Entity\PaymentInterface;
 use Drupal\commerce_payment\Exception\PaymentGatewayException;
-use Drupal\commerce_payment\PaymentMethodTypeManager;
-use Drupal\commerce_payment\PaymentTypeManager;
 use Drupal\commerce_payment\Plugin\Commerce\PaymentGateway\OffsitePaymentGatewayBase;
-use Drupal\commerce_paypal\IPNHandlerInterface;
 use Drupal\commerce_price\Price;
-use Drupal\commerce_price\RounderInterface;
-use Drupal\Component\Datetime\TimeInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Logger\LoggerChannelFactoryInterface;
-use GuzzleHttp\ClientInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -98,65 +88,17 @@ class ExpressCheckout extends OffsitePaymentGatewayBase implements ExpressChecko
   protected $eventDispatcher;
 
   /**
-   * Constructs a new PaymentGatewayBase object.
-   *
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
-   * @param \Drupal\commerce_payment\PaymentTypeManager $payment_type_manager
-   *   The payment type manager.
-   * @param \Drupal\commerce_payment\PaymentMethodTypeManager $payment_method_type_manager
-   *   The payment method type manager.
-   * @param \Drupal\Component\Datetime\TimeInterface $time
-   *   The time.
-   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_channel_factory
-   *   The logger channel factory.
-   * @param \GuzzleHttp\ClientInterface $client
-   *   The client.
-   * @param \Drupal\commerce_price\RounderInterface $rounder
-   *   The price rounder.
-   * @param \Drupal\commerce_paypal\IPNHandlerInterface $ip_handler
-   *   The IPN handler.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
-   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
-   *   The event dispatcher.
-   */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, PaymentTypeManager $payment_type_manager, PaymentMethodTypeManager $payment_method_type_manager, TimeInterface $time, LoggerChannelFactoryInterface $logger_channel_factory, ClientInterface $client, RounderInterface $rounder, IPNHandlerInterface $ip_handler, ModuleHandlerInterface $module_handler, EventDispatcherInterface $event_dispatcher) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $payment_type_manager, $payment_method_type_manager, $time);
-
-    $this->logger = $logger_channel_factory->get('commerce_paypal');
-    $this->httpClient = $client;
-    $this->rounder = $rounder;
-    $this->ipnHandler = $ip_handler;
-    $this->moduleHandler = $module_handler;
-    $this->eventDispatcher = $event_dispatcher;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity_type.manager'),
-      $container->get('plugin.manager.commerce_payment_type'),
-      $container->get('plugin.manager.commerce_payment_method_type'),
-      $container->get('datetime.time'),
-      $container->get('logger.factory'),
-      $container->get('http_client'),
-      $container->get('commerce_price.rounder'),
-      $container->get('commerce_paypal.ipn_handler'),
-      $container->get('module_handler'),
-      $container->get('event_dispatcher')
-    );
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    $instance->logger = $container->get('logger.channel.commerce_paypal');
+    $instance->httpClient = $container->get('http_client');
+    $instance->rounder = $container->get('commerce_price.rounder');
+    $instance->ipnHandler = $container->get('commerce_paypal.ipn_handler');
+    $instance->moduleHandler = $container->get('module_handler');
+    $instance->eventDispatcher = $container->get('event_dispatcher');
+    return $instance;
   }
 
   /**

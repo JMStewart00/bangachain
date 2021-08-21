@@ -223,6 +223,7 @@ class ProductAttributeFieldManager implements ProductAttributeFieldManagerInterf
     }
     $query = $this->entityTypeManager->getStorage('commerce_product_variation')->getQuery()
       ->condition('type', $variation_type_id)
+      ->accessCheck(FALSE)
       ->exists($field_name)
       ->range(0, 1);
     $result = $query->execute();

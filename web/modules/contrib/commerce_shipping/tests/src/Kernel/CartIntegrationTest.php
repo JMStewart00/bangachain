@@ -21,7 +21,7 @@ class CartIntegrationTest extends ShippingKernelTestBase {
   /**
    * The sample product variations.
    *
-   * @var \Drupal\commerce_product\Entity\ProductVariationInterface[[
+   * @var \Drupal\commerce_product\Entity\ProductVariationInterface[]
    */
   protected $variations = [];
 
@@ -42,7 +42,7 @@ class CartIntegrationTest extends ShippingKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installCommerceCart();

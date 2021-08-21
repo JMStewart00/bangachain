@@ -422,7 +422,7 @@ function fontawesome_entity_presave(EntityInterface $entity) {
           foreach ($fields as $field) {
             // Find and replace SVG strings with original icon HTML.
             $fieldValue = $field->getValue();
-            $fieldValue['value'] = preg_replace('%<svg .*?class="svg-inline--fa.*?<\/svg><!--\s?(.*?)\s?-->%', '$1', $fieldValue['value']);
+            $fieldValue['value'] = preg_replace('%<svg .*?class="svg-inline--fa.*?<\/svg><!--\s?(<span.*?<\/span>).*\s?-->%', '$1', $fieldValue['value']);
             $field->setValue($fieldValue);
           }
         }

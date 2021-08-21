@@ -28,6 +28,7 @@ use Drupal\profile\Entity\ProfileInterface;
  *   bundle_plugin_type = "commerce_payment_method_type",
  *   handlers = {
  *     "access" = "Drupal\commerce_payment\PaymentMethodAccessControlHandler",
+ *     "permission_provider" = "Drupal\commerce_payment\PaymentMethodPermissionProvider",
  *     "list_builder" = "Drupal\commerce_payment\PaymentMethodListBuilder",
  *     "storage" = "Drupal\commerce_payment\PaymentMethodStorage",
  *     "views_data" = "Drupal\commerce\CommerceEntityViewsData",

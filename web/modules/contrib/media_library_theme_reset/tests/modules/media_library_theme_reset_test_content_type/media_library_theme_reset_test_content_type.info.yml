@@ -5,7 +5,7 @@ package: Testing
 dependencies:
   - drupal:media_library_theme_reset
 
-# Information added by Drupal.org packaging script on 2020-06-16
-version: '8.x-1.0'
+# Information added by Drupal.org packaging script on 2021-06-20
+version: '8.x-1.1'
 project: 'media_library_theme_reset'
-datestamp: 1592330454
+datestamp: 1624207601

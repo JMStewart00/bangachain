@@ -12,7 +12,7 @@ use Drupal\layout_builder_restrictions\Traits\PluginHelperTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * EntityViewModeRestrictionByRegion Plugin.
+ * Controls behavior of the by region plugin.
  *
  * @LayoutBuilderRestriction(
  *   id = "entity_view_mode_restriction_by_region",
@@ -100,17 +100,18 @@ class EntityViewModeRestrictionByRegion extends LayoutBuilderRestrictionBase {
         $allowed_block_categories = $default->getThirdPartySetting('layout_builder_restrictions', 'allowed_block_categories', []);
         $whitelisted_blocks = (isset($third_party_settings['whitelisted_blocks'][$layout_id])) ? $third_party_settings['whitelisted_blocks'][$layout_id] : [];
         $blacklisted_blocks = (isset($third_party_settings['blacklisted_blocks'][$layout_id])) ? $third_party_settings['blacklisted_blocks'][$layout_id] : [];
+        $restricted_categories = (isset($third_party_settings['restricted_categories'][$layout_id])) ? $third_party_settings['restricted_categories'][$layout_id] : [];
 
         // If restriction applies to all regions, then overwrite region
         // to 'all_regions'.
-        if (isset($whitelisted_blocks['all_regions']) || isset($blacklisted_blocks['all_regions'])) {
+        if (isset($whitelisted_blocks['all_regions']) || isset($blacklisted_blocks['all_regions']) || isset($restricted_categories['all_regions'])) {
           $region = 'all_regions';
         }
 
         // Filter blocks from entity-specific SectionStorage (i.e., UI).
         $content_block_types_by_uuid = $this->getBlockTypeByUuid();
 
-        if (!empty($whitelisted_blocks) || !empty($blacklisted_blocks)) {
+        if (!empty($whitelisted_blocks) || !empty($blacklisted_blocks) || !empty($restricted_categories)) {
           foreach ($definitions as $delta => $definition) {
             $original_delta = $delta;
             $category = $this->getUntranslatedCategory($definition['category']);
@@ -128,7 +129,10 @@ class EntityViewModeRestrictionByRegion extends LayoutBuilderRestrictionBase {
                 $delta = $content_block_types_by_uuid[$uuid];
               }
             }
-            if (isset($whitelisted_blocks[$region]) && in_array($category, array_keys($whitelisted_blocks[$region]))) {
+            if (in_array($category, $restricted_categories[$region])) {
+              unset($definitions[$original_delta]);
+            }
+            elseif (isset($whitelisted_blocks[$region]) && in_array($category, array_keys($whitelisted_blocks[$region]))) {
               if (!in_array($delta, $whitelisted_blocks[$region][$category])) {
                 // The current block is not whitelisted. Remove it.
                 unset($definitions[$original_delta]);
@@ -196,10 +200,11 @@ class EntityViewModeRestrictionByRegion extends LayoutBuilderRestrictionBase {
     // Get region restrictions.
     $whitelisted_blocks = (isset($third_party_settings['whitelisted_blocks'][$layout_id])) ? $third_party_settings['whitelisted_blocks'][$layout_id] : [];
     $blacklisted_blocks = (isset($third_party_settings['blacklisted_blocks'][$layout_id])) ? $third_party_settings['blacklisted_blocks'][$layout_id] : [];
+    $restricted_categories = (isset($third_party_settings['restricted_categories'][$layout_id])) ? $third_party_settings['restricted_categories'][$layout_id] : [];
 
-    // If restriction applies to all regions, then overwrite region
+    // If restriction applies to all regions, then overwrite region_to
     // to 'all_regions'.
-    if (isset($whitelisted_blocks['all_regions']) || isset($blacklisted_blocks['all_regions'])) {
+    if (isset($third_party_settings['whitelisted_blocks'][$layout_id]['all_regions']) || isset($third_party_settings['blacklisted_blocks'][$layout_id]['all_regions']) || isset($third_party_settings['restricted_categories'][$layout_id]['all_regions'])) {
       $region_to = 'all_regions';
     }
 
@@ -211,14 +216,16 @@ class EntityViewModeRestrictionByRegion extends LayoutBuilderRestrictionBase {
     // Load the plugin definition.
     if ($definition = $this->blockManager()->getDefinition($block_id)) {
       $category = $this->getUntranslatedCategory($definition['category']);
-
       if (isset($whitelisted_blocks[$region_to][$category]) || isset($blacklisted_blocks[$region_to][$category])) {
         // If there is a restriction, assume this block is restricted.
         // If the block is whitelisted or NOT blacklisted,
         // the restriction will be removed, below.
         $has_restrictions = TRUE;
       }
-      if (!isset($whitelisted_blocks[$region_to][$category]) && !isset($blacklisted_blocks[$region_to][$category]) && $category != "Custom blocks") {
+      if (in_array($category, array_values($restricted_categories[$region_to]))) {
+        $has_restrictions = TRUE;
+      }
+      if (!isset($restricted_categories[$region_to][$category]) && !isset($blacklisted_blocks[$region_to][$category]) && !isset($whitelisted_blocks[$region_to][$category]) && !in_array($category, array_values($restricted_categories[$region_to])) && $category != "Custom blocks") {
         // No restrictions have been placed on this category.
         $has_restrictions = FALSE;
       }
@@ -275,7 +282,6 @@ class EntityViewModeRestrictionByRegion extends LayoutBuilderRestrictionBase {
           }
         }
       }
-
       if ($has_restrictions) {
         return $this->t("There is a restriction on %block placement in the %layout %region region for %type content.", [
           "%block" => $definition['admin_label'],
@@ -303,7 +309,7 @@ class EntityViewModeRestrictionByRegion extends LayoutBuilderRestrictionBase {
 
     // If restriction behavior is for all regions, then overwrite
     // region with 'all_regions'.
-    if (isset($third_party_settings['whitelisted_blocks'][$layout_id]['all_regions']) || isset($third_party_settings['blacklisted_blocks'][$layout_id]['all_regions'])) {
+    if (isset($third_party_settings['whitelisted_blocks'][$layout_id]['all_regions']) || isset($third_party_settings['blacklisted_blocks'][$layout_id]['all_regions']) || isset($third_party_settings['restricted_categories'][$layout_id]['all_regions'])) {
       $region = 'all_regions';
     }
 

@@ -16,7 +16,7 @@ class BlockPlacementBlacklistTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'block',
     'layout_builder',
     'layout_builder_restrictions',

@@ -34,7 +34,7 @@ class DefaultPackerTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $order_type = $this->prophesize(OrderTypeInterface::class);

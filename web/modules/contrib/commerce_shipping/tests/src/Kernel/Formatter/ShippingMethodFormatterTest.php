@@ -35,7 +35,7 @@ class ShippingMethodFormatterTest extends ShippingKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->translationLanguage = ConfigurableLanguage::createFromLangcode('fr');

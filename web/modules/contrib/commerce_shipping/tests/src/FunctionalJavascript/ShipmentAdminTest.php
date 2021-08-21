@@ -89,7 +89,7 @@ class ShipmentAdminTest extends CommerceWebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $product_variation_type = ProductVariationType::load('default');
@@ -349,8 +349,8 @@ class ShipmentAdminTest extends CommerceWebDriverTestBase {
     $this->assertEquals($this->defaultAddress, array_filter($shipping_profile->get('address')->first()->toArray()));
     $this->assertEquals($this->defaultProfile->id(), $shipping_profile->getData('address_book_profile_id'));
     $this->assertSession()->pageTextContains('$9.99');
-    $this->assertTrue($page->hasButton('Finalize shipment'));
-    $this->assertTrue($page->hasButton('Cancel shipment'));
+    $this->assertTrue($page->hasLink('Finalize shipment'));
+    $this->assertTrue($page->hasLink('Cancel shipment'));
 
     $adjustments = $this->order->getAdjustments();
     $this->assertCount(1, $adjustments);
@@ -772,8 +772,18 @@ class ShipmentAdminTest extends CommerceWebDriverTestBase {
     $page->pressButton('Save');
 
     // Email is triggered at Send shipment step.
-    $this->getSession()->getPage()->pressButton('Finalize shipment');
-    $this->getSession()->getPage()->pressButton('Send shipment');
+    $this->getSession()->getPage()->clickLink('Finalize shipment');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->pageTextContains('Are you sure you want to apply this transition?');
+    $this->assertSession()->pageTextContains('This action cannot be undone.');
+    $this->assertSession()->linkExists('Cancel');
+    // Note, there is some odd behavior calling the `press()` method on the
+    // button, so after asserting it exists, click via this method.
+    $this->click('button:contains("Confirm")');
+    $this->getSession()->getPage()->clickLink('Send shipment');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->pageTextContains('This action cannot be undone.');
+    $this->click('button:contains("Confirm")');
 
     // Test email content.
     $email = current($this->getMails());

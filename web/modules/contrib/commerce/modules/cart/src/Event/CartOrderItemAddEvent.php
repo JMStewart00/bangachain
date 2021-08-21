@@ -2,16 +2,16 @@
 
 namespace Drupal\commerce_cart\Event;
 
+use Drupal\commerce\EventBase;
 use Drupal\commerce_order\Entity\OrderInterface;
 use Drupal\commerce_order\Entity\OrderItemInterface;
-use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Defines the cart order item add event.
  *
  * @see \Drupal\commerce_cart\Event\CartEvents
  */
-class CartOrderItemAddEvent extends Event {
+class CartOrderItemAddEvent extends EventBase {
 
   /**
    * The cart order.

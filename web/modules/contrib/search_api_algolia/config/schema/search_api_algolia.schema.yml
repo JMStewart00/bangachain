@@ -1,0 +1,10 @@
+search_api_algolia.settings:
+  type: config_entity
+  label : 'Search API Algolia Settings'
+  mapping:
+    debug:
+      type: boolean
+      label: 'Is debug mode active'
+    wait_for_delete:
+      type: boolean
+      label: 'Wait for delete operation to finish'

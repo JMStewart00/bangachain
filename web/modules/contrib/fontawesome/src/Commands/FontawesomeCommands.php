@@ -4,7 +4,6 @@ namespace Drupal\fontawesome\Commands;
 
 use Drush\Commands\DrushCommands;
 use Drupal\Core\Asset\LibraryDiscoveryInterface;
-use Drupal\Core\File\FileSystem;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Archiver\ArchiverManager;
 

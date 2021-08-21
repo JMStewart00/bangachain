@@ -366,7 +366,7 @@ class ProductVariationResourceTest extends ResourceTestBase {
    *
    * @todo remove after https://www.drupal.org/project/drupal/issues/3163590
    */
-  protected function getRelationshipFieldNames(EntityInterface $entity = NULL, ResourceType  $resource_type = NULL) {
+  protected function getRelationshipFieldNames(EntityInterface $entity = NULL, ResourceType $resource_type = NULL) {
     $entity = $entity ?: $this->entity;
     $resource_type = $resource_type ?: $this->resourceType;
     // Only content entity types can have relationships.
@@ -374,14 +374,13 @@ class ProductVariationResourceTest extends ResourceTestBase {
       ? iterator_to_array($entity)
       : [];
     return array_reduce($fields, function ($field_names, $field) use ($resource_type) {
-      /* @var \Drupal\Core\Field\FieldItemListInterface $field */
+      /** @var \Drupal\Core\Field\FieldItemListInterface $field */
       if (static::isReferenceFieldDefinition($field->getFieldDefinition())) {
         $field_names[] = $resource_type->getPublicName($field->getName());
       }
       return $field_names;
     }, []);
   }
-
 
   /**
    * {@inheritdoc}

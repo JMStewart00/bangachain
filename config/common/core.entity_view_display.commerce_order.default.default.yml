@@ -93,7 +93,7 @@ content:
     label: hidden
     region: content
   uid:
-    label: inline
+    label: hidden
     type: author
     weight: 5
     settings: {  }

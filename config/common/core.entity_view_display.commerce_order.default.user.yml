@@ -20,7 +20,7 @@ content:
   billing_profile:
     type: entity_reference_revisions_entity_view
     weight: 0
-    label: above
+    label: hidden
     settings:
       view_mode: default
       link: ''
@@ -83,8 +83,10 @@ content:
     label: hidden
     region: content
 hidden:
+  balance: true
   changed: true
   ip_address: true
+  search_api_excerpt: true
   shipments: true
   store_id: true
   total_paid: true

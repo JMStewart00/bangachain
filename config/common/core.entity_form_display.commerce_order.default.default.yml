@@ -24,14 +24,14 @@ content:
   billing_profile:
     type: commerce_billing_profile
     weight: 0
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   cart:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 20
+    weight: 3
     region: content
     third_party_settings: {  }
   order_items:
@@ -45,6 +45,10 @@ content:
       match_operator: CONTAINS
       allow_existing: false
       form_mode: default
+      revision: false
+      collapsible: false
+      collapsed: false
+      allow_duplicate: false
     third_party_settings: {  }
     region: content
 hidden:

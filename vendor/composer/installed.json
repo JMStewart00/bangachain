@@ -5114,6 +5114,9 @@
                         "status": "not-covered",
                         "message": "Dev releases are not covered by Drupal security advisories."
                     }
+                },
+                "patches_applied": {
+                    "Nullpointer exception during cron run for optimal cron run mode.": "https://www.drupal.org/files/issues/2021-08-25/nullpointer-exception-cron-run-3229773-2.patch"
                 }
             },
             "installation-source": "source",

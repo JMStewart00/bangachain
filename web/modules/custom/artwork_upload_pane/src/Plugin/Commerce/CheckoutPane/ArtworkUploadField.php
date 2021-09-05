@@ -31,7 +31,7 @@ class ArtworkUploadField extends CheckoutPaneBase {
         '#upload_location' => 'private://client_uploads', // Can also use 'public://'
         '#required' => TRUE,
         '#upload_validators' => [
-          'file_validate_extensions' => ['zip'], // Limit to any file extension(s) here
+          'file_validate_extensions' => ['zip, jpg, jpeg, png'], // Limit to any file extension(s) here
         ],
       ];
     }

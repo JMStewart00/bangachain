@@ -348,6 +348,9 @@
             },
             "drupal/feeds": {
                 "Undefined Index: allowed_extensions AJAX error when creating feed types.": "https://www.drupal.org/files/issues/2019-02-06/3031019-undefined-index-ajax-2.patch"
+            },
+            "drupal/commerce_stock": {
+                "Nullpointer exception during cron run for optimal cron run mode.": "https://www.drupal.org/files/issues/2021-08-25/nullpointer-exception-cron-run-3229773-2.patch"
             }
         },
         "enable-patching": true,

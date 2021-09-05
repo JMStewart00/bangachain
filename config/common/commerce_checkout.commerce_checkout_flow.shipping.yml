@@ -69,19 +69,19 @@ configuration:
     commerce_giftcard_redemption:
       allow_multiple: true
       step: _sidebar
-      weight: 11
+      weight: 12
     coupon_redemption:
       allow_multiple: true
       step: _sidebar
-      weight: 12
+      weight: 13
     login:
       allow_guest_checkout: true
       allow_registration: false
       step: _disabled
-      weight: 13
-    artwork_upload_pane_file_upload:
-      step: _disabled
       weight: 14
+    artwork_upload_pane_file_upload:
+      step: _sidebar
+      weight: 11
     email_registration_completion_registration:
       step: _disabled
       weight: 15

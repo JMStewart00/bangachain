@@ -37,7 +37,12 @@ export const SearchSummary = connectStateResults(
       <div className="l-row--no-columns u-vr__py--1 c-facet-search-summary">
         <div className="u-fw__medium" hidden={!hasResults || !searchState.query} dangerouslySetInnerHTML={{__html: summary}}/>
         <div className="u-fw__medium" hidden={hasResults}>
-          There are no results for "<strong>{searchState.query}</strong>".
+          <p>There are no results for "<strong>{searchState.query}</strong>".</p>
+          <p>Two things could cause this.</p>
+          <ul>
+            <li>(1) Your search query is too far off from what you meant (misspelled) or...</li>
+            <li>(2) We're out of stock on that one and we didn't want it to show up here and get your hopes up.<br />If you really want this one, drop us a message on the Contact Us page and let us know that you're looking for it<br />and we'll try to get it in soon! You can always stop by the shop and see if we have it in the used bins as well!</li>
+          </ul>
         </div>
       </div>
     );

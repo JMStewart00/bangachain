@@ -98,7 +98,7 @@ content:
       step: '1'
       custom_transaction_note: false
     third_party_settings: {  }
-    type: commerce_stock_level_simple_transaction
+    type: commerce_stock_level_absolute
     region: content
   field_used:
     weight: 3

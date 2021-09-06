@@ -288,16 +288,8 @@ class IframeWidgetBase extends WidgetBase {
    * @see \Drupal\Core\Form\FormValidator
    */
   public static function validateWidth(&$form, FormStateInterface &$form_state) {
-    $parents = $form['#parents'];
-    $itemfield = $parents[0];
-    $iteminst = $parents[1];
-    /*
-     * $value = $form['#value'];
-     * $itemname = $parents[2];
-     * $itemid = $form['#id'];
-     */
-    $node = $form_state->getUserInput();
-    $me = $node[$itemfield][$iteminst];
+    $me = IframeWidgetBase::getField($form, $form_state);
+
     // \iframe_debug(0, 'validateWidth', $me);
     if (!empty($me['url']) && isset($me['width'])) {
       if (empty($me['width']) || !preg_match('#^(\d+\%?|auto)$#', $me['width'])) {
@@ -312,16 +304,8 @@ class IframeWidgetBase extends WidgetBase {
    * @see \Drupal\Core\Form\FormValidator
    */
   public static function validateHeight(&$form, FormStateInterface &$form_state) {
-    $parents = $form['#parents'];
-    $itemfield = $parents[0];
-    $iteminst = $parents[1];
-    /*
-     * $value = $form['#value'];
-     * $itemname = $parents[2];
-     * $itemid = $form['#id'];
-     */
-    $node = $form_state->getUserInput();
-    $me = $node[$itemfield][$iteminst];
+    $me = IframeWidgetBase::getField($form, $form_state);
+
     // \iframe_debug(0, 'validateHeight', $me);
     if (!empty($me['url']) && isset($me['height'])) {
       if (empty($me['height']) || !preg_match('#^(\d+\%?|auto)$#', $me['height'])) {
@@ -336,16 +320,8 @@ class IframeWidgetBase extends WidgetBase {
    * @see \Drupal\Core\Form\FormValidator
    */
   public static function validateUrl(&$form, FormStateInterface &$form_state) {
-    $parents = $form['#parents'];
-    $itemfield = $parents[0];
-    $iteminst = $parents[1];
-    /*
-     * $value = $form['#value'];
-     * $itemname = $parents[2];
-     * $itemid = $form['#id'];
-     */
-    $node = $form_state->getUserInput();
-    $me = $node[$itemfield][$iteminst];
+    $me = IframeWidgetBase::getField($form, $form_state);
+
     $testabsolute = true;
     // \iframe_debug(0, 'validateUrl', $me);
     if (!empty($me['url'])) {
@@ -359,6 +335,33 @@ class IframeWidgetBase extends WidgetBase {
         $form_state->setError($form, t('Drupal does not accept scheme-less URLs. Please add "https:" to your URL, this works on http-parent-pages too.'));
       }
     }
+  }
+
+  /**
+   * Return the field values.
+   *
+   * @param array $form
+   *   The form structure where widgets are being attached to. This might be a
+   *   full form structure, or a sub-element of a larger form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   *
+   * @return array
+   */
+  private static function getField(&$form, FormStateInterface &$form_state) {
+    $parents = $form['#parents'];
+    $node = $form_state->getUserInput();
+
+    // Remove the field property from the list of parents.
+    array_pop($parents);
+
+    // Starting from the node drill down to the field.
+    $field = $node;
+    for($i = 0; $i < count($parents); $i++) {
+      $field = $field[$parents[$i]];
+    }
+
+    return $field;
   }
 
   /**

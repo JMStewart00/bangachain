@@ -54,7 +54,7 @@ class IframeDefaultFormatter extends FormatterBase {
       if (empty($item->url)) {
         continue;
       }
-      if (!isset($item->title)) {
+      if (!(property_exists($item, 'title') && $item->title !== null)) {
         $item->title = '';
       }
       $elements[$delta] = self::iframeIframe($item->title, $item->url, $item);
@@ -72,8 +72,8 @@ class IframeDefaultFormatter extends FormatterBase {
   public static function iframeIframe($text, $path, $item) {
     // \iframe_debug(0, __METHOD__, $item->toArray());
     $options = [];
-    $options['width'] = !empty($item->width) ? $item->width : '100%';
-    $options['height'] = !empty($item->height) ? $item->height : '701';
+    $options['width'] = empty($item->width) ? '100%' : $item->width;
+    $options['height'] = empty($item->height) ? '701' : $item->height;
     // Collect all allow policies.
     $allow = [];
     // Collect styles, but leave it overwritable.
@@ -104,20 +104,20 @@ class IframeDefaultFormatter extends FormatterBase {
     }
 
     $htmlid = 'iframe-' . $itemName . '-' . $itemParentId;
-    if (isset($item->htmlid) && !empty($item->htmlid)) {
+    if (property_exists($item, 'htmlid') && $item->htmlid !== null && !empty($item->htmlid)) {
       $htmlid = $item->htmlid;
     }
     $htmlid = preg_replace('#[^A-Za-z0-9\-\_]+#', '-', $htmlid);
     $options['id'] = $options['name'] = $htmlid;
 
     // Append active class.
-    $options['class'] = !empty($item->class) ? $item->class : '';
+    $options['class'] = empty($item->class) ? '' : $item->class;
 
     // Remove all HTML and PHP tags from a tooltip.
     // For best performance, we act only
     // if a quick strpos() pre-check gave a suspicion
     // (because strip_tags() is expensive).
-    $options['title'] = !empty($item->title) ? $item->title : '';
+    $options['title'] = empty($item->title) ? '' : $item->title;
     if (!empty($options['title']) && strpos($options['title'], '<') !== FALSE) {
       $options['title'] = strip_tags($options['title']);
     }
@@ -159,16 +159,16 @@ class IframeDefaultFormatter extends FormatterBase {
       $src = $srcuri->toString();
       $options['src'] = $src;
       $drupal_attributes = new Attribute($options);
-
-      $render_array = [
+      $element = [
         '#theme' => 'iframe',
         '#src' => $src,
         '#attributes' => $drupal_attributes,
         '#text' => (isset($options['html']) && $options['html'] ? $text : new HtmlEscapedText($text)),
         '#style' => 'iframe#' . $htmlid . ' {' . $style . '}',
       ];
-      return $render_array;
+      return $element;
     } catch (\Exception $excep) {
+      // \iframe_debug(0, __METHOD__, $excep);
       watchdog_exception(__METHOD__, $excep);
       return [];
     }

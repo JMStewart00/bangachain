@@ -20,9 +20,7 @@ class IframeUrlwidthheightWidget extends IframeWidgetBase {
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
-    $elements = parent::formElement($items, $delta, $element, $form, $form_state);
-
-    return $elements;
+    return parent::formElement($items, $delta, $element, $form, $form_state);
   }
 
 }

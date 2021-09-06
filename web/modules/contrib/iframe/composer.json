@@ -1,0 +1,13 @@
+{
+    "name": "drupal/iframe",
+    "type": "drupal-module",
+    "description": "Defines a simple iframe field type.",
+    "homepage": "http://drupal.org/project/iframe",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "drupal/core": "^8.8 || ^9"
+    },
+    "require-dev": {
+        "drupal/token": "^1.0"
+    }
+}

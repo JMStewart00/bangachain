@@ -68,13 +68,15 @@ function iframe_help($route_name, RouteMatchInterface $route_match) {
  */
 function iframe_theme() {
   return [
+    /* template name "iframe" => templates/iframe.html.twig */
     'iframe' => [
       'variables' => [
-        'src' => '',
+        'src' => 'src',
         'attributes' => [],
         'text' => '',
         'style' => '',
       ],
+      'template' => 'iframe',
     ],
   ];
 }

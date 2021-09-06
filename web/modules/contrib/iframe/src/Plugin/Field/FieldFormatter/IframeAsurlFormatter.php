@@ -27,10 +27,10 @@ class IframeAsurlFormatter extends IframeDefaultFormatter {
       if (empty($item->url)) {
         continue;
       }
-      if (!isset($item->title)) {
+      if (!(property_exists($item, 'title') && $item->title !== null)) {
         $item->title = '';
       }
-      $linktext = !empty($item->title) ? $item->title : $item->url;
+      $linktext = empty($item->title) ? $item->url : $item->title;
       $elements[$delta] = [
         '#markup' => Link::fromTextAndUrl($linktext, Url::fromUri($item->url, ['title' => $item->title]))->toString(),
         '#allowed_tags' => ['iframe', 'a', 'h3'],

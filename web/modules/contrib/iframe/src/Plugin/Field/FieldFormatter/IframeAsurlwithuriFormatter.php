@@ -27,7 +27,7 @@ class IframeAsurlwithuriFormatter extends IframeDefaultFormatter {
       if (empty($item->url)) {
         continue;
       }
-      if (!isset($item->title)) {
+      if (!(property_exists($item, 'title') && $item->title !== null)) {
         $item->title = '';
       }
       $linktext = $item->url;

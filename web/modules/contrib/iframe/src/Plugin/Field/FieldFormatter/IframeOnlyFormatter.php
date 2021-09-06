@@ -26,7 +26,7 @@ class IframeOnlyFormatter extends IframeDefaultFormatter {
       if (empty($item->url)) {
         continue;
       }
-      if (!isset($item->title)) {
+      if (!(property_exists($item, 'title') && $item->title !== null)) {
         $item->title = '';
       }
       $elements[$delta] = self::iframeIframe('', $item->url, $item);

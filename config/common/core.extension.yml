@@ -11,6 +11,7 @@ module:
   bangachain_custom_blocks: 0
   bangachain_layout: 0
   bangachain_menu: 0
+  bangachain_reports: 0
   bangachain_views: 0
   better_exposed_filters: 0
   big_pipe: 0

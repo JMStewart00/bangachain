@@ -1,0 +1,8 @@
+name: Bang-A-Chain Custom Reports
+description: Provides BangAChain custom reports.
+type: module
+core_version_requirement: ^8 || ^9
+package: Bang-A-Chain
+
+dependencies:
+  - commerce

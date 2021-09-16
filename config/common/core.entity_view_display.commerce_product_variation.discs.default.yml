@@ -16,6 +16,7 @@ dependencies:
     - field.field.commerce_product_variation.discs.field_upc
     - field.field.commerce_product_variation.discs.field_used
     - field.field.commerce_product_variation.discs.field_vendor_cost
+    - field.field.commerce_product_variation.discs.maximum_order_quantity
     - field.field.commerce_product_variation.discs.weight
   module:
     - commerce_price
@@ -92,6 +93,7 @@ hidden:
   field_upc: true
   field_used: true
   list_price: true
+  maximum_order_quantity: true
   product_id: true
   search_api_excerpt: true
   sku: true

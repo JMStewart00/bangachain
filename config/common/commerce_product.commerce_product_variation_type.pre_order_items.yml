@@ -5,6 +5,7 @@ dependencies: {  }
 id: pre_order_items
 label: 'Pre Order Items'
 orderItemType: default
-generateTitle: null
-traits: {  }
+generateTitle: false
+traits:
+  - maximum_order_quantity
 locked: false

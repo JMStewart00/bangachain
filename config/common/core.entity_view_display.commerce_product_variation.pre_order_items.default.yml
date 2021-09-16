@@ -5,6 +5,7 @@ dependencies:
   config:
     - commerce_product.commerce_product_variation_type.pre_order_items
     - field.field.commerce_product_variation.pre_order_items.field_loyalty_points
+    - field.field.commerce_product_variation.pre_order_items.maximum_order_quantity
   module:
     - commerce_price
 id: commerce_product_variation.pre_order_items.default
@@ -43,6 +44,7 @@ content:
     third_party_settings: {  }
 hidden:
   add_to_cart_link: true
+  maximum_order_quantity: true
   product_id: true
   search_api_excerpt: true
   sku: true

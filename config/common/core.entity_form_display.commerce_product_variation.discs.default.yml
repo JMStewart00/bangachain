@@ -16,6 +16,7 @@ dependencies:
     - field.field.commerce_product_variation.discs.field_upc
     - field.field.commerce_product_variation.discs.field_used
     - field.field.commerce_product_variation.discs.field_vendor_cost
+    - field.field.commerce_product_variation.discs.maximum_order_quantity
     - field.field.commerce_product_variation.discs.weight
   module:
     - commerce_bulk
@@ -98,7 +99,7 @@ content:
       step: '1'
       custom_transaction_note: false
     third_party_settings: {  }
-    type: commerce_stock_level_absolute
+    type: commerce_stock_level_simple_transaction
     region: content
   field_used:
     weight: 3
@@ -113,6 +114,13 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: number
+    region: content
+  maximum_order_quantity:
+    type: number
+    weight: 1
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
     region: content
   price:
     type: commerce_price_default

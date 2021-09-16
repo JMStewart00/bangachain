@@ -9,6 +9,7 @@ dependencies:
     - field.field.commerce_product_variation.bags.field_product_image
     - field.field.commerce_product_variation.bags.field_stock
     - field.field.commerce_product_variation.bags.field_upc
+    - field.field.commerce_product_variation.bags.maximum_order_quantity
     - field.field.commerce_product_variation.bags.weight
   module:
     - commerce_bulk
@@ -61,7 +62,7 @@ content:
       default_transaction_note: 'Transaction issued by stock level field.'
       step: '1'
     third_party_settings: {  }
-    type: commerce_stock_level_absolute
+    type: commerce_stock_level_simple_transaction
     region: content
   list_price:
     type: commerce_list_price
@@ -69,6 +70,13 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  maximum_order_quantity:
+    type: number
+    weight: 1
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    region: content
   price:
     type: commerce_price_default
     weight: 4

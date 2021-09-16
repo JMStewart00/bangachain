@@ -9,6 +9,7 @@ dependencies:
     - field.field.commerce_product_variation.accessories.field_product_image
     - field.field.commerce_product_variation.accessories.field_stock
     - field.field.commerce_product_variation.accessories.field_upc
+    - field.field.commerce_product_variation.accessories.maximum_order_quantity
     - field.field.commerce_product_variation.accessories.weight
   module:
     - commerce_bulk
@@ -69,6 +70,13 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  maximum_order_quantity:
+    type: number
+    weight: 1
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    region: content
   price:
     type: commerce_price_default
     weight: 6

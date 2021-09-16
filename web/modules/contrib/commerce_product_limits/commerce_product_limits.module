@@ -1,0 +1,51 @@
+<?php
+
+/**
+ * @file
+ * Provides commerce product limits functionality.
+ */
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function commerce_product_limits_form_views_form_commerce_cart_form_default_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  /** @var \Drupal\views\ViewExecutable $view */
+  $view = reset($form_state->getBuildInfo()['args']);
+  // Only add limitation for quantity if the cart form view has order items.
+  if ($view->storage->get('tag') == 'commerce_cart_form' && !empty($view->result)) {
+    // Load order items.
+    $id = $view->argument['order_id']->value[0];
+    $storage = \Drupal::entityTypeManager()->getStorage('commerce_order');
+    $order = $storage->load($id);
+    $order_items = $order->getItems();
+    foreach ($order_items as $key => $order_item) {
+      // Get limit fields from product variation.
+      $entity = $order_item->getPurchasedEntity();
+      if ($entity->hasField('minimum_order_quantity') && !$entity->get('minimum_order_quantity')->isEmpty()) {
+        $form['edit_quantity'][$key]['#min'] = $entity->get('minimum_order_quantity')->value;
+      }
+      if ($entity->hasField('maximum_order_quantity') && !$entity->get('maximum_order_quantity')->isEmpty()) {
+        $form['edit_quantity'][$key]['#max'] = $entity->get('maximum_order_quantity')->value;
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function commerce_product_limits_form_commerce_order_item_add_to_cart_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  // Limit quantity on the first loading of the page.
+  /** @var \Drupal\commerce_order\Entity\OrderItemInterface $order_item */
+  $order_item = $form_state->getFormObject()->getEntity();
+  $entity = $order_item->getPurchasedEntity();
+
+  // Get limit fields from product variation.
+  if ($entity->hasField('minimum_order_quantity') && !$entity->get('minimum_order_quantity')->isEmpty()) {
+    $form['quantity']['widget'][0]['value']['#default_value'] = $entity->get('minimum_order_quantity')->value;
+    $form['quantity']['widget'][0]['value']['#min'] = $entity->get('minimum_order_quantity')->value;
+  }
+  if ($entity->hasField('maximum_order_quantity') && !$entity->get('maximum_order_quantity')->isEmpty()) {
+    $form['quantity']['widget'][0]['value']['#max'] = $entity->get('maximum_order_quantity')->value;
+  }
+}

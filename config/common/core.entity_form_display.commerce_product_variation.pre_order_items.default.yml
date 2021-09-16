@@ -5,6 +5,7 @@ dependencies:
   config:
     - commerce_product.commerce_product_variation_type.pre_order_items
     - field.field.commerce_product_variation.pre_order_items.field_loyalty_points
+    - field.field.commerce_product_variation.pre_order_items.maximum_order_quantity
   module:
     - commerce_bulk
     - commerce_price
@@ -32,6 +33,13 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  maximum_order_quantity:
+    type: number
+    weight: 1
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    region: content
   price:
     type: commerce_price_default
     weight: 0

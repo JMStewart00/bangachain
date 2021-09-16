@@ -10,6 +10,7 @@ dependencies:
     - field.field.commerce_product_variation.accessories.field_product_image
     - field.field.commerce_product_variation.accessories.field_stock
     - field.field.commerce_product_variation.accessories.field_upc
+    - field.field.commerce_product_variation.accessories.maximum_order_quantity
     - field.field.commerce_product_variation.accessories.weight
   module:
     - layout_builder
@@ -34,6 +35,7 @@ hidden:
   field_stock: true
   field_upc: true
   list_price: true
+  maximum_order_quantity: true
   price: true
   product_id: true
   search_api_excerpt: true

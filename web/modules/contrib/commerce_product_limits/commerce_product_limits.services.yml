@@ -1,0 +1,6 @@
+services:
+  commerce_product_limits.availability_checker:
+    class: Drupal\commerce_product_limits\AvailabilityChecker
+    arguments: ['@commerce_cart.order_item_matcher']
+    tags:
+      - { name: commerce_order.availability_checker }

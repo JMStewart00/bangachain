@@ -15,5 +15,6 @@ label: Discs
 orderItemType: default
 generateTitle: true
 traits:
+  - maximum_order_quantity
   - purchasable_entity_shippable
 locked: false

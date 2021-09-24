@@ -165,6 +165,7 @@ module:
   update: 0
   user: 0
   user_registrationpassword: 0
+  views_aggregator: 0
   views_ajax_history: 0
   views_data_export: 0
   views_infinite_scroll: 0

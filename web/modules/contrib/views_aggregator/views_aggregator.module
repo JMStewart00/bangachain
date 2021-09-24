@@ -1,0 +1,183 @@
+<?php
+
+/**
+ * @file
+ * Module implementing post-query aggregation functions for Views tables.
+ */
+
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Url;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\bootstrap\Bootstrap;
+
+require_once __DIR__ . '/views_aggregator_functions.inc';
+
+/**
+ * Implements hook_help().
+ */
+function views_aggregator_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.views_aggregator':
+      return t('See the <a href="@README">README</a> for View configuration instructions and examples, or browse the <a href="@project">project</a> support queue.', [
+        '@project' => Url::fromUri('https://www.drupal.org/project/views_aggregator')->toString(),
+        '@README' => Url::fromUri('base:' . drupal_get_path('module', 'views_aggregator') . '/README.txt')->toString(),
+      ]);
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function views_aggregator_theme() {
+  return [
+    'views_aggregator_plugin_style_table' => [
+      'render element' => 'form',
+      'file' => 'views_aggregator.theme.inc',
+    ],
+  ];
+}
+
+/**
+ * Gets all available aggregation function definitions.
+ *
+ * @param string $name
+ *   The name of the desired function or NULL to retrieve an array of functions.
+ *
+ * @return array
+ *   An array of aggregation function info.
+ */
+function views_aggregator_get_aggregation_functions_info($name = NULL) {
+
+  $aggregation_functions = &drupal_static(__FUNCTION__);
+
+  if (empty($aggregation_functions)) {
+    // Collect aggregations functions defined in other modules via their
+    // hook_views_aggregation_functions_info() implementations.
+    $aggregation_functions = \Drupal::moduleHandler()->invokeAll('views_aggregation_functions_info');
+    // @todo sort by display name, rather than function name
+    ksort($aggregation_functions);
+
+    // Let other modules alter the aggregation functions by implementing
+    // hook_views_aggregation_functions_info_alter().
+    \Drupal::moduleHandler()->alter('views_aggregation_functions_info', $aggregation_functions);
+  }
+
+  if (empty($name)) {
+    return $aggregation_functions;
+  }
+  return isset($aggregation_functions[$name]) ? $aggregation_functions[$name] : [];
+}
+
+/**
+ * Returns the result value at the intersection of column and row.
+ *
+ * @param object $field_handler
+ *   The handler associated with the table column being requested.
+ * @param int $row_num
+ *   Index into the View result rows array.
+ * @param bool $rendered
+ *   Whether to return the rendered as opposed to the raw value of the cell.
+ *
+ * @return string
+ *   The content of the cell
+ */
+function views_aggregator_get_cell($field_handler, $row_num, $rendered = FALSE) {
+  if (isset($field_handler->view->style_plugin)) {
+    return $field_handler->view->style_plugin->getCell($field_handler, $row_num, $rendered);
+  }
+}
+
+/**
+ * Prepares for rendering the view results as a table style.
+ *
+ * Rendering in TWIG/HTML happens in views-aggregator-results-table.html.twig.
+ *
+ * See also:
+ * template_preprocess_views_view_table(&$vars) in Views
+ */
+function template_preprocess_views_aggregator_results_table(&$vars) {
+
+  $view = $vars['view'];
+  $vars['grouping_field'] = '';
+
+  foreach ($view->style_plugin->options['info'] as $field_name => $info) {
+    if (!empty($info['has_aggr']) && !empty($info['aggr']['views_aggregator_group_and_compress'])) {
+      $vars['grouping_field'] = $field_name;
+      break;
+    }
+  }
+  $vars['group_aggregation_results'] = $view->style_plugin->options['group_aggregation']['group_aggregation_results'];
+  $vars['grouping_row_class'] = $view->style_plugin->options['group_aggregation']['grouping_row_class'];
+  $vars['grouping_field_class'] = $view->style_plugin->options['group_aggregation']['grouping_field_class'];
+
+  if (!empty($view->subtotals) && array_filter($view->subtotals) != []) {
+    $vars['subtotals'] = $view->subtotals;
+  }
+  if (!empty($view->totals) && array_filter($view->totals) != []) {
+    $vars['totals'] = $view->totals;
+  }
+  $totals_position = $view->style_plugin->options['column_aggregation']['totals_row_position'];
+  $vars['totals_row_position'] = $totals_position[1] + $totals_position[2];
+  $vars['totals_row_class'] = $view->style_plugin->options['column_aggregation']['totals_row_class'];
+
+  // If 'caption' is requested, string all column totals together separated by
+  // a space and display the string as a caption above the table.
+  // For this to render meaningful output, you probably want to assign a "Label"
+  // column aggregation function to one of the first fields in the View.
+  if (!empty($vars['totals']) && !empty($totals_position[3])) {
+    $totals = array_column($vars['totals'], '#markup');
+    // This value will be transferred to the template in view.theme.inc
+    $view->style_plugin->options['caption'] = implode(' ', $totals);
+  }
+
+  if (!isset($view->row_index)) {
+    // Have seen trouble when this is not set...
+    $view->row_index = 0;
+  }
+  // At this point template_preprocess_views_view(), will have put the (sorted)
+  // $view->result on $vars['rows'].
+  // template_preprocess_views_view_table() will add row and field classes,
+  // caption etc. It will also call render_fields() but that won't do anything
+  // as we've already done the rendering in view_aggregator_plugin_style_table::
+  // pre_render().
+  // The order of the rendered rows is determined by $view->result, while the
+  // content of each row comes from $view->style_plugin->rendered_fields.
+  //
+  // Loop code taken from template_preprocess_views_view_table(),
+  // file: views/theme/theme.inc.
+  $options = $view->style_plugin->options;
+  $columns = $view->style_plugin->sanitizeColumns($options['columns'], $view->field);
+  foreach ($columns as $field => $column) {
+    if ($field == $column) {
+      // Make all columns click-sortable, excluding "Global: Counter".
+      $plugin_id = $view->field[$field]->getPluginId();
+      if ($plugin_id === 'counter') {
+        $view->field[$field]->definition['click sortable'] = FALSE;
+      }
+      else {
+        $view->field[$field]->definition['click sortable'] = TRUE;
+      }
+    }
+  }
+  // Add support for Bootstrap theme settings.
+  // Check if we are using the Bootstrap theme or a Bootstrap-based sub-theme.
+  $default_theme = \Drupal::service('theme_handler')->getDefault();
+  $enabled_themes = \Drupal::service('theme_handler')->listInfo();
+  $base_themes = \Drupal::service('theme_handler')->getBaseThemes($enabled_themes, $default_theme);
+
+  if ($default_theme == 'bootstrap' || in_array('Bootstrap', $base_themes)) {
+    $theme = Bootstrap::getTheme();
+    if ($theme && $theme->isBootstrap()) {
+      foreach (array_keys($theme->getSettingPlugin()) as $key) {
+        $exp_key = explode('_', $key);
+        // Get the table related settings.
+        if ($exp_key[0] == 'table') {
+          $vars[$exp_key[1]] = $theme->getSetting($key);
+        }
+      }
+    }
+  }
+
+  $vars['attributes_array']['id'] = Html::getUniqueId('views_aggregator_datatable');
+  template_preprocess_views_view_table($vars);
+}

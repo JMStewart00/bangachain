@@ -1,0 +1,15 @@
+{
+    "name": "drupal/views_aggregator",
+    "description": "A Views plugin that operates on the results <em>after</em> the database query has run, thus offering aggregation functions not otherwise possible.",
+    "type": "drupal-module",
+    "license": "GPL-2.0-or-later",
+    "homepage": "https://www.drupal.org/project/views_aggregator",
+    "support": {
+        "issues": "https://www.drupal.org/project/issues/views_aggregator",
+        "source": "https://git.drupalcode.org/project/views_aggregator"
+    },
+    "require": {
+        "drupal/core": "^8.7.7 || ^9"
+    },
+    "minimum-stability": "dev"
+}

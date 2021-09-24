@@ -1,0 +1,133 @@
+<?php
+
+/**
+ * @file
+ * views_aggregator_more_functions.module
+ *
+ * Defines additional aggregation functions for Views Aggregator Plus.
+ */
+
+/**
+ * Implements hook_views_aggregation_functions_info().
+ */
+function views_aggregator_more_functions_views_aggregation_functions_info() {
+  $functions = [
+    // By edc1, see https://www.drupal.org/node/2299055
+    'views_aggregator_group_seq_number' => [
+      'group' => t('Group sequence no. *'),
+      'column' => t('Group count'),
+      'is_renderable' => TRUE,
+    ],
+    // By JordiK, see https://www.drupal.org/node/3135233
+    'views_aggregator_range_diff' => [
+      'group' => t('Range difference'),
+      'column' => t('Range difference'),
+    ],
+    // By RdeBoer.
+    'views_aggregator_percentage' => [
+      'group' => t('Percentage'),
+      'column' => t('100%'),
+      'is_renderable' => TRUE,
+    ],
+  ];
+
+  return $functions;
+}
+
+/**
+ * Replaces the cell by the group sequence number (resulting table row number).
+ *
+ * @param array $groups
+ *   An array of groups of rows, each group indexed by group value.
+ * @param object $field_handler
+ *   Not used.
+ * @param int $start_value
+ *   Number at which to start the sequence, defaults to 1.
+ *
+ * @return array
+ *   An array of values, one for each group and one for the column.
+ */
+function views_aggregator_group_seq_number(array $groups, $field_handler = NULL, $start_value = NULL) {
+  $values = [];
+  $count = (!isset($start_value) || $start_value == '') ? 1 : (int) $start_value;
+  foreach ($groups as $group => $rows) {
+    $values['column'] = $values[$group] = $count++;
+  }
+  return $values;
+}
+
+/**
+ * Aggregates a field group as a difference between min and max.
+ *
+ * Example: 5.5 (min) and 14.9 (max) will render 9.4.
+ *
+ * @param array $groups
+ *   An array of groups of rows, each group indexed by group value.
+ * @param object $field_handler
+ *   The handler for the view column.
+ *
+ * @return array
+ *   An array of values, one for each group, plus the 'column' group.
+ */
+function views_aggregator_range_diff(array $groups, $field_handler) {
+  $values = [];
+  foreach ($groups as $group => $rows) {
+    $is_first = TRUE;
+    foreach ($rows as $num => $row) {
+      $value = views_aggregator_get_cell($field_handler, $num, FALSE);
+      if ($is_first) {
+        $minimum = $maximum = $value;
+        $is_first = FALSE;
+      }
+      elseif (isset($value) && $value < $minimum) {
+        $minimum = $value;
+      }
+      elseif (isset($value) && $value > $maximum) {
+        $maximum = $value;
+      }
+    };
+    $values[$group] = [($maximum - $minimum)];
+    if (!isset($minimum_column) || $minimum < $minimum_column) {
+      $minimum_column = $minimum;
+    }
+    if (!isset($maximum_column) || $maximum > $maximum_column) {
+      $maximum_column = $maximum;
+    }
+  }
+  $values['column'] = [($maximum - $minimum)];
+  return $values;
+}
+
+/**
+ * Aggregates a field group total as the percentage of the column total.
+ *
+ * @param array $groups
+ *   An array of groups of rows, each group indexed by group value.
+ * @param object $field_handler
+ *   The handler for the view column to calculate percentages in.
+ *
+ * @return array
+ *   An array of values, one for each group and one for the column
+ *   (always 100%).
+ */
+function views_aggregator_percentage(array $groups, $field_handler, $arg_group, $arg_column) {
+  $values = [];
+  $sum_column = 0.0;
+  foreach ($groups as $group => $rows) {
+    $sum = 0.0;
+    foreach ($rows as $num => $row) {
+      // Do not count empty or non-numeric cells.
+      $cell = vap_num(views_aggregator_get_cell($field_handler, $num, FALSE));
+      if ($cell !== FALSE) {
+        $sum += $cell;
+      }
+    }
+    $values[$group] = $sum;
+    $sum_column += $sum;
+  }
+  foreach ($groups as $group => $rows) {
+    $values[$group] = ($sum_column == 0.0) ? '' : 100 * $values[$group] / $sum_column;
+  }
+  $values['column'] = 100;
+  return $values;
+}

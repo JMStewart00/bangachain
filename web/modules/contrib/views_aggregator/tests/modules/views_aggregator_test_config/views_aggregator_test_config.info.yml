@@ -1,0 +1,14 @@
+name: 'Views Aggregator Test Views'
+type: module
+description: 'Provides views for Views Aggregator Plus tests.'
+package: Testing
+core_version_requirement: ^8 || ^9
+# project: 'views_aggregator'
+dependencies:
+  - drupal:views
+  - views_aggregator:views_aggregator
+
+# Information added by Drupal.org packaging script on 2020-11-22
+version: '8.x-1.0-beta2'
+project: 'views_aggregator'
+datestamp: 1606085850

@@ -1,0 +1,198 @@
+{#
+/**
+ * @file
+ * Template to display views results after aggregation as a table.
+ *
+ * This template is based on the one in the Views module:
+ * views/templates/views-view-table.html.twig
+ *
+ * Available variables:
+ * - attributes: Remaining HTML attributes for the element.
+ *   - class: HTML classes that can be used to style contextually through CSS.
+ * - title : The title of this group of rows.
+ * - header: The table header columns.
+ *   - attributes: Remaining HTML attributes for the element.
+ *   - content: HTML classes to apply to each header cell, indexed by
+ *   the header's key.
+ *   - default_classes: A flag indicating whether default classes should be
+ *     used.
+ * - caption_needed: Is the caption tag needed.
+ * - caption: The caption for this table.
+ * - accessibility_description: Extended description for the table details.
+ * - accessibility_summary: Summary for the table details.
+ * - rows: Table row items. Rows are keyed by row number.
+ *   - attributes: HTML classes to apply to each row.
+ *   - columns: Row column items. Columns are keyed by column number.
+ *     - attributes: HTML classes to apply to each column.
+ *     - content: The column content.
+ *   - default_classes: A flag indicating whether default classes should be
+ *     used.
+ * - bordered: Flag indicating whether or not the table should be bordered (Bootstrap).
+ * - condensed: Flag indicating whether or not the table should be condensed (Bootstrap).
+ * - hover: Flag indicating whether or not table rows should be hoverable (Bootstrap).
+ * - striped: Flag indicating whether or not table rows should be striped (Bootstrap).
+ * - responsive: A flag indicating whether table is responsive.
+ * - sticky: A flag indicating whether table header is sticky.
+ * - grouping_field: The field with the function Group & Compress applied.
+ * - group_aggregation_results: Whether to output results as subtotals.
+ * - grouping_row_class: A class to apply to cells in the group aggregation row.
+ * - grouping_field_class: A class to apply to cells in the group aggregation column.
+ * - totals: an array with field name as key and the value to show in the table footer as value
+ * - totals_row_position: whether to show the totals row at top, bottom or both
+ * - totals_row_class: A class to apply to the column aggregation row.
+ * @see template_preprocess_views_view_table()
+ *
+ * @ingroup themeable
+ */
+#}
+{% if responsive %}
+  <div class="table-responsive">
+{% endif %}
+{%
+  set classes = [
+    'table',
+    'cols-' ~ header|length,
+    bordered ? 'table-bordered',
+    condensed ? 'table-condensed',
+    hover ? 'table-hover',
+    striped ? 'table-striped',
+    responsive ? 'responsive-enabled',
+    sticky ? 'sticky-enabled',
+  ]
+%}
+{% set totals_attributes = create_attribute() %}
+<table{{ attributes.addClass(classes) }}>
+  {% if caption_needed %}
+    <caption>
+    {% if caption %}
+      {{ caption }}
+    {% else %}
+      {{ title }}
+    {% endif %}
+    {% if (summary is not empty) or (description is not empty) %}
+      <details>
+        {% if summary is not empty %}
+          <summary>{{ summary }}</summary>
+        {% endif %}
+        {% if description is not empty %}
+          {{ description }}
+        {% endif %}
+      </details>
+    {% endif %}
+    </caption>
+  {% endif %}
+  {% if header %}
+    <thead>
+      <tr>
+        {% for key, column in header %}
+          {% if column.default_classes %}
+            {%
+              set column_classes = [
+                'views-field',
+                'views-field-' ~ fields[key],
+              ]
+            %}
+          {% endif %}
+          <th{{ column.attributes.addClass(column_classes).setAttribute('scope', 'col') }}>
+            {%- if column.wrapper_element -%}
+              <{{ column.wrapper_element }}>
+                {%- if column.url -%}
+                  <a href="{{ column.url }}" title="{{ column.title }}">{{ column.content }}{{ column.sort_indicator }}</a>
+                {%- else -%}
+                  {{ column.content }}{{ column.sort_indicator }}
+                {%- endif -%}
+              </{{ column.wrapper_element }}>
+            {%- else -%}
+              {%- if column.url -%}
+                <a href="{{ column.url }}" title="{{ column.title }}">{{ column.content }}{{ column.sort_indicator }}</a>
+              {%- else -%}
+                {{- column.content }}{{ column.sort_indicator }}
+              {%- endif -%}
+            {%- endif -%}
+          </th>
+        {% endfor %}
+      </tr>
+      {% if totals and totals_row_position in [1,3] %}
+        <tr{{ totals_attributes.addClass(totals_row_class) }}>
+          {% for key, column in header %}
+            {% if attribute(totals, key) %}
+              {% if grouping_field and grouping_field_class and grouping_field == key %}
+                <td{{ column.attributes.addClass(column_classes).addClass(grouping_field_class) }}>{{ attribute(totals, key) }}</td>
+              {% else %}
+                <td{{ column.attributes.addClass(column_classes) }}>{{ attribute(totals, key) }}</td>
+              {% endif %}
+            {% else %}
+              <td{{ column.attributes.addClass(column_classes) }}></td>
+            {% endif %}
+          {% endfor %}
+        </tr>
+      {% endif %}
+    </thead>
+  {% endif %}
+  <tbody>
+    {% for row in rows %}
+      <tr{{ row.attributes }}>
+        {% for key, column in row.columns %}
+          {% if column.default_classes %}
+            {%
+              set column_classes = [
+                'views-field'
+              ]
+            %}
+            {% for field in column.fields %}
+              {% set column_classes = column_classes|merge(['views-field-' ~ field]) %}
+                {% if grouping_field and grouping_field_class and grouping_field == key %}
+                  {% set column_classes = column_classes|merge([grouping_field_class]) %}
+                {% endif %}
+            {% endfor %}
+          {% endif %}
+          <td{{ column.attributes.addClass(column_classes) }}>
+            {%- if column.wrapper_element -%}
+              <{{ column.wrapper_element }}>
+              {% for content in column.content %}
+                {{ content.separator }}{{ content.field_output }}
+              {% endfor %}
+              </{{ column.wrapper_element }}>
+            {%- else -%}
+              {% for content in column.content %}
+                {{- content.separator }}{{ content.field_output -}}
+              {% endfor %}
+            {%- endif %}
+          </td>
+        {% endfor %}
+      </tr>
+      {% if loop.index0 in subtotals|keys %}
+        {% set row_number = loop.index0 %}
+        <tr{{ row.attributes.addClass(grouping_row_class) }}>
+          {% for key, column in header %}
+            {% if attribute(subtotals[row_number], key) %}
+              {% if grouping_field and grouping_field_class and grouping_field == key %}
+                <td{{ column.attributes.addClass(column_classes).addClass(grouping_field_class) }}>{{ attribute(subtotals[row_number], key) }}</td>
+              {% else %}
+                <td{{ column.attributes.addClass(column_classes) }}>{{ attribute(subtotals[row_number], key) }}</td>
+              {% endif %}
+            {% else %}
+              <td{{ column.attributes.addClass(column_classes) }}></td>
+            {% endif %}
+          {% endfor %}
+        </tr>
+      {% endif %}
+    {% endfor %}
+  </tbody>
+{% if totals and totals_row_position in [2,3] %}
+  <tfoot>
+    <tr{{ totals_attributes.addClass(totals_row_class) }}>
+    {% for key, column in header %}
+        {% if attribute(totals, key) %}
+          <td{{ column.attributes.addClass(column_classes) }}>{{ attribute(totals, key) }}</td>
+        {% else %}
+          <td{{ column.attributes.addClass(column_classes) }}></td>
+        {% endif %}
+    {% endfor %}
+    </tr>
+  </tfoot>
+{% endif %}
+</table>
+{% if responsive %}
+</div>
+{% endif %}

@@ -1,0 +1,32 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the completion message.
+ *
+ * Available variables:
+ * - order_entity: The order entity.
+ * - message: The completion message.
+ * - payment_instructions: The payment instructions, if provided.
+ *
+ * @ingroup themeable
+ */
+#}
+<div class="checkout-complete u-vr__mx--3 u-vr__my--3">
+  <div class="l-row l-row--no-columns justify-content-center u-vr__mb--1">
+    <a href="/">
+      <picture>
+        <source srcset="/themes/custom/bangachain/assets/images/logo.png" media="(max-width: 639px)">
+        <source srcset="/themes/custom/bangachain/assets/images/logo.png" media="(min-width: 640px)">
+        <img style="margin: auto; max-width: 150px;" src="/themes/custom/bangachain/assets/images/logo.png" alt="Bang-A-Chain logo">
+      </picture>
+    </a>
+  </div>
+  {{- message -}}
+
+  {% if payment_instructions %}
+    <div class="checkout-complete__payment-instructions">
+      <h2>{{ 'Payment instructions'|t }}</h2>
+      {{ payment_instructions }}
+    </div>
+  {% endif %}
+</div>

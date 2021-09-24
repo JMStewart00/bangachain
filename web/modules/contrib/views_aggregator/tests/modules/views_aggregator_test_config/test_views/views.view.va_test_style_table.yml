@@ -1,0 +1,201 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - views_aggregator
+id: va_test_style_table
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: views_test_data
+base_field: nid
+core: '8'
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: 0
+    display_options:
+      defaults:
+        fields: false
+        pager: false
+        sorts: false
+      fields:
+        id:
+          field: id
+          id: id
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+        age:
+          field: age
+          id: age
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+        name:
+          field: name
+          id: name
+          relationship: none
+          table: views_test_data
+          plugin_id: string
+        job:
+          field: job
+          id: job
+          relationship: none
+          table: views_test_data
+          plugin_id: string
+        job_1:
+          field: job
+          id: job_1
+          relationship: none
+          table: views_test_data
+          plugin_id: string
+      pager:
+        options:
+          offset: 0
+        type: none
+      sorts:
+        id:
+          field: id
+          id: id
+          order: ASC
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+      style:
+        type: views_aggregator_plugin_style_table
+        options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: true
+          override: true
+          sticky: false
+          summary: summary-text
+          columns:
+            id: id
+            age: age
+            name: name
+            job: job
+            job_1: job_1
+          info:
+            id:
+              sortable: true
+              default_sort_order: desc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+              has_aggr: 0
+              aggr:
+                views_aggregator_first: views_aggregator_first
+              aggr_par: ''
+              has_aggr_column: 1
+              aggr_column: views_aggregator_replace
+              aggr_par_column: TOTAL
+            age:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+              has_aggr: 0
+              aggr:
+                views_aggregator_first: views_aggregator_first
+              aggr_par: ''
+              has_aggr_column: 1
+              aggr_column: views_aggregator_sum
+              aggr_par_column: ''
+            name:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+              has_aggr: 0
+              aggr:
+                views_aggregator_first: views_aggregator_first
+              aggr_par: ''
+              has_aggr_column: 0
+              aggr_column: views_aggregator_sum
+              aggr_par_column: ''
+            job:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+              has_aggr: 0
+              aggr:
+                views_aggregator_first: views_aggregator_first
+              aggr_par: ''
+              has_aggr_column: 0
+              aggr_column: views_aggregator_sum
+              aggr_par_column: ''
+            job_1:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: true
+              responsive: ''
+              has_aggr: 0
+              aggr:
+                views_aggregator_first: views_aggregator_first
+              aggr_par: ''
+              has_aggr_column: 0
+              aggr_column: views_aggregator_count
+              aggr_par_column: ''
+          default: id
+          empty_table: true
+          caption: caption-text
+          description: description-text
+          group_aggregation:
+            grouping_field_class: ''
+          column_aggregation:
+            totals_row_position:
+              1: '1'
+              2: '2'
+            totals_per_page: '1'
+            precision: '2'
+            totals_row_class: 'va-totals-test-class'
+      row:
+        type: fields
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          empty: true
+          content: 'custom text'
+          tokenize: false
+          plugin_id: text_custom
+  page_1:
+    display_options:
+      path: va-test-style-table
+    display_plugin: page
+    display_title: 'Page display'
+    id: page_1
+    position: 1
+  page_1_no_pager:
+    display_plugin: page
+    id: page_1_no_pager
+    display_title: Page
+    position: 1
+    display_options:
+      path: va-test-style-table-no-pager
+      pager:
+        type: none
+        options:
+          offset: 0
+      defaults:
+        pager: false

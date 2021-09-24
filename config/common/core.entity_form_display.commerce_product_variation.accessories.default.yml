@@ -62,7 +62,7 @@ content:
       default_transaction_note: 'Transaction issued by stock level field.'
       step: '1'
     third_party_settings: {  }
-    type: commerce_stock_level_absolute
+    type: commerce_stock_level_simple_transaction
     region: content
   list_price:
     type: commerce_list_price

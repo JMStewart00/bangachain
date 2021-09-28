@@ -183,7 +183,7 @@
         "version_normalized": "1.12.4.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/jquery/jquery-dist.git",
+            "url": "git@github.com:jquery/jquery-dist.git",
             "reference": "5e89585e0121e72ff47de177c5ef604f3089a53d"
         },
         "dist": {
@@ -10652,34 +10652,31 @@
     },
     {
         "name": "drupal/views_aggregator",
-        "version": "1.0.0-beta2",
-        "version_normalized": "1.0.0.0-beta2",
+        "version": "dev-1.x",
+        "version_normalized": "dev-1.x",
         "source": {
             "type": "git",
             "url": "https://git.drupalcode.org/project/views_aggregator.git",
-            "reference": "8.x-1.0-beta2"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://ftp.drupal.org/files/projects/views_aggregator-8.x-1.0-beta2.zip",
-            "reference": "8.x-1.0-beta2",
-            "shasum": "45bce7a21ff203c84e50c3727948bc2d76e1be59"
+            "reference": "f6bb04b597a00125fd137119c8b18ff6b7e647ac"
         },
         "require": {
             "drupal/core": "^8.7.7 || ^9"
         },
         "type": "drupal-module",
         "extra": {
+            "branch-alias": {
+                "dev-1.x": "1.x-dev"
+            },
             "drupal": {
-                "version": "8.x-1.0-beta2",
-                "datestamp": "1606085848",
+                "version": "8.x-1.0-beta2+1-dev",
+                "datestamp": "1608332889",
                 "security-coverage": {
                     "status": "not-covered",
-                    "message": "Beta releases are not covered by Drupal security advisories."
+                    "message": "Dev releases are not covered by Drupal security advisories."
                 }
             }
         },
-        "installation-source": "dist",
+        "installation-source": "source",
         "notification-url": "https://packages.drupal.org/8/downloads",
         "license": [
             "GPL-2.0-or-later"

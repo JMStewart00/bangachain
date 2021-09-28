@@ -1068,7 +1068,7 @@ class Table extends ViewsTable {
         }
         elseif (count(array_keys($row_value->_relationship_entities)) > 0) {
           foreach ($row_value->_relationship_entities as $key => $rel) {
-            if (isset($row_value->_relationship_entities[$rel]->{$field_name})) {
+            if (isset($row_value->_relationship_entities[$key]->{$field_name})) {
               $row = $row_value;
               break;
             }
@@ -1378,6 +1378,11 @@ class Table extends ViewsTable {
     //
     // Columns that need to be sorted using rendered, post-aggregated values:
     // o Custom: Text field, Views Field View, addresses, taxonomy terms.
+
+    // When no default column sort is set, $this->active will equal -1.
+    if (empty($this->active) || $this->active == -1) {
+      return 0;
+    }
     $field_handler = $this->view->field[$this->active];
     if (isset($field_handler->options['entity_field'])) {
       $field_name = $field_handler->options['entity_field'];
@@ -1432,7 +1437,7 @@ class Table extends ViewsTable {
   }
 
   /**
-   * Set correct couter field order after sorting.
+   * Set correct counter field order after sorting.
    */
   private function fixCounterFields() {
     // Get the list of counter fields

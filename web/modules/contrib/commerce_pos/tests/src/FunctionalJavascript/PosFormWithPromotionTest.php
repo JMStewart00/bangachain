@@ -14,6 +14,8 @@ use Drupal\Tests\commerce_pos\Functional\CommercePosCreateStoreTrait;
 class PosFormWithPromotionTest extends WebDriverTestBase {
   use CommercePosCreateStoreTrait;
 
+  protected $defaultTheme = 'stark';
+
   /**
    * The test promotion.
    *
@@ -47,7 +49,7 @@ class PosFormWithPromotionTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->setUpStore();

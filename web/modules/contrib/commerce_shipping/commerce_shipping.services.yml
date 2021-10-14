@@ -13,7 +13,7 @@ services:
 
   commerce_shipping.default_packer:
     class: Drupal\commerce_shipping\Packer\DefaultPacker
-    arguments: ['@entity_type.manager']
+    arguments: ['@entity_type.manager', '@string_translation']
     tags:
       - { name: commerce_shipping.packer, priority: -100 }
 

@@ -2,6 +2,9 @@
 
 namespace Algolia\AlgoliaSearch\Config;
 
+/**
+ * @deprecated Please use Algolia\AlgoliaSearch\Config\PersonalizationConfig instead
+ */
 final class RecommendationConfig extends AbstractConfig
 {
     /**

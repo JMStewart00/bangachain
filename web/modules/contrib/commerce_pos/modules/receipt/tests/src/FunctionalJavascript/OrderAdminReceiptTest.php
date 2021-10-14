@@ -13,6 +13,8 @@ use Drupal\Tests\commerce_pos\Functional\CommercePosCreateStoreTrait;
 class OrderAdminReceiptTest extends OrderWebDriverTestBase {
   use CommercePosCreateStoreTrait;
 
+  protected $defaultTheme = 'stark';
+
   /**
    * Modules to enable.
    *
@@ -26,7 +28,7 @@ class OrderAdminReceiptTest extends OrderWebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->setUpStore();
     // @todo work out the expected permissions to view products etc...
@@ -49,6 +51,9 @@ class OrderAdminReceiptTest extends OrderWebDriverTestBase {
     $this->getSession()->getPage()->fillField('mail', 'test@test.com');
 
     $this->getSession()->getPage()->findButton('Create')->click();
+
+    $this->getSession()->getPage()->findButton('Add billing information')->click();
+    $web_assert->assertWaitOnAjaxRequest();
 
     $this->getSession()->getPage()->fillField(
       'billing_profile[0][profile][address][0][address][given_name]',
@@ -78,7 +83,7 @@ class OrderAdminReceiptTest extends OrderWebDriverTestBase {
     $this->getSession()->getPage()->findButton('Add new order item')->click();
     $web_assert->assertWaitOnAjaxRequest();
 
-    $autocomplete_field = $this->getSession()->getPage()->findField('order_items[form][inline_entity_form][purchased_entity][0][target_id]');
+    $autocomplete_field = $this->getSession()->getPage()->findField('order_items[form][0][purchased_entity][0][target_id]');
     $autocomplete_field->setValue('Jum');
     $this->getSession()->getDriver()->keyDown($autocomplete_field->getXpath(), 'p');
     $web_assert->waitOnAutocomplete();
@@ -87,20 +92,15 @@ class OrderAdminReceiptTest extends OrderWebDriverTestBase {
     $results[0]->click();
     $web_assert->assertWaitOnAjaxRequest();
 
-    // Currently due to a bug in commerce you must override the price.
-    $this->getSession()->getPage()->fillField(
-      'order_items[form][inline_entity_form][unit_price][0][override]',
-      '1'
-    );
-    $this->getSession()->getPage()->fillField(
-      'order_items[form][inline_entity_form][unit_price][0][amount][number]',
-      '9.99'
-    );
-
     $this->getSession()->getPage()->findButton('Create order item')->click();
     $web_assert->assertWaitOnAjaxRequest();
     $this->getSession()->getPage()->findButton('Save')->click();
-    $this->getSession()->getPage()->findButton('Place order')->click();
+    $this->getSession()->getPage()->clickLink('Place order');
+    $web_assert->assertWaitOnAjaxRequest();
+    $this->assertSession()->buttonExists('Confirm');
+    // Note, there is some odd behavior calling the `press()` method on the
+    // button, so after asserting it exists, click via this method.
+    $this->click('button:contains("Confirm")');
 
     // This is the only receipt specific part, the rest is just making
     // sure everything works right and getting to the point where we can test the receipt.

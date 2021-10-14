@@ -27,7 +27,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *       label = @Translation("Subject"),
  *       description = @Translation("The email's subject.")
  *     ),
- *     "message" = @ContextDefinition("text",
+ *     "message" = @ContextDefinition("string",
  *       label = @Translation("Message"),
  *       description = @Translation("The email's message body. Drupal will by default remove all HTML tags. If you want to use HTML you must override this behavior by installing a contributed module such as Mime Mail.")
  *     ),

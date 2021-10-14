@@ -129,32 +129,26 @@ trait ContextHandlerIntegrityTrait {
    *   The list of violations where new ones will be added.
    */
   protected function checkDataTypeCompatible(CoreContextDefinitionInterface $context_definition, DataDefinitionInterface $provided, $context_name, IntegrityViolationList $violation_list) {
-    $expected_type = $context_definition->getDataDefinition()->getDataType();
-    $provided_type = $provided->getDataType();
-    if ($expected_type === $provided_type) {
+    // Compare data types. For now, fail if they are not equal.
+    // @todo Add support for matching based upon type-inheritance.
+    $target_type = $context_definition->getDataDefinition()->getDataType();
+
+    // Special case any and entity target types for now.
+    if ($target_type == 'any' || ($target_type == 'entity' && strpos($provided->getDataType(), 'entity:') !== FALSE)) {
       return;
     }
-
-    // Make a special case for 'any' and 'entity' expected types for now.
-    if ($expected_type === 'any' || ($expected_type === 'entity' && strpos($provided_type, 'entity:') !== FALSE)) {
-      return;
+    if ($target_type != $provided->getDataType()) {
+      $expected_type_problem = $context_definition->getDataDefinition()->getDataType();
+      $violation = new IntegrityViolation();
+      $violation->setMessage($this->t('Expected a @expected_type data type for context %context_name but got a @provided_type data type instead.', [
+        '@expected_type' => $expected_type_problem,
+        '%context_name' => $context_definition->getLabel(),
+        '@provided_type' => $provided->getDataType(),
+      ]));
+      $violation->setContextName($context_name);
+      $violation->setUuid($this->getUuid());
+      $violation_list->add($violation);
     }
-
-    $provided_class = $provided->getClass();
-    $expected_class = $context_definition->getDataDefinition()->getClass();
-    if (is_subclass_of($expected_class, $provided_class)) {
-      return;
-    }
-
-    $violation = new IntegrityViolation();
-    $violation->setMessage($this->t('Expected a %allowed_type data type for context %context_name but got a %provided_type data type instead.', [
-      '%allowed_type' => $expected_type,
-      '%context_name' => $context_definition->getLabel(),
-      '%provided_type' => $provided->getDataType(),
-    ]));
-    $violation->setContextName($context_name);
-    $violation->setUuid($this->getUuid());
-    $violation_list->add($violation);
   }
 
 }

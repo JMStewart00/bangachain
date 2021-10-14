@@ -55,6 +55,7 @@ class ShipmentTypeForm extends CommerceBundleEntityFormBase {
     if (!$this->entity->isNew()) {
       $shipment_storage = $this->entityTypeManager->getStorage('commerce_shipment');
       $shipments_exist = (bool) $shipment_storage->getQuery()
+        ->accessCheck(FALSE)
         ->condition('type', $shipment_type->id())
         ->execute();
     }

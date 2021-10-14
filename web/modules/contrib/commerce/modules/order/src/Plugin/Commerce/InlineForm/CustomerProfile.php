@@ -171,7 +171,7 @@ class CustomerProfile extends EntityInlineFormBase {
         $user_input = (array) NestedArray::getValue($form_state->getUserInput(), $inline_form['#parents']);
         if (!empty($user_input['select_address'])) {
           // An option was selected, pre-fill the profile form.
-          $address_book_profile = $this->getProfileForOption($user_input['select_address']);
+          $address_book_profile = $this->getProfileForOption($user_input['select_address'], $address_book_profiles);
         }
         elseif ($this->entity->isNew()) {
           // The customer profile form is being rendered for the first time.
@@ -539,11 +539,13 @@ class CustomerProfile extends EntityInlineFormBase {
    *
    * @param string $option_id
    *   The option ID. A profile ID, or a special value ('_original', '_new').
+   * @param \Drupal\profile\Entity\ProfileInterface[] $address_book_profiles
+   *   The address book profiles.
    *
    * @return \Drupal\profile\Entity\ProfileInterface|null
    *   The profile, or NULL if none found.
    */
-  protected function getProfileForOption($option_id) {
+  protected function getProfileForOption($option_id, array $address_book_profiles) {
     $profile_storage = $this->entityTypeManager->getStorage('profile');
     /** @var \Drupal\profile\Entity\ProfileInterface $address_book_profile */
     if ($option_id == '_new') {
@@ -559,7 +561,7 @@ class CustomerProfile extends EntityInlineFormBase {
     }
     else {
       assert(is_numeric($option_id));
-      $address_book_profile = $profile_storage->load($option_id);
+      $address_book_profile = $address_book_profiles[$option_id] ?? $this->selectDefaultProfile($address_book_profiles);
     }
 
     return $address_book_profile;

@@ -761,7 +761,7 @@ class CommerceSmartImporerService extends ControllerBase {
     if ($url != filter_var($url, FILTER_SANITIZE_URL)) {
       throw new Exception("There are some illegal characters in url");
     }
-    if ($url{0} != '/') {
+    if ($url[0] != '/') {
       throw new Exception("URL alias must start with /");
     }
     return ['alias' => $url];
@@ -1532,7 +1532,7 @@ class CommerceSmartImporerService extends ControllerBase {
       if (empty($redirection)) {
         continue;
       }
-      if ($redirection{0} == '/') {
+      if ($redirection[0] == '/') {
         $redirection = substr($redirection, 1);
       }
       Redirect::create([

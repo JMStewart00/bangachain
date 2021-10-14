@@ -15,6 +15,8 @@ use Drupal\commerce_order\Entity\Order;
 class ParkOrderTest extends WebDriverTestBase {
   use CommercePosCreateStoreTrait;
 
+  protected $defaultTheme = 'stark';
+
   /**
    * Modules to enable.
    *
@@ -35,7 +37,7 @@ class ParkOrderTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->setUpStore();
     $this->drupalPlaceBlock('local_tasks_block');

@@ -2,16 +2,12 @@
 
 namespace Drupal\Tests\layout_builder_restrictions\FunctionalJavascript;
 
-use Drupal\block_content\Entity\BlockContent;
-use Drupal\block_content\Entity\BlockContentType;
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
-
 /**
  * Demonstrate that blocks can be individually restricted.
  *
  * @group layout_builder_restrictions
  */
-class LanguageCategoriesTest extends WebDriverTestBase {
+class LanguageCategoriesTest extends LayoutBuilderRestrictionsTestBase {
 
   /**
    * {@inheritdoc}
@@ -29,20 +25,10 @@ class LanguageCategoriesTest extends WebDriverTestBase {
   ];
 
   /**
-   * Specify the theme to be used in testing.
-   *
-   * @var string
-   */
-  protected $defaultTheme = 'stable';
-
-  /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
-
-    // Create a node bundle.
-    $this->createContentType(['type' => 'bundle_with_section_field']);
 
     $this->drupalLogin($this->drupalCreateUser([
       'administer languages',
@@ -56,23 +42,27 @@ class LanguageCategoriesTest extends WebDriverTestBase {
     // Install Norwegian language.
     $edit = [];
     $edit['predefined_langcode'] = 'nb';
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
+    $this->drupalGet('admin/config/regional/language/add');
+    $this->submitForm($edit, t('Add language'));
 
     $edit = [
       'site_default_language' => 'nb',
     ];
-    $this->drupalPostForm('admin/config/regional/language', $edit, t('Save configuration'));
+    $this->drupalGet('admin/config/regional/language');
+    $this->submitForm($edit, t('Save configuration'));
 
     // Enable URL language detection and selection.
     $edit = ['language_interface[enabled][language-url]' => 1];
-    $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));
+    $this->drupalGet('admin/config/regional/language/detection');
+    $this->submitForm($edit, t('Save settings'));
 
     // Make sure the Norwegian language is prefix free.
     $edit = [
       'prefix[en]' => 'en',
       'prefix[nb]' => '',
     ];
-    $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
+    $this->drupalGet('admin/config/regional/language/detection/url');
+    $this->submitForm($edit, t('Save configuration'));
 
     // Make sure one of the strings we know will be translated.
     $locale_storage = $this->container->get('locale.storage');
@@ -117,60 +107,19 @@ class LanguageCategoriesTest extends WebDriverTestBase {
    */
   public function testBlockRestriction() {
     // Create 2 custom block types, with 3 block instances.
-    $bundle = BlockContentType::create([
-      'id' => 'basic',
-      'label' => 'Basic',
-    ]);
-    $bundle->save();
-    $bundle = BlockContentType::create([
-      'id' => 'alternate',
-      'label' => 'Alternate',
-    ]);
-    $bundle->save();
-    block_content_add_body_field($bundle->id());
-    $blocks = [
-      'Basic Block 1' => 'basic',
-      'Basic Block 2' => 'basic',
-      'Alternate Block 1' => 'alternate',
-    ];
-    foreach ($blocks as $info => $type) {
-      $block = BlockContent::create([
-        'info' => $info,
-        'type' => $type,
-        'body' => [
-          [
-            'value' => 'This is the block content',
-            'format' => filter_default_format(),
-          ],
-        ],
-      ]);
-      $block->save();
-      $blocks[$info] = $block->uuid();
-    }
-
-    $this->getSession()->resizeWindow(1200, 2000);
+    $blocks = $this->generateTestBlocks();
+    $node_id = $this->generateTestNode();
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
-    $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
-    // From the manage display page, go to manage the layout.
-    $this->drupalGet("$field_ui_prefix/display/default");
-    // Checking is_enable will show allow_custom.
-    $page->checkField('layout[enabled]');
-    $page->checkField('layout[allow_custom]');
-    $page->pressButton('Save');
-    $assert_session->linkExists('Manage layout');
-    $this->clickLink('Manage layout');
-    $this->clickLink('Add block');
-    $assert_session->assertWaitOnAjaxRequest();
-
+    $this->navigateToNodeSettingsTray($node_id);
     // Initially, the body field is available.
     $assert_session->linkExists('Body');
     // Initially, the Hjelp block is available.
     $assert_session->linkExists('Hjelp');
 
     // Impose Custom Block type restrictions.
-    $this->drupalGet("$field_ui_prefix/display/default");
+    $this->navigateToManageDisplay();
     $element = $page->find('xpath', '//*[@id="edit-layout-layout-builder-restrictions-allowed-blocks"]/summary');
     $element->click();
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-content-fields-restriction-all"]');
@@ -189,12 +138,7 @@ class LanguageCategoriesTest extends WebDriverTestBase {
 
     $page->pressButton('Save');
 
-    $this->drupalGet("$field_ui_prefix/display/default");
-    $assert_session->linkExists('Manage layout');
-    $this->clickLink('Manage layout');
-    $assert_session->addressEquals("$field_ui_prefix/display/default/layout");
-    $this->clickLink('Add block');
-    $assert_session->assertWaitOnAjaxRequest();
+    $this->navigateToNodeSettingsTray($node_id);
     // Establish that the 'body' field is no longer present.
     $assert_session->linkNotExists('Body');
     // Establish that the Hjelp block is still present.

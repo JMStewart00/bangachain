@@ -13,6 +13,8 @@ use Drupal\Tests\commerce_pos\Functional\CommercePosCreateStoreTrait;
 class PosFormWithDecimals extends WebDriverTestBase {
   use CommercePosCreateStoreTrait;
 
+  protected $defaultTheme = 'stark';
+
   protected $adminUser;
 
   /**
@@ -32,7 +34,7 @@ class PosFormWithDecimals extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->setUpStore();

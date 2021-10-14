@@ -15,6 +15,8 @@ use Drupal\user\Entity\User;
 class OrderLookupTest extends WebDriverTestBase {
   use CommercePosCreateStoreTrait;
 
+  protected $defaultTheme = 'stark';
+
   /**
    * Modules to enable.
    *
@@ -35,7 +37,7 @@ class OrderLookupTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Initial store set up.

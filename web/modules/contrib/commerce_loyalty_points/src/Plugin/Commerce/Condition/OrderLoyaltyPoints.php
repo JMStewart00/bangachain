@@ -55,7 +55,7 @@ class OrderLoyaltyPoints extends ConditionBase {
     ];
     $form['loyalty_points_usage_interval'] = [
       '#type' => 'select',
-      '#title' => t('A cutomer can redeem loyalty points every'),
+      '#title' => t('A customer can redeem loyalty points every'),
       '#options' => $options,
       '#default_value' => $this->configuration['loyalty_points_usage_interval'],
       '#description' => t('This will restrict a customer from using loyalty points more than once in a given calendar period. For example, Every Month means if a coupon was redeemed on January 31, another can be redeemed on February 1 for the month of february.'),

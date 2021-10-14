@@ -13,12 +13,14 @@ use Drupal\Tests\commerce_pos\Functional\CommercePosCreateStoreTrait;
 class KeypadTest extends WebDriverTestBase {
   use CommercePosCreateStoreTrait;
 
+  protected $defaultTheme = 'stark';
+
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'search_api_db',
     'commerce_pos_keypad_test',
     'commerce_pos',
@@ -31,7 +33,7 @@ class KeypadTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->setUpStore();

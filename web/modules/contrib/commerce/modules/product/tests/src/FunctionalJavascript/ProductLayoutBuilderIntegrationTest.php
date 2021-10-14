@@ -92,7 +92,7 @@ class ProductLayoutBuilderIntegrationTest extends ProductWebDriverTestBase {
    * @link https://www.drupal.org/project/commerce/issues/3190799
    */
   public function testSampleValuesGeneratedImages() {
-    // Add an image field to the  variation.
+    // Add an image field to the variation.
     FieldStorageConfig::create([
       'entity_type' => 'commerce_product_variation',
       'field_name' => 'field_images',

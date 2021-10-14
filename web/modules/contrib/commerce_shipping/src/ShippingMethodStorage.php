@@ -18,6 +18,7 @@ class ShippingMethodStorage extends CommerceContentEntityStorage implements Ship
   public function loadMultipleForShipment(ShipmentInterface $shipment) {
     $query = $this->getQuery();
     $query
+      ->accessCheck(TRUE)
       ->condition('stores', $shipment->getOrder()->getStoreId())
       ->condition('status', TRUE);
     $result = $query->execute();

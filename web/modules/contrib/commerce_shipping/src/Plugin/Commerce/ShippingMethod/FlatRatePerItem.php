@@ -22,7 +22,7 @@ class FlatRatePerItem extends FlatRate {
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildConfigurationForm($form, $form_state);
-    $form['rate_amount']['#description'] = t('Charged for each quantity of each shipment item.');
+    $form['rate_amount']['#description'] = $this->t('Charged for each quantity of each shipment item.');
 
     return $form;
   }

@@ -10,7 +10,7 @@ dependencies:
 test_dependencies:
   - layout_library:layout_library
 
-# Information added by Drupal.org packaging script on 2021-06-20
-version: '8.x-2.9'
+# Information added by Drupal.org packaging script on 2021-10-12
+version: '8.x-2.10'
 project: 'layout_builder_restrictions'
-datestamp: 1624208345
+datestamp: 1634056698

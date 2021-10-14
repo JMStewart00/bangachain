@@ -46,7 +46,7 @@ class DefaultConfigTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('user');
   }
@@ -57,12 +57,8 @@ class DefaultConfigTest extends KernelTestBase {
   public function moduleListDataProvider() {
     return [
       ['commerce_pos'],
-      ['commerce_pos_currency_denominations'],
-      ['commerce_pos_keypad'],
-      ['commerce_pos_label'],
+      ['commerce_pos_barcode_scanning'],
       ['commerce_pos_receipt'],
-      ['commerce_pos_print'],
-      ['commerce_pos_reports'],
     ];
   }
 

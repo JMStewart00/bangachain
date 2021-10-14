@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\layout_builder_restrictions\FunctionalJavascript;
 
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
-
 /**
  * Demonstrate that Layout Builder Restrictions works with Mini Layouts.
  *
@@ -11,7 +9,7 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
  *
  * @requires mini_layouts
  */
-class MiniLayoutsIntegrationTest extends WebDriverTestBase {
+class MiniLayoutsIntegrationTest extends LayoutBuilderRestrictionsTestBase {
 
   /**
    * {@inheritdoc}
@@ -25,16 +23,9 @@ class MiniLayoutsIntegrationTest extends WebDriverTestBase {
   ];
 
   /**
-   * Specify the theme to be used in testing.
-   *
-   * @var string
-   */
-  protected $defaultTheme = 'stable';
-
-  /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->drupalLogin($this->drupalCreateUser([
@@ -50,7 +41,6 @@ class MiniLayoutsIntegrationTest extends WebDriverTestBase {
   public function testMiniLayoutsWithRestrictionsEnabled() {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
-
     $this->drupalGet('admin/structure/mini_layouts/add');
     $page->fillField('Administrative Label', 'Charlie');
     $this->assertNotEmpty($assert_session->waitForText('Machine name: charlie'));
@@ -61,11 +51,11 @@ class MiniLayoutsIntegrationTest extends WebDriverTestBase {
     $page->clickLink('Add section');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.layout-selection'));
     $page->clickLink('One column');
-    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertNotEmpty($assert_session->waitForText('Configure section'));
     $page->pressButton('Add section');
-    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertNotEmpty($assert_session->waitForText('You have unsaved changes'));
     $page->clickLink('Add block');
-    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertNotEmpty($assert_session->waitForText('Choose a block'));
   }
 
 }

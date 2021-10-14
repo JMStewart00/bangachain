@@ -119,9 +119,6 @@ class CombinationOffer extends OrderPromotionOfferBase implements CombinationOff
       // When a target plugin ID is selected, embed the offer configuration
       // form.
       if (!empty($offer['target_plugin_id'])) {
-        // If an offer plugin is already used, remove it from the plugins array
-        // so it cannot be used more than once.
-        unset($plugins[$offer['target_plugin_id']]);
         $inline_form = $this->inlineFormManager->createInstance('plugin_configuration', [
           'plugin_type' => 'commerce_promotion_offer',
           'plugin_id' => $offer['target_plugin_id'],

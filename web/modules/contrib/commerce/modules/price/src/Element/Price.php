@@ -2,6 +2,7 @@
 
 namespace Drupal\commerce_price\Element;
 
+use Drupal\commerce_price\Entity\CurrencyInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element\FormElement;
 
@@ -87,6 +88,10 @@ class Price extends FormElement {
     $currency_storage = \Drupal::service('entity_type.manager')->getStorage('commerce_currency');
     /** @var \Drupal\commerce_price\Entity\CurrencyInterface[] $currencies */
     $currencies = $currency_storage->loadMultiple();
+    // Filter out disabled currencies.
+    $currencies = array_filter($currencies, function (CurrencyInterface $currency) {
+      return $currency->status();
+    });
     $currency_codes = array_keys($currencies);
     // Keep only available currencies.
     $available_currencies = $element['#available_currencies'];

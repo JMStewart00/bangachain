@@ -738,8 +738,7 @@ class PaymentCheckoutTest extends CommerceWebDriverTestBase {
     $order = Order::load(1);
     $this->assertFalse($order->isLocked());
     $this->assertEquals('stored_offsite', $order->get('payment_gateway')->target_id);
-    // @todo PaymentUpdater should sync this from the payment. https://www.drupal.org/project/commerce/issues/3137636
-    // $this->assertEquals(3, $order->get('payment_method')->target_id);
+    $this->assertEquals(3, $order->get('payment_method')->target_id);
     $payment = Payment::load(1);
     $this->assertNotNull($payment);
     $this->assertEquals($payment->getAmount(), $order->getTotalPrice());
@@ -763,11 +762,10 @@ class PaymentCheckoutTest extends CommerceWebDriverTestBase {
     $this->submitForm([], 'Pay and complete purchase');
     $this->assertSession()->pageTextContains('Your order number is 2. You can view your order on your account page when logged in.');
 
-    $order = Order::load(1);
+    $order = Order::load(2);
     $this->assertFalse($order->isLocked());
     $this->assertEquals('stored_offsite', $order->get('payment_gateway')->target_id);
-    // @todo PaymentUpdater should sync this from the payment. https://www.drupal.org/project/commerce/issues/3137636
-    // $this->assertEquals(3, $order->get('payment_method')->target_id);
+    $this->assertEquals(3, $order->get('payment_method')->target_id);
     $payment = Payment::load(1);
     $this->assertNotNull($payment);
     $this->assertEquals($payment->getAmount(), $order->getTotalPrice());

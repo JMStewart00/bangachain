@@ -7,6 +7,9 @@ use Algolia\AlgoliaSearch\RequestOptions\RequestOptions;
 use Algolia\AlgoliaSearch\RetryStrategy\ApiWrapper;
 use Algolia\AlgoliaSearch\RetryStrategy\ClusterHosts;
 
+/**
+ * @deprecated Please use Algolia\AlgoliaSearch\PersonalizationClient instead
+ */
 final class RecommendationClient
 {
     /**

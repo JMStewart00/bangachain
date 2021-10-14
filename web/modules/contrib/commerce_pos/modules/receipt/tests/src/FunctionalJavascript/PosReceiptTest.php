@@ -13,6 +13,8 @@ use Drupal\Tests\commerce_pos\Functional\CommercePosCreateStoreTrait;
 class PosReceiptTest extends WebDriverTestBase {
   use CommercePosCreateStoreTrait;
 
+  protected $defaultTheme = 'stark';
+
   /**
    * Modules to enable.
    *
@@ -26,7 +28,7 @@ class PosReceiptTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->setUpStore();
     // @todo work out the expected permissions to view products etc...
@@ -56,9 +58,14 @@ class PosReceiptTest extends WebDriverTestBase {
 
     // We now have a product selected and current order is in progress.
     $this->drupalGet('admin/commerce/orders');
-    $web_assert->elementsCount('css', '.views-view-table tbody tr', 1);
+    $web_assert->elementsCount('css', '#views-form-commerce-orders-page-1 table tbody tr', 1);
     $web_assert->pageTextContains('Point of Sale');
     $web_assert->pageTextContains('Draft');
+    $web_assert->pageTextContains('View');
+
+    $results = $this->getSession()->getPage()->findAll('css', '.dropbutton-toggle button');
+    $results[0]->click();
+
     $web_assert->pageTextContains('Edit');
     $web_assert->pageTextNotContains('Show receipt');
 
@@ -77,8 +84,12 @@ class PosReceiptTest extends WebDriverTestBase {
     $this->drupalGet('admin/commerce/orders');
 
     // The first row has a Show receipt action and the second does not.
-    $web_assert->elementContains('xpath', '//table[contains(@class, "views-view-table")]/tbody/tr[1]', 'Show receipt');
-    $web_assert->elementNotContains('xpath', '//table[contains(@class, "views-view-table")]/tbody/tr[2]', 'Show receipt');
+    $results = $this->getSession()->getPage()->findAll('css', '.dropbutton-toggle button');
+    $results[0]->click();
+    $web_assert->elementContains('xpath', '//*[@id="views-form-commerce-orders-page-1"]/table/tbody/tr[1]', 'Show receipt');
+    $results[0]->click();
+    $results[1]->click();
+    $web_assert->elementNotContains('xpath', '//*[@id="views-form-commerce-orders-page-1"]/table/tbody/tr[2]', 'Show receipt');
   }
 
 }

@@ -1025,6 +1025,53 @@ class CheckoutPaneTest extends CommerceWebDriverTestBase {
   }
 
   /**
+   * Tests that the shipping method doesn't change.
+   */
+  public function testSelectedShippingMethodPersists() {
+    $default_profile = $this->createEntity('profile', [
+      'type' => 'customer',
+      'uid' => $this->adminUser->id(),
+      'address' => $this->defaultAddress,
+    ]);
+
+    $this->drupalGet($this->firstProduct->toUrl()->toString());
+    $this->submitForm([], 'Add to cart');
+    $this->drupalGet($this->secondProduct->toUrl()->toString());
+    $this->submitForm([], 'Add to cart');
+
+    $this->drupalGet('checkout/1');
+    $this->assertSession()->pageTextContains('Shipping information');
+    $this->assertRenderedAddress($this->defaultAddress, 'shipping_information[shipping_profile]');
+    $this->assertRenderedAddress($this->defaultAddress, 'payment_information[add_payment_method][billing_information]');
+
+    // Confirm that shipping method selection is available, because the
+    // selected profile has a complete address.
+    $this->assertSession()->pageTextContains('Shipping method');
+    $page = $this->getSession()->getPage();
+    $first_radio_button = $page->findField('Standard shipping: $9.99');
+    // The $19.99 is displayed crossed out, but Mink strips HTML.
+    $second_radio_button = $page->findField('Overnight shipping: $19.99 $16.99');
+    $this->assertNotNull($first_radio_button);
+    $this->assertNotNull($second_radio_button);
+    $this->assertNotEmpty($first_radio_button->getAttribute('checked'));
+
+    $this->submitForm([
+      'payment_information[add_payment_method][payment_details][number]' => '4111111111111111',
+      'payment_information[add_payment_method][payment_details][expiration][month]' => '02',
+      'payment_information[add_payment_method][payment_details][expiration][year]' => '2024',
+      'payment_information[add_payment_method][payment_details][security_code]' => '123',
+    ], 'Continue to review');
+    $this->assertSession()->pageTextContains('Standard shipping');
+    $this->assertSession()->pageTextNotContains('Overnight shipping');
+    $page->clickLink('Go back');
+    $first_radio_button = $page->findField('Standard shipping: $9.99');
+    $second_radio_button = $page->findField('Overnight shipping: $19.99 $16.99');
+    $this->assertNotNull($first_radio_button);
+    $this->assertNotNull($second_radio_button);
+    $this->assertNotEmpty($first_radio_button->getAttribute('checked'));
+  }
+
+  /**
    * Asserts that a select field has all of the provided options.
    *
    * Core only has assertOption(), this helper decreases the number of needed

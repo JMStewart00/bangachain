@@ -1,13 +1,13 @@
 langcode: en
 status: true
 dependencies:
-  module:
-    - commerce_product
-    - search_api
   config:
     - field.storage.commerce_product.body
     - field.storage.commerce_product_variation.field_upc
     - search_api.server.pos
+  module:
+    - commerce_product
+    - search_api
 id: pos
 name: 'Commerce POS'
 description: 'Basic POS index created by the Commerce POS module'
@@ -20,11 +20,10 @@ field_settings:
     type: text
     boost: 0.5
     dependencies:
-      module:
-        - commerce_product
-        - commerce_product
       config:
         - field.storage.commerce_product.body
+      module:
+        - commerce_product
   field_upc:
     label: UPC
     datasource_id: 'entity:commerce_product_variation'
@@ -50,8 +49,6 @@ field_settings:
     dependencies:
       module:
         - commerce_product
-        - commerce_product
-        - commerce_product
   title:
     label: Title
     datasource_id: 'entity:commerce_product_variation'
@@ -67,8 +64,6 @@ field_settings:
     type: text
     dependencies:
       module:
-        - commerce_product
-        - commerce_product
         - commerce_product
 datasource_settings:
   'entity:commerce_product_variation':
@@ -138,6 +133,7 @@ processor_settings:
       - title
       - title_1
     spaces: ''
+    ignored: ._-
     overlap_cjk: 1
     minimum_word_size: '1'
     weights:

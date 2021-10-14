@@ -230,6 +230,9 @@ class ShippingRateWidget extends WidgetBase implements ContainerFactoryPluginInt
       $selector = sprintf('[data-drupal-selector="%s"]', $form['sidebar']['order_summary']['#attributes']['data-drupal-selector']);
       $response->addCommand(new ReplaceCommand($selector, $form['sidebar']['order_summary']));
     }
+    if (isset($form['shipping_information']['shipments'])) {
+      $response->addCommand(new ReplaceCommand('[data-drupal-selector="' . $form['shipping_information']['shipments']['#attributes']['data-drupal-selector'] . '"]', $form['shipping_information']['shipments']));
+    }
 
     return $response;
   }

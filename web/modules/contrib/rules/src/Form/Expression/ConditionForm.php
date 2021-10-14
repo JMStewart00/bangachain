@@ -181,7 +181,7 @@ class ConditionForm implements ExpressionFormInterface {
     }
 
     $condition_definition = $this->conditionManager->getDefinition($condition_id);
-    $context_config = $this->getContextConfigFromFormValues($form, $form_state, $condition_definition['context_definitions']);
+    $context_config = $this->getContextConfigFromFormValues($form_state, $condition_definition['context_definitions']);
 
     // Rename provided variables, if any.
     if ($provided_variables = $form_state->getValue('provides')) {

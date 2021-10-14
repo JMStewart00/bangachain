@@ -94,7 +94,7 @@ class CartProviderTest extends CartKernelTestBase {
     $this->assertEquals($another_cart->id(), $this->cartProvider->getCartId('default', $another_store, $this->anonymousUser));
     $carts = $this->cartProvider->getCarts($this->anonymousUser, $another_store);
     $this->assertEquals($another_cart, reset($carts));
-    $this->assertContains($another_cart->id(), $this->cartProvider->getCartIds($this->anonymousUser, $another_store));
+    $this->assertContains((int) $another_cart->id(), $this->cartProvider->getCartIds($this->anonymousUser, $another_store));
 
     // Test that 2 carts are returned when omitting the store parameter.
     $this->assertCount(2, $this->cartProvider->getCartIds($this->anonymousUser));
@@ -144,7 +144,7 @@ class CartProviderTest extends CartKernelTestBase {
     $this->assertEquals($another_cart->id(), $this->cartProvider->getCartId('default', $another_store, $this->authenticatedUser));
     $carts = $this->cartProvider->getCarts($this->authenticatedUser, $another_store);
     $this->assertEquals($another_cart, reset($carts));
-    $this->assertContains($another_cart->id(), $this->cartProvider->getCartIds($this->authenticatedUser, $another_store));
+    $this->assertContains((int) $another_cart->id(), $this->cartProvider->getCartIds($this->authenticatedUser, $another_store));
 
     // Test that 2 carts are returned when omitting the store parameter.
     $this->assertCount(2, $this->cartProvider->getCartIds($this->authenticatedUser));

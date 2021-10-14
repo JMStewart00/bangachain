@@ -127,8 +127,8 @@ class POSForm extends ContentEntityForm {
       $form = $this->buildPaymentForm($form, $form_state);
     }
 
-    // // Add order note form.
-    // $form = $this->buildOrderCommentForm($form, $form_state);
+    // Add order note form.
+    $form = $this->buildOrderCommentForm($form, $form_state);
 
     $this->addTotalsDisplay($form, $form_state);
 
@@ -199,6 +199,9 @@ class POSForm extends ContentEntityForm {
     ];
 
     $form['actions']['submit']['#value'] = $this->t('Pay Now');
+    if ($order->getState()->value === 'return_initiated') {
+      $form['actions']['submit']['#value'] = $this->t('Refund Now');
+    }
     $form['actions']['submit']['#element_key'] = 'pay-now';
 
     // Modify the delete label.
@@ -290,7 +293,15 @@ class POSForm extends ContentEntityForm {
     $payment_gateway_storage = $this->entityTypeManager->getStorage('commerce_payment_gateway');
     $payment_gateways = $payment_gateway_storage->loadMultipleForOrder($order);
     $order_balance = $this->getOrderBalance();
-    $balance_paid = $order_balance->getNumber() <= 0;
+    $order_balance_number = $order_balance->getNumber();
+
+    // In some cases the order balance is calculated as really close to 0 but
+    // not exactly zero.
+    $is_draft = $order->getState()->value === 'draft';
+    $is_refund = $order_balance->getNumber() <= 0 && !$is_draft;
+    $payment_label = $is_refund ? 'Refund' : 'Payment';
+    $balance_paid = $order_balance_number < 0.01 && $is_draft && !$is_refund
+      || $order_balance_number > -0.01 && !$is_draft && $is_refund;
 
     $form['payment_tabs'] = [
       '#type' => 'vertical_tabs',
@@ -335,13 +346,15 @@ class POSForm extends ContentEntityForm {
         $form[$payment_gateway->id()]['keypad']['add'] = [
           '#type' => 'submit',
           '#group' => 'payment_tabs',
-          '#value' => $this->t('Add @label Payment', [
+          '#value' => $this->t('Add @label @payment_label', [
             '@label' => $payment_gateway->label(),
+            '@payment_label' => $payment_label,
           ]),
           '#name' => 'commerce-pos-pay-keypad-add-' . $payment_gateway->id(),
           '#submit' => ['::submitForm'],
           '#payment_gateway_id' => $payment_gateway->id(),
           '#element_key' => 'add-payment',
+          '#is_refund' => $is_refund,
           '#ajax' => [
             'wrapper' => $form_state->wrapper_id,
             'callback' => '::ajaxRefresh',
@@ -380,7 +393,9 @@ class POSForm extends ContentEntityForm {
 
     $form['actions']['finish'] = [
       '#type' => 'submit',
-      '#value' => $this->t('Complete Order'),
+      '#value' => t('Complete @final_value', [
+        '@final_value' => $payment_label,
+      ]),
       '#disabled' => !$balance_paid,
       '#name' => 'commerce-pos-finish',
       '#submit' => ['::submitForm'],
@@ -468,13 +483,13 @@ class POSForm extends ContentEntityForm {
     $element_value = $triggering_element["#value"];
 
     // Adding another check because order comment not saving for park orders.
-    if (empty($comment) && $element_value == 'Park Order') {
+    if (empty($comment && $element_value == 'Park Order')) {
       $order_comment_user_input = $form_state->getUserInput();
       $comment = $order_comment_user_input['order_comments']['add_order_comment']['order_comment_text'];
     }
     // In order to add a comment to an order it needs to be saved. This should
     // never be the case but this is defensive code.
-    if (!empty($comment)) {
+    if (isset($comment) && $comment != '') {
       if ($order->isNew()) {
         $order->save();
       }
@@ -493,17 +508,20 @@ class POSForm extends ContentEntityForm {
    * Defines displayOrderComment helper function.
    */
   protected function displayOrderComment() {
-    // Get the default commerce log view.
-    $view = Views::getView('commerce_activity');
     /* @var \Drupal\commerce_order\Entity\Order $order */
     $order = $this->entity;
-    if ($view) {
-      $view->setDisplay('default');
-      $view->setArguments([$order->id(), 'commerce_order']);
-      // Get generated views.
-      $render = $view->render();
-    }
-    return $render;
+
+    // Get the default commerce log view.
+    $view = Views::getView('commerce_activity');
+
+    $view->setDisplay('default');
+    $view->setArguments([$order->id(), 'commerce_order']);
+
+    // as per https://www.drupal.org/project/commerce/issues/2908196
+    // commerce now adds an add comment form to the views header, which we don't want
+    $view->removeHandler('default', 'header', 'commerce_log_admin_comment_form');
+
+    return $view->render();
   }
 
   /**
@@ -571,52 +589,48 @@ class POSForm extends ContentEntityForm {
     parent::validateForm($form, $form_state);
 
     // Only validates 'Order' form.
-    if ($form_state->get('step') == 'order') {
-
-      // TODO Suppress the default 'This value should not be null' message.
-      // If no product has been added to order...
-      if (empty($this->entity->getItems())) {
-        $form_state->setErrorByName('no_product_selected',
-          $this->t('Cannot submit an empty order')->render());
-      }
-
-      // Get order customer information.
-      /** @var \Drupal\commerce_order\Entity\OrderInterface $order */
-      $order = $this->entity;
-      $customer_id = $order->getCustomerId();
-
-      // If customer is not set aka 'Anonymous'.
-      if ($customer_id == 0) {
-
-        // This protects against if the 'Remove' customer button does not clear
-        // 'Customer email' field.
-        $form['mail']['widget'][0]['value']['#value'] = '';
-        $form['mail']['widget'][0]['value']['#default_value'] = '';
-
-        // Get input from customer widget.
-        $customer_input = $form_state->getValue(['uid'])[0]['target_id']['order_customer']['customer_textfield'];
-
-        // If customer widget has input.
-        if (!empty($customer_input)) {
-
-          // If input is not a valid email address.
-          if (!filter_var($customer_input, FILTER_VALIDATE_EMAIL)) {
-
-            // If customer widget has not matched input with a user.
-            if ($customer_input != User::load($customer_id)->getUsername()) {
-
-              // Set 'invalid_customer_id' error.
-              $link = Link::createFromRoute(t('Create New Customer Account'),
-                'user.admin_create')->toString();
-              $form_state->setErrorByName('invalid_customer_id',
-                $this->t('Customer account for "@input" not found. @link',
-                  ['@link' => $link, '@input' => $customer_input]));
-            }
-          }
-        }
-      }
-
+    if ($form_state->get('step') != 'order') {
+      return;
     }
+
+    // TODO Suppress the default 'This value should not be null' message.
+    // If no product has been added to order...
+    if (empty($this->entity->getItems())) {
+      $form_state->setErrorByName('no_product_selected',
+        $this->t('Cannot submit an empty order')->render());
+    }
+
+    // Get order customer information.
+    /** @var \Drupal\commerce_order\Entity\OrderInterface $order */
+    $order = $this->entity;
+    $customer_id = $order->getCustomerId();
+
+    // If customer is not set aka 'Anonymous'.
+    if ($customer_id != 0) {
+      return;
+    }
+
+    // This protects against if the 'Remove' customer button does not clear
+    // 'Customer email' field.
+    $form['mail']['widget'][0]['value']['#value'] = '';
+    $form['mail']['widget'][0]['value']['#default_value'] = '';
+
+    // Get input from customer widget.
+    $customer_input = $form_state->getValue(['uid'])[0]['target_id']['order_customer']['customer_textfield'];
+
+    // If customer widget has input.
+    if (empty($customer_input)
+      || filter_var($customer_input, FILTER_VALIDATE_EMAIL)
+      || $customer_input == User::load($customer_id)->getAccountName()) {
+      return;
+    }
+
+    // Set 'invalid_customer_id' error.
+    $link = Link::createFromRoute(t('Create New Customer Account'),
+      'user.admin_create')->toString();
+    $form_state->setErrorByName('invalid_customer_id',
+      $this->t('Customer account for "@input" not found. @link',
+        ['@link' => $link, '@input' => $customer_input]));
   }
 
   /**
@@ -637,6 +651,9 @@ class POSForm extends ContentEntityForm {
     if ($step == 'order') {
       parent::submitForm($form, $form_state);
       $this->entity->save();
+      if ($triggering_element_key !== 'remove-payment') {
+        $form_state->set('step', 'payment');
+      }
       $form_state->setRebuild();
     }
 
@@ -703,12 +720,19 @@ class POSForm extends ContentEntityForm {
     // Right now all the payment methods are manual, we'll have to change this
     // up once we want to support integrated payment methods.
     $payment_gateway = $triggering_element['#payment_gateway_id'];
+
+    // Make the payment negative if we are issuing a refund.
+    $amount_number = $form_state->getValue($payment_gateway, 'keypad', 'amount')['keypad']['amount'];
+    if (!empty($triggering_element['#is_refund'])) {
+      $amount_number = (string) (-1 * $amount_number);
+    }
+
     $values = [
       'payment_gateway' => $payment_gateway,
       'order_id' => $this->entity->id(),
       'state' => 'pending',
       'amount' => [
-        'number' => $form_state->getValue($payment_gateway, 'keypad', 'amount')['keypad']['amount'],
+        'number' => $amount_number,
         'currency_code' => $default_currency->getCurrencyCode(),
       ],
     ];
@@ -772,7 +796,13 @@ class POSForm extends ContentEntityForm {
 
     $order = $this->entity;
 
-    $transition = $order->getState()->getWorkflow()->getTransition('place');
+    $state = $order->getState()->getId();
+    if($state == 'completed') {
+      $transition = $order->getState()->getWorkflow()->getTransition('return');
+    }
+    else {
+      $transition = $order->getState()->getWorkflow()->getTransition('place');
+    }
     $order->getState()->applyTransition($transition);
     $order->save();
 

@@ -2,16 +2,14 @@
 
 namespace Drupal\Tests\layout_builder_restrictions_by_region\FunctionalJavascript;
 
-use Drupal\block_content\Entity\BlockContent;
-use Drupal\block_content\Entity\BlockContentType;
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\Tests\layout_builder_restrictions\FunctionalJavascript\LayoutBuilderRestrictionsTestBase;
 
 /**
  * Demonstrate that blocks can be individually restricted.
  *
  * @group layout_builder_restrictions_by_region
  */
-class BlockPlacementBlacklistTest extends WebDriverTestBase {
+class BlockPlacementBlacklistTest extends LayoutBuilderRestrictionsTestBase {
 
   /**
    * {@inheritdoc}
@@ -27,20 +25,10 @@ class BlockPlacementBlacklistTest extends WebDriverTestBase {
   ];
 
   /**
-   * Specify the theme to be used in testing.
-   *
-   * @var string
-   */
-  protected $defaultTheme = 'classy';
-
-  /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
-
-    // Create a node bundle.
-    $this->createContentType(['type' => 'bundle_with_section_field']);
 
     $this->drupalLogin($this->drupalCreateUser([
       'access administration pages',
@@ -72,22 +60,11 @@ class BlockPlacementBlacklistTest extends WebDriverTestBase {
    * Verify that both tempstore and config storage function correctly.
    */
   public function testBlockRestrictionStorage() {
-    $this->blockTestSetup();
-
-    $this->getSession()->resizeWindow(1200, 4000);
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
-    $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
-
-    // From the manage display page, go to manage the layout.
-    $this->drupalGet("$field_ui_prefix/display/default");
-    // Checking is_enable will show allow_custom.
-    $page->checkField('layout[enabled]');
-    $page->checkField('layout[allow_custom]');
-    $page->pressButton('Save');
-    $assert_session->linkExists('Manage layout');
 
     // Only allow two-column layout.
+    $this->navigateToManageDisplay();
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-layouts"]/summary');
     $element->click();
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-layouts-layout-restriction-restricted"]');
@@ -173,7 +150,7 @@ class BlockPlacementBlacklistTest extends WebDriverTestBase {
 
     // Verify no block restrictions bleed to other layouts/regions upon save
     // to database.
-    $this->drupalGet("$field_ui_prefix/display/default");
+    $this->navigateToManageDisplay();
     // Check two-column layout.
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section"]/summary');
     $element->click();
@@ -195,23 +172,13 @@ class BlockPlacementBlacklistTest extends WebDriverTestBase {
    * Verify that the UI can restrict blocks in Layout Builder settings tray.
    */
   public function testBlockRestriction() {
-    $this->blockTestSetup();
-
-    $this->getSession()->resizeWindow(1200, 4000);
+    $blocks = $this->generateTestBlocks();
+    $node_id = $this->generateTestNode();
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
-    $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
-
-    // From the manage display page, go to manage the layout.
-    $this->drupalGet("$field_ui_prefix/display/default");
-    // Checking is_enable will show allow_custom.
-    $page->checkField('layout[enabled]');
-    $page->checkField('layout[allow_custom]');
-    $page->pressButton('Save');
-    $assert_session->linkExists('Manage layout');
 
     // Only allow two-column layout.
-    $this->drupalGet("$field_ui_prefix/display/default");
+    $this->navigateToManageDisplay();
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-layouts"]/summary');
     $element->click();
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-layouts-layout-restriction-restricted"]');
@@ -228,7 +195,7 @@ class BlockPlacementBlacklistTest extends WebDriverTestBase {
     $assert_session->elementContains('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section-table"]/tbody/tr[@data-region="second"]', 'Unrestricted');
     $page->pressButton('Save');
 
-    $this->clickLink('Manage layout');
+    $this->navigateToNodeLayout($node_id);
     // Remove default one-column layout and replace with two-column layout.
     $this->clickLink('Remove Section 1');
     $assert_session->assertWaitOnAjaxRequest();
@@ -262,7 +229,7 @@ class BlockPlacementBlacklistTest extends WebDriverTestBase {
     $page->pressButton('Save');
 
     // Load Allowed Blocks form for First region.
-    $this->drupalGet("$field_ui_prefix/display/default");
+    $this->navigateToManageDisplay();
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section"]/summary');
     $element->click();
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section-restriction-behavior-per-region"]');
@@ -288,9 +255,7 @@ class BlockPlacementBlacklistTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
     $page->pressButton('Save');
 
-    $this->clickLink('Manage layout');
-    $assert_session->addressEquals("$field_ui_prefix/display/default/layout");
-
+    $this->navigateToNodeLayout($node_id);
     // Select 'Add block' link in First region.
     $element = $page->find('xpath', '//*[contains(@class, "layout__region--first")]//a');
     $element->click();
@@ -306,9 +271,8 @@ class BlockPlacementBlacklistTest extends WebDriverTestBase {
     $assert_session->linkExists('Alternate');
 
     // Impose Inline Block type & Content restrictions.
-    $this->drupalGet("$field_ui_prefix/display/default");
     // Load Allowed Blocks form for First region.
-    $this->drupalGet("$field_ui_prefix/display/default");
+    $this->navigateToManageDisplay();
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section"]/summary');
     $element->click();
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section-table"]/tbody/tr[@data-region="first"]//a');
@@ -343,11 +307,7 @@ class BlockPlacementBlacklistTest extends WebDriverTestBase {
     $page->pressButton('Save');
 
     // Check independent restrictions on Custom block and Inline blocks.
-    $this->drupalGet("$field_ui_prefix/display/default");
-    $assert_session->linkExists('Manage layout');
-    $this->clickLink('Manage layout');
-    $assert_session->addressEquals("$field_ui_prefix/display/default/layout");
-
+    $this->navigateToNodeLayout($node_id);
     $element = $page->find('xpath', '//*[contains(@class, "layout__region--first")]//a');
     $element->click();
     $assert_session->assertWaitOnAjaxRequest();
@@ -360,7 +320,7 @@ class BlockPlacementBlacklistTest extends WebDriverTestBase {
     $assert_session->linkNotExists('Create custom block');
 
     // Blacklist some blocks / block types.
-    $this->drupalGet("$field_ui_prefix/display/default");
+    $this->navigateToManageDisplay();
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section"]/summary');
     $element->click();
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section-table"]/tbody/tr[@data-region="first"]//a');
@@ -385,12 +345,7 @@ class BlockPlacementBlacklistTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
     $page->pressButton('Save');
 
-    $this->drupalGet("$field_ui_prefix/display/default");
-    $assert_session->linkExists('Manage layout');
-    $this->clickLink('Manage layout');
-    $assert_session->addressEquals("$field_ui_prefix/display/default/layout");
-    $this->clickLink('Add block');
-    $assert_session->assertWaitOnAjaxRequest();
+    $this->navigateToNodeSettingsTray($node_id);
     $assert_session->linkExists('Body');
     // ... but other 'content' fields aren't.
     $assert_session->linkNotExists('Promoted to front page');
@@ -405,7 +360,7 @@ class BlockPlacementBlacklistTest extends WebDriverTestBase {
     $assert_session->linkExists('Alternate');
 
     // Custom block instances take precedence over custom block type setting.
-    $this->drupalGet("$field_ui_prefix/display/default");
+    $this->navigateToManageDisplay();
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section"]/summary');
     $element->click();
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section-table"]/tbody/tr[@data-region="first"]//a');
@@ -419,18 +374,15 @@ class BlockPlacementBlacklistTest extends WebDriverTestBase {
       $block->click();
     }
     // Allow Alternate Block 1.
-    $page->uncheckField('allowed_blocks[Custom blocks][allowed_blocks][block_content:' . $this->blocks['Alternate Block 1'] . ']');
+    $page->uncheckField('allowed_blocks[Custom blocks][allowed_blocks][block_content:' . $blocks['Alternate Block 1'] . ']');
     // Allow Basic Block 1.
-    $page->uncheckField('allowed_blocks[Custom blocks][allowed_blocks][block_content:' . $this->blocks['Basic Block 1'] . ']');
+    $page->uncheckField('allowed_blocks[Custom blocks][allowed_blocks][block_content:' . $blocks['Basic Block 1'] . ']');
     $element = $page->find('xpath', '//*[starts-with(@id,"edit-submit--")]');
     $element->click();
     $assert_session->assertWaitOnAjaxRequest();
     $page->pressButton('Save');
 
-    $this->drupalGet("$field_ui_prefix/display/default");
-    $assert_session->linkExists('Manage layout');
-    $this->clickLink('Manage layout');
-    $assert_session->addressEquals("$field_ui_prefix/display/default/layout");
+    $this->navigateToNodeLayout($node_id);
     $element = $page->find('xpath', '//*[contains(@class, "layout__region--first")]//a');
     $element->click();
     $assert_session->assertWaitOnAjaxRequest();
@@ -441,7 +393,7 @@ class BlockPlacementBlacklistTest extends WebDriverTestBase {
     // Next, add restrictions to another region and verify no contamination
     // between regions.
     // Add restriction to Second region.
-    $this->drupalGet("$field_ui_prefix/display/default");
+    $this->navigateToManageDisplay();
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section"]/summary');
     $element->click();
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section-table"]/tbody/tr[@data-region="second"]//a');
@@ -456,11 +408,7 @@ class BlockPlacementBlacklistTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
     $page->pressButton('Save');
 
-    $this->drupalGet("$field_ui_prefix/display/default");
-    $assert_session->linkExists('Manage layout');
-    $this->clickLink('Manage layout');
-    $assert_session->addressEquals("$field_ui_prefix/display/default/layout");
-
+    $this->navigateToNodeLayout($node_id);
     $element = $page->find('xpath', '//*[contains(@class, "layout__region--first")]//a');
     $element->click();
     $assert_session->assertWaitOnAjaxRequest();
@@ -474,7 +422,7 @@ class BlockPlacementBlacklistTest extends WebDriverTestBase {
     $page->pressButton('Close');
 
     // Next, allow a three-column layout and verify no contamination.
-    $this->drupalGet("$field_ui_prefix/display/default");
+    $this->navigateToManageDisplay();
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-layouts"]/summary');
     $element->click();
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-layouts-layouts-layout-threecol-section"]');
@@ -523,11 +471,7 @@ class BlockPlacementBlacklistTest extends WebDriverTestBase {
     $assert_session->elementContains('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-threecol-section-table"]/tbody/tr[@data-region="third"]', 'Restricted');
     $page->pressButton('Save');
 
-    $this->drupalGet("$field_ui_prefix/display/default");
-    $assert_session->linkExists('Manage layout');
-    $this->clickLink('Manage layout');
-    $assert_session->addressEquals("$field_ui_prefix/display/default/layout");
-
+    $this->navigateToNodeLayout($node_id);
     $element = $page->find('xpath', '//*[contains(@class, "layout__region--first")]//a');
     $element->click();
     $assert_session->assertWaitOnAjaxRequest();
@@ -551,7 +495,7 @@ class BlockPlacementBlacklistTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
     $page->pressButton('Save');
 
-    $this->clickLink('Manage layout');
+    $this->navigateToNodeLayout($node_id);
     // Verify core blocks are unavailable to First region in
     // three-column layout.
     $element = $page->find('xpath', '//*[contains(@class, "layout--threecol-section")]/*[contains(@class, "layout__region--first")]//a');
@@ -559,7 +503,7 @@ class BlockPlacementBlacklistTest extends WebDriverTestBase {
     $assert_session->linkNotExists('Primary admin actions');
 
     // Finally, test all_regions functionality.
-    $this->drupalGet("$field_ui_prefix/display/default");
+    $this->navigateToManageDisplay();
 
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section"]/summary');
     $element->click();
@@ -570,7 +514,7 @@ class BlockPlacementBlacklistTest extends WebDriverTestBase {
     $page->pressButton('Save');
 
     // Verify no restrictions.
-    $this->clickLink('Manage layout');
+    $this->navigateToNodeLayout($node_id);
     $element = $page->find('xpath', '//*[contains(@class, "layout--twocol-section")]/*[contains(@class, "layout__region--first")]//a');
     $element->click();
     $assert_session->assertWaitOnAjaxRequest();
@@ -587,8 +531,7 @@ class BlockPlacementBlacklistTest extends WebDriverTestBase {
     $page->pressButton('Save');
 
     // Add a restriction for all_regions.
-    $this->drupalGet("$field_ui_prefix/display/default");
-
+    $this->navigateToManageDisplay();
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section"]/summary');
     $element->click();
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section-table"]/tbody/tr[@data-region="all_regions"]//a');
@@ -610,7 +553,7 @@ class BlockPlacementBlacklistTest extends WebDriverTestBase {
     $page->pressButton('Save');
 
     // Verify restrictions applied to both regions.
-    $this->clickLink('Manage layout');
+    $this->navigateToNodeLayout($node_id);
     $element = $page->find('xpath', '//*[contains(@class, "layout--twocol-section")]/*[contains(@class, "layout__region--first")]//a');
     $element->click();
     $assert_session->assertWaitOnAjaxRequest();
@@ -626,44 +569,6 @@ class BlockPlacementBlacklistTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
 
     $page->pressButton('Save');
-  }
-
-  /**
-   * Helper function to set up block restriction-related tests.
-   */
-  protected function blockTestSetup() {
-    // Create 2 custom block types, with 3 block instances.
-    $bundle = BlockContentType::create([
-      'id' => 'basic',
-      'label' => 'Basic',
-    ]);
-    $bundle->save();
-    $bundle = BlockContentType::create([
-      'id' => 'alternate',
-      'label' => 'Alternate',
-    ]);
-    $bundle->save();
-    block_content_add_body_field($bundle->id());
-    $blocks = [
-      'Basic Block 1' => 'basic',
-      'Basic Block 2' => 'basic',
-      'Alternate Block 1' => 'alternate',
-    ];
-    foreach ($blocks as $info => $type) {
-      $block = BlockContent::create([
-        'info' => $info,
-        'type' => $type,
-        'body' => [
-          [
-            'value' => 'This is the block content',
-            'format' => filter_default_format(),
-          ],
-        ],
-      ]);
-      $block->save();
-      $blocks[$info] = $block->uuid();
-    }
-    $this->blocks = $blocks;
   }
 
 }

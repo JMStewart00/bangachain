@@ -129,7 +129,7 @@ class EntityViewModeRestrictionByRegion extends LayoutBuilderRestrictionBase {
                 $delta = $content_block_types_by_uuid[$uuid];
               }
             }
-            if (in_array($category, $restricted_categories[$region])) {
+            if (isset($restricted_categories[$region]) && in_array($category, $restricted_categories[$region])) {
               unset($definitions[$original_delta]);
             }
             elseif (isset($whitelisted_blocks[$region]) && in_array($category, array_keys($whitelisted_blocks[$region]))) {
@@ -222,10 +222,10 @@ class EntityViewModeRestrictionByRegion extends LayoutBuilderRestrictionBase {
         // the restriction will be removed, below.
         $has_restrictions = TRUE;
       }
-      if (in_array($category, array_values($restricted_categories[$region_to]))) {
+      if (isset($restricted_categories[$region_to]) && in_array($category, array_values($restricted_categories[$region_to]))) {
         $has_restrictions = TRUE;
       }
-      if (!isset($restricted_categories[$region_to][$category]) && !isset($blacklisted_blocks[$region_to][$category]) && !isset($whitelisted_blocks[$region_to][$category]) && !in_array($category, array_values($restricted_categories[$region_to])) && $category != "Custom blocks") {
+      elseif (!isset($restricted_categories[$region_to][$category]) && !isset($blacklisted_blocks[$region_to][$category]) && !isset($whitelisted_blocks[$region_to][$category]) && $category != "Custom blocks") {
         // No restrictions have been placed on this category.
         $has_restrictions = FALSE;
       }

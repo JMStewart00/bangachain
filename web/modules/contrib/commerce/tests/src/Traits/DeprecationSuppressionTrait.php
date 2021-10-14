@@ -19,7 +19,7 @@ trait DeprecationSuppressionTrait {
    * Sets an error handler to suppress specified deprecation messages.
    */
   protected function setErrorHandler() {
-    $previous_error_handler = set_error_handler(function ($severity, $message, $file, $line, $context) use (&$previous_error_handler) {
+    $previous_error_handler = set_error_handler(function ($severity, $message, $file, $line, $context = NULL) use (&$previous_error_handler) {
 
       $skipped_deprecations = [
         // @see https://www.drupal.org/project/address/issues/3089266

@@ -235,8 +235,9 @@ class CartProvider implements CartProviderInterface {
         // Skip locked carts, the customer is probably off-site for payment.
         continue;
       }
-      if ($cart->getCustomerId() != $uid || empty($cart->cart->value) || $cart->getState()->getId() != 'draft') {
-        // Skip carts that are no longer eligible.
+
+      // Skip carts that are no longer eligible.
+      if (!$this->isEligibleCart($cart, $account)) {
         $non_eligible_cart_ids[] = $cart->id();
         continue;
       }
@@ -254,6 +255,34 @@ class CartProvider implements CartProviderInterface {
     }
 
     return $this->cartData[$uid];
+  }
+
+  /**
+   * Returns whether the given cart is "eligible" for the given user.
+   *
+   * @param \Drupal\commerce_order\Entity\OrderInterface $cart
+   *   The cart order.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The account.
+   *
+   * @return bool
+   *   Whether the given cart is "eligible" for the given user.
+   */
+  protected function isEligibleCart(OrderInterface $cart, AccountInterface $account) : bool {
+    // Carts that don't match customer ids should not be valid.
+    if ($cart->getCustomerId() != $account->id()) {
+      return FALSE;
+    }
+    // Empty carts should not be valid.
+    if (empty($cart->cart->value)) {
+      return FALSE;
+    }
+    // Carts not in draft mode should not be valid.
+    if ($cart->getState()->getId() != 'draft') {
+      return FALSE;
+    }
+
+    return TRUE;
   }
 
 }

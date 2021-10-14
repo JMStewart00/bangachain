@@ -15,6 +15,8 @@ class CashierLoginTest extends WebDriverTestBase {
 
   use CommercePosCreateStoreTrait;
 
+  protected $defaultTheme = 'stark';
+
   /**
    * A user with the cashier permissions for testing.
    *
@@ -35,7 +37,7 @@ class CashierLoginTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->setUpStore();
@@ -112,7 +114,7 @@ class CashierLoginTest extends WebDriverTestBase {
 
     $this->drupalGet($login_url);
 
-    $this->getSession()->getPage()->fillField('name', $this->cashier->getUsername());
+    $this->getSession()->getPage()->fillField('name', $this->cashier->getAccountName());
     $this->getSession()->getPage()->fillField('pass', $this->cashier->passRaw);
 
     $this->getSession()->getPage()->findButton('Login')->click();
@@ -128,7 +130,7 @@ class CashierLoginTest extends WebDriverTestBase {
     $this->assertSession()->pageTextContains('You\'ve been logged out');
 
     // Test that we've actually been logged out and can login again.
-    $this->getSession()->getPage()->fillField('name', $this->cashier->getUsername());
+    $this->getSession()->getPage()->fillField('name', $this->cashier->getAccountName());
     $this->getSession()->getPage()->fillField('pass', $this->cashier->passRaw);
 
     $this->getSession()->getPage()->findButton('Login')->click();

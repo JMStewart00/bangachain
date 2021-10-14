@@ -17,7 +17,7 @@ use Drupal\Core\Form\FormStateInterface;
  *   EntityInterface object.
  */
 function commerce_loyalty_points_add_loyalty_field(EntityInterface $entity) {
-  $label = 'Loyalty points offered per unit of currency';
+  $label = 'Loyalty points offered';
   $field_name = 'field_loyalty_points';
   $field_storage = FieldStorageConfig::loadByName('commerce_product_variation', $field_name);
   $field = FieldConfig::loadByName('commerce_product_variation', $entity->id(), $field_name);
@@ -124,11 +124,11 @@ function commerce_loyalty_points_user_profile_form_submit($form, FormStateInterf
     // Assign role to current user.
     if ($value) {
       $account->addRole('loyalty_points_subscriber');
-      drupal_set_message(t('This account has been enrolled into Loyalty points program successfully.'), 'status');
+      \Drupal::messenger()->addStatus(t('This account has been enrolled into Loyalty points program successfully.'));
     }
     else {
       $account->removeRole('loyalty_points_subscriber');
-      drupal_set_message(t('Subscription for loyalty points program has been suspended for this account.'), 'status');
+      \Drupal::messenger()->addStatus(t('Subscription for loyalty points program has been suspended for this account.'));
     }
     $account->save();
   }

@@ -126,7 +126,7 @@ class PromotionSubscriberTest extends ShippingKernelTestBase implements ServiceM
     $promotion->save();
     // Now run the subscriber.
     $subscriber->onCalculate($event);
-    $this->assertEqual(count($event->getRates()), 1);
+    $this->assertCount(1, $event->getRates());
   }
 
   /**

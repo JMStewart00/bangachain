@@ -267,12 +267,10 @@ trait ContextHandlerTrait {
 
     // Reverse the mapping and apply the changes.
     foreach ($changed_definitions as $context_name => $definition) {
-      if (isset($this->configuration['context_mapping'])) {
-        $selector = $this->configuration['context_mapping'][$context_name];
-        // @todo Deal with selectors matching not a context name.
-        if (strpos($selector, '.') === FALSE) {
-          $metadata_state->setDataDefinition($selector, $definition);
-        }
+      $selector = $this->configuration['context_mapping'][$context_name];
+      // @todo Deal with selectors matching not a context name.
+      if (strpos($selector, '.') === FALSE) {
+        $metadata_state->setDataDefinition($selector, $definition);
       }
     }
   }

@@ -3,7 +3,6 @@
 namespace Drupal\Tests\layout_builder_restrictions\FunctionalJavascript;
 
 use Drupal\Core\Url;
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
  * Demonstrate that Layout Builder Restrictions works with Layout Library.
@@ -12,7 +11,7 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
  *
  * @requires layout_library
  */
-class LayoutLibraryIntegrationTest extends WebDriverTestBase {
+class LayoutLibraryIntegrationTest extends LayoutBuilderRestrictionsTestBase {
 
   /**
    * {@inheritdoc}
@@ -26,16 +25,9 @@ class LayoutLibraryIntegrationTest extends WebDriverTestBase {
   ];
 
   /**
-   * Specify the theme to be used in testing.
-   *
-   * @var string
-   */
-  protected $defaultTheme = 'stable';
-
-  /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->drupalCreateContentType(['type' => 'alpha', 'name' => 'Alpha']);
@@ -53,7 +45,6 @@ class LayoutLibraryIntegrationTest extends WebDriverTestBase {
   public function testLayoutLibraryWithRestrictionsEnabled() {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
-
     $this->drupalGet(Url::fromRoute('entity.layout.add_form'));
     $page->fillField('Label', 'Charlie');
     $this->assertNotEmpty($assert_session->waitForText('Machine name: charlie'));
@@ -62,7 +53,7 @@ class LayoutLibraryIntegrationTest extends WebDriverTestBase {
     $page->clickLink('Add section');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.layout-selection'));
     $page->clickLink('One column');
-    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertNotEmpty($assert_session->waitForText('Configure section'));
   }
 
 }

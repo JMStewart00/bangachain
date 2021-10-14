@@ -137,6 +137,8 @@ class ProductVariationTitleWidget extends ProductVariationWidgetBase implements 
       '#ajax' => [
         'callback' => [get_class($this), 'ajaxRefresh'],
         'wrapper' => $form['#wrapper_id'],
+        // Prevent a jump to the top of the page.
+        'disable-refocus' => TRUE,
       ],
     ];
     if ($this->getSetting('label_display') == FALSE) {

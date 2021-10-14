@@ -109,13 +109,6 @@ class ContextDefinition extends ContextDefinitionCore implements ContextDefiniti
   protected $assignmentRestriction = NULL;
 
   /**
-   * An array of data type => widget id pairs.
-   *
-   * @var string[]
-   */
-  protected $widgetList;
-
-  /**
    * {@inheritdoc}
    */
   public function toArray() {
@@ -187,82 +180,6 @@ class ContextDefinition extends ContextDefinitionCore implements ContextDefiniti
   public function setAssignmentRestriction($restriction) {
     $this->assignmentRestriction = $restriction;
     return $this;
-  }
-
-  /**
-   * An array of standard data types and their corresponding widget id.
-   *
-   * This covers all the data types provided by Core and Typed Data API
-   * Enhancements, apart from 'binary' and 'map'.
-   *
-   * @return string[]
-   *   An array of data type => widget id.
-   */
-  protected static function getStandardWidgetList() {
-    return [
-      // Single line text input.
-      'any' => 'text_input',
-      'boolean' => 'text_input',
-      'email' => 'text_input',
-      'entity' => 'text_input',
-      'entity_reference' => 'text_input',
-      'float' => 'text_input',
-      'integer' => 'text_input',
-      'language' => 'text_input',
-      'language_reference' => 'text_input',
-      'string' => 'text_input',
-      'uri' => 'text_input',
-
-      // Multi-line text area.
-      'list' => 'textarea',
-      'text' => 'textarea',
-
-      // Date.
-      'datetime_iso8601' => 'datetime',
-      'timestamp' => 'datetime',
-
-      // Date range.
-      'duration_iso8601' => 'datetime_range',
-      'timespan' => 'datetime_range',
-
-      // Selection list.
-      'none-yet' => 'select',
-    ];
-  }
-
-  /**
-   * Derive a widget id from a datatype.
-   *
-   * The widget id is used to generate a form element provided by Typed Data.
-   * Modules can implement hook_typed_data_widgetlist_alter() to declare which
-   * widget to use for their custom data types.
-   *
-   * @todo this function should be moved into the typed_data module. But whilst
-   * still developing the integration of widgets in Rules it can stay here.
-   * Inject $this->moduleHandler instead of calling \Drupal::moduleHandler() ?
-   *
-   * @param string $dataType
-   *   The datatype to check.
-   *
-   * @return string
-   *   The id of the widget to use when building the input form.
-   */
-  public function getWidgetId($dataType) {
-    if (!isset($this->widgetList)) {
-      $this->widgetList = static::getStandardWidgetList();
-      // Allow other modules to add to the datatype -> widget id list by
-      // invoking all hook_typed_data_widgetlist_alter() implementations.
-      \Drupal::moduleHandler()->alter('typed_data_widgetlist', $this->widgetList);
-    }
-    // Return the widget id for this data type. If none, default to 'broken' id.
-    return $this->widgetList[$dataType] ?? self::BROKEN_WIDGET_ID;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getWidgetSettings() {
-    return [];
   }
 
 }

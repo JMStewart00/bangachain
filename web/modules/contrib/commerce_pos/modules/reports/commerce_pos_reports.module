@@ -209,7 +209,7 @@ function commerce_pos_reports_get_totals($date_filter, $register_id, array $pos_
     }
 
     if (!empty($row->field_cashier_target_id) && $cashier = User::load($row->field_cashier_target_id)) {
-      $cashier_name = $cashier->getUsername();
+      $cashier_name = $cashier->getAccountName();
     }
     else {
       $cashier_name = t('Unknown');

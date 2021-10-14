@@ -16,6 +16,8 @@ class OrderCommentsTest extends WebDriverTestBase {
 
   use CommercePosCreateStoreTrait;
 
+  protected $defaultTheme = 'stark';
+
   /**
    * Modules to enable.
    *
@@ -30,7 +32,7 @@ class OrderCommentsTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->setUpStore();
@@ -81,16 +83,16 @@ class OrderCommentsTest extends WebDriverTestBase {
     // Add a comment.
     $this->getSession()->getPage()->fillField('order_comments[add_order_comment][order_comment_text]', 'Test comment');
     $this->getSession()->getPage()->findButton('Pay Now')->click();
-    $results = $this->getSession()->getPage()->findAll('css', '.view-commerce-activity table tr');
-    $this->assertCount(2, $results);
-    $this->assertContains('Test comment', $results[1]->getText());
+    $results = $this->getSession()->getPage()->findAll('css', '#edit-order-comments-display-order-comment table tbody tr');
+    $this->assertCount(1, $results);
+    $this->assertStringContainsString('Test comment', $results[0]->getText());
 
     // Add another comment with XSS.
     $this->getSession()->getPage()->findButton('Back To Order')->click();
     $this->getSession()->getPage()->fillField('order_comments[add_order_comment][order_comment_text]', "<script>alert('here');</script>");
     $this->getSession()->getPage()->findButton('Pay Now')->click();
-    $results = $this->getSession()->getPage()->findAll('css', '.view-commerce-activity table tr');
-    $this->assertCount(3, $results);
+    $results = $this->getSession()->getPage()->findAll('css', '#edit-order-comments-display-order-comment table tbody tr');
+    $this->assertCount(2, $results);
     $web_assert->pageTextContains("<script>alert('here');</script>");
     $web_assert->pageTextContains('Test comment');
 
@@ -101,22 +103,19 @@ class OrderCommentsTest extends WebDriverTestBase {
     $logStorage = $this->container->get('entity_type.manager')->getStorage('commerce_log');
     $order = Order::load(1);
     $logs = $logStorage->loadMultipleByEntity($order);
-    $this->assertEquals(3, count($logs));
+    $this->assertEquals(4, count($logs));
+
     $logViewBuilder = $this->container->get('entity_type.manager')->getViewBuilder('commerce_log');
     $build = $logViewBuilder->view($logs[1]);
-    $this->assertContains('Test comment', (string) $this->container->get('renderer')->renderPlain($build));
+    $this->assertStringContainsString('Test comment', (string) $this->container->get('renderer')->renderPlain($build));
     $build = $logViewBuilder->view($logs[2]);
     // The script tag should be escaped.
-    $this->assertContains(Html::escape("<script>alert('here');</script>"), (string) $this->container->get('renderer')->renderPlain($build));
+    $this->assertStringContainsString(Html::escape("<script>alert('here');</script>"), (string) $this->container->get('renderer')->renderPlain($build));
     $build = $logViewBuilder->view($logs[3]);
-    $this->assertContains('Test parked', (string) $this->container->get('renderer')->renderPlain($build));
-
-    // View the order via the regular interface, the comment should also be here.
-    $this->drupalGet($order->toUrl());
-    $web_assert->pageTextContains('Test comment');
-    $web_assert->responseNotContains("<script>alert('here');</script>");
-    $web_assert->pageTextContains("<script>alert('here');</script>");
-    $web_assert->pageTextContains('Test parked');
+    $this->assertStringContainsString('Test parked', (string) $this->container->get('renderer')->renderPlain($build));
+    // Automatic park entry
+    $build = $logViewBuilder->view($logs[4]);
+    $this->assertStringContainsString('<p>Order moved from <em>Draft</em> to <em>Parked</em> by the <em>Park order</em> transition.</p>', (string) $this->container->get('renderer')->renderPlain($build));
   }
 
 }

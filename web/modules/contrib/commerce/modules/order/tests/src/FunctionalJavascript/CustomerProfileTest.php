@@ -177,13 +177,37 @@ class CustomerProfileTest extends OrderWebDriverTestBase {
     ], 'Submit');
     $this->assertSession()->pageTextContains('The street is "10 Drupal Ave" and the country code is US. Address book: Yes');
 
-    // Confirm that selecting "Enter a new address" clears the form.
-    $this->drupalGet('/commerce_order_test/customer_profile_test_form');
+    // Create another profile, belonging to another test user.
+    $user = $this->createUser();
+    $another_us_profile = Profile::create([
+      'type' => 'customer',
+      'uid' => $user->id(),
+      'address' => array_merge($this->usAddress, [
+        'postal_code' => '29617',
+      ]),
+    ]);
+    $another_us_profile->save();
+    // Attempt forging the profile selection, to ensure the profile that doesn't
+    // belong to the current profile cannot be edited/viewed.
+    \Drupal::state()->set('commerce_order_forge_profile_selection', [
+      'search' => $us_profile->id(),
+      'replace' => $another_us_profile->id(),
+    ]);
+    $this->getSession()->reload();
+    $this->getSession()->getPage()->pressButton('billing_edit');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->pageTextContains('An illegal choice has been detected.');
+    $this->assertSession()->pageTextContains($this->usAddress['postal_code']);
+    $this->assertSession()->pageTextNotContains('29617');
+    \Drupal::state()->delete('commerce_order_forge_profile_selection');
+    $this->getSession()->reload();
+
     $this->getSession()->getPage()->pressButton('billing_edit');
     $this->assertSession()->assertWaitOnAjaxRequest();
     foreach ($this->usAddress as $property => $value) {
       $this->assertSession()->fieldValueEquals("profile[address][0][address][$property]", $value);
     }
+    // Confirm that selecting "Enter a new address" clears the form.
     $this->getSession()->getPage()->fillField('profile[select_address]', '_new');
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->saveHtmlOutput();

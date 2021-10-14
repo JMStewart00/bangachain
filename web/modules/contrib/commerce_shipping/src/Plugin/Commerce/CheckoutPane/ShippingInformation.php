@@ -339,7 +339,7 @@ class ShippingInformation extends CheckoutPaneBase implements ContainerFactoryPl
     // Update the shipments and save the order if no rate was explicitly
     // selected, that usually occurs when changing addresses, this will ensure
     // the default rate is selected/applied.
-    if (!$this->hasRateSelected($pane_form, $form_state)) {
+    if (!$this->hasRateSelected($pane_form, $form_state) && ($recalculate_shipping || $force_packing)) {
       array_map(function (ShipmentInterface $shipment) {
         if (!$shipment->isNew()) {
           $shipment->save();

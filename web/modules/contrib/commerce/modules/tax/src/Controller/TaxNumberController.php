@@ -165,7 +165,7 @@ class TaxNumberController implements ContainerInjectionInterface {
   protected function prepareContext($context) {
     $context = UrlData::decode($context);
     $context = $context ?: [];
-    if (!count($context) == 4) {
+    if (count($context) !== 4) {
       return FALSE;
     }
     // Assign keys. The context array is numerically indexed to save space.

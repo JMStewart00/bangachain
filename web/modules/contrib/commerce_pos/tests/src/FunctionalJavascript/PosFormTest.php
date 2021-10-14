@@ -19,6 +19,8 @@ use Drupal\Tests\commerce_pos\Functional\CommercePosCreateStoreTrait;
 class PosFormTest extends WebDriverTestBase {
   use CommercePosCreateStoreTrait;
 
+  protected $defaultTheme = 'stark';
+
   /**
    * Modules to enable.
    *
@@ -38,7 +40,7 @@ class PosFormTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->setUpStore();
@@ -260,7 +262,8 @@ class PosFormTest extends WebDriverTestBase {
 
     // Clicking finish will bring us back to the order item screen - processing
     // a new order.
-    $this->click('input[name="commerce-pos-finish"]');
+    $this->getSession()->getPage()->findButton('Complete Payment')->click();
+    $web_assert->assertWaitOnAjaxRequest();
     $web_assert->pageTextContains('Total $0.00');
     $web_assert->pageTextNotContains('Cash');
     $web_assert->pageTextContains('To Pay $0.00');

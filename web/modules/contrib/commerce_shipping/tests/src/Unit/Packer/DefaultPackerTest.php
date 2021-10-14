@@ -13,10 +13,13 @@ use Drupal\commerce_shipping\ShipmentItem;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\physical\Plugin\Field\FieldType\MeasurementItem;
 use Drupal\physical\Weight;
 use Drupal\profile\Entity\ProfileInterface;
 use Drupal\Tests\UnitTestCase;
+use Prophecy\Argument;
 
 /**
  * @coversDefaultClass \Drupal\commerce_shipping\Packer\DefaultPacker
@@ -43,8 +46,11 @@ class DefaultPackerTest extends UnitTestCase {
     $order_type_storage->load('default')->willReturn($order_type->reveal());
     $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
     $entity_type_manager->getStorage('commerce_order_type')->willReturn($order_type_storage->reveal());
+    $string_translation = $this->prophesize(TranslationInterface::class);
+    $string_translation->translateString(Argument::type(TranslatableMarkup::class))
+      ->willReturn('Shipment #1');
 
-    $this->packer = new DefaultPacker($entity_type_manager->reveal());
+    $this->packer = new DefaultPacker($entity_type_manager->reveal(), $string_translation->reveal());
   }
 
   /**
@@ -113,27 +119,6 @@ class DefaultPackerTest extends UnitTestCase {
     ]);
     $result = $this->packer->pack($order, $shipping_profile);
     $this->assertEquals([$expected_proposed_shipment], $result);
-  }
-
-}
-
-namespace Drupal\commerce_shipping\Packer;
-
-if (!function_exists('t')) {
-
-  /**
-   * Mocks the t() function.
-   *
-   * @param string $string
-   *   A string containing the English text to translate.
-   * @param array $args
-   *   (optional) An associative array of replacements to make after translation.
-   *
-   * @return string
-   *   The translated string.
-   */
-  function t($string, array $args = []) {
-    return strtr($string, $args);
   }
 
 }

@@ -224,7 +224,9 @@ class UpgradeStatusForm extends FormBase {
     }
     catch (\Exception $e) {
       $analyzer_ready = FALSE;
-      $this->messenger()->addError($e->getMessage());
+      // Message and impact description is not translated as the message
+      // is sourced from an exception thrown.
+      $this->messenger()->addError($e->getMessage() . ' Scanning is not possible until this is resolved.');
     }
 
     $environment = $this->buildEnvironmentChecks();
@@ -1361,6 +1363,11 @@ MARKUP
     $app_root = $this->kernel->getAppRoot();
     $site_path = $this->kernel->getSitePath();
     if (is_readable($app_root . '/' . $site_path . '/settings.php')) {
+      // Reset the "global" variables expected to exist for settings.
+      $settings = [];
+      $config = [];
+      $databases = [];
+      $class_loader = require $app_root . '/autoload.php';
       require $app_root . '/' . $site_path . '/settings.php';
     }
 

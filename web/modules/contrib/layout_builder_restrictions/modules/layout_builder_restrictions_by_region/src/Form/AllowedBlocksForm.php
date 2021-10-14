@@ -444,7 +444,7 @@ class AllowedBlocksForm extends FormBase {
   protected function getBlockDefault($block_id, $category, $temp_data) {
     // Attempt to retrieve default value from tempStore, then from config.
     if (!is_null($temp_data)) {
-      if (isset($temp_data[$category])) {
+      if (isset($temp_data[$category]['restrictions'])) {
         return in_array($block_id, array_keys($temp_data[$category]['restrictions']));
       }
       else {

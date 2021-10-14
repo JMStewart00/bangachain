@@ -13,12 +13,14 @@ use Drupal\Tests\commerce_pos\Functional\CommercePosCreateStoreTrait;
 class LabelTest extends WebDriverTestBase {
   use CommercePosCreateStoreTrait;
 
+  protected $defaultTheme = 'stark';
+
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_pos_print',
     'commerce_pos_label',
     'search_api_db',
@@ -33,7 +35,7 @@ class LabelTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->setUpStore();
     $this->adminUser = $this->drupalCreateUser($this->getAdministratorPermissions());

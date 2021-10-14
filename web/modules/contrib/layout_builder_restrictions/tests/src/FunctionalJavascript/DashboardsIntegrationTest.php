@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\layout_builder_restrictions\FunctionalJavascript;
 
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
-
 /**
  * Demonstrate that Layout Builder Restrictions works with Dashboards.
  *
@@ -11,7 +9,7 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
  *
  * @requires dashboards
  */
-class DashboardsIntegrationTest extends WebDriverTestBase {
+class DashboardsIntegrationTest extends LayoutBuilderRestrictionsTestBase {
 
   /**
    * {@inheritdoc}
@@ -25,16 +23,9 @@ class DashboardsIntegrationTest extends WebDriverTestBase {
   ];
 
   /**
-   * Specify the theme to be used in testing.
-   *
-   * @var string
-   */
-  protected $defaultTheme = 'stable';
-
-  /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->strictConfigSchema = NULL;
     parent::setUp();
 
@@ -51,7 +42,6 @@ class DashboardsIntegrationTest extends WebDriverTestBase {
   public function testDashboardsWithRestrictionsEnabled() {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
-
     $this->drupalGet('admin/structure/dashboards/add');
     $page->fillField('Administrative Label', 'Charlie');
     $this->assertNotEmpty($assert_session->waitForText('Machine name: charlie'));
@@ -60,11 +50,11 @@ class DashboardsIntegrationTest extends WebDriverTestBase {
     $page->clickLink('Add section');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.layout-selection'));
     $page->clickLink('One column');
-    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertNotEmpty($assert_session->waitForText('Configure section'));
     $page->pressButton('Add section');
-    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertNotEmpty($assert_session->waitForText('You have unsaved changes'));
     $page->clickLink('Add block');
-    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertNotEmpty($assert_session->waitForText('Choose a block'));
   }
 
 }

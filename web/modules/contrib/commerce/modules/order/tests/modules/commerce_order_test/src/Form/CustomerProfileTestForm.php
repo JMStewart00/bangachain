@@ -6,13 +6,14 @@ use Drupal\commerce\InlineFormManager;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * A form for testing the customer_profile inline form.
  */
-class CustomerProfileTestForm extends FormBase {
+class CustomerProfileTestForm extends FormBase implements TrustedCallbackInterface {
 
   /**
    * The current user.
@@ -101,6 +102,7 @@ class CustomerProfileTestForm extends FormBase {
       '#type' => 'submit',
       '#value' => $this->t('Submit'),
     ];
+    $form['#post_render'][] = [static::class, 'postRender'];
 
     return $form;
   }
@@ -121,6 +123,35 @@ class CustomerProfileTestForm extends FormBase {
       '@country_code' => $address->getCountryCode(),
       '@address_book' => $profile->getData('copy_to_address_book') ? 'Yes' : 'No',
     ]));
+  }
+
+  /**
+   * Alters the rendered form to simulate input forgery.
+   *
+   * It's necessary to alter the rendered form here because Mink does not
+   * support manipulating the DOM tree.
+   *
+   * @param string $rendered_form
+   *   The rendered form.
+   *
+   * @return string
+   *   The modified rendered form.
+   *
+   * @see \Drupal\Tests\commerce_order\FunctionalJavascript\CustomerProfileTest::testMultipleNew()
+   */
+  public static function postRender($rendered_form) {
+    $forge_profile_selection = \Drupal::state()->get('commerce_order_forge_profile_selection');
+    if (!$forge_profile_selection) {
+      return $rendered_form;
+    }
+    return str_replace('value="' . $forge_profile_selection['search'] . '"', 'value="' . $forge_profile_selection['replace'] . '"', $rendered_form);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['postRender'];
   }
 
 }

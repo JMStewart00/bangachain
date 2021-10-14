@@ -2,9 +2,6 @@
 
 namespace Drupal\Tests\layout_builder_restrictions\FunctionalJavascript;
 
-use Drupal\block_content\Entity\BlockContent;
-use Drupal\block_content\Entity\BlockContentType;
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\layout_library\Entity\Layout;
 use Drupal\Tests\layout_builder_restrictions\Traits\MoveBlockHelperTrait;
@@ -14,17 +11,10 @@ use Drupal\Tests\layout_builder_restrictions\Traits\MoveBlockHelperTrait;
  *
  * @group layout_builder_restrictions
  */
-class MoveBlockRestrictionTest extends WebDriverTestBase {
+class MoveBlockRestrictionTest extends LayoutBuilderRestrictionsTestBase {
 
   use ContentTypeCreationTrait;
   use MoveBlockHelperTrait;
-
-  /**
-   * Path prefix for the field UI for the test bundle.
-   *
-   * @var string
-   */
-  const FIELD_UI_PREFIX = 'admin/structure/types/manage/bundle_with_section_field';
 
   /**
    * {@inheritdoc}
@@ -49,12 +39,8 @@ class MoveBlockRestrictionTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
-    $page = $this->getSession()->getPage();
-    $assert_session = $this->assertSession();
-
-    $this->createContentType(['type' => 'bundle_with_section_field']);
 
     $this->drupalLogin($this->drupalCreateUser([
       'access administration pages',
@@ -74,13 +60,6 @@ class MoveBlockRestrictionTest extends WebDriverTestBase {
     ]);
     $layout->save();
 
-    // Enable Layout Builder.
-    $this->drupalPostForm(
-      static::FIELD_UI_PREFIX . '/display/default',
-      ['layout[enabled]' => TRUE],
-      'Save'
-    );
-    $this->getSession()->resizeWindow(1200, 2000);
   }
 
   /**
@@ -96,40 +75,36 @@ class MoveBlockRestrictionTest extends WebDriverTestBase {
     // Add a layout to the library.
     $this->drupalGet('admin/structure/layouts');
     $page->clickLink('Edit layout');
-    $assert_session->assertWaitOnAjaxRequest();
     $page->clickLink('Add section');
-    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertNotEmpty($assert_session->waitForText('Choose a layout for this section'));
     $page->clickLink('One column');
-    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertNotEmpty($assert_session->waitForText('Configure section'));
     $page->pressButton('Add section');
-    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertNotEmpty($assert_session->waitForText('You have unsaved changes'));
     $page->clickLink('Add block');
-    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertNotEmpty($assert_session->waitForText('Choose a block'));
     $page->clickLink('Powered by Drupal');
-    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertNotEmpty($assert_session->waitForText('Configure block'));
     $page->fillField('settings[label]', 'Powered by Drupal');
     $page->checkField('settings[label_display]');
     $page->pressButton('Add block');
-    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.block-system-powered-by-block'));
     $page->clickLink('Add block');
-    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertNotEmpty($assert_session->waitForText('Choose a block'));
     $page->clickLink('Site branding');
-    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertNotEmpty($assert_session->waitForText('Configure block'));
     $page->fillField('settings[label]', 'Site branding');
     $page->checkField('settings[label_display]');
     $page->pressButton('Add block');
-    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.block-system-branding-block'));
 
     $page->pressButton('Save layout');
-    $assert_session->assertWaitOnAjaxRequest();
 
     // Two blocks have been saved to the Layout, in the order
     // Powered by Drupal, Site branding.
     // Change the order & save.
     $this->drupalGet('admin/structure/layouts');
     $page->clickLink('Edit layout');
-    $assert_session->assertWaitOnAjaxRequest();
-
     // Move the body block into the first region above existing block.
     $this->openMoveForm(0, 'content', 'block-system-powered-by-block', ['Powered by Drupal (current)', 'Site branding']);
     $page->selectFieldOption('Region', '0:content');
@@ -138,12 +113,10 @@ class MoveBlockRestrictionTest extends WebDriverTestBase {
     $page->pressButton('Move');
     $this->assertSession()->assertWaitOnAjaxRequest();
     $page->pressButton('Save layout');
-    $assert_session->assertWaitOnAjaxRequest();
 
     // Confirm the order has successfully changed.
     $this->drupalGet('admin/structure/layouts');
     $page->clickLink('Edit layout');
-    $assert_session->assertWaitOnAjaxRequest();
     $expected_block_order = [
       '.block-system-branding-block',
       '.block-system-powered-by-block',
@@ -157,8 +130,8 @@ class MoveBlockRestrictionTest extends WebDriverTestBase {
   public function testMovePluginBlock() {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
+    $this->navigateToManageDisplay();
     $page->clickLink('Manage layout');
-    $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display/default/layout');
     $expected_block_order = [
       '.block-extra-field-blocknodebundle-with-section-fieldlinks',
       '.block-field-blocknodebundle-with-section-fieldbody',
@@ -168,9 +141,7 @@ class MoveBlockRestrictionTest extends WebDriverTestBase {
     // Add a top section using the Two column layout.
     $page->clickLink('Add section');
     $assert_session->waitForElementVisible('css', '#drupal-off-canvas');
-    $assert_session->assertWaitOnAjaxRequest();
     $page->clickLink('Two column');
-    $assert_session->assertWaitOnAjaxRequest();
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'input[value="Add section"]'));
     $page->pressButton('Add section');
     $this->assertRegionBlocksOrder(1, 'content', $expected_block_order);
@@ -179,23 +150,20 @@ class MoveBlockRestrictionTest extends WebDriverTestBase {
     $assert_session->elementNotExists('css', $first_region_block_locator);
     $assert_session->elementExists('css', '[data-layout-delta="0"].layout--twocol-section [data-region="first"] .layout-builder__add-block')->click();
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas a:contains("Powered by Drupal")'));
-    $assert_session->assertWaitOnAjaxRequest();
     $page->clickLink('Powered by Drupal');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'input[value="Add block"]'));
-    $assert_session->assertWaitOnAjaxRequest();
     $page->pressButton('Add block');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', $first_region_block_locator));
 
     // Ensure the request has completed before the test starts.
     $this->waitForNoElement('#drupal-off-canvas');
-    $assert_session->assertWaitOnAjaxRequest();
 
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
     // Add a block restriction after the fact to test basic restriction.
     // Restrict all 'Content' fields from options.
-    $this->drupalGet(static::FIELD_UI_PREFIX . "/display/default");
+    $this->navigateToManageDisplay();
     $element = $page->find('xpath', '//*[@id="edit-layout-layout-builder-restrictions-allowed-blocks"]/summary');
     $element->click();
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-content-fields-restriction-all"]');
@@ -211,7 +179,6 @@ class MoveBlockRestrictionTest extends WebDriverTestBase {
       '.block-field-blocknodebundle-with-section-fieldbody',
     ];
     $this->assertRegionBlocksOrder(1, 'content', $expected_block_order_1);
-    $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display/default/layout');
 
     // Attempt to reorder body field in current region.
     $this->openMoveForm(1, 'content', 'block-field-blocknodebundle-with-section-fieldbody', ['Links', 'Body (current)']);
@@ -227,13 +194,12 @@ class MoveBlockRestrictionTest extends WebDriverTestBase {
     $this->assertNotNull($close_button);
     $close_button->press();
 
-    $this->assertSession()->assertWaitOnAjaxRequest();
     $page->pressButton('Save layout');
     $page->clickLink('Manage layout');
     // The order should not have changed after save.
     $this->assertRegionBlocksOrder(1, 'content', $expected_block_order_1);
 
-    $this->drupalGet(static::FIELD_UI_PREFIX . "/display/default");
+    $this->navigateToManageDisplay();
     $element = $page->find('xpath', '//*[@id="edit-layout-layout-builder-restrictions-allowed-blocks"]/summary');
     $element->click();
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-content-fields-restriction-all"]');
@@ -242,9 +208,9 @@ class MoveBlockRestrictionTest extends WebDriverTestBase {
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-content-fields-restriction-whitelisted"]');
     $element->click();
     $page->pressButton('Save');
-    $this->assertSession()->assertWaitOnAjaxRequest();
 
-    $this->drupalGet(static::FIELD_UI_PREFIX . "/display/default/layout");
+    $this->navigateToManageDisplay();
+    $page->clickLink('Manage layout');
     // Move the body block into the first region above existing block.
     $this->openMoveForm(1, 'content', 'block-field-blocknodebundle-with-section-fieldbody', ['Links', 'Body (current)']);
     $page->selectFieldOption('Region', '0:first');
@@ -255,84 +221,47 @@ class MoveBlockRestrictionTest extends WebDriverTestBase {
     $modal = $page->find('css', '#drupal-off-canvas p');
     // Content cannot be moved between sections if a restriction exists.
     $this->assertSame("There is a restriction on Body placement in the layout_twocol_section first region for bundle_with_section_field content.", trim($modal->getText()));
-
   }
 
   /**
    * Tests moving a content block.
    */
   public function testMoveContentBlock() {
-    // Create 2 custom block types, with 3 block instances.
-    $bundle = BlockContentType::create([
-      'id' => 'basic',
-      'label' => 'Basic',
-    ]);
-    $bundle->save();
-    $bundle = BlockContentType::create([
-      'id' => 'alternate',
-      'label' => 'Alternate',
-    ]);
-    $bundle->save();
-    block_content_add_body_field($bundle->id());
-    // Add custom blocks.
-    $blocks = [
-      'Basic Block 1' => 'basic',
-      'Basic Block 2' => 'basic',
-      'Alternate Block 1' => 'alternate',
-    ];
-    foreach ($blocks as $info => $type) {
-      $block = BlockContent::create([
-        'info' => $info,
-        'type' => $type,
-        'body' => [
-          [
-            'value' => 'This is the block content',
-            'format' => filter_default_format(),
-          ],
-        ],
-      ]);
-      $block->save();
-      $blocks[$info] = $block->uuid();
-    }
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
-    $page->clickLink('Manage layout');
-    $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display/default/layout');
+    $blocks = $this->generateTestBlocks();
+    $node_id = $this->generateTestNode();
 
+    $this->navigateToManageDisplay();
+    $page->clickLink('Manage layout');
     // Add a top section using the Two column layout.
     $page->clickLink('Add section');
     $assert_session->waitForElementVisible('css', '#drupal-off-canvas');
-    $assert_session->assertWaitOnAjaxRequest();
     $page->clickLink('Two column');
-    $assert_session->assertWaitOnAjaxRequest();
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'input[value="Add section"]'));
     $page->pressButton('Add section');
     $assert_session->assertWaitOnAjaxRequest();
 
     // Add Basic Block 1 to the 'first' region.
     $assert_session->elementExists('css', '[data-layout-delta="0"].layout--twocol-section [data-region="first"] .layout-builder__add-block')->click();
-    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas a:contains("Basic Block 1")'));
-    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertNotEmpty($assert_session->waitForText('Basic Block 1'));
     $page->clickLink('Basic Block 1');
     $assert_session->assertWaitOnAjaxRequest();
     $page->pressButton('Add block');
     $this->waitForNoElement('#drupal-off-canvas');
-    $assert_session->assertWaitOnAjaxRequest();
 
     // Add Alternate Block 1 to the 'first' region.
     $assert_session->elementExists('css', '[data-layout-delta="0"].layout--twocol-section [data-region="first"] .layout-builder__add-block')->click();
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas a:contains("Alternate Block 1")'));
-    $assert_session->assertWaitOnAjaxRequest();
     $page->clickLink('Alternate Block 1');
     $assert_session->assertWaitOnAjaxRequest();
     $page->pressButton('Add block');
     $this->waitForNoElement('#drupal-off-canvas');
-    $assert_session->assertWaitOnAjaxRequest();
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
     // Restrict all Custom blocks.
-    $this->drupalGet(static::FIELD_UI_PREFIX . "/display/default");
+    $this->navigateToManageDisplay();
     $element = $page->find('xpath', '//*[@id="edit-layout-layout-builder-restrictions-allowed-blocks"]/summary');
     $element->click();
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-custom-blocks-restriction-all"]');
@@ -348,7 +277,8 @@ class MoveBlockRestrictionTest extends WebDriverTestBase {
       '.block-block-content' . $blocks['Alternate Block 1'],
     ];
     $this->assertRegionBlocksOrder(0, 'first', $expected_block_order);
-    $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display/default/layout');
+    $this->navigateToManageDisplay();
+    $page->clickLink('Manage layout');
 
     // Attempt to reorder Alternate Block 1.
     $this->openMoveForm(0, 'first', 'block-block-content' . $blocks['Alternate Block 1'], ['Basic Block 1', 'Alternate Block 1 (current)']);
@@ -371,7 +301,7 @@ class MoveBlockRestrictionTest extends WebDriverTestBase {
     $this->assertRegionBlocksOrder(0, 'first', $expected_block_order);
 
     // Allow Alternate Block, but not Basic block.
-    $this->drupalGet(static::FIELD_UI_PREFIX . "/display/default");
+    $this->navigateToManageDisplay();
     $element = $page->find('xpath', '//*[@id="edit-layout-layout-builder-restrictions-allowed-blocks"]/summary');
     $element->click();
     // Do not apply individual block level restrictions.
@@ -391,7 +321,6 @@ class MoveBlockRestrictionTest extends WebDriverTestBase {
       '.block-block-content' . $blocks['Basic Block 1'],
     ];
     $this->assertRegionBlocksOrder(0, 'first', $expected_block_order);
-    $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display/default/layout');
     $this->openMoveForm(0, 'first', 'block-block-content' . $blocks['Alternate Block 1'], ['Basic Block 1', 'Alternate Block 1 (current)']);
     $this->moveBlockWithKeyboard('up', 'Alternate Block 1', ['Alternate Block 1 (current)*', 'Basic Block 1']);
     $page->pressButton('Move');
@@ -415,7 +344,7 @@ class MoveBlockRestrictionTest extends WebDriverTestBase {
     $page->clickLink('Manage layout');
 
     // Allow all Custom block types.
-    $this->drupalGet(static::FIELD_UI_PREFIX . "/display/default");
+    $this->navigateToManageDisplay();
     $element = $page->find('xpath', '//*[@id="edit-layout-layout-builder-restrictions-allowed-blocks"]/summary');
     $element->click();
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-custom-block-types-restriction-all"]');
@@ -428,7 +357,6 @@ class MoveBlockRestrictionTest extends WebDriverTestBase {
     // Reorder both Alternate & Basic block block.
     $page->clickLink('Manage layout');
     $this->assertRegionBlocksOrder(0, 'first', $expected_block_order_moved);
-    $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display/default/layout');
     $this->openMoveForm(0, 'first', 'block-block-content' . $blocks['Basic Block 1'], ['Alternate Block 1', 'Basic Block 1 (current)']);
     $this->moveBlockWithKeyboard('up', 'Basic Block 1', ['Basic Block 1 (current)*', 'Alternate Block 1']);
     $page->pressButton('Move');
@@ -446,7 +374,6 @@ class MoveBlockRestrictionTest extends WebDriverTestBase {
     $page->pressButton('Save layout');
     $page->clickLink('Manage layout');
     $this->assertRegionBlocksOrder(0, 'first', $expected_block_order_moved);
-
   }
 
 }

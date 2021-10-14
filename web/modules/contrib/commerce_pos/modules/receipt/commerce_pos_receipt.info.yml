@@ -1,7 +1,7 @@
 name: Commerce POS Receipts
 description: Provides receipts printing for Commerce Point of Sale.
 type: module
-core: 8.x
+core_version_requirement: ^8 || ^9
 package: Commerce (POS)
 configure: commerce_pos_receipt.settings
 dependencies:

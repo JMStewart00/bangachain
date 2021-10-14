@@ -14,6 +14,8 @@ use Drupal\Tests\commerce_pos\Functional\CommercePosCreateStoreTrait;
 class PosReturnFormTest extends WebDriverTestBase {
   use CommercePosCreateStoreTrait;
 
+  protected $defaultTheme = 'stark';
+
   /**
    * Modules to enable.
    *
@@ -33,7 +35,7 @@ class PosReturnFormTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->setUpStore();
@@ -190,14 +192,15 @@ class PosReturnFormTest extends WebDriverTestBase {
     $this->getSession()->getPage()->findButton('Pay Now')->click();
 
     // Ensure we don't have to pay anything and the totals are correct.
-    $web_assert->pageTextNotContains('Enter Cash Amount');
     $web_assert->pageTextContains('Total $50.00');
     $web_assert->pageTextContains('Cash $100.00');
     $web_assert->pageTextContains('Total Paid $100.00');
     $web_assert->pageTextContains('To Pay $0.00');
     $web_assert->pageTextContains('Change $50.00');
 
-    $this->getSession()->getPage()->findButton('Complete Order')->click();
+    $this->getSession()->getPage()->findButton('Add Cash Refund')->click();
+    $web_assert->assertWaitOnAjaxRequest();
+    $this->getSession()->getPage()->findButton('Complete Refund')->click();
 
     $web_assert->pageTextNotContains('Total $50.00');
     $field = $this->getSession()->getPage()->findField('order_items[target_id][product_selector]');

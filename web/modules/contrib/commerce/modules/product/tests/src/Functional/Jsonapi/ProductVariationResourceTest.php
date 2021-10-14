@@ -125,6 +125,56 @@ class ProductVariationResourceTest extends ResourceTestBase {
   protected function getExpectedDocument() {
     $base_url = Url::fromUri('base:/jsonapi/commerce_product_variation/default/' . $this->entity->uuid())->setAbsolute();
     $self_url = clone $base_url;
+    $relationships = [
+      'commerce_product_variation_type' => [
+        'data' => [
+          'id' => ProductVariationType::load('default')->uuid(),
+          'type' => 'commerce_product_variation_type--commerce_product_variation_type',
+        ],
+        'links' => [
+          'related' => [
+            'href' => $base_url->toString() . '/commerce_product_variation_type',
+          ],
+          'self' => [
+            'href' => $base_url->toString() . '/relationships/commerce_product_variation_type',
+          ],
+        ],
+      ],
+      'product_id' => [
+        'data' => [
+          'id' => $this->product->uuid(),
+          'type' => 'commerce_product--default',
+        ],
+        'links' => [
+          'related' => [
+            'href' => $base_url->toString() . '/product_id',
+          ],
+          'self' => [
+            'href' => $base_url->toString() . '/relationships/product_id',
+          ],
+        ],
+      ],
+      'uid' => [
+        'data' => [
+          'id' => $this->entity->getOwner()->uuid(),
+          'type' => 'user--user',
+        ],
+        'links' => [
+          'related' => [
+            'href' => $base_url->toString() . '/uid',
+          ],
+          'self' => [
+            'href' => $base_url->toString() . '/relationships/uid',
+          ],
+        ],
+      ],
+    ];
+    // See https://www.drupal.org/node/3218910.
+    if (method_exists($this, 'decorateResourceIdentifierWithDrupalInternalTargetId')) {
+      $relationships['product_id']['data']['meta']['drupal_internal__target_id'] = (int) $this->product->id();
+      $relationships['uid']['data']['meta']['drupal_internal__target_id'] = (int) $this->entity->getOwnerId();
+      $relationships['commerce_product_variation_type']['data']['meta']['drupal_internal__target_id'] = 'default';
+    }
     return [
       'jsonapi' => [
         'meta' => [
@@ -156,50 +206,7 @@ class ProductVariationResourceTest extends ResourceTestBase {
           'status' => TRUE,
           'title' => $this->entity->label(),
         ],
-        'relationships' => [
-          'commerce_product_variation_type' => [
-            'data' => [
-              'id' => ProductVariationType::load('default')->uuid(),
-              'type' => 'commerce_product_variation_type--commerce_product_variation_type',
-            ],
-            'links' => [
-              'related' => [
-                'href' => $base_url->toString() . '/commerce_product_variation_type',
-              ],
-              'self' => [
-                'href' => $base_url->toString() . '/relationships/commerce_product_variation_type',
-              ],
-            ],
-          ],
-          'product_id' => [
-            'data' => [
-              'id' => $this->product->uuid(),
-              'type' => 'commerce_product--default',
-            ],
-            'links' => [
-              'related' => [
-                'href' => $base_url->toString() . '/product_id',
-              ],
-              'self' => [
-                'href' => $base_url->toString() . '/relationships/product_id',
-              ],
-            ],
-          ],
-          'uid' => [
-            'data' => [
-              'id' => $this->entity->getOwner()->uuid(),
-              'type' => 'user--user',
-            ],
-            'links' => [
-              'related' => [
-                'href' => $base_url->toString() . '/uid',
-              ],
-              'self' => [
-                'href' => $base_url->toString() . '/relationships/uid',
-              ],
-            ],
-          ],
-        ],
+        'relationships' => $relationships,
       ],
       'links' => [
         'self' => ['href' => $self_url->toString()],
@@ -211,6 +218,18 @@ class ProductVariationResourceTest extends ResourceTestBase {
    * {@inheritdoc}
    */
   protected function getPostDocument() {
+    $relationships = [
+      'product_id' => [
+        'data' => [
+          'type' => 'commerce_product--default',
+          'id' => $this->product->uuid(),
+        ],
+      ],
+    ];
+    // See https://www.drupal.org/node/3218910.
+    if (method_exists($this, 'decorateResourceIdentifierWithDrupalInternalTargetId')) {
+      $relationships['product_id']['data']['meta']['drupal_internal__target_id'] = (int) $this->product->id();
+    }
     return [
       'data' => [
         'type' => 'commerce_product_variation--default',
@@ -224,14 +243,7 @@ class ProductVariationResourceTest extends ResourceTestBase {
             'number' => '8.99',
           ],
         ],
-        'relationships' => [
-          'product_id' => [
-            'data' => [
-              'type' => 'commerce_product--default',
-              'id' => $this->product->uuid(),
-            ],
-          ],
-        ],
+        'relationships' => $relationships,
       ],
     ];
   }

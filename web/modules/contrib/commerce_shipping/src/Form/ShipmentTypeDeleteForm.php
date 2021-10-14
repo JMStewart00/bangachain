@@ -17,6 +17,7 @@ class ShipmentTypeDeleteForm extends EntityDeleteForm {
     $shipment_query = $this->entityTypeManager->getStorage('commerce_shipment')->getQuery();
     $shipment_count = $shipment_query
       ->condition('type', $this->entity->id())
+      ->accessCheck(FALSE)
       ->count()
       ->execute();
     if ($shipment_count) {

@@ -6,6 +6,8 @@ use Drupal\commerce_order\Entity\OrderInterface;
 use Drupal\commerce_shipping\ProposedShipment;
 use Drupal\commerce_shipping\ShipmentItem;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\physical\Calculator;
 use Drupal\physical\Weight;
 use Drupal\physical\WeightUnit;
@@ -15,6 +17,8 @@ use Drupal\profile\Entity\ProfileInterface;
  * Creates a single shipment per order.
  */
 class DefaultPacker implements PackerInterface {
+
+  use StringTranslationTrait;
 
   /**
    * The entity type manager.
@@ -28,9 +32,12 @@ class DefaultPacker implements PackerInterface {
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
+   *   The string translation service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, TranslationInterface $string_translation) {
     $this->entityTypeManager = $entity_type_manager;
+    $this->stringTranslation = $string_translation;
   }
 
   /**
@@ -77,7 +84,7 @@ class DefaultPacker implements PackerInterface {
       $proposed_shipments[] = new ProposedShipment([
         'type' => $this->getShipmentType($order),
         'order_id' => $order->id(),
-        'title' => t('Shipment #1'),
+        'title' => $this->t('Shipment #1'),
         'items' => $items,
         'shipping_profile' => $shipping_profile,
       ]);

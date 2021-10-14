@@ -20,27 +20,14 @@ use Drupal\commerce_pos\Entity\Register;
 class EndOfDayTest extends WebDriverTestBase {
   use CommercePosCreateStoreTrait;
 
-  /**
-   * {@inheritdoc}
-   */
-  protected $adminUser;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $nonPrivilegedUser;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $store;
+  protected $defaultTheme = 'stark';
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'search_api_db',
     'commerce_price',
     'commerce_pos',
@@ -57,11 +44,25 @@ class EndOfDayTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected $adminUser;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $nonPrivilegedUser;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $store;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
     parent::setUp();
 
     $this->setUpStore();
-
     $this->adminUser = $this->drupalCreateUser($this->getAdministratorPermissions());
     $this->nonPrivilegedUser = $this->drupalCreateUser([]);
 
@@ -89,6 +90,7 @@ class EndOfDayTest extends WebDriverTestBase {
       'administer commerce_store_type',
       'access commerce pos administration pages',
       'access commerce pos reports',
+      'access site reports',
     ];
   }
 
@@ -147,8 +149,7 @@ class EndOfDayTest extends WebDriverTestBase {
     $this->getSession()->getPage()->fillField('register_id', $this->register->id());
     $web_assert->assertWaitOnAjaxRequest();
 
-    $this->getSession()->getPage()->pressButton('Print');
-    $web_assert->assertWaitOnAjaxRequest();
+    $this->assertSession()->buttonExists('Print');
   }
 
   /**

@@ -7,10 +7,8 @@
 
 namespace Drupal\commerce_autosku;
 
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Utility\Token;
 
 /**
  * Provides an content entity decorator for automatic label generation.
@@ -32,25 +30,23 @@ class EntityDecorator implements EntityDecoratorInterface {
   protected $entityTypeManager;
 
   /**
-   * Token service.
+   * The generator manager.
    *
-   * @var CommerceAutoSkuGeneratorManagerInterface
+   * @var \Drupal\commerce_autosku\CommerceAutoSkuGeneratorManagerInterface
    */
   protected $generatorManager;
 
   /**
    * Constructs an EntityDecorator object.
    *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   Configuration factory.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   Entity type manager
-   * @param \Drupal\Core\Utility\Token $token
-   *   Token manager.
+   * @param \Drupal\commerce_autosku\CommerceAutoSkuGeneratorManagerInterface $generator_manager
+   *   The generator manager.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, CommerceAutoSkuGeneratorManagerInterface $generatorManager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, CommerceAutoSkuGeneratorManagerInterface $generator_manager) {
     $this->entityTypeManager = $entity_type_manager;
-    $this->generatorManager = $generatorManager;
+    $this->generatorManager = $generator_manager;
   }
 
   /**
@@ -60,4 +56,5 @@ class EntityDecorator implements EntityDecoratorInterface {
     $this->entity = new CommerceAutoSkuManager($entity, $this->entityTypeManager, $this->generatorManager);
     return $this->entity;
   }
+
 }

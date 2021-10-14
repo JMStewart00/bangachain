@@ -93,7 +93,7 @@ class OrderQueryAccessHandlerTest extends OrderKernelTestBase {
     $this->assertEquals('OR', $conditions->getConjunction());
     $this->assertEquals(1, $conditions->count());
     $this->assertEquals($expected_conditions, $conditions->getConditions());
-    $this->assertEquals(['user', 'user.permissions'], $conditions->getCacheContexts());
+    $this->assertEqualsCanonicalizing(['user', 'user.permissions'], $conditions->getCacheContexts());
     $this->assertFalse($conditions->isAlwaysFalse());
 
     // Bundle permission.

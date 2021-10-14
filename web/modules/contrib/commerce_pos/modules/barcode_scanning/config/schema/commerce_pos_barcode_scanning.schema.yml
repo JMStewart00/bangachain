@@ -1,0 +1,15 @@
+# Schema for the configuration files of the Barcode Scanning module.
+
+commerce_pos_barcode_scanning.settings:
+  type: config_object
+  label: 'Barcode scanning settings'
+  mapping:
+    status_on_load:
+      type: string
+      label: Status on load
+    close_after_scanning:
+      type: string
+      label: Close after scanning
+    delay:
+      type: integer
+      label: Delay

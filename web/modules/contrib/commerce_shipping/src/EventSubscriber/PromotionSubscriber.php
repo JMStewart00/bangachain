@@ -74,13 +74,14 @@ class PromotionSubscriber implements EventSubscriberInterface {
     }
 
     // Clone the entities to avoid modifying the original data.
-    $fake_shipment = clone $shipment;
-    $fake_order = clone $order;
+    $fake_shipment = $shipment->createDuplicate();
+    $fake_order = $order->createDuplicate();
     $fake_order->set('shipments', [$fake_shipment]);
     // Re-fetch the shipment to acquire a reference.
     /** @var \Drupal\commerce_shipping\Entity\ShipmentInterface[] $fake_shipments */
     $fake_shipments = $fake_order->get('shipments')->referencedEntities();
     $fake_shipment = reset($fake_shipments);
+    $fake_shipment->order_id->entity = $fake_order;
     // Calculate the discounted amounts.
     foreach ($rates as $rate) {
       $shipping_method->getPlugin()->selectRate($fake_shipment, $rate);

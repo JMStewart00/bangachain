@@ -3,11 +3,15 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.storage.commerce_product.field_brand
     - system.menu.admin
+    - user.role.administrator
   module:
+    - better_exposed_filters
     - commerce
     - commerce_order
     - commerce_product
+    - user
     - views_aggregator
 id: top_sales
 label: 'Top Sales'
@@ -24,8 +28,10 @@ display:
     position: 0
     display_options:
       access:
-        type: none
-        options: {  }
+        type: role
+        options:
+          role:
+            administrator: administrator
       cache:
         type: tag
         options: {  }
@@ -38,15 +44,33 @@ display:
           query_comment: ''
           query_tags: {  }
       exposed_form:
-        type: basic
+        type: bef
         options:
           submit_button: Apply
-          reset_button: false
+          reset_button: true
           reset_button_label: Reset
           exposed_sorts_label: 'Sort by'
           expose_sort_order: true
           sort_asc_label: Asc
           sort_desc_label: Desc
+          text_input_required: 'Select any filter and click on Apply to see results'
+          text_input_required_format: basic_html
+          bef:
+            general:
+              autosubmit: false
+              autosubmit_exclude_textfield: false
+              autosubmit_textfield_delay: 500
+              autosubmit_hide: false
+              input_required: true
+              allow_secondary: false
+              secondary_label: 'Advanced options'
+              secondary_open: false
+            filter:
+              completed:
+                plugin_id: bef_datepicker
+                advanced:
+                  collapsible: false
+                  is_secondary: false
       pager:
         type: none
         options:
@@ -66,6 +90,7 @@ display:
             type: type
             title_2: title_2
             nothing: nothing
+            field_brand: field_brand
           info:
             title_1:
               sortable: 1
@@ -111,7 +136,7 @@ display:
               aggr_par_column: ''
             nothing:
               sortable: 1
-              default_sort_order: asc
+              default_sort_order: desc
               align: ''
               separator: ''
               empty_column: 0
@@ -123,7 +148,21 @@ display:
               has_aggr_column: 0
               aggr_column: views_aggregator_sum
               aggr_par_column: ''
-          default: '-1'
+            field_brand:
+              sortable: 1
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: 0
+              responsive: ''
+              has_aggr: 0
+              aggr:
+                views_aggregator_first: views_aggregator_first
+              aggr_par: ''
+              has_aggr_column: 0
+              aggr_column: views_aggregator_sum
+              aggr_par_column: ''
+          default: nothing
           empty_table: 0
           group_aggregation:
             group_aggregation_results: '0'
@@ -207,14 +246,14 @@ display:
           entity_type: commerce_product
           entity_field: title
           plugin_id: field
-        type:
-          id: type
-          table: commerce_order
-          field: type
-          relationship: order_id
+        field_brand:
+          id: field_brand
+          table: commerce_product__field_brand
+          field: field_brand
+          relationship: product_id
           group_type: group
           admin_label: ''
-          label: 'Order type'
+          label: Brand
           exclude: false
           alter:
             alter_text: false
@@ -269,8 +308,71 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          hide_single_bundle: true
-          entity_type: commerce_order
+          plugin_id: field
+        type_1:
+          id: type_1
+          table: commerce_product_field_data
+          field: type
+          relationship: product_id
+          group_type: group
+          admin_label: ''
+          label: 'Product type'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: entity_reference_label
+          settings:
+            link: false
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          hide_single_bundle: false
+          entity_type: commerce_product
           entity_field: type
           plugin_id: commerce_entity_bundle
         title_2:
@@ -395,12 +497,61 @@ display:
           relationship: order_id
           group_type: group
           admin_label: ''
-          operator: '>='
+          operator: between
           value:
             min: ''
             max: ''
             value: '-30 days'
-            type: offset
+            type: date
+          group: 1
+          exposed: true
+          expose:
+            operator_id: completed_op
+            label: 'Orders Between'
+            description: ''
+            use_operator: false
+            operator: completed_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: completed
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              pos_cashier: '0'
+              team_member: '0'
+              chimp_team: '0'
+              loyalty_points_subscriber: '0'
+            placeholder: ''
+            min_placeholder: MM/DD/YYYY
+            max_placeholder: MM/DD/YYYY
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: commerce_order
+          entity_field: completed
+          plugin_id: date
+        title:
+          id: title
+          table: commerce_product_field_data
+          field: title
+          relationship: product_id
+          group_type: group
+          admin_label: ''
+          operator: '!='
+          value: Used
           group: 1
           exposed: false
           expose:
@@ -418,8 +569,6 @@ display:
             remember_roles:
               authenticated: authenticated
             placeholder: ''
-            min_placeholder: ''
-            max_placeholder: ''
           is_grouped: false
           group_info:
             label: ''
@@ -432,11 +581,11 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          entity_type: commerce_order
-          entity_field: completed
-          plugin_id: date
+          entity_type: commerce_product
+          entity_field: title
+          plugin_id: string
       sorts: {  }
-      title: 'Top Sales'
+      title: 'Top Selling Items'
       header: {  }
       footer: {  }
       empty: {  }
@@ -480,8 +629,11 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - url
         - url.query_args
-      tags: {  }
+        - user.roles
+      tags:
+        - 'config:field.storage.commerce_product.field_brand'
   page_1:
     display_plugin: page
     id: page_1
@@ -505,5 +657,8 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - url
         - url.query_args
-      tags: {  }
+        - user.roles
+      tags:
+        - 'config:field.storage.commerce_product.field_brand'

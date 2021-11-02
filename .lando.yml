@@ -2,13 +2,12 @@ name: bangachain
 recipe: pantheon
 
 config:
-  php: "7.3"
+  php: "7.4"
   webroot: web
   xdebug: false
   id: 2b62a896-ca8f-4f60-a9b3-5497d8e23a8f
   site: bangachain
   framework: drupal8
-  composer_version: 2.0.12
 
 events:
   # Clear cache after a database import

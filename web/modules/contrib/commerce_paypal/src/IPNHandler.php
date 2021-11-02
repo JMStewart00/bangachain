@@ -70,7 +70,9 @@ class IPNHandler implements IPNHandlerInterface {
       ])->getBody();
       $paypal_response = $this->getRequestDataArray($request->getContents());
     }
-    catch (ClientException $exception) {}
+    catch (ClientException $exception) {
+      $this->logger->error($exception->getMessage());
+    }
 
     // If the IPN was invalid, log a message and exit.
     if (!isset($paypal_response) || isset($paypal_response['INVALID'])) {

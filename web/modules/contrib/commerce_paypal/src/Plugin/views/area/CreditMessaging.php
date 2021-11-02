@@ -214,7 +214,7 @@ class CreditMessaging extends AreaPluginBase {
         }
         /** @var \Drupal\commerce_order\Entity\OrderInterface $order */
         $order = $this->orderStorage->load($argument->getValue());
-        if (!$order)  {
+        if (!$order) {
           return [];
         }
         $element = [

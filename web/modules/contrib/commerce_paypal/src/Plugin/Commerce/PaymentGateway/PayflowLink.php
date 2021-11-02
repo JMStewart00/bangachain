@@ -258,7 +258,7 @@ class PayflowLink extends OffsitePaymentGatewayBase implements PayflowLinkInterf
       $payment->save();
     }
     else {
-      throw new PaymentGatewayException($this->t('Refund failed: @reason', ['@reason' => $response['RESPMSG']]),  $response['RESULT']);
+      throw new PaymentGatewayException($this->t('Refund failed: @reason', ['@reason' => $response['RESPMSG']]), $response['RESULT']);
     }
   }
 
@@ -394,7 +394,7 @@ class PayflowLink extends OffsitePaymentGatewayBase implements PayflowLinkInterf
         break;
 
       default:
-        throw new PaymentGatewayException($this->t('Capture failed: @reason.', ['@reason' => $response['RESPMSG']]),  $response['RESULT']);
+        throw new PaymentGatewayException($this->t('Capture failed: @reason.', ['@reason' => $response['RESPMSG']]), $response['RESULT']);
     }
 
     $payment->save();
@@ -687,7 +687,7 @@ class PayflowLink extends OffsitePaymentGatewayBase implements PayflowLinkInterf
       $new_payment->save();
     }
     else {
-      throw new PaymentGatewayException($this->t('Reference transaction failed: @reason.', ['@reason' => $response['RESPMSG']]),  $response['RESULT']);
+      throw new PaymentGatewayException($this->t('Reference transaction failed: @reason.', ['@reason' => $response['RESPMSG']]), $response['RESULT']);
     }
   }
 

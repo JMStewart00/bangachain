@@ -264,7 +264,7 @@ class CheckoutSdk implements CheckoutSdkInterface {
       // Skip included adjustments and the adjustment types we're handling
       // below such as "shipping" and "tax".
       if ($adjustment->isIncluded() ||
-        in_array($adjustment->getType(), ['tax', 'shipping', 'promotion'])) {
+        in_array($adjustment->getType(), ['tax', 'shipping', 'promotion', 'commerce_giftcard'])) {
         continue;
       }
       $item_total = $item_total ? $item_total->add($adjustment->getAmount()) : $adjustment->getAmount();
@@ -301,7 +301,7 @@ class CheckoutSdk implements CheckoutSdkInterface {
       ];
     }
 
-    $promotion_total = $this->getAdjustmentsTotal($adjustments, ['promotion']);
+    $promotion_total = $this->getAdjustmentsTotal($adjustments, ['promotion', 'commerce_giftcard']);
     if (!empty($promotion_total)) {
       $breakdown['discount'] = [
         'currency_code' => $promotion_total->getCurrencyCode(),

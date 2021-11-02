@@ -102,7 +102,7 @@ class PaymentMethodAddForm extends BasePaymentMethodAddForm {
     }
     else {
       // Since we're not calling the parent submitConfigurationForm() method
-      // we need to duplicate the logic for setting the billing profile
+      // we need to duplicate the logic for setting the billing profile.
       /** @var \Drupal\commerce_payment\Plugin\Commerce\PaymentGateway\OnsitePaymentGatewayInterface $payment_gateway_plugin */
       $payment_gateway_plugin = $this->plugin;
       /** @var \Drupal\commerce_payment\Entity\PaymentMethodInterface $payment_method */

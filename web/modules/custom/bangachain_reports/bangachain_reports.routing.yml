@@ -1,0 +1,8 @@
+bangachain_reports.yearly_sales:
+  path: '/admin/commerce/reports/bac/reports/{year}'
+  defaults:
+    _controller: '\Drupal\bangachain_reports\Controller\SalesByYearController::content'
+    _title: 'Sales Broken Down by Year'
+  requirements:
+    _permission: 'view any unpublished content'
+    year: '^[0-9_]+'

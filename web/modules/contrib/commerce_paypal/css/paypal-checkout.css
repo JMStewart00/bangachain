@@ -7,7 +7,7 @@
     clear: right;
   }
 }
-#paypal-background-overlay {
+.paypal-background-overlay {
   position: fixed;
   top: 0;
   left: 0;

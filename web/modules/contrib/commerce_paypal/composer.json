@@ -5,7 +5,7 @@
   "homepage": "http://drupal.org/project/commerce_paypal",
   "license": "GPL-2.0-or-later",
   "require": {
-    "drupal/commerce": "^2.19",
+    "drupal/commerce": "^2.19 || ^3",
     "sainsburys/guzzle-oauth2-plugin": "^3.0"
   }
 }

@@ -126,13 +126,13 @@
       waitForSdk();
     },
     addLoader: function() {
-      var $background = $('<div id="paypal-background-overlay"></div>');
+      var $background = $('<div class="paypal-background-overlay"></div>');
       var $loader = $('<div class="paypal-background-overlay-loader"></div>');
       $background.append($loader);
       $('body').append($background);
     },
     removeLoader: function() {
-      $('body').remove('#paypal-background-overlay');
+      $('body').remove('.paypal-background-overlay');
     },
     extractBillingInfo: function ($form) {
       var billingInfo = {

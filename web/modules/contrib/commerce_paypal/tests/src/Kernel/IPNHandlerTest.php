@@ -5,7 +5,6 @@ namespace Drupal\Tests\commerce_paypal\Kernel;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 use Drupal\Tests\commerce_order\Kernel\OrderKernelTestBase;
-use GuzzleHttp\Exception\ClientException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 

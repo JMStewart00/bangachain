@@ -38,9 +38,10 @@
   }
 
   &--tertiary {
-    padding: spacer(0.5) spacer(2.5);
-    background-color: darken($brand-blue, 10%);
-    color: $white;
+    padding: spacer(0.5) spacer(1);
+    background-color: $white;
+    color: $brand-blue;
+    border: 2px solid $brand-blue;
     letter-spacing: rem(0.5);
     text-transform: uppercase;
     transition: background-color 0.2s ease-in;

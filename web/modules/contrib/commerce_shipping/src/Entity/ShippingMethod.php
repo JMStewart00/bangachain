@@ -222,6 +222,10 @@ class ShippingMethod extends ContentEntityBase implements ShippingMethodInterfac
    * {@inheritdoc}
    */
   public function applies(ShipmentInterface $shipment) {
+    // First, check if the shipping method applies for the given shipment.
+    if ($this->getPlugin() && !$this->getPlugin()->applies($shipment)) {
+      return FALSE;
+    }
     $conditions = $this->getConditions();
     if (!$conditions) {
       // Shipping methods without conditions always apply.

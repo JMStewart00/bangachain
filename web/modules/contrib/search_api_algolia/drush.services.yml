@@ -1,0 +1,8 @@
+services:
+  search_api_algolia.commands:
+    class: Drupal\search_api_algolia\Commands\SearchApiAlgoliaCommands
+    arguments:
+      - '@logger.factory'
+      - '@database'
+    tags:
+      - { name: drush.command }

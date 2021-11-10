@@ -39,6 +39,9 @@ field.field_settings.commerce_price:
       orderby: value
       sequence:
         type: string
+    allow_negative:
+      type: boolean
+      label: 'Allow negative prices'
 
 field.formatter.settings.commerce_price_default:
   type: mapping

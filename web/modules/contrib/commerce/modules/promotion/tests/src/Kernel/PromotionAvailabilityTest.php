@@ -95,6 +95,33 @@ class PromotionAvailabilityTest extends OrderKernelTestBase {
   }
 
   /**
+   * Test availability for promotions available in all stores.
+   */
+  public function testAvailabilityAllStores() {
+    $promotion = Promotion::create([
+      'order_types' => ['default'],
+      'stores' => [],
+      'usage_limit' => 2,
+      'start_date' => '2019-01-01T00:00:00',
+      'status' => TRUE,
+    ]);
+    $promotion->save();
+    $this->assertTrue($promotion->available($this->order));
+
+    $promotion->setEnabled(FALSE);
+    $this->assertFalse($promotion->available($this->order));
+    $promotion->setEnabled(TRUE);
+
+    $promotion->setOrderTypeIds(['test']);
+    $this->assertFalse($promotion->available($this->order));
+    $promotion->setOrderTypeIds(['default']);
+
+    $promotion->setStoreIds(['90']);
+    $this->assertFalse($promotion->available($this->order));
+    $promotion->setStoreIds([$this->store->id()]);
+  }
+
+  /**
    * Tests the start date logic.
    */
   public function testStartDate() {

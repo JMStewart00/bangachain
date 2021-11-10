@@ -31,6 +31,13 @@ class OrderAddForm extends FormBase {
   protected $storeStorage;
 
   /**
+   * The user storage.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
+  protected $userStorage;
+
+  /**
    * Constructs a new OrderAddForm object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -39,6 +46,7 @@ class OrderAddForm extends FormBase {
   public function __construct(EntityTypeManagerInterface $entity_type_manager) {
     $this->orderStorage = $entity_type_manager->getStorage('commerce_order');
     $this->storeStorage = $entity_type_manager->getStorage('commerce_store');
+    $this->userStorage = $entity_type_manager->getStorage('user');
   }
 
   /**
@@ -113,6 +121,13 @@ class OrderAddForm extends FormBase {
     ];
 
     return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    $this->validateCustomerForm($form, $form_state);
   }
 
   /**

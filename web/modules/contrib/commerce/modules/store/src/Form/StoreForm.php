@@ -5,10 +5,27 @@ namespace Drupal\commerce_store\Form;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\entity\Form\EntityDuplicateFormTrait;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class StoreForm extends ContentEntityForm {
 
   use EntityDuplicateFormTrait;
+
+  /**
+   * The date formatter.
+   *
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
+   */
+  protected $dateFormatter;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    $instance = parent::create($container);
+    $instance->dateFormatter = $container->get('date.formatter');
+    return $instance;
+  }
 
   /**
    * {@inheritdoc}
@@ -17,6 +34,77 @@ class StoreForm extends ContentEntityForm {
     $form = parent::form($form, $form_state);
     /** @var \Drupal\commerce_store\Entity\StoreInterface $store */
     $store = $this->entity;
+
+    $form['#theme'] = ['commerce_store_form'];
+    $form['#attached']['library'][] = 'commerce_store/form';
+    $changed = $store->getChangedTime();
+    $form['changed'] = [
+      '#type' => 'hidden',
+      '#default_value' => $changed,
+    ];
+    if ($changed) {
+      $last_saved = $this->dateFormatter->format($changed, 'short');
+    }
+    else {
+      $last_saved = $store->isNew() ? $this->t('Not saved yet') : $this->t('N/A');
+    }
+
+    $form['advanced'] = [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['entity-meta']],
+      '#weight' => 99,
+    ];
+    $form['meta'] = [
+      '#attributes' => ['class' => ['entity-meta__header']],
+      '#type' => 'container',
+      '#group' => 'advanced',
+      '#title' => $this->t('Authoring information'),
+      '#weight' => 90,
+      'published' => [
+        '#type' => 'html_tag',
+        '#tag' => 'h3',
+        '#value' => $store->isDefault() ? $this->t('Default store') : '',
+        '#access' => $store->isDefault(),
+        '#attributes' => [
+          'class' => ['entity-meta__title'],
+        ],
+      ],
+      'changed' => [
+        '#type' => 'item',
+        '#wrapper_attributes' => [
+          'class' => ['entity-meta__last-saved', 'container-inline'],
+        ],
+        '#markup' => '<h4 class="label inline">' . $this->t('Last saved') . '</h4> ' . $last_saved,
+      ],
+      'owner' => [
+        '#type' => 'item',
+        '#wrapper_attributes' => [
+          'class' => ['author', 'container-inline'],
+        ],
+        '#markup' => '<h4 class="label inline">' . $this->t('Owner') . '</h4> ' . $store->getOwner()->getDisplayName(),
+      ],
+    ];
+    if (isset($form['uid'])) {
+      $form['uid']['#group'] = 'author';
+    }
+    if (isset($form['created'])) {
+      $form['created']['#group'] = 'author';
+    }
+    $form['countries'] = [
+      '#type' => 'details',
+      '#title' => t('Supported countries'),
+      '#weight' => 90,
+      '#open' => TRUE,
+      '#group' => 'advanced',
+    ];
+    if (isset($form['billing_countries'])) {
+      $form['billing_countries']['widget']['#title'] = $this->t('Billing countries');
+      $form['billing_countries']['#group'] = 'countries';
+    }
+    if (isset($form['shipping_countries'])) {
+      $form['shipping_countries']['widget']['#title'] = $this->t('Shipping countries');
+      $form['shipping_countries']['#group'] = 'countries';
+    }
 
     $form['path_settings'] = [
       '#type' => 'details',

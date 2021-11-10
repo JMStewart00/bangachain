@@ -37,12 +37,10 @@ class ShipmentAccessControlHandler extends CoreEntityAccessControlHandler {
       return AccessResult::forbidden()->addCacheableDependency($entity);
     }
 
-    if ($operation === 'view') {
-      $result = $order->access('view', $account, TRUE);
-    }
-    else {
-      $bundle = $entity->bundle();
-      $result = AccessResult::allowedIfHasPermission($account, "manage $bundle commerce_shipment");
+    $bundle = $entity->bundle();
+    $result = AccessResult::allowedIfHasPermission($account, "manage $bundle commerce_shipment");
+    if ($result->isNeutral() && ($operation === 'view' || $operation === 'update')) {
+      $result = $order->access($operation, $account, TRUE);
     }
 
     return $result;

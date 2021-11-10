@@ -5,7 +5,7 @@ namespace Drupal\nodeaccess\Form;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\Entity\NodeType;
-use Drupal\Component\Utility\HTML;
+use Drupal\Component\Utility\Html;
 
 /**
  * Builds the configuration form.
@@ -110,7 +110,7 @@ class ConfigForm extends ConfigFormBase {
     foreach ($role_alias as $id => $role) {
       $form['role']['alias'][$id]['allow'] = [
         '#type' => 'checkbox',
-        '#title' => HTML::escape($role['name']),
+        '#title' => Html::escape($role['name']),
         '#default_value' => $role['allow'],
       ];
       $form['role']['alias'][$id]['alias'] = [

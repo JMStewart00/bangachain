@@ -273,3 +273,49 @@ function commerce_promotion_update_8209() {
     $role->save();
   }
 }
+
+/**
+ * Mark the promotion "stores" field as optional.
+ */
+function commerce_promotion_update_8210() {
+  \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
+}
+
+/**
+ * Add start & end dates to coupons.
+ */
+function commerce_promotion_update_8211() {
+  $fields['start_date'] = BaseFieldDefinition::create('datetime')
+    ->setLabel(t('Start date'))
+    ->setDescription(t('The date the coupon becomes valid.'))
+    ->setRequired(FALSE)
+    ->setSetting('datetime_type', 'datetime')
+    ->setSetting('datetime_optional_label', t('Provide a start date'))
+    ->setDefaultValueCallback('Drupal\commerce_promotion\Entity\Promotion::getDefaultStartDate')
+    ->setDisplayOptions('form', [
+      'type' => 'commerce_store_datetime',
+      'weight' => 5,
+    ]);
+
+  $fields['end_date'] = BaseFieldDefinition::create('datetime')
+    ->setLabel(t('End date'))
+    ->setDescription(t('The date after which the coupon is invalid.'))
+    ->setRequired(FALSE)
+    ->setSetting('datetime_type', 'datetime')
+    ->setSetting('datetime_optional_label', t('Provide an end date'))
+    ->setDisplayOptions('form', [
+      'type' => 'commerce_store_datetime',
+      'weight' => 6,
+    ]);
+
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  foreach ($fields as $name => $definition) {
+    // Skip installing the field storage definition if the field already exists.
+    // This could happen if the commerce_coupon_conditions module is installed
+    // on the site for example.
+    if ($definition_update_manager->getFieldStorageDefinition($name, 'commerce_promotion_coupon')) {
+      continue;
+    }
+    $definition_update_manager->installFieldStorageDefinition($name, 'commerce_promotion_coupon', 'commerce_promotion', $definition);
+  }
+}

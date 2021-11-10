@@ -103,7 +103,7 @@ abstract class LocalTaxTypeBase extends TaxTypeBase implements LocalTaxTypeInter
    */
   public function applies(OrderInterface $order) {
     $store = $order->getStore();
-    return $this->matchesAddress($store) || $this->matchesRegistrations($store);
+    return $this->matchesRegistrations($store);
   }
 
   /**
@@ -214,8 +214,11 @@ abstract class LocalTaxTypeBase extends TaxTypeBase implements LocalTaxTypeInter
    */
   protected function checkRegistrations(StoreInterface $store, TaxZone $zone) {
     foreach ($store->get('tax_registrations') as $field_item) {
-      if ($zone->match(new Address($field_item->value))) {
-        return TRUE;
+      $address = new Address($field_item->value);
+      foreach ($zone->getTerritories() as $territory) {
+        if ($territory->getCountryCode() === $address->getCountryCode()) {
+          return TRUE;
+        }
       }
     }
     return FALSE;

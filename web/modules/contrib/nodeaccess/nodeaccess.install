@@ -38,6 +38,7 @@ function nodeaccess_install() {
     $settings->set($type, $grants);
   }
   $i = 1;
+  $role_map = [];
   foreach (user_roles() as $id => $role) {
     $role_alias[$id] = [
       'alias' => $role->label(),
@@ -123,7 +124,6 @@ function nodeaccess_update_8101() {
         'allow' => 0,
       ];
     }
-    $i++;
   }
   $config->set('role_alias', $role_alias);
   $config->save();

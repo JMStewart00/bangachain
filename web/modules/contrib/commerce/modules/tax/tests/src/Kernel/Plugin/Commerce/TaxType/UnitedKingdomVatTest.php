@@ -36,7 +36,7 @@ class UnitedKingdomVatTest extends EuropeanUnionVatTest {
   public function testApplication() {
     $plugin = $this->taxType->getPlugin();
     // GB customer, GB store, standard VAT.
-    $order = $this->buildOrder('GB', 'GB');
+    $order = $this->buildOrder('GB', 'GB', '', ['GB']);
     $this->assertTrue($plugin->applies($order));
     $plugin->apply($order);
     $adjustments = $order->collectAdjustments();
@@ -45,7 +45,7 @@ class UnitedKingdomVatTest extends EuropeanUnionVatTest {
     $this->assertEquals('united_kingdom_vat|gb|standard', $adjustment->getSourceId());
 
     // Customer from Isles of Man, GB store, standard VAT.
-    $order = $this->buildOrder('IM', 'GB');
+    $order = $this->buildOrder('IM', 'GB', '', ['GB']);
     $this->assertTrue($plugin->applies($order));
     $plugin->apply($order);
     $adjustments = $order->collectAdjustments();
@@ -54,7 +54,7 @@ class UnitedKingdomVatTest extends EuropeanUnionVatTest {
     $this->assertEquals('united_kingdom_vat|gb|standard', $adjustment->getSourceId());
 
     // French customer, GB store, no VAT.
-    $order = $this->buildOrder('FR', 'GB');
+    $order = $this->buildOrder('FR', 'GB', '', ['GB']);
     $this->assertTrue($plugin->applies($order));
     $plugin->apply($order);
     $adjustments = $order->collectAdjustments();

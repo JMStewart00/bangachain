@@ -6,11 +6,12 @@ use Drupal\address\AddressInterface;
 use Drupal\commerce_price\Entity\CurrencyInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\user\EntityOwnerInterface;
+use Drupal\Core\Entity\EntityChangedInterface;
 
 /**
  * Defines the interface for stores.
  */
-interface StoreInterface extends ContentEntityInterface, EntityOwnerInterface {
+interface StoreInterface extends ContentEntityInterface, EntityOwnerInterface, EntityChangedInterface {
 
   /**
    * Gets the store name.
@@ -159,5 +160,23 @@ interface StoreInterface extends ContentEntityInterface, EntityOwnerInterface {
    * @return $this
    */
   public function setDefault($is_default);
+
+  /**
+   * Gets the store creation timestamp.
+   *
+   * @return int
+   *   The store creation timestamp.
+   */
+  public function getCreatedTime();
+
+  /**
+   * Sets the store creation timestamp.
+   *
+   * @param int $timestamp
+   *   The store creation timestamp.
+   *
+   * @return $this
+   */
+  public function setCreatedTime($timestamp);
 
 }

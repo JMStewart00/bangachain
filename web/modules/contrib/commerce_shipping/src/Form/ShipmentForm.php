@@ -2,10 +2,12 @@
 
 namespace Drupal\commerce_shipping\Form;
 
+use Drupal\commerce\AjaxFormTrait;
 use Drupal\commerce_order\Entity\OrderInterface;
 use Drupal\commerce_shipping\PackageTypeManagerInterface;
 use Drupal\commerce_shipping\ShipmentItem;
 use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityRepositoryInterface;
@@ -20,6 +22,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Defines the shipment add/edit form.
  */
 class ShipmentForm extends ContentEntityForm {
+
+  use AjaxFormTrait;
 
   /**
    * The package type manager.
@@ -62,6 +66,8 @@ class ShipmentForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
+    // Workaround for core bug #2897377.
+    $form['#id'] = Html::getId($form_state->getBuildInfo()['form_id']);
     /** @var \Drupal\commerce_shipping\Entity\ShipmentInterface $shipment */
     $shipment = $this->entity;
     $order_id = $shipment->get('order_id')->target_id;
@@ -103,11 +109,14 @@ class ShipmentForm extends ContentEntityForm {
       $form['shipping_method']['#access'] = FALSE;
     }
 
-    // Prepare the form for ajax.
-    // Not using Html::getUniqueId() on the wrapper ID to avoid #2675688.
-    $form['#wrapper_id'] = 'shipping-information-wrapper';
-    $form['#prefix'] = '<div id="' . $form['#wrapper_id'] . '">';
-    $form['#suffix'] = '</div>';
+    // Ensure selecting a different address refreshes the entire form.
+    if (isset($form['shipping_profile']['widget'][0]['profile']['select_address'])) {
+      $form['shipping_profile']['widget'][0]['profile']['select_address']['#ajax'] = [
+        'callback' => [get_class($this), 'ajaxRefreshForm'],
+      ];
+      // Selecting a different address should trigger a recalculation.
+      $form['shipping_profile']['widget'][0]['profile']['select_address']['#recalculate'] = TRUE;
+    }
 
     $package_types = $this->packageTypeManager->getDefinitions();
     $package_type_options = [];
@@ -185,8 +194,7 @@ class ShipmentForm extends ContentEntityForm {
       '#value' => $this->t('Recalculate shipping'),
       '#recalculate' => TRUE,
       '#ajax' => [
-        'callback' => [get_class($this), 'ajaxRefresh'],
-        'wrapper' => $form['#wrapper_id'],
+        'callback' => [get_class($this), 'ajaxRefreshForm'],
       ],
       // The calculation process only needs a valid shipping profile.
       '#limit_validation_errors' => [
@@ -230,7 +238,7 @@ class ShipmentForm extends ContentEntityForm {
       return $element;
     }
     $triggering_element_name = end($triggering_element['#parents']);
-    if ($triggering_element_name === 'recalculate_shipping') {
+    if (in_array($triggering_element_name, ['recalculate_shipping', 'select_address'], TRUE)) {
       $user_input = &$form_state->getUserInput();
       unset($user_input['shipping_method']);
     }
@@ -255,16 +263,17 @@ class ShipmentForm extends ContentEntityForm {
       $selected_profile_id = $form_state->getValue($selected_profile_key);
       $address_key = array_merge($base_form_key, ['address', '0', 'address']);
       $address = $form_state->getValue($address_key);
-      // If an address was input, use that as an address override.
-      if ($address !== NULL) {
-        $shipment->getShippingProfile()->get('address')->setValue($address);
-      }
       // If a different profile was selected, load it and use its address.
-      elseif ($selected_profile_id !== '_original') {
+      if (!empty($selected_profile_id) && is_numeric($selected_profile_id)) {
         $profile_storage = $this->entityTypeManager->getStorage('profile');
         $selected_profile = $profile_storage->load($selected_profile_id);
         assert($selected_profile instanceof ProfileInterface);
-        $shipment->getShippingProfile()->set('address', $selected_profile->get('address'));
+        $shipment->getShippingProfile()->set('address', $selected_profile->get('address')->first()->toArray());
+      }
+      elseif ($selected_profile_id !== '_original') {
+        // We update the address, even it's NULL so that no shipping rates are
+        // returned in case none apply without entering an address.
+        $shipment->getShippingProfile()->get('address')->setValue($address);
       }
 
       // Add the shipping items.
@@ -321,7 +330,7 @@ class ShipmentForm extends ContentEntityForm {
       $order->save();
     }
 
-    $this->messenger()->addMessage($this->t('Shipment for order @order created.', ['@order' => $order->getOrderNumber()]));
+    $this->messenger()->addMessage($this->t('Saved shipment for order @order.', ['@order' => $order->getOrderNumber()]));
     $form_state->setRedirect('entity.commerce_shipment.collection', ['commerce_order' => $order->id()]);
   }
 

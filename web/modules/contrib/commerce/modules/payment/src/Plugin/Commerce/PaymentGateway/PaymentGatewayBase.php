@@ -472,19 +472,9 @@ abstract class PaymentGatewayBase extends PluginBase implements PaymentGatewayIn
   }
 
   /**
-   * Gets the remote customer ID for the given user.
-   *
-   * The remote customer ID is specific to a payment gateway instance
-   * in the configured mode. This allows the gateway to skip test customers
-   * after the gateway has been switched to live mode.
-   *
-   * @param \Drupal\user\UserInterface $account
-   *   The user account.
-   *
-   * @return string
-   *   The remote customer ID, or NULL if none found.
+   * {@inheritDoc}
    */
-  protected function getRemoteCustomerId(UserInterface $account) {
+  public function getRemoteCustomerId(UserInterface $account) {
     $remote_id = NULL;
     if ($account->isAuthenticated()) {
       $provider = $this->parentEntity->id() . '|' . $this->getMode();

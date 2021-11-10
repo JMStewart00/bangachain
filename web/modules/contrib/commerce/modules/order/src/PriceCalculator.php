@@ -109,7 +109,7 @@ class PriceCalculator implements PriceCalculatorInterface {
       $processors = array_merge($processors, $this->getProcessors($adjustment_type));
     }
     if (empty($adjustment_types) || empty($processors)) {
-      return new PriceCalculatorResult($resolved_price, $resolved_price);
+      return new PriceCalculatorResult($resolved_price->multiply($quantity), $resolved_price);
     }
 
     /** @var \Drupal\commerce_order\OrderItemStorageInterface $order_item_storage */

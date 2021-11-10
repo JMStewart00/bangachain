@@ -69,16 +69,16 @@ function nodeaccess_node_access_records($node) {
     else {
       // Otherwise, check access to unpublished content for authenticated and
       // anonymous users.
-      $role_perms = user_role_permissions([DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID]);
+      $role_perms = user_role_permissions([AccountInterface::ANONYMOUS_ROLE, AccountInterface::AUTHENTICATED_ROLE]);
       // Anonymous user setting.
       $grants[] = [
-        'gid' => DRUPAL_ANONYMOUS_RID,
-        'grant_view' => in_array('bypass node access', $role_perms[DRUPAL_ANONYMOUS_RID]),
+        'gid' => AccountInterface::ANONYMOUS_ROLE,
+        'grant_view' => in_array('bypass node access', $role_perms[AccountInterface::ANONYMOUS_ROLE]),
       ];
       // Authenticated user setting.
       $grants[] = [
-        'gid' => DRUPAL_AUTHENTICATED_RID,
-        'grant_view' => in_array('bypass node access', $role_perms[DRUPAL_AUTHENTICATED_RID]),
+        'gid' => AccountInterface::AUTHENTICATED_ROLE,
+        'grant_view' => in_array('bypass node access', $role_perms[AccountInterface::AUTHENTICATED_ROLE]),
       ];
     }
   }
@@ -230,15 +230,16 @@ function nodeaccess_node_type_insert(NodeTypeInterface $type) {
   $config = \Drupal::configFactory()->getEditable('nodeaccess.settings');
 
   // New node type, default to whatever is set for access content permission.
-  $role_perms = user_role_permissions([DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID]);
-  $anonymous_access = (int) in_array('access content', $role_perms[DRUPAL_ANONYMOUS_RID]);
-  $authenticated_access = (int) in_array('access content', $role_perms[DRUPAL_AUTHENTICATED_RID]);
-  $grants[DRUPAL_ANONYMOUS_RID] = [
+  $role_perms = user_role_permissions([AccountInterface::ANONYMOUS_ROLE, AccountInterface::AUTHENTICATED_ROLE]);
+  $anonymous_access = (int) in_array('access content', $role_perms[AccountInterface::ANONYMOUS_ROLE]);
+  $authenticated_access = (int) in_array('access content', $role_perms[AccountInterface::AUTHENTICATED_ROLE]);
+
+  $grants[AccountInterface::ANONYMOUS_ROLE] = [
     'grant_view' => $anonymous_access,
     'grant_update' => 0,
     'grant_delete' => 0,
   ];
-  $grants[DRUPAL_AUTHENTICATED_RID] = [
+  $grants[AccountInterface::AUTHENTICATED_ROLE] = [
     'grant_view' => $authenticated_access,
     'grant_update' => 0,
     'grant_delete' => 0,
@@ -269,7 +270,7 @@ function nodeaccess_node_access(NodeInterface $node, $op, $account) {
       if ($account->id() == 0 && $node->getOwnerId() == 0) {
         // We check if the role has particular access to this node.
         $grants = _nodeaccess_get_grants($node);
-        $anonymous_rid = $role_map[DRUPAL_ANONYMOUS_RID];
+        $anonymous_rid = $role_map[AccountInterface::ANONYMOUS_ROLE];
         // If anonymous has rights to this node, we allow them.
         if (($grants['rid'][$anonymous_rid]['grant_update'] && $op == 'update') ||
             ($grants['rid'][$anonymous_rid]['grant_delete'] && $op == 'delete')) {

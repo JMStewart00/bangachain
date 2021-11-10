@@ -48,13 +48,19 @@ class EuropeanUnionVat extends LocalTaxTypeBase {
     }
     $order = $order_item->getOrder();
     $store = $order->getStore();
-    $store_address = $store->getAddress();
-    $store_country = $store_address->getCountryCode();
-    $store_zones = $this->getMatchingZones($store_address);
     $store_registration_zones = array_filter($zones, function ($zone) use ($store) {
       /** @var \Drupal\commerce_tax\TaxZone $zone */
       return $this->checkRegistrations($store, $zone);
     });
+
+    // The store is not registered to collect taxes in the EU, stop here.
+    if (empty($store_registration_zones)) {
+      return [];
+    }
+
+    $store_address = $store->getAddress();
+    $store_country = $store_address->getCountryCode();
+    $store_zones = $this->getMatchingZones($store_address);
 
     $customer_tax_number = '';
     if (!$customer_profile->get('tax_number')->isEmpty()) {
@@ -70,7 +76,7 @@ class EuropeanUnionVat extends LocalTaxTypeBase {
     $taxable_type = $this->getTaxableType($order_item);
     $year = $order->getCalculationDate()->format('Y');
     $is_digital = $taxable_type == TaxableType::DIGITAL_GOODS && $year >= 2015;
-    if (empty($store_zones) && !empty($store_registration_zones)) {
+    if (empty($store_zones)) {
       // The store is not in the EU but is registered to collect VAT for
       // digital goods.
       $resolved_zones = [];
@@ -682,6 +688,7 @@ class EuropeanUnionVat extends LocalTaxTypeBase {
           'label' => $labels['second_reduced'],
           'percentages' => [
             ['number' => '0.09', 'start_date' => '2011-07-01', 'end_date' => '2018-12-31'],
+            ['number' => '0.09', 'start_date' => '2020-11-01', 'end_date' => '2022-08-31'],
           ],
         ],
         [

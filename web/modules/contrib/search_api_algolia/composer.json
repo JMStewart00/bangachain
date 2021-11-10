@@ -31,5 +31,12 @@
   },
   "suggest": {
     "drupal/search_api_autocomplete": "^1.0"
+  },
+  "extra": {
+    "drush": {
+      "services": {
+        "drush.services.yml": "^9"
+      }
+    }
   }
 }

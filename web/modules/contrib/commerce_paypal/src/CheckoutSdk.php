@@ -221,6 +221,27 @@ class CheckoutSdk implements CheckoutSdkInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function verifyWebhookSignature(array $parameters) {
+    $required_keys = [
+      'auth_algo',
+      'cert_url',
+      'transmission_id',
+      'transmission_sig',
+      'transmission_time',
+      'webhook_id',
+      'webhook_event',
+    ];
+    foreach ($required_keys as $required_key) {
+      if (empty($parameters[$required_key])) {
+        throw new \InvalidArgumentException(sprintf('Missing required parameter key "%s".', $required_key));
+      }
+    }
+    return $this->client->post('/v1/notifications/verify-webhook-signature', ['json' => $parameters]);
+  }
+
+  /**
    * Prepare the order request parameters.
    *
    * @param \Drupal\commerce_order\Entity\OrderInterface $order

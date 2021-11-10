@@ -16,18 +16,22 @@ order_created_admin:
   category: commerce_order
   label: 'Order created'
   template: '<p>Order created through the order add form.</p>'
+# Deprecated in favor of the generic order_state_updated log template.
 order_placed:
   category: commerce_order
   label: 'Order placed'
   template: '<p>The order was placed.</p>'
+# Deprecated in favor of the generic order_state_updated log template.
 order_validated:
   category: commerce_order
   label: 'Order validated'
   template: '<p>The order was validated.</p>'
+# Deprecated in favor of the generic order_state_updated log template.
 order_fulfilled:
   category: commerce_order
   label: 'Order fulfilled'
   template: '<p>The order was fulfilled.</p>'
+# Deprecated in favor of the generic order_state_updated log template.
 order_canceled:
   category: commerce_order
   label: 'Order canceled'

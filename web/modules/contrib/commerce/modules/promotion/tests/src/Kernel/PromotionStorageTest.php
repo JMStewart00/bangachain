@@ -186,13 +186,30 @@ class PromotionStorageTest extends OrderKernelTestBase {
       'status' => TRUE,
     ]);
     $promotion6->save();
+    // Past start date, enabled. No end time. All stores.
+    $promotion7 = Promotion::create([
+      'name' => 'Promotion 7',
+      'order_types' => [$this->orderType],
+      'start_date' => '2014-01-01T00:00:00',
+      'status' => TRUE,
+    ]);
+    $this->assertEquals(SAVED_NEW, $promotion7->save());
+    // Past start date, enabled. No end time. Different store.
+    $promotion8 = Promotion::create([
+      'name' => 'Promotion 8',
+      'order_types' => [$this->orderType],
+      'stores' => [5],
+      'start_date' => '2014-01-01T00:00:00',
+      'status' => TRUE,
+    ]);
+    $this->assertEquals(SAVED_NEW, $promotion8->save());
 
     // Confirm that the promotions were filtered by date and status,
     // and sorted by weight.
     $promotions = $this->promotionStorage->loadAvailable($this->order);
-    $this->assertCount(3, $promotions);
+    $this->assertCount(4, $promotions);
     $this->assertEquals([
-      $promotion5->id(), $promotion1->id(), $promotion2->id(),
+      $promotion5->id(), $promotion1->id(), $promotion2->id(), $promotion7->id(),
     ], array_keys($promotions));
 
     // Test filtering by offer ID.

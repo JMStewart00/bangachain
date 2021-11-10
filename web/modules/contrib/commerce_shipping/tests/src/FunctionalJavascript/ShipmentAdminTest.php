@@ -334,7 +334,7 @@ class ShipmentAdminTest extends CommerceWebDriverTestBase {
       'title[0][value]' => 'Test shipment',
     ], 'Save');
     $this->assertSession()->addressEquals($this->shipmentUri);
-    $this->assertSession()->pageTextContains(t('Shipment for order @order created.', ['@order' => $this->order->getOrderNumber()]));
+    $this->assertSession()->pageTextContains(t('Saved shipment for order @order.', ['@order' => $this->order->getOrderNumber()]));
 
     \Drupal::entityTypeManager()->getStorage('commerce_order')->resetCache([$this->order->id()]);
     $this->order = Order::load($this->order->id());

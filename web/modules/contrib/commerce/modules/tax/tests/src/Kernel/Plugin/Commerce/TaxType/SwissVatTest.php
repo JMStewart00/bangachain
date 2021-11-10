@@ -36,7 +36,7 @@ class SwissVatTest extends EuropeanUnionVatTest {
   public function testApplication() {
     $plugin = $this->taxType->getPlugin();
     // Swiss customer, Swiss store, standard VAT.
-    $order = $this->buildOrder('CH', 'CH');
+    $order = $this->buildOrder('CH', 'CH', '', ['CH']);
     $this->assertTrue($plugin->applies($order));
     $plugin->apply($order);
     $adjustments = $order->collectAdjustments();
@@ -45,7 +45,7 @@ class SwissVatTest extends EuropeanUnionVatTest {
     $this->assertEquals('swiss_vat|ch|standard', $adjustment->getSourceId());
 
     // Liechtenstein customer, Swiss store, standard VAT.
-    $order = $this->buildOrder('LI', 'CH');
+    $order = $this->buildOrder('LI', 'CH', '', ['CH']);
     $this->assertTrue($plugin->applies($order));
     $plugin->apply($order);
     $adjustments = $order->collectAdjustments();
@@ -54,7 +54,7 @@ class SwissVatTest extends EuropeanUnionVatTest {
     $this->assertEquals('swiss_vat|ch|standard', $adjustment->getSourceId());
 
     // Serbian customer, Swiss store, no VAT.
-    $order = $this->buildOrder('RS', 'CH');
+    $order = $this->buildOrder('RS', 'CH', '', ['CH']);
     $this->assertTrue($plugin->applies($order));
     $plugin->apply($order);
     $adjustments = $order->collectAdjustments();

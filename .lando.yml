@@ -8,6 +8,7 @@ config:
   id: 2b62a896-ca8f-4f60-a9b3-5497d8e23a8f
   site: bangachain
   framework: drupal8
+  database: "mariadb:10.4"
 
 events:
   # Clear cache after a database import

@@ -4,11 +4,12 @@ package: Access control
 configure: nodeaccess.administration
 type: module
 core: 8.x
+core_version_requirement: ^8 || ^9
 
 dependencies:
   - drupal:node
 
-# Information added by Drupal.org packaging script on 2020-05-20
-version: '8.x-1.0'
+# Information added by Drupal.org packaging script on 2021-10-20
+version: '8.x-1.1'
 project: 'nodeaccess'
-datestamp: 1589973323
+datestamp: 1634751953

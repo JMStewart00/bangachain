@@ -51,7 +51,7 @@ final class PriceCalculatorResult {
   /**
    * Gets the calculated price.
    *
-   * This is the resolved unit price with adjustments applied.
+   * This is the resolved price with adjustments applied.
    *
    * @return \Drupal\commerce_price\Price
    *   The calculated price.

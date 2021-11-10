@@ -1,42 +1,21 @@
 <?php
 
-namespace Drupal\Tests\search_api\Unit;
+namespace Drupal\Tests\search_api\Unit\Views;
 
-use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Entity\EntityRepositoryInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\search_api\Plugin\views\argument\SearchApiTerm;
 use Drupal\taxonomy\Entity\Term;
-use Drupal\taxonomy\TermStorageInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests whether the SearchApiTerm plugin works correctly.
+ * Tests whether the SearchApiTerm argument plugin works correctly.
  *
  * @group search_api
+ *
+ * @coversDefaultClass \Drupal\search_api\Plugin\views\argument\SearchApiTerm
  */
 class TaxonomyTermArgumentTest extends UnitTestCase {
 
-  /**
-   * The test container.
-   *
-   * @var \Drupal\Core\DependencyInjection\ContainerBuilder
-   */
-  protected $container;
-
-  /**
-   * The mock term storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit\Framework\MockObject\MockObject
-   */
-  protected $termStorage;
-
-  /**
-   * The mock entity repository service.
-   *
-   * @var \Drupal\Core\Entity\EntityRepositoryInterface|\PHPUnit\Framework\MockObject\MockObject
-   */
-  protected $entityRepository;
+  use TaxonomyTestTrait;
 
   /**
    * {@inheritdoc}
@@ -44,23 +23,13 @@ class TaxonomyTermArgumentTest extends UnitTestCase {
   public function setUp() {
     parent::setUp();
 
-    $this->container = new ContainerBuilder();
-    $this->entityRepository = $this->createMock(EntityRepositoryInterface::class);
-    $this->termStorage = $this->getMockBuilder(TermStorageInterface::class)
-      ->getMock();
-    $entity_type_manager = $this->getMockBuilder(EntityTypeManagerInterface::class)
-      ->disableOriginalConstructor()
-      ->getMock();
-    $entity_type_manager->expects($this->any())
-      ->method('getStorage')
-      ->willReturn($this->termStorage);
-    $this->container->set('entity.repository', $this->entityRepository);
-    $this->container->set('entity_type.manager', $entity_type_manager);
-    \Drupal::setContainer($this->container);
+    $this->setupContainer();
   }
 
   /**
    * Tests that null is returned if no argument has been set for any reason.
+   *
+   * @covers ::title
    */
   public function testReturnsNullIfArgumentNotSet() {
     $plugin = $this->getSubjectUnderTest();
@@ -70,6 +39,8 @@ class TaxonomyTermArgumentTest extends UnitTestCase {
 
   /**
    * Tests that the set argument is returned when no value is provided.
+   *
+   * @covers ::title
    */
   public function testReturnsArgumentIfSet() {
     $plugin = $this->getSubjectUnderTest('argument');
@@ -80,6 +51,8 @@ class TaxonomyTermArgumentTest extends UnitTestCase {
 
   /**
    * Tests that the set argument is returned when non existing ids are provided.
+   *
+   * @covers ::title
    */
   public function testReturnsArgumentIfInvalidTermIdIsPassed() {
     $plugin = $this->getSubjectUnderTest('argument');
@@ -101,6 +74,8 @@ class TaxonomyTermArgumentTest extends UnitTestCase {
 
   /**
    * Tests that the term label is returned if an existing id is provided.
+   *
+   * @covers ::title
    */
   public function testReturnsTermNameIfValidTermIdIsPassed() {
     $plugin = $this->getSubjectUnderTest('argument');
@@ -124,6 +99,8 @@ class TaxonomyTermArgumentTest extends UnitTestCase {
 
   /**
    * Tests that a comma separated list of term labels is returned.
+   *
+   * @covers ::title
    */
   public function testReturnsCommaSeparatedNamesIfValidTermIdsArePassed() {
     $plugin = $this->getSubjectUnderTest('argument');

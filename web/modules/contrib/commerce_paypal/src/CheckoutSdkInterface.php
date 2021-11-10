@@ -134,4 +134,20 @@ interface CheckoutSdkInterface {
    */
   public function voidPayment($authorization_id);
 
+  /**
+   * Verifies a webhook signature.
+   *
+   * @param array $parameters
+   *   An array of parameters to pass as the request body.
+   *
+   * @see https://developer.paypal.com/docs/api/webhooks/v1/#verify-webhook-signature_post
+   *
+   * @throws \InvalidArgumentException
+   *   Thrown when one of the required parameter isn't passed.
+   *
+   * @return \Psr\Http\Message\ResponseInterface
+   *   The HTTP response.
+   */
+  public function verifyWebhookSignature(array $parameters);
+
 }

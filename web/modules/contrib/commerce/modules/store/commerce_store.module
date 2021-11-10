@@ -32,6 +32,9 @@ function commerce_store_theme() {
     'commerce_store' => [
       'render element' => 'elements',
     ],
+    'commerce_store_form' => [
+      'render element' => 'form',
+    ],
   ];
 }
 

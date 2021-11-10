@@ -19,6 +19,8 @@ payment_paypal_checkout:
       label: 'Partially refunded'
     refunded:
       label: 'Refunded'
+    capture_denied:
+      label: 'Capture denied'
   transitions:
     authorize:
       label: 'Authorize payment'

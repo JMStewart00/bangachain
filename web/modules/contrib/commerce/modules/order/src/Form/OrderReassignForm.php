@@ -31,13 +31,6 @@ class OrderReassignForm extends FormBase {
   protected $orderAssignment;
 
   /**
-   * The user storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $userStorage;
-
-  /**
    * Constructs a new OrderReassignForm object.
    *
    * @param \Drupal\Core\Routing\CurrentRouteMatch $current_route_match
@@ -113,6 +106,13 @@ class OrderReassignForm extends FormBase {
     ];
 
     return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    $this->validateCustomerForm($form, $form_state);
   }
 
   /**

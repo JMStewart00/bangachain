@@ -319,6 +319,7 @@ class OrderAdminTest extends OrderWebDriverTestBase {
     $order = $this->createEntity('commerce_order', [
       'type' => 'default',
       'mail' => $this->loggedInUser->getEmail(),
+      'order_number' => '11111',
       'uid' => $this->loggedInUser,
       'store_id' => $this->store,
     ]);
@@ -343,6 +344,7 @@ class OrderAdminTest extends OrderWebDriverTestBase {
       'mail' => $this->loggedInUser->getEmail(),
       'uid' => $this->loggedInUser,
       'store_id' => $this->store,
+      'order_number' => '11111',
       'locked' => TRUE,
     ]);
     $this->drupalGet($order->toUrl('unlock-form'));
@@ -461,6 +463,25 @@ class OrderAdminTest extends OrderWebDriverTestBase {
     $this->drupalLogout();
     $this->drupalGet($order->toUrl()->toString());
     $this->assertSession()->pageTextContains('Access denied');
+  }
+
+  /**
+   * Tests creating a new customer with same email used by an existing customer.
+   */
+  public function testCreateOrderNewCustomer() {
+    $email = 'guest@example.com';
+    $this->createUser([], $this->randomString(), FALSE, ['mail' => $email]);
+
+    $this->drupalGet('/admin/commerce/orders');
+    $this->getSession()->getPage()->clickLink('Create a new order');
+    $this->getSession()->getPage()->selectFieldOption('customer_type', 'new');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $edit = [
+      'customer_type' => 'new',
+      'mail' => $email,
+    ];
+    $this->submitForm($edit, t('Create'));
+    $this->assertSession()->pageTextContains('The email address guest@example.com is already taken.');
   }
 
 }

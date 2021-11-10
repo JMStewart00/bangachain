@@ -47,7 +47,7 @@ class OrderRefresh implements OrderRefreshInterface {
   /**
    * The order preprocessors.
    *
-   * @var \Drupal\commerce_order\OrderPreProcessorInterface[]
+   * @var \Drupal\commerce_order\OrderPreprocessorInterface[]
    */
   protected $preprocessors = [];
 
@@ -153,13 +153,22 @@ class OrderRefresh implements OrderRefreshInterface {
     $current_time = $this->time->getCurrentTime();
     $order->setChangedTime($current_time);
     $order->clearAdjustments();
+    $customer = $order->getCustomer();
+
+    // For authenticated users, maintain the order email in sync with the
+    // customer's email.
+    if ($customer->isAuthenticated()) {
+      if ($order->getEmail() && $order->getEmail() != $customer->getEmail()) {
+        $order->setEmail($customer->getEmail());
+      }
+    }
     // Nothing else can be done while the order is empty.
-    if (!$order->hasItems()) {
+    if (!$order->getItems()) {
       return;
     }
 
     $time = $order->getCalculationDate()->format('U');
-    $context = new Context($order->getCustomer(), $order->getStore(), $time);
+    $context = new Context($customer, $order->getStore(), $time);
     foreach ($order->getItems() as $order_item) {
       $purchased_entity = $order_item->getPurchasedEntity();
       if ($purchased_entity) {

@@ -126,10 +126,10 @@ class ShippingInformation extends CheckoutPaneBase implements ContainerFactoryPl
    */
   public function buildConfigurationSummary() {
     if (!empty($this->configuration['require_shipping_profile'])) {
-      $summary = $this->t('Hide shipping costs until an address is entered: Yes') . '<br>';;
+      $summary = $this->t('Hide shipping costs until an address is entered: Yes') . '<br>';
     }
     else {
-      $summary = $this->t('Hide shipping costs until an address is entered: No') . '<br>';;
+      $summary = $this->t('Hide shipping costs until an address is entered: No') . '<br>';
     }
     if (!empty($this->configuration['auto_recalculate'])) {
       $summary .= $this->t('Autorecalculate: Yes');

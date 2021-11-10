@@ -10,12 +10,16 @@ use Drupal\commerce_order\Entity\OrderInterface;
 use Drupal\commerce_order\Entity\OrderType;
 use Drupal\commerce_shipping\Entity\ShipmentType;
 use Drupal\entity\BundleFieldDefinition;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 
 /**
@@ -342,4 +346,16 @@ function template_preprocess_commerce_shipment(array &$variables) {
   foreach (Element::children($variables['elements']) as $key) {
     $variables['shipment'][$key] = $variables['elements'][$key];
   }
+}
+
+/**
+ * Implements hook_entity_field_access().
+ */
+function commerce_shipping_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+  if (!\Drupal::moduleHandler()->moduleExists('jsonapi')) {
+    return AccessResult::neutral();
+  }
+  /** @var \Drupal\commerce_shipping\FieldAccessInterface $field_access */
+  $field_access = \Drupal::getContainer()->get('commerce_shipping.field_access');
+  return $field_access->handle($operation, $field_definition, $account, $items);
 }

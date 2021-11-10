@@ -54,6 +54,9 @@ commerce_payment.commerce_payment_gateway.plugin.paypal_checkout:
     enable_on_cart:
       type: boolean
       label: 'Show the Smart payment buttons on the cart page'
+    webhook_id:
+      type: string
+      label: 'The webhook ID'
 commerce_payment.commerce_payment_gateway.plugin.paypal_express_checkout:
   type: commerce_payment_gateway_configuration
   mapping:

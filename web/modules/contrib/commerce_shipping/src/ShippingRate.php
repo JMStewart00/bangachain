@@ -60,6 +60,13 @@ final class ShippingRate {
   protected $deliveryDate;
 
   /**
+   * The data.
+   *
+   * @var array
+   */
+  protected $data = [];
+
+  /**
    * Constructs a new ShippingRate object.
    *
    * @param array $definition
@@ -92,6 +99,7 @@ final class ShippingRate {
     $this->amount = $definition['amount'];
     $this->description = $definition['description'] ?? '';
     $this->deliveryDate = $definition['delivery_date'] ?? NULL;
+    $this->data = $definition['data'] ?? [];
   }
 
   /**
@@ -224,6 +232,29 @@ final class ShippingRate {
   }
 
   /**
+   * Gets the data.
+   *
+   * @return array
+   *   The data.
+   */
+  public function getData() {
+    return $this->data;
+  }
+
+  /**
+   * Sets the data.
+   *
+   * @param array $data
+   *   The data.
+   *
+   * @return $this
+   */
+  public function setData(array $data) {
+    $this->data = $data;
+    return $this;
+  }
+
+  /**
    * Gets the array representation of the shipping rate.
    *
    * @return array
@@ -238,6 +269,7 @@ final class ShippingRate {
       'amount' => $this->amount,
       'description' => $this->description,
       'delivery_date' => $this->deliveryDate,
+      'data' => $this->data,
     ];
   }
 

@@ -18,6 +18,7 @@ use Drupal\search_api\Plugin\PluginFormTrait;
 use Drupal\search_api\Query\ConditionGroupInterface;
 use Drupal\search_api\Query\QueryInterface;
 use Drupal\search_api\Utility\Utility;
+use Drupal\search_api_algolia\SearchApiAlgoliaHelper;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -78,16 +79,26 @@ class SearchApiAlgoliaBackend extends BackendPluginBase implements PluginFormInt
   protected $configFactory;
 
   /**
+   * Search API Algolia Helper service.
+   *
+   * @var \Drupal\search_api_algolia\SearchApiAlgoliaHelper
+   */
+  protected $helper;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration,
+  public function __construct(
+    array $configuration,
     $plugin_id,
     $plugin_definition,
     LanguageManagerInterface $language_manager,
-    ConfigFactoryInterface $config_factory) {
+    ConfigFactoryInterface $config_factory,
+    SearchApiAlgoliaHelper $helper) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->languageManager = $language_manager;
     $this->configFactory = $config_factory;
+    $this->helper = $helper;
   }
 
   /**
@@ -99,7 +110,8 @@ class SearchApiAlgoliaBackend extends BackendPluginBase implements PluginFormInt
       $plugin_id,
       $plugin_definition,
       $container->get('language_manager'),
-      $container->get('config.factory')
+      $container->get('config.factory'),
+      $container->get('search_api_algolia.helper')
     );
 
     /** @var \Drupal\Core\Extension\ModuleHandlerInterface $module_handler */
@@ -376,13 +388,25 @@ class SearchApiAlgoliaBackend extends BackendPluginBase implements PluginFormInt
    * {@inheritdoc}
    */
   public function deleteItems(IndexInterface $index, array $ids) {
+    // When using custom field for object id, we handle the deletion of
+    // objects in separate code.
+    if ($index->getOption('object_id_field')){
+      return;
+    }
+
     // Deleting all items included in the $ids array.
     foreach ($this->getLanguages($index) as $key) {
+      // If algolia_index_batch_deletion enabled delete in batches
+      // with drush command.
+      if ($index->getOption('algolia_index_batch_deletion')) {
+        $this->helper->scheduleForDeletion($index, $ids, $key);
+        continue;
+      }
+
       try {
         // Connect to the Algolia index for specific language.
         $this->connect($index, '', $key);
-      }
-      catch (\Exception $e) {
+      } catch (\Exception $e) {
         $this->getLogger()->error('Failed to connect to Algolia index while deleting indexed items, Error: @message', [
           '@message' => $e->getMessage(),
         ]);

@@ -121,3 +121,26 @@ function commerce_store_update_8205() {
   $storage_definition->setDefaultValueCallback($default_value_callback);
   $definition_update_manager->updateFieldStorageDefinition($storage_definition);
 }
+
+/**
+ * Add created and changed fields to stores.
+ */
+function commerce_store_update_8206() {
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+
+  $storage_definitions['created'] = BaseFieldDefinition::create('created')
+    ->setLabel(t('Created'))
+    ->setDescription(t('The time when the store was created.'))
+    ->setTranslatable(TRUE)
+    ->setDisplayConfigurable('form', TRUE)
+    ->setDisplayConfigurable('view', TRUE);
+
+  $storage_definitions['changed'] = BaseFieldDefinition::create('changed')
+    ->setLabel(t('Changed'))
+    ->setDescription(t('The time when the store was last edited.'))
+    ->setTranslatable(TRUE);
+
+  foreach ($storage_definitions as $name => $definition) {
+    $definition_update_manager->installFieldStorageDefinition($name, 'commerce_store', 'commerce_store', $definition);
+  }
+}

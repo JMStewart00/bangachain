@@ -105,6 +105,7 @@ abstract class NumberPatternBase extends PluginBase implements NumberPatternInte
       '#description' => $this->t('Allows adding a prefix (such as "INV-") or a suffix to the number.'),
       '#default_value' => $this->configuration['pattern'],
       '#required' => TRUE,
+      '#maxlength' => NULL,
       '#element_validate' => ['token_element_validate'],
       '#token_types' => $token_types,
     ];

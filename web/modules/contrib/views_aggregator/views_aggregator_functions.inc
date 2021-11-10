@@ -671,7 +671,6 @@ function views_aggregator_tally(array $groups, $field_handler, $separator_group,
   $separator_group = empty($separator_group) ? '<br/>' : $separator_group;
   $separator_column = empty($separator_column) ? '<br/>' : $separator_column;
   $values = ['column' => []];
-  $is_new_php = version_compare(phpversion(), '5.4.0', '>=');
   foreach ($groups as $group => $rows) {
     $tally = [];
     foreach ($rows as $num => $row) {
@@ -694,12 +693,8 @@ function views_aggregator_tally(array $groups, $field_handler, $separator_group,
       // Unfortunately this applies to the entire column.
       unset($field_handler->options['link_to_node']);
     }
-    if ($is_new_php) {
-      ksort($tally, SORT_NATURAL | SORT_FLAG_CASE);
-    }
-    else {
-      ksort($tally);
-    }
+    ksort($tally, SORT_NATURAL | SORT_FLAG_CASE);
+
     $rendered_tally = [];
     foreach ($tally as $cell => $count) {
       $rendered_tally[] = "$cell ($count)";

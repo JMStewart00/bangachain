@@ -509,7 +509,7 @@ class Promotion extends CommerceContentEntityBase implements PromotionInterface 
     if (!in_array($order->bundle(), $this->getOrderTypeIds())) {
       return FALSE;
     }
-    if (!in_array($order->getStoreId(), $this->getStoreIds())) {
+    if (!empty($this->getStoreIds()) && !in_array($order->getStoreId(), $this->getStoreIds())) {
       return FALSE;
     }
     $date = $order->getCalculationDate();
@@ -761,11 +761,11 @@ class Promotion extends CommerceContentEntityBase implements PromotionInterface 
 
     $fields['stores'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Stores'))
-      ->setDescription(t('The stores for which the promotion is valid.'))
+      ->setDescription(t('Limit promotion availability to selected stores.'))
       ->setCardinality(BaseFieldDefinition::CARDINALITY_UNLIMITED)
-      ->setRequired(TRUE)
       ->setSetting('target_type', 'commerce_store')
       ->setSetting('handler', 'default')
+      ->setSetting('optional_label', t('Restrict to specific stores'))
       ->setDisplayOptions('form', [
         'type' => 'commerce_entity_select',
         'weight' => 2,

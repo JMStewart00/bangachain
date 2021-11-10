@@ -105,6 +105,7 @@ class Checkout extends OffsitePaymentGatewayBase implements CheckoutInterface {
       'style' => [],
       'enable_on_cart' => TRUE,
       'collect_billing_information' => FALSE,
+      'webhook_id' => '',
     ] + parent::defaultConfiguration();
   }
 
@@ -171,6 +172,12 @@ class Checkout extends OffsitePaymentGatewayBase implements CheckoutInterface {
       '#title' => $this->t('Show Smart Payment Buttons on the cart page.'),
       '#default_value' => $this->configuration['enable_on_cart'],
       '#states' => $spb_states,
+    ];
+    $form['webhook_id'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Webhook ID'),
+      '#description' => $this->t('Required value when using Webhooks, used to verify the webhook signature.'),
+      '#default_value' => $this->configuration['webhook_id'],
     ];
     $form['intent'] = [
       '#type' => 'radios',
@@ -365,6 +372,7 @@ class Checkout extends OffsitePaymentGatewayBase implements CheckoutInterface {
       'update_billing_profile',
       'update_shipping_profile',
       'enable_on_cart',
+      'webhook_id',
     ];
 
     // Only save the style settings if the customize buttons checkbox is checked.
@@ -604,6 +612,136 @@ class Checkout extends OffsitePaymentGatewayBase implements CheckoutInterface {
     $payment->setRemoteState($response['status']);
     $payment->setRefundedAmount($new_refunded_amount);
     $payment->save();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onNotify(Request $request) {
+    // Reacts to Webhook events.
+    $request_body = Json::decode($request->getContent());
+    $this->logger->debug('Incoming webhook request: <pre>@data</pre>', [
+      '@data' => print_r($request_body, TRUE),
+    ]);
+    $supported_events = [
+      'PAYMENT.AUTHORIZATION.VOIDED',
+      'PAYMENT.CAPTURE.COMPLETED',
+      'PAYMENT.CAPTURE.REFUNDED',
+      'PAYMENT.CAPTURE.PENDING',
+      'PAYMENT.CAPTURE.DENIED',
+    ];
+
+    // Ignore unsupported events.
+    if (!isset($request_body['event_type']) ||
+      !in_array($request_body['event_type'], $supported_events)) {
+      return;
+    }
+
+    try {
+      $sdk = $this->checkoutSdkFactory->get($this->configuration);
+      $parameters = [
+        'auth_algo' => $request->headers->get('PAYPAL-AUTH-ALGO'),
+        'cert_url' => $request->headers->get('PAYPAL-CERT-URL'),
+        'transmission_id' => $request->headers->get('PAYPAL-TRANSMISSION-ID'),
+        'transmission_sig' => $request->headers->get('PAYPAL-TRANSMISSION-SIG'),
+        'transmission_time' => $request->headers->get('PAYPAL-TRANSMISSION-TIME'),
+        'webhook_id' => $this->configuration['webhook_id'],
+        'webhook_event' => $request_body,
+      ];
+      $signature_request = $sdk->verifyWebhookSignature($parameters);
+      $response = Json::decode($signature_request->getBody());
+
+      // If the webhook signature could not be successfully verified, stop here.
+      if (strtolower($response['verification_status']) !== 'success') {
+        $this->logger->error('An error occurred while trying to verify the webhook signature: <pre>@response</pre>', [
+          '@response' => print_r($response, TRUE),
+        ]);
+        return;
+      }
+      // Unfortunately, we need to use the "custom_id" (i.e the order_id) for
+      // retrieving the payment associated to this webhook event since the
+      // resource id might differ from our "remote_id".
+      $order_id = $request_body['resource']['custom_id'];
+      /** @var \Drupal\commerce_payment\PaymentStorageInterface $payment_storage */
+      $payment_storage = $this->entityTypeManager->getStorage('commerce_payment');
+      // Note that we don't use the loadMultipleByOrder() method on the payment
+      // storage since we don't actually need to load the order.
+      // This assumes the last payment is the right one.
+      $payment_ids = $payment_storage->getQuery()
+        ->condition('order_id', $order_id)
+        ->accessCheck(FALSE)
+        ->sort('payment_id', 'DESC')
+        ->range(0, 1)
+        ->execute();
+
+      if (!$payment_ids) {
+        $this->logger->error('Could not find a payment transaction in Drupal for the order ID @order_id.', [
+          '@order_id' => $order_id,
+        ]);
+        return;
+      }
+      $payment = $payment_storage->load(reset($payment_ids));
+      $amount = Price::fromArray([
+        'number' => $request_body['resource']['amount']['value'],
+        'currency_code' => $request_body['resource']['amount']['currency_code'],
+      ]);
+      // Synchronize the remote ID and remote state.
+      $payment->setRemoteId($request_body['resource']['id']);
+      $payment->setRemoteState($request_body['resource']['status']);
+
+      switch ($request_body['event_type']) {
+        case 'PAYMENT.AUTHORIZATION.VOIDED':
+          if ($payment->getState()->getId() !== 'authorization_voided') {
+            $payment->setState('authorization_voided');
+            $payment->save();
+          }
+          break;
+
+        case 'PAYMENT.CAPTURE.DENIED':
+          if ($payment->getState()->getId() !== 'authorization_voided') {
+            $payment->setState('capture_denied');
+            $payment->save();
+          }
+          break;
+
+        case 'PAYMENT.CAPTURE.COMPLETED':
+          // Ignore completed payments.
+          if ($payment->getState()->getId() !== 'completed' ||
+            $amount->lessThan($payment->getAmount())) {
+            $payment->setAmount($amount);
+            $payment->setState('completed');
+            $payment->save();
+          }
+          break;
+
+        case 'PAYMENT.CAPTURE.REFUNDED':
+          if ($amount->lessThan($payment->getAmount())) {
+            $payment->setState('partially_refunded');
+          }
+          else {
+            $payment->setState('refunded');
+          }
+          if (!$payment->getRefundedAmount() ||
+            !$payment->getRefundedAmount()->equals($amount)) {
+            $payment->setRefundedAmount($amount);
+            $payment->save();
+          }
+          break;
+
+        case 'PAYMENT.CAPTURE.PENDING':
+          if ($payment->getState()->getId() !== 'pending') {
+            $payment->setAmount($amount);
+            $payment->setState('pending');
+            $payment->save();
+          }
+          break;
+      }
+    }
+    catch (BadResponseException $exception) {
+      $this->logger->error('An error occurred while trying to verify the webhook signature: @error', [
+        '@error' => $exception->getMessage(),
+      ]);
+    }
   }
 
   /**

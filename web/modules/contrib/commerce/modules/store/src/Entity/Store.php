@@ -11,6 +11,7 @@ use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Entity\EntityChangedTrait;
 
 /**
  * Defines the store entity class.
@@ -83,6 +84,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
 class Store extends ContentEntityBase implements StoreInterface {
 
   use EntityOwnerTrait;
+  use EntityChangedTrait;
 
   /**
    * {@inheritdoc}
@@ -226,6 +228,21 @@ class Store extends ContentEntityBase implements StoreInterface {
         $translation->setOwnerId(0);
       }
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCreatedTime() {
+    return $this->get('created')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setCreatedTime($timestamp) {
+    $this->set('created', $timestamp);
+    return $this;
   }
 
   /**
@@ -384,6 +401,18 @@ class Store extends ContentEntityBase implements StoreInterface {
       ])
       ->setDisplayConfigurable('view', TRUE)
       ->setDisplayConfigurable('form', TRUE);
+
+    $fields['created'] = BaseFieldDefinition::create('created')
+      ->setLabel(t('Created'))
+      ->setDescription(t('The time when the store was created.'))
+      ->setTranslatable(TRUE)
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['changed'] = BaseFieldDefinition::create('changed')
+      ->setLabel(t('Changed'))
+      ->setDescription(t('The time when the store was last edited.'))
+      ->setTranslatable(TRUE);
 
     return $fields;
   }

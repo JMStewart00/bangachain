@@ -163,7 +163,7 @@ class ShippingRateWidget extends WidgetBase implements ContainerFactoryPluginInt
     $selected_value = NestedArray::getValue($form_state->getValues(), $parents, $key_exists);
 
     // Fallback to the default rate if the selected rate is no longer valid.
-    if (!isset($element[$selected_value]) && isset($element[$element['#default_value']])) {
+    if (!isset($element[$selected_value]) && isset($element['#default_value'], $element[$element['#default_value']])) {
       $selected_value = $element['#default_value'];
     }
 

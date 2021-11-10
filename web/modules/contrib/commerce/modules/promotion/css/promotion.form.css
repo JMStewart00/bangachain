@@ -9,6 +9,9 @@
 .layout-region {
   box-sizing: border-box;
 }
+.form-item-stores-has-value {
+  margin-top: 1em !important;
+}
 
 /* Wide screens */
 @media

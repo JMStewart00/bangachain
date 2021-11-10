@@ -6,8 +6,10 @@
  */
 
 use Algolia\AlgoliaSearch\Exceptions\AlgoliaException;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\search_api\Entity\Index;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Implements hook_form_FORM_ID_alter().
@@ -34,6 +36,24 @@ function search_api_algolia_form_search_api_index_edit_form_alter(&$form, FormSt
     $form['options']['algolia_index_name']['#description'] = t('Avoid language suffix here if the flag to apply language suffix is enabled');
   }
 
+  $form['options']['algolia_index_batch_deletion'] = [
+    '#type' => 'select',
+    '#title' => t('Enabled items deletion in Batches'),
+    '#options' => [0 => t('No'), 1 => t('Yes')],
+    '#default_value' => $index->getOption('algolia_index_batch_deletion') ?? 0,
+    '#weight' => 1,
+  ];
+
+  $form['options']['object_id_field'] = [
+    '#type' => 'textfield',
+    '#title' => t('Object ID Field'),
+    '#default_value' => $index->getOption('object_id_field') ?? '',
+    '#weight' => 1,
+    '#description' => t('Specify the custom field to be use for Object ID field in Algolia. Leave empty to use default from search_api.'),
+  ];
+
+  $form['#validate'][] = 'search_api_algolia_index_edit_form_validate';
+
   // Show the list of available indexes for user to select from.
   $server = $index->getServerInstance();
   if ($server->getBackendId() == 'search_api_algolia') {
@@ -56,6 +76,24 @@ function search_api_algolia_form_search_api_index_edit_form_alter(&$form, FormSt
       watchdog_exception('search_api_algolia', $exception, 'Unable to connect to Algolia.');
       \Drupal::messenger()->addError(t('Unable to connect to Algolia.'));
     }
-
   }
+}
+
+/**
+ * Form validation handler.
+ *
+ */
+function search_api_algolia_index_edit_form_validate($form, FormStateInterface $form_state) {
+  if (!$form_state->getValue('options')['algolia_index_batch_deletion']
+    && !empty($form_state->getValue('options')['object_id_field'])) {
+    $form_state->setErrorByName('options][object_id_field', t('To use Custom Object ID, it is required to delete the items in batches.'));
+  }
+}
+
+/**
+ * Implements hook_entity_delete().
+ *
+ */
+function search_api_algolia_entity_delete(EntityInterface $entity) {
+  \Drupal::service('search_api_algolia.helper')->entityDelete($entity);
 }

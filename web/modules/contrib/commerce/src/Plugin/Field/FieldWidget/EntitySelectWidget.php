@@ -111,8 +111,10 @@ class EntitySelectWidget extends WidgetBase {
       $default_value = !empty($values) ? $values[0]['target_id'] : NULL;
     }
 
-    $element += [
+    $field = $this->fieldDefinition;
+    $element['target_id'] = [
       '#type' => 'commerce_entity_select',
+      '#title' => $field->getLabel(),
       '#target_type' => $this->getFieldSetting('target_type'),
       '#multiple' => $multiple,
       '#default_value' => $default_value,
@@ -120,17 +122,45 @@ class EntitySelectWidget extends WidgetBase {
       '#autocomplete_threshold' => $settings['autocomplete_threshold'],
       '#autocomplete_size' => $settings['autocomplete_size'],
       '#autocomplete_placeholder' => $settings['autocomplete_placeholder'],
-      '#required' => $this->fieldDefinition->isRequired(),
+      '#required' => $field->isRequired(),
     ];
 
-    return ['target_id' => $element];
+    if (!$field->isRequired() && $field->getSetting('optional_label')) {
+      $checkbox_parents = array_merge($form['#parents'], [$field->getName(), 'has_value']);
+      $checkbox_path = array_shift($checkbox_parents);
+      $checkbox_path .= '[' . implode('][', $checkbox_parents) . ']';
+
+      $element['has_value'] = [
+        '#type' => 'checkbox',
+        '#title' => $field->getSetting('optional_label'),
+        '#default_value' => !empty($element['target_id']['#default_value']),
+      ];
+      $element['target_id']['#weight'] = 10;
+      $element['target_id']['#description'] = '';
+      $element['container'] = [
+        '#type' => 'container',
+        '#states' => [
+          'visible' => [
+            ':input[name="' . $checkbox_path . '"]' => ['checked' => TRUE],
+          ],
+        ],
+      ];
+      $element['container']['target_id'] = $element['target_id'];
+      unset($element['target_id']);
+    }
+
+    return $element;
   }
 
   /**
    * {@inheritdoc}
    */
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
-    return $values['target_id'];
+    if (isset($values['container']['target_id']) && !empty($values['has_value'])) {
+      $values['target_id'] = $values['container']['target_id'];
+      unset($values['container']);
+    }
+    return $values['target_id'] ?? [];
   }
 
 }

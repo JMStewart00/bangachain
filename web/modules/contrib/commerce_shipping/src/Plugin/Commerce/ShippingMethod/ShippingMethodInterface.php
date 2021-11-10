@@ -67,4 +67,15 @@ interface ShippingMethodInterface extends ConfigurableInterface, DependentPlugin
    */
   public function selectRate(ShipmentInterface $shipment, ShippingRate $rate);
 
+  /**
+   * Checks whether the shipping method applies to the given shipment.
+   *
+   * @param \Drupal\commerce_shipping\Entity\ShipmentInterface $shipment
+   *   The shipment.
+   *
+   * @return bool
+   *   TRUE if shipping method applies, FALSE otherwise.
+   */
+  public function applies(ShipmentInterface $shipment);
+
 }

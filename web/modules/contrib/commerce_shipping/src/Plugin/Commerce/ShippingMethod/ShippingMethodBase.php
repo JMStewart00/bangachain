@@ -253,4 +253,11 @@ abstract class ShippingMethodBase extends PluginBase implements ContainerFactory
     $shipment->setAmount($rate->getAmount());
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function applies(ShipmentInterface $shipment) {
+    return TRUE;
+  }
+
 }

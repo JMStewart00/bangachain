@@ -23,6 +23,7 @@ class GrantsForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, Node $node = NULL) {
+    $db = \Drupal::database();
     $form_values = $form_state->getValues();
     $settings = \Drupal::configFactory()->get('nodeaccess.settings');
     $nid = $node->id();
@@ -41,12 +42,13 @@ class GrantsForm extends FormBase {
       // Load all roles.
       foreach ($role_alias as $id => $role) {
         $rid = $role_map[$id];
-        $result = db_query("SELECT na.grant_view, na.grant_update, na.grant_delete
-        FROM {node_access} na where na.gid = :rid AND na.realm = :realm AND na.nid = :nid", [
-          ':rid' => $rid,
-          ':realm' => 'nodeaccess_rid',
-          ':nid' => $nid,
-        ])->fetchAssoc();
+        $query = $db->select('node_access', 'n')
+          ->fields('n', ['grant_view', 'grant_update', 'grant_delete'])
+          ->condition('n.gid', $rid, '=')
+          ->condition('n.realm', 'nodeaccess_rid', '=')
+          ->condition('n.nid', $nid)
+          ->execute();
+        $result = $query->fetchAssoc();
         if (!empty($result)) {
           $form_values['rid'][$rid] = [
             'name' => $role['alias'],
@@ -66,15 +68,15 @@ class GrantsForm extends FormBase {
       }
 
       // Load users from node_access.
-      $results = db_query("SELECT uid, name, grant_view, grant_update, grant_delete
-        FROM {node_access}
-        LEFT JOIN {users_field_data} ON uid = gid
-        WHERE nid = :nid AND realm = :realm
-        ORDER BY name", [
-          ':nid' => $nid,
-          ':realm' => 'nodeaccess_uid',
-        ]);
-      foreach ($results as $account) {
+      $query = $db->select('node_access', 'n');
+      $query->join('users_field_data', 'ufd', 'ufd.uid = n.gid');
+      $query->fields('n', ['grant_view', 'grant_update', 'grant_delete', 'nid']);
+      $query->fields('ufd', ['name', 'uid']);
+      $query->condition('n.nid', $nid, '=');
+      $query->condition('n.realm', 'nodeaccess_uid', '=');
+      $query->orderBy('ufd.name', 'ASC');
+      $results = $query->execute();
+      while ($account = $results->fetchObject()) {
         $form_values['uid'][$account->uid] = [
           'name' => $account->name,
           'keep' => 1,
@@ -88,16 +90,17 @@ class GrantsForm extends FormBase {
       // Perform search.
       if ($form_values['keys']) {
         $uids = [];
-        $sql = "SELECT uid, name FROM {users_field_data} WHERE uid in (:uids[])";
+        $query = $db->select('users_field_data', 'ufd');
+        $query->fields('ufd', ['uid', 'name']);
         if (isset($form_values['uid']) && is_array($form_values['uid'])) {
           $uids = array_keys($form_values['uid']);
         }
         if (!in_array($form_values['keys'], $uids)) {
           array_push($uids, $form_values['keys']);
         }
-        $params = [':uids[]' => $uids];
-        $result = db_query($sql, $params);
-        foreach ($result as $account) {
+        $query->condition('ufd.uid', $uids, 'IN');
+        $results = $query->execute();
+        while ($account = $results->fetchObject()) {
           $form_values['uid'][$account->uid] = [
             'name' => $account->name,
             'keep' => 0,
@@ -105,49 +108,44 @@ class GrantsForm extends FormBase {
         }
       }
       // Calculate default grants for found users.
-      $db = \Drupal::database();
       if (isset($form_values['uid']) && is_array($form_values['uid'])) {
+        // set the cast type depending on which database engine is being used.
         if (strstr($db->version(), 'MariaDB') !== FALSE) {
           $cast_type = 'int';
         }
+        elseif (strstr($db->clientVersion(), 'PostgreSQL') !== FALSE) {
+          $cast_type = 'integer';
+        }
         else {
+          // assume it's MySQL.
           $cast_type = 'unsigned';
         }
         foreach (array_keys($form_values['uid']) as $uid) {
           if (!$form_values['uid'][$uid]['keep']) {
             foreach (['grant_view', 'grant_update', 'grant_delete'] as $grant_type) {
-              $form_values['uid'][$uid][$grant_type] = $db->queryRange('
-                SELECT count(*) FROM {node_access} na
-                LEFT JOIN {user__roles} r ON (na.gid = CAST(r.roles_target_id as ' . $cast_type . '))
-                WHERE na.nid = :nid
-                  AND na.realm = :realm
-                  AND r.entity_id = :uid
-                  AND :grant_type = :one',
-                0,
-                1,
-                [
-                  ':nid' => $nid,
-                  ':realm' => 'nodeaccess_rid',
-                  ':uid' => $uid,
-                  ':grant_type' => $grant_type,
-                  ':one' => 1,
-                ])->fetchField() ||
-                $db->queryRange('
-                  SELECT count(*) FROM {node_access}
-                  WHERE nid = :nid
-                    AND realm = :realm
-                    AND gid = :gid
-                    AND :grant_type = :one',
-                  0,
-                  1,
-                  [
-                    ':nid' => $nid,
-                    ':realm' => 'nodeaccess_uid',
-                    ':grant_type' => $grant_type,
-                    ':gid' => $uid,
-                    ':one' => 1,
-                  ]
-                  )->fetchField();
+
+              $query = $db->select('node_access', 'na');
+              $query->join('user__roles', 'r', '(na.gid = CAST(r.roles_target_id as ' . $cast_type . '))');
+              $query->condition('na.nid', $nid, '=');
+              $query->condition('na.realm', 'nodeaccess_rid', '=');
+              $query->condition('r.entity_id', $uid, '=');
+              $query->condition($grant_type, '1', '=');
+              $query->range(0, 1);
+              $query = $query->countQuery();
+              $results = $query->execute();
+              $count1 = $results->fetchField();
+
+              $query = $db->select('node_access', 'na');
+              $query->condition('na.nid', $nid, '=');
+              $query->condition('na.realm', 'nodeaccess_uid', '=');
+              $query->condition('na.gid', $uid, '=');
+              $query->condition($grant_type, '1', '=');
+              $query->range(0, 1);
+              $query = $query->countQuery();
+              $results = $query->execute();
+              $count2 = $results->fetchField();
+
+              $form_values['uid'][$uid][$grant_type] = $count1 || $count2;
             }
             $form_values['uid'][$uid]['keep'] = TRUE;
           }
@@ -308,6 +306,7 @@ class GrantsForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    $db = \Drupal::database();
     // Update configuration.
     $values = $form_state->getValues();
     $nid = $values['nid'];
@@ -332,11 +331,11 @@ class GrantsForm extends FormBase {
       }
     }
     // Save role and user grants to our own table.
-    \Drupal::database()->delete('nodeaccess')
+    $db->delete('nodeaccess')
       ->condition('nid', $nid)
       ->execute();
     foreach ($grants as $grant) {
-      $id = db_insert('nodeaccess')
+      $id = $db->insert('nodeaccess')
         ->fields([
           'nid' => $nid,
           'gid' => $grant['gid'],
@@ -347,8 +346,9 @@ class GrantsForm extends FormBase {
         ])
         ->execute();
     }
-    \Drupal::entityTypeManager()->getAccessControlHandler('node')->writeGrants($node);
-    drupal_set_message($this->t('Grants saved.'));
+    \Drupal::entityTypeManager()->getAccessControlHandler('node')->acquireGrants($node);
+    \Drupal::service('node.grant_storage')->write($node, $grants);
+    \Drupal::messenger()->addMessage($this->t('Grants saved.'));
 
     $tags = ['node:' . $node->id()];
     Cache::invalidateTags($tags);

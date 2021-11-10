@@ -91,7 +91,7 @@ class EuropeanUnionVatTest extends OrderKernelTestBase {
   public function testApplication() {
     $plugin = $this->taxType->getPlugin();
     // German customer, French store, VAT number provided.
-    $order = $this->buildOrder('DE', 'FR', 'DE123456789');
+    $order = $this->buildOrder('DE', 'FR', 'DE123456789', ['FR']);
     $this->assertTrue($plugin->applies($order));
     $plugin->apply($order);
     $adjustments = $order->collectAdjustments();
@@ -99,8 +99,15 @@ class EuropeanUnionVatTest extends OrderKernelTestBase {
     $this->assertCount(1, $adjustments);
     $this->assertEquals('european_union_vat|ic|zero', $adjustment->getSourceId());
 
+    // French customer, French store, no tax registration, tax shouldn't apply.
+    $order = $this->buildOrder('FR', 'FR');
+    $this->assertFalse($plugin->applies($order));
+    $plugin->apply($order);
+    $adjustments = $order->collectAdjustments();
+    $this->assertCount(0, $adjustments);
+
     // French customer, French store, VAT number provided.
-    $order = $this->buildOrder('FR', 'FR', 'FR00123456789');
+    $order = $this->buildOrder('FR', 'FR', 'FR00123456789', ['FR']);
     $this->assertTrue($plugin->applies($order));
     $plugin->apply($order);
     $adjustments = $order->collectAdjustments();
@@ -109,7 +116,7 @@ class EuropeanUnionVatTest extends OrderKernelTestBase {
     $this->assertEquals('european_union_vat|fr|standard', $adjustment->getSourceId());
 
     // German customer, French store, physical product.
-    $order = $this->buildOrder('DE', 'FR');
+    $order = $this->buildOrder('DE', 'FR', '', ['FR']);
     $this->assertTrue($plugin->applies($order));
     $plugin->apply($order);
     $adjustments = $order->collectAdjustments();
@@ -118,7 +125,7 @@ class EuropeanUnionVatTest extends OrderKernelTestBase {
     $this->assertEquals('european_union_vat|fr|standard', $adjustment->getSourceId());
 
     // GB customer, French store, no VAT.
-    $order = $this->buildOrder('GB', 'FR');
+    $order = $this->buildOrder('GB', 'FR', '', ['FR']);
     $this->assertTrue($plugin->applies($order));
     $plugin->apply($order);
     $adjustments = $order->collectAdjustments();
@@ -134,7 +141,7 @@ class EuropeanUnionVatTest extends OrderKernelTestBase {
     $this->assertEquals('european_union_vat|de|standard', $adjustment->getSourceId());
 
     // German customer, French store, digital product before Jan 1st 2015.
-    $order = $this->buildOrder('DE', 'FR', '', [], TRUE);
+    $order = $this->buildOrder('DE', 'FR', '', ['FR'], TRUE);
     $order->setPlacedTime(mktime(1, 1, 1, 1, 1, 2014));
     $order->save();
     $this->assertTrue($plugin->applies($order));
@@ -145,7 +152,7 @@ class EuropeanUnionVatTest extends OrderKernelTestBase {
     $this->assertEquals('european_union_vat|fr|standard', $adjustment->getSourceId());
 
     // German customer, French store, digital product.
-    $order = $this->buildOrder('DE', 'FR', '', [], TRUE);
+    $order = $this->buildOrder('DE', 'FR', '', ['FR'], TRUE);
     $this->assertTrue($plugin->applies($order));
     $plugin->apply($order);
     $adjustments = $order->collectAdjustments();
@@ -172,7 +179,7 @@ class EuropeanUnionVatTest extends OrderKernelTestBase {
     $this->assertEquals('european_union_vat|ic|zero', $adjustment->getSourceId());
 
     // Serbian customer, French store, physical product.
-    $order = $this->buildOrder('RS', 'FR');
+    $order = $this->buildOrder('RS', 'FR', '', ['FR']);
     $this->assertTrue($plugin->applies($order));
     $plugin->apply($order);
     $this->assertCount(0, $order->collectAdjustments());
@@ -180,6 +187,34 @@ class EuropeanUnionVatTest extends OrderKernelTestBase {
     // French customer, Serbian store, physical product.
     $order = $this->buildOrder('FR', 'RS');
     $this->assertFalse($plugin->applies($order));
+
+    // Portuguese customer in Madeira, Portuguese store, physical product.
+    $order = $this->buildOrder('PT', 'PT', '', ['PT']);
+    $billing_profile = $order->getBillingProfile();
+    $billing_profile->set('address', [
+      'country_code' => 'PT',
+      'postal_code' => '9004-519',
+    ]);
+    $billing_profile->save();
+    $plugin->apply($order);
+    $adjustments = $order->collectAdjustments();
+    $adjustment = reset($adjustments);
+    $this->assertCount(1, $adjustments);
+    $this->assertEquals('european_union_vat|pt_30|standard', $adjustment->getSourceId());
+
+    // French customer in Corsica, FR store, physical product.
+    $order = $this->buildOrder('FR', 'FR', '', ['FR']);
+    $billing_profile = $order->getBillingProfile();
+    $billing_profile->set('address', [
+      'country_code' => 'FR',
+      'postal_code' => '20090',
+    ]);
+    $billing_profile->save();
+    $plugin->apply($order);
+    $adjustments = $order->collectAdjustments();
+    $adjustment = reset($adjustments);
+    $this->assertCount(1, $adjustments);
+    $this->assertEquals('european_union_vat|fr_h|standard', $adjustment->getSourceId());
   }
 
   /**

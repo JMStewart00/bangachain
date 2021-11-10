@@ -146,6 +146,7 @@ class CanadianSalesTaxTest extends OrderKernelTestBase {
         'country_code' => 'CA',
       ],
       'prices_include_tax' => FALSE,
+      'tax_registrations' => ['CA'],
     ]);
     $store->save();
     $customer_profile = Profile::create([

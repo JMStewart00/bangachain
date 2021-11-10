@@ -9,6 +9,7 @@ use Drupal\Component\Plugin\DerivativeInspectionInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Plugin\PluginWithFormsInterface;
 use Drupal\commerce_price\Price;
+use Drupal\user\UserInterface;
 
 /**
  * Defines the base interface for payment gateways.
@@ -153,5 +154,20 @@ interface PaymentGatewayInterface extends PluginWithFormsInterface, Configurable
    * @see \Drupal\commerce_price\MinorUnitsConverter::toMinorUnits()
    */
   public function toMinorUnits(Price $amount);
+
+  /**
+   * Gets the remote customer ID for the given user.
+   *
+   * The remote customer ID is specific to a payment gateway instance
+   * in the configured mode. This allows the gateway to skip test customers
+   * after the gateway has been switched to live mode.
+   *
+   * @param \Drupal\user\UserInterface $account
+   *   The user account.
+   *
+   * @return string
+   *   The remote customer ID, or NULL if none found.
+   */
+  public function getRemoteCustomerId(UserInterface $account);
 
 }

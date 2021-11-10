@@ -73,6 +73,8 @@ class ShippingRateTest extends UnitTestCase {
    * @covers ::setAmount
    * @covers ::getDescription
    * @covers ::setDescription
+   * @covers ::getData
+   * @covers ::setData
    * @covers ::getDeliveryDate
    * @covers ::setDeliveryDate
    * @covers ::toArray
@@ -89,6 +91,9 @@ class ShippingRateTest extends UnitTestCase {
       'amount' => new Price('10.00', 'USD'),
       'description' => 'Delivery in 3-5 business days.',
       'delivery_date' => $first_date,
+      'data' => [
+        'custom' => 'xxx',
+      ],
     ];
 
     $shipping_rate = new ShippingRate($definition);
@@ -99,6 +104,7 @@ class ShippingRateTest extends UnitTestCase {
     $this->assertEquals($definition['amount'], $shipping_rate->getAmount());
     $this->assertEquals($definition['description'], $shipping_rate->getDescription());
     $this->assertEquals($definition['delivery_date'], $shipping_rate->getDeliveryDate());
+    $this->assertEquals($definition['data'], $shipping_rate->getData());
     $this->assertEquals($definition, $shipping_rate->toArray());
 
     $shipping_rate->setOriginalAmount(new Price('14.00', 'USD'));
@@ -109,6 +115,8 @@ class ShippingRateTest extends UnitTestCase {
     $this->assertEquals('Arrives yesterday.', $shipping_rate->getDescription());
     $shipping_rate->setDeliveryDate($second_date);
     $this->assertEquals($second_date, $shipping_rate->getDeliveryDate());
+    $shipping_rate->setData(['arbitrary_data' => 10]);
+    $this->assertEquals(['arbitrary_data' => 10], $shipping_rate->getData());
   }
 
   /**

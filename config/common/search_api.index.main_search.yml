@@ -197,4 +197,5 @@ options:
   index_directly: true
   cron_limit: 50
   algolia_index_name: prod_bangachain_main
+  track_changes_in_references: true
 server: algolia

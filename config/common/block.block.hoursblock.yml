@@ -1,0 +1,27 @@
+uuid: 3cf53f1e-e602-43fc-95cf-e13dc35dbab7
+langcode: en
+status: true
+dependencies:
+  module:
+    - bangachain_custom_blocks
+    - bangachain_layout
+  theme:
+    - bangachain
+third_party_settings:
+  bangachain_layout:
+    vertical_spacing:
+      top: none
+      bottom: none
+id: hoursblock
+theme: bangachain
+region: secondary_menu
+weight: 0
+provider: null
+plugin: bangachain_hours_block
+settings:
+  id: bangachain_hours_block
+  label: 'Hours Block'
+  provider: bangachain_custom_blocks
+  label_display: visible
+  content: "<ul>\r\n\t<li>Wed-Sat 12:00 - 7:00 p.m.</li>\r\n\t<li>Sunday 12:00 - 5:00 p.m.</li>\r\n</ul>\r\n"
+visibility: {  }

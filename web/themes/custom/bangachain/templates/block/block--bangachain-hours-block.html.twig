@@ -1,0 +1,12 @@
+{%
+  set classes = [
+    'c-header__hours',
+  ]
+%}
+
+<div{{ attributes.addClass(classes) }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+  <i class="far fa-clock fa-2x o-icon o-icon--white"></i>
+  {{ content['#markup']|raw }}
+</div>

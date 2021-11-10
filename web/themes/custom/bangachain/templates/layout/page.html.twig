@@ -77,13 +77,7 @@
       <div class="l-row--no-columns t-background--blue">
         <div class="c-header__main-menu">
 					{{ page.primary_menu }}
-          <div class="c-header__hours">
-            <i class="far fa-clock fa-2x o-icon o-icon--white"></i>
-            <ul class="o-list">
-              <li class="o-list__item">Wed-Sat 12:00 - 7:00 p.m.</li>
-              <li class="o-list__item">Sunday 12:00 - 5:00 p.m.</li>
-            </ul>
-          </div>
+          {{ page.secondary_menu }}
 				</div>
       </div>
 		</div>
@@ -145,10 +139,7 @@
       </div>
       <div class="c-contact-us">
         <h3 class="u-color__white u-ff__badaboom">STORE HOURS</h3>
-        <ul>
-          <li>Wed-Sat 12:00 - 7:00 p.m.</li>
-          <li>Sunday 12:00 - 5:00 p.m.</li>
-        </ul>
+        {{page.secondary_menu}}
       </div>
 		</div>
 	</footer>

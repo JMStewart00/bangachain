@@ -1,0 +1,31 @@
+commerce_wishlist.page:
+  path: '/wishlist'
+  defaults:
+    _controller: '\Drupal\commerce_wishlist\Controller\WishlistController::wishlistPage'
+    _title: 'Wishlist'
+  requirements:
+    _permission: 'access wishlist'
+
+commerce_wishlist.user_page:
+  path: '/user/{user}/wishlist'
+  defaults:
+    _controller: '\Drupal\commerce_wishlist\Controller\WishlistController::userPage'
+    _title: 'Wishlist'
+  requirements:
+    _permission: 'access wishlist'
+
+commerce_wishlist.admin_settings:
+  path: '/admin/commerce/config/wishlist-settings'
+  defaults:
+    _form: '\Drupal\commerce_wishlist\Form\SettingsForm'
+    _title: 'Wishlist settings'
+  requirements:
+    _permission: 'administer commerce_wishlist'
+
+commerce_wishlist.configuration:
+  path: '/admin/commerce/config/wishlists'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Wishlists'
+  requirements:
+    _permission: 'administer commerce_wishlist'

@@ -1,0 +1,24 @@
+{#
+/**
+ * @file
+ * Template for the wishlist item details.
+ *
+ * Do not remove or modify the wrapping div, it is used by
+ * WishlistItemDetailsForm::successfulAjaxSubmit().
+ *
+ * Available variables:
+ * - wishlist_item_entity: The wishlist item entity.
+ *
+ * @ingroup themeable
+ */
+#}
+<div id="wishlist-item-details-{{ wishlist_item_entity.id }}">
+  {% if wishlist_item_entity.getComment %}
+    <div class="wishlist-item__comment">
+      {{ wishlist_item_entity.getComment }}
+    </div>
+  {% endif %}
+  <div class="wishlist-item__quantity">
+    {{ 'Quantity:'|t }} {{ wishlist_item_entity.getQuantity|number_format }}
+  </div>
+</div>

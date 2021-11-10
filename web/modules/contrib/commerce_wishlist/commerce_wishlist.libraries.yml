@@ -1,0 +1,5 @@
+user:
+  version: VERSION
+  css:
+    layout:
+      css/commerce_wishlist.user.css: {}

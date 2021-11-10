@@ -1,0 +1,8 @@
+access wishlist:
+  title: 'Access wishlist'
+  description: 'View the wishlist page.'
+
+'administer commerce_wishlist_type':
+  title: 'Administer wishlist types'
+  description: 'Maintain the types of wishlists available and the fields that are associated with those types.'
+  'restrict access': TRUE

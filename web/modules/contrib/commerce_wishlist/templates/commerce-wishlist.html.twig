@@ -1,0 +1,22 @@
+{#
+/**
+ * @file
+ * Default wishlist template.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the wrapper.
+ * - wishlist: The rendered wishlist fields.
+ *   Use 'wishlist' to print them all, or print a subset such as
+ *   'wishlist.name'. Use the following code to exclude the
+ *   printing of a given field:
+ *   @code
+ *   {{ wishlist|without('name') }}
+ *   @endcode
+ * - wishlist_entity: The wishlist entity.
+ *
+ * @ingroup themeable
+ */
+#}
+<div{{ attributes }}>
+  {{ wishlist }}
+</div>

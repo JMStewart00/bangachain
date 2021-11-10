@@ -1,0 +1,25 @@
+{#
+/**
+ * @file
+ * Template for the wishlist share email.
+ *
+ * Available variables:
+ * - wishlist_entity: The wishlist entity.
+ * - wishlist_url: The wishlist url.
+ *
+ * @ingroup themeable
+ */
+#}
+<p>
+  {% trans %}Check out my wishlist!{% endtrans %}
+</p>
+
+<p>
+  Test custom field {{ custom_field }}
+  {% trans %}I use my wishlist for keeping track of items I am interested in.{% endtrans %} <br>
+  {% trans %}To see the list in the store and buy items from it, <a href="{{ wishlist_url }}">click here</a>.{% endtrans %}
+</p>
+
+<p>
+  {% trans %}Thanks for having a look!{% endtrans %}
+</p>

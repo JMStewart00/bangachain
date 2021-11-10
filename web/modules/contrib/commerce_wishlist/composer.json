@@ -1,0 +1,12 @@
+{
+  "name": "drupal/commerce_wishlist",
+  "type": "drupal-module",
+  "description": "Provides the ability for customers to add products to a list.",
+  "homepage": "https://www.drupal.org/project/commerce_wishlist",
+  "license": "GPL-2.0+",
+  "require": {
+    "drupal/commerce": "^2.15 || ^3",
+    "drupal/inline_entity_form": "~1.0",
+    "drupal/profile": "~1.0",
+  }
+}

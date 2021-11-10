@@ -1,0 +1,19 @@
+{#
+/**
+ * @file
+ * Template for the wishlist block.
+ *
+ * Available variables:
+ * - count: The number of items in the wishlist.
+ * - count_text: The text representing the number of items in the wishlist.
+ * - wishlist_entity: The wishlist entity.
+ * - url: The url to the wishlist page.
+ *
+ * @ingroup themeable
+ */
+#}
+<div{{ attributes.addClass('wishlist-block') }}>
+  <a class="wishlist-block__link" href="{{ url }}">
+    <span class="wishlist-block__count">{{ count_text }}</span>
+  </a>
+</div>

@@ -1,0 +1,38 @@
+services:
+  cache_context.wishlist:
+    class: Drupal\commerce_wishlist\Cache\Context\WishlistCacheContext
+    arguments: ['@current_user', '@commerce_wishlist.wishlist_provider']
+    tags:
+      - { name: cache.context }
+
+  commerce_wishlist.wishlist_assignment:
+    class: Drupal\commerce_wishlist\WishlistAssignment
+    arguments: ['@entity_type.manager', '@event_dispatcher', '@config.factory', '@commerce_wishlist.wishlist_manager']
+
+  commerce_wishlist.wishlist_session:
+    class: Drupal\commerce_wishlist\WishlistSession
+    arguments: ['@session']
+
+  commerce_wishlist.wishlist_provider:
+    class: Drupal\commerce_wishlist\WishlistProvider
+    arguments: ['@entity_type.manager', '@current_user', '@commerce_wishlist.wishlist_session', '@config.factory']
+
+  commerce_wishlist.wishlist_manager:
+    class: Drupal\commerce_wishlist\WishlistManager
+    arguments: ['@entity_type.manager', '@event_dispatcher']
+
+  commerce_wishlist.wishlist_subscriber:
+    class: Drupal\commerce_wishlist\EventSubscriber\WishlistEventSubscriber
+    arguments: ['@messenger', '@string_translation']
+    tags:
+      - { name: event_subscriber }
+
+  commerce_wishlist.wishlist_share_mail:
+    class: Drupal\commerce_wishlist\Mail\WishlistShareMail
+    arguments: ['@config.factory', '@commerce.mail_handler']
+
+  access_check.entity.commerce_wishlist_item.details_form:
+    class: Drupal\commerce_wishlist\Access\WishlistItemDetailsAccessCheck
+    arguments: ['@commerce_wishlist.wishlist_session', '@current_route_match']
+    tags:
+      - { name: access_check, applies_to: _wishlist_item_details_access_check }

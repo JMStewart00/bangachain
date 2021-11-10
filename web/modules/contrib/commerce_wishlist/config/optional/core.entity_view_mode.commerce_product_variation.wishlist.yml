@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - commerce_product
+      - commerce_wishlist
+id: commerce_product_variation.wishlist
+label: Wishlist
+targetEntityType: commerce_product_variation
+cache: true

@@ -1,0 +1,278 @@
+<?php
+
+/**
+ * @file
+ * Contains install and update functions for Commerce Wishlist.
+ */
+
+use Drupal\commerce_wishlist\Entity\WishlistType;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Session\AccountInterface;
+
+/**
+ * Implements hook_install().
+ */
+function commerce_wishlist_install() {
+  // Allow all roles to use wishlist.
+  user_role_grant_permissions(AccountInterface::ANONYMOUS_ROLE, ['access wishlist']);
+  user_role_grant_permissions(AccountInterface::AUTHENTICATED_ROLE, ['access wishlist']);
+}
+
+/**
+ * Update entity keys for wishlist.
+ */
+function commerce_wishlist_update_8301() {
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $entity_type_id = 'commerce_wishlist';
+  $uid_storage_definition = $definition_update_manager->getFieldStorageDefinition('uid', $entity_type_id);
+  $entity_type = $definition_update_manager->getEntityType($entity_type_id);
+  $keys = $entity_type->getKeys();
+  $keys['owner'] = 'uid';
+  $keys['uid'] = 'uid';
+  $entity_type->set('entity_keys', $keys);
+  $definition_update_manager->updateEntityType($entity_type);
+  $definition_update_manager->updateFieldStorageDefinition($uid_storage_definition);
+}
+
+/**
+ * Add the 'comment' and 'priority' fields to commerce_wishlist_item entities.
+ */
+function commerce_wishlist_update_8302() {
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+
+  $storage_definition = BaseFieldDefinition::create('string_long')
+    ->setLabel(t('Comment'))
+    ->setDescription(t('The item comment.'))
+    ->setDefaultValue('')
+    ->setDisplayOptions('form', [
+      'type' => 'string_textarea',
+      'weight' => 25,
+      'settings' => [
+        'rows' => 4,
+      ],
+    ]);
+  $definition_update_manager->installFieldStorageDefinition('comment', 'commerce_wishlist_item', 'commerce_wishlist', $storage_definition);
+
+  $storage_definition = BaseFieldDefinition::create('integer')
+    ->setLabel(t('Priority'))
+    ->setDescription(t('The item priority.'))
+    ->setDefaultValue(0);
+  $definition_update_manager->installFieldStorageDefinition('priority', 'commerce_wishlist_item', 'commerce_wishlist', $storage_definition);
+}
+
+/**
+ * Remove the wishlist item title.
+ */
+function commerce_wishlist_update_8303() {
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+
+  $storage_definition = BaseFieldDefinition::create('string')
+    ->setName('title')
+    ->setTargetEntityTypeId('commerce_wishlist_item')
+    ->setLabel(t('Title'))
+    ->setDescription(t('The wishlist item title.'))
+    ->setSettings([
+      'default_value' => '',
+      'max_length' => 512,
+    ]);
+  $definition_update_manager->uninstallFieldStorageDefinition($storage_definition);
+}
+
+/**
+ * Replace the commerce_wishlist_item_type entity type with automatic bundles.
+ */
+function commerce_wishlist_update_8304() {
+  /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager */
+  $entity_field_manager = \Drupal::service('entity_field.manager');
+  /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
+  $entity_type_manager = \Drupal::service('entity_type.manager');
+  /** @var \Drupal\Core\Config\ConfigFactoryInterface $config_factory */
+  $config_factory = \Drupal::service('config.factory');
+  /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
+  $config_manager = \Drupal::service('config.manager');
+
+  // Start from empty caches, so that they reflect the updated code.
+  $entity_type_manager->clearCachedDefinitions();
+  $entity_field_manager->clearCachedFieldDefinitions();
+
+  // Remove all wishlist item types and their fields, form/view displays.
+  $names = $config_factory->listAll('commerce_wishlist.commerce_wishlist_item_type.');
+  $dependents = $config_manager->findConfigEntityDependents('config', $names);
+  foreach ($dependents as $dependent) {
+    $config_factory->getEditable($dependent->getConfigDependencyName());
+  }
+  foreach ($names as $name) {
+    $config_factory->getEditable($name)->delete();
+  }
+
+  // Update core's field schema and storage definition repositories.
+  $new_definitions = $entity_field_manager->getBaseFieldDefinitions('commerce_wishlist_item');
+  $definition = $new_definitions['type']->getFieldStorageDefinition();
+  $field_schema = $definition->getSchema();
+  /** @var \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $last_installed_schema_repository */
+  $last_installed_schema_repository = \Drupal::service('entity.last_installed_schema.repository');
+  $last_installed_schema_repository->setLastInstalledFieldStorageDefinition($definition);
+
+  $entity_storage_schema_sql = \Drupal::keyValue('entity.storage_schema.sql');
+  $schema_key = 'commerce_wishlist_item.field_schema_data.type';
+  $installed_field_schema = $entity_storage_schema_sql->get($schema_key);
+  $installed_field_schema['commerce_wishlist_item']['fields']['type'] = $field_schema['columns']['value'];
+  $installed_field_schema['commerce_wishlist_item']['fields']['type']['not null'] = TRUE;
+  unset($installed_field_schema['commerce_wishlist_item']['indexes']);
+  $entity_storage_schema_sql->set('commerce_wishlist_item.field_schema_data.type', $installed_field_schema);
+
+  // Alter the database table to reflect the new structure.
+  // Core doesn't provide an index for string bundle keys right now.
+  $database = \Drupal::database();
+  $database->schema()->changeField('commerce_wishlist_item', 'type', 'type', $installed_field_schema['commerce_wishlist_item']['fields']['type']);
+  $database->schema()->dropIndex('commerce_wishlist_item', 'commerce_wishlist_item_field__type__target_id');
+
+  // Update wishlist item storage.
+  // Assume all previous bundles were product variation bundles.
+  $database->update('commerce_wishlist_item')
+    ->fields(['type' => 'commerce_product_variation'])
+    ->execute();
+}
+
+/**
+ * Add the 'is_public' and 'keep_purchased_items' fields to wishlists.
+ */
+function commerce_wishlist_update_8305() {
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+
+  $storage_definition = BaseFieldDefinition::create('boolean')
+    ->setLabel(t('Public'))
+    ->setDisplayOptions('form', [
+      'type' => 'boolean_checkbox',
+      'settings' => [
+        'display_label' => TRUE,
+      ],
+      'weight' => 19,
+    ]);
+  $definition_update_manager->installFieldStorageDefinition('is_public', 'commerce_wishlist', 'commerce_wishlist', $storage_definition);
+
+  $storage_definition = BaseFieldDefinition::create('boolean')
+    ->setLabel(t('Keep purchased items in the list'))
+    ->setDefaultValue(TRUE)
+    ->setDisplayOptions('form', [
+      'type' => 'boolean_checkbox',
+      'settings' => [
+        'display_label' => TRUE,
+      ],
+      'weight' => 20,
+    ])
+    ->setDisplayConfigurable('form', TRUE);
+  $definition_update_manager->installFieldStorageDefinition('keep_purchased_items', 'commerce_wishlist', 'commerce_wishlist', $storage_definition);
+}
+
+/**
+ * Add 'purchases' field to commerce_wishlist_item entities.
+ */
+function commerce_wishlist_update_8306() {
+  \Drupal::service('plugin.manager.field.field_type')->clearCachedDefinitions();
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+
+  $storage_definition = BaseFieldDefinition::create('commerce_wishlist_purchase')
+    ->setLabel(t('Purchases'))
+    ->setCardinality(BaseFieldDefinition::CARDINALITY_UNLIMITED);
+  $definition_update_manager->installFieldStorageDefinition('purchases', 'commerce_wishlist_item', 'commerce_wishlist', $storage_definition);
+}
+
+/**
+ * Add the 'code' field to wishlists.
+ */
+function commerce_wishlist_update_8307() {
+  $storage_definition = BaseFieldDefinition::create('string')
+    ->setLabel(t('Code'))
+    ->setSetting('max_length', 25)
+    ->addConstraint('UniqueField', []);
+
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $definition_update_manager->installFieldStorageDefinition('code', 'commerce_wishlist', 'commerce_wishlist', $storage_definition);
+}
+
+/**
+ * Delete config that is no longer used.
+ */
+function commerce_wishlist_update_8308() {
+  /** @var \Drupal\Core\Config\ConfigFactoryInterface $config_factory */
+  $config_factory = \Drupal::service('config.factory');
+
+  $config = [
+    'core.entity_view_display.commerce_wishlist.default.user',
+    'core.entity_view_mode.commerce_wishlist.user',
+    'views.view.commerce_wishlist_form',
+    'views.view.commerce_user_wishlists',
+  ];
+  foreach ($config as $config_name) {
+    $config_factory->getEditable($config_name)->delete();
+  }
+}
+
+/**
+ * Convert the 'wishlist_items' configurable field into a base field.
+ */
+function commerce_wishlist_update_8309() {
+  $bundle_info = \Drupal::service('entity_type.bundle.info')->getBundleInfo('commerce_wishlist');
+  $wishlist_types = array_keys($bundle_info);
+  $config_factory = \Drupal::configFactory();
+  $config_manager = \Drupal::service('config.manager');
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $entity_field_manager = \Drupal::service('entity_field.manager');
+
+  $entity_type_manager->clearCachedDefinitions();
+  $entity_field_manager->clearCachedFieldDefinitions();
+
+  $key = 'commerce_wishlist.field_storage_definitions';
+  $entity_definitions_installed = \Drupal::keyValue('entity.definitions.installed');
+  $definitions = $entity_definitions_installed->get($key);
+  /** @var \Drupal\Core\Field\FieldDefinitionInterface[] $base_field_definitions */
+  $base_field_definitions = $entity_field_manager->getBaseFieldDefinitions('commerce_wishlist');
+  $definitions['wishlist_items'] = $base_field_definitions['wishlist_items']->getFieldStorageDefinition();
+  $entity_definitions_installed->set($key, $definitions);
+
+  $configuration_to_delete = [];
+  foreach ($wishlist_types as $bundle) {
+    $configuration_to_delete[] = 'field.field.commerce_wishlist.' . $bundle . '.wishlist_items';
+  }
+  $configuration_to_delete[] = 'field.storage.commerce_wishlist.wishlist_items';
+
+  $dependents = $config_manager->findConfigEntityDependents('config', $configuration_to_delete);
+  /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface $config_entity */
+  foreach ($dependents as $config_name => $config_entity) {
+    $config_entity = $config_factory->getEditable($config_name);
+    $dependencies = $config_entity->get('dependencies.config');
+    $dependencies = array_diff($dependencies, $configuration_to_delete);
+    $config_entity->set('dependencies.config', $dependencies);
+    $config_entity->save();
+  }
+
+  foreach ($configuration_to_delete as $config) {
+    $config_factory->getEditable($config)->delete();
+  }
+}
+
+/**
+ * Update wishlist settings.
+ */
+function commerce_wishlist_update_8310() {
+  /** @var \Drupal\Core\Config\ConfigFactoryInterface $config_factory */
+  $config_factory = \Drupal::service('config.factory');
+
+  // We don't allow multiple wishlists by default.
+  $allow_multiple = FALSE;
+
+  // Load all wishlist types.
+  $wishlist_types = WishlistType::loadMultiple();
+  /** @var \Drupal\commerce_wishlist\Entity\WishlistTypeInterface $wishlist_type */
+  foreach ($wishlist_types as $wishlist_type) {
+    if ($allow_multiple = $wishlist_type->get('allowMultiple')) {
+      break;
+    }
+  }
+
+  $config = $config_factory->getEditable('commerce_wishlist.settings');
+  $config->set('default_type', 'default');
+  $config->set('allow_multiple', (bool) $allow_multiple);
+  $config->save();
+}

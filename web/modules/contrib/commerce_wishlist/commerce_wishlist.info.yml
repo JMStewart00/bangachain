@@ -1,0 +1,11 @@
+name: Commerce Wishlist
+type: module
+description: Provides the ability for customers to add products to a list.
+package: Commerce (contrib)
+core_version_requirement: ^8.9 || ^9
+dependencies:
+  - commerce:commerce
+  - commerce:commerce_cart
+  - commerce:commerce_store
+  - inline_entity_form:inline_entity_form
+  - profile:profile

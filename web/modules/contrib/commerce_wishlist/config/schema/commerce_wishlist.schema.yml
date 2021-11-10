@@ -1,0 +1,79 @@
+commerce_wishlist.settings:
+  type: config_object
+  label: 'Wishlist settings'
+  mapping:
+    allow_multiple:
+      type: boolean
+      label: 'Allow multiple wishlists'
+    default_type:
+      type: string
+      label: 'Default wishlist type'
+    view_modes:
+      type: sequence
+      label: 'View modes'
+      sequence:
+        view_mode:
+          type: string
+          label: 'View mode'
+
+commerce_wishlist.commerce_wishlist_type.*:
+  type: config_entity
+  label: 'Wishlist type'
+  mapping:
+    label:
+      type: label
+      label: 'Label'
+    id:
+      type: string
+      label: 'Machine-readable name'
+    allowAnonymous:
+      type: boolean
+      label: 'Allow anonymous wishlists'
+
+block.settings.commerce_wishlist:
+  type: block_settings
+  label: 'Wishlist block'
+  mapping:
+    dropdown:
+      type: boolean
+      label: 'Display wishlist contents in dropdown'
+
+field.formatter.third_party.commerce_wishlist:
+  type: mapping
+  label: 'Wishlist settings'
+  mapping:
+    show_wishlist:
+      type: boolean
+      label: 'Show wishlist button'
+    weight_wishlist:
+      type: integer
+      label: 'Modify wishlist button sort order'
+    label_wishlist:
+      type: text
+      label: 'Override the button label'
+    region:
+      type: text
+      label: 'Region'
+
+commerce_product.commerce_product_type.*.third_party.commerce_wishlist:
+  type: field.formatter.third_party.commerce_wishlist
+
+views.field.commerce_wishlist_item_move_to_cart:
+  type: views.field.field
+  mapping:
+    keep_item:
+      type: boolean
+      label: 'Keep item'
+    combine:
+      type: boolean
+      label: 'Whether to attempt to combine order items containing the same product variation'
+
+views.field.commerce_wishlist_order_item_move_to_wishlist:
+  type: views.field.field
+  mapping:
+    keep_item:
+      type: boolean
+      label: 'Keep item'
+    combine:
+      type: boolean
+      label: 'Whether to attempt to combine wishlist items containing the same product variation'

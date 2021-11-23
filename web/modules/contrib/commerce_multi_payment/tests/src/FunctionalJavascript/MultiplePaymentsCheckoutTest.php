@@ -8,8 +8,7 @@ use Drupal\commerce_payment\Entity\Payment;
 use Drupal\commerce_payment\Entity\PaymentGateway;
 use Drupal\commerce_price\Price;
 use Drupal\commerce_product\Entity\ProductInterface;
-use Drupal\Tests\commerce\Functional\CommerceBrowserTestBase;
-use Drupal\Tests\commerce\FunctionalJavascript\JavascriptTestTrait;
+use Drupal\Tests\commerce\FunctionalJavascript\CommerceWebDriverTestBase;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 
 /**
@@ -17,9 +16,7 @@ use Symfony\Component\CssSelector\CssSelectorConverter;
  *
  * @group commerce
  */
-class MultiplePaymentsCheckoutTest extends CommerceBrowserTestBase {
-  
-  use JavascriptTestTrait;
+class MultiplePaymentsCheckoutTest extends CommerceWebDriverTestBase {
 
   /**
    * The current user.
@@ -172,7 +169,7 @@ class MultiplePaymentsCheckoutTest extends CommerceBrowserTestBase {
    */
   public function testPaymentInformation() {
     $cart = $this->addProductToCart($this->product);
-    
+
     $this->drupalGet('checkout/' . $cart->id());
     $this->assertSession()->pageTextContains('Payment information');
 
@@ -192,18 +189,18 @@ class MultiplePaymentsCheckoutTest extends CommerceBrowserTestBase {
     $label = $new_gift_card->find('xpath', $css_selector_converter->toXPath('summary'));
     $this->assertNotEmpty($label);
     $this->assertEquals('Apply a gift card', $label->getText());
-    
+
     // Admin user can't see store credit because UID = 2, and name is random.
     $xpath = $css_selector_converter->toXPath('#edit-multi-payment-apply #edit-multi-payment-apply-store-credit details');
     $store_credit_details = $this->xpath($xpath);
     $this->assertEmpty($store_credit_details);
-    
+
     // Add "credit" to user's name to activate example credit.
     $this->adminUser->set('name', $this->adminUser->get('name')->value . '_credit')->save();
-    
+
     $this->drupalGet('checkout/' . $cart->id());
     $store_credit_details = $this->xpath($xpath);
-    
+
     $this->assertEquals(1, count($store_credit_details));
     $store_credit = reset($store_credit_details);
     $this->assertEmpty($store_credit->getAttribute('open'));
@@ -212,7 +209,7 @@ class MultiplePaymentsCheckoutTest extends CommerceBrowserTestBase {
     $this->assertEquals('Apply store credit: $300.00 available', $label->getText());
 
     // Check the Summary for Adjustments
-    
+
     // Add gift card
     $this->getSession()->getPage()->fillField('multi_payment_apply[gift_card][form][new][gift_card_number]', '3111');
     $this->getSession()->getPage()->pressButton('add_gift_card_gift_card');
@@ -225,7 +222,7 @@ class MultiplePaymentsCheckoutTest extends CommerceBrowserTestBase {
     $this->getSession()->getPage()->pressButton('add_gift_card_gift_card');
     $this->waitForAjaxToFinish();
     $this->assertSession()->pageTextContains('This gift card has already been added to the order.');
-    
+
     // Try to apply an invalid gift card.
     $this->getSession()->getPage()->fillField('multi_payment_apply[gift_card][form][new][gift_card_number]', '3222');
     $this->getSession()->getPage()->pressButton('add_gift_card_gift_card');
@@ -239,25 +236,25 @@ class MultiplePaymentsCheckoutTest extends CommerceBrowserTestBase {
     $this->assertSession()->pageTextNotContains('This gift card has already been added to the order.');
     $this->assertSession()->pageTextNotContains('Gift card 3222 has been declined.');
     $this->assertTrue($this->orderAdjustmentExists('Gift card: 5111', '-$250.00'));
-    
+
     $xpath = $css_selector_converter->toXPath('#edit-multi-payment-apply #edit-multi-payment-apply-gift-card details');
     $gift_card_details = $this->xpath($xpath);
     $this->assertEquals(3, count($gift_card_details));
     $standard_payment_options = $this->getStandardPaymentOptionsFromPaymentInfoPane();
     $this->assertEquals(0, count($standard_payment_options));
-    
+
     // Try to add more from gift card #2. Should be ignored because we have already paid for entire order.
     $amount_field_name = $gift_card_details[1]->find('xpath', $css_selector_converter->toXPath('input[type=text]'))->getAttribute('name');
     preg_match('/(\d+)\]\[amount\]\[number\]$/', $amount_field_name, $matches);
     $stored_payment_id = $matches[1];
-    
+
     $apply_button_field_name = 'apply_gift_card_payment_' . $stored_payment_id;
     $this->getSession()->getPage()->fillField($amount_field_name, '400');
     $this->getSession()->getPage()->pressButton($apply_button_field_name);
     $this->waitForAjaxToFinish();
     $this->assertTrue($this->orderAdjustmentExists('Gift card: 5111', '-$250.00'));
     $this->assertEquals('250.00', $gift_card_details[1]->find('xpath', $css_selector_converter->toXPath('input[type=text]'))->getAttribute('value'));
-    
+
     // Remove the second gift card
     $remove_button_field_name = 'remove_gift_card_payment_' . $stored_payment_id;
     $this->getSession()->getPage()->pressButton($remove_button_field_name);
@@ -281,7 +278,7 @@ class MultiplePaymentsCheckoutTest extends CommerceBrowserTestBase {
     $this->waitForAjaxToFinish();
     $this->assertTrue($this->orderAdjustmentExists('Store credit', '-$250.00'));
     $this->assertEquals('$0.00', $this->getOrderTotalFromSummary());
-    
+
     // Confirm that payment information pane removes the CC options
     $standard_payment_options = $this->getStandardPaymentOptionsFromPaymentInfoPane();
     $this->assertEquals(0, count($standard_payment_options));
@@ -295,7 +292,7 @@ class MultiplePaymentsCheckoutTest extends CommerceBrowserTestBase {
   public function testReviewPage() {
     // Add "credit" to user's name to activate example credit.
     $this->adminUser->set('name', $this->adminUser->get('name')->value . '_credit')->save();
-    
+
     $cart = $this->addProductToCart($this->product);
 
     $this->drupalGet('checkout/' . $cart->id());
@@ -312,16 +309,16 @@ class MultiplePaymentsCheckoutTest extends CommerceBrowserTestBase {
     // Check review page for gift card being listed.
     $this->submitForm([], 'Continue to review');
     $this->assertSession()->pageTextContains('Gift card: 3111: $500.00');
-    
+
     // Go back to payment information page
     $this->clickLink('Go back');
-    
+
     // Add a second gift card for a small amount.
     $this->getSession()->getPage()->fillField('multi_payment_apply[gift_card][form][new][gift_card_number]', '5111');
     $this->getSession()->getPage()->pressButton('add_gift_card_gift_card');
     $this->waitForAjaxToFinish();
     $this->assertTrue($this->orderAdjustmentExists('Gift card: 5111', '-$250.00'));
-    
+
     $xpath = $css_selector_converter->toXPath('#edit-multi-payment-apply #edit-multi-payment-apply-gift-card details');
     $gift_card_details = $this->xpath($xpath);;
     $amount_field_name = $gift_card_details[1]->find('xpath', $css_selector_converter->toXPath('input[type=text]'))->getAttribute('name');
@@ -333,12 +330,12 @@ class MultiplePaymentsCheckoutTest extends CommerceBrowserTestBase {
     $this->getSession()->getPage()->pressButton($apply_button_field_name);
     $this->waitForAjaxToFinish();
     $this->assertTrue($this->orderAdjustmentExists('Gift card: 5111', '-$50.00'));
-    
+
     // Go to review page, check for both cards listed.
     $this->submitForm([], 'Continue to review');
     $this->assertSession()->pageTextContains('Gift card: 3111: $500.00');
     $this->assertSession()->pageTextContains('Gift card: 5111: $50.00');
-    
+
     // Go back to review page, add store credit for remaining.
     $this->clickLink('Go back');
     $xpath = $css_selector_converter->toXPath('[data-drupal-selector="multi_payment_apply-store_credit-form-ajax-wrapper"] details summary');
@@ -347,14 +344,14 @@ class MultiplePaymentsCheckoutTest extends CommerceBrowserTestBase {
     $this->getSession()->getPage()->pressButton('store_credit_apply_store_credit_payment');
     $this->waitForAjaxToFinish();
     $this->assertTrue($this->orderAdjustmentExists('Store credit', '-$200.00'));
-    
+
     // Go to review page, check that all payments are shown.
     $this->submitForm([], 'Continue to review');
     $this->assertSession()->pageTextContains('Gift card: 3111: $500.00');
     $this->assertSession()->pageTextContains('Gift card: 5111: $50.00');
     $this->assertSession()->pageTextContains('Store credit: $200.00');
 
-    
+
   }
 
   /**
@@ -363,7 +360,7 @@ class MultiplePaymentsCheckoutTest extends CommerceBrowserTestBase {
   public function testSuccessfulCheckout() {
     // Add "credit" to user's name to activate example credit.
     $this->adminUser->set('name', $this->adminUser->get('name')->value . '_credit')->save();
-    
+
     $cart = $this->addProductToCart($this->product);
     $this->drupalGet('checkout/' . $cart->id());
 
@@ -398,7 +395,7 @@ class MultiplePaymentsCheckoutTest extends CommerceBrowserTestBase {
     $order_storage->resetCache([$cart->id()]);
     /** @var \Drupal\commerce_order\Entity\OrderInterface $order */
     $order = $order_storage->load($cart->id());
-    
+
     /** @var \Drupal\commerce_payment\PaymentStorageInterface $payment_storage */
     $payment_storage = $this->container->get('entity_type.manager')->getStorage('commerce_payment');
     $payments = $payment_storage->loadMultipleByOrder($order);
@@ -506,7 +503,7 @@ class MultiplePaymentsCheckoutTest extends CommerceBrowserTestBase {
     $this->adminUser->set('name', $this->adminUser->get('name')->value . '_credit')->save();
 
     // Tests when first multi-payment fails.
-    
+
     $cart = $this->addProductToCart($this->product);
     $this->drupalGet('checkout/' . $cart->id());
 
@@ -544,9 +541,9 @@ class MultiplePaymentsCheckoutTest extends CommerceBrowserTestBase {
         $staged_payment->setData('remote_id', '3222')->save();
       }
     }
-    
+
     $this->submitForm([], 'Pay and complete purchase');
-    
+
     $this->assertContains('checkout/' . $cart->id() . '/order_information', $this->getSession()->getCurrentUrl());
     $this->assertSession()->pageTextContains('We encountered an error processing your payment method');
 
@@ -559,7 +556,7 @@ class MultiplePaymentsCheckoutTest extends CommerceBrowserTestBase {
     $payment_storage = $this->container->get('entity_type.manager')->getStorage('commerce_payment');
     $payments = $payment_storage->loadMultipleByOrder($order);
     $this->assertEquals(0, count($payments));
-    
+
     // Fix the gift card staged payment.
     foreach ($staged_payments as $staged_payment) {
       /** @var \Drupal\commerce_multi_payment\Entity\StagedPaymentInterface $staged_payment */
@@ -582,19 +579,19 @@ class MultiplePaymentsCheckoutTest extends CommerceBrowserTestBase {
     $payments = $payment_storage->loadMultipleByOrder($order);
     $this->assertEquals(1, count($payments));
     $payment = reset($payments);
-    
+
     $this->assertEquals('gift_card', $payment->getPaymentGatewayId());
     $this->assertEquals('authorization_voided', $payment->getState()->getString());
-    
+
     // Delete this payment to clear things up for next test.
     $payment->delete();
 
     // Change user name so that store credit succeeds.
     $this->adminUser->set('name', 'admin_credit')->save();
-    
+
     // Now, we test with a failed CC after both multi-payments are complete
     $this->drupalGet('checkout/' . $cart->id() . '/order_information');
-    
+
     // Add store credit, for not the full amount.
     $this->getSession()->getPage()->fillField('multi_payment_apply[store_credit][form][store_credit][amount][number]', '200');
     $this->getSession()->getPage()->pressButton('store_credit_apply_store_credit_payment');
@@ -619,7 +616,7 @@ class MultiplePaymentsCheckoutTest extends CommerceBrowserTestBase {
     ], 'Continue to review');
 
     $this->submitForm([], 'Pay and complete purchase');
-    
+
     $this->assertContains('checkout/' . $cart->id() . '/order_information', $this->getSession()->getCurrentUrl());
     $this->assertSession()->pageTextContains('We encountered an error processing your payment method');
 
@@ -637,7 +634,7 @@ class MultiplePaymentsCheckoutTest extends CommerceBrowserTestBase {
     }
     $this->assertEquals(2, count($found_payment_gateways));
   }
-  
+
   protected function getStandardPaymentOptionsFromPaymentInfoPane() {
     $css_selector_converter = new CssSelectorConverter();
     $xpath = $css_selector_converter->toXPath('[data-drupal-selector="edit-payment-information-payment-method"] .form-item');
@@ -664,7 +661,7 @@ class MultiplePaymentsCheckoutTest extends CommerceBrowserTestBase {
     $total = reset($total);
     return $total->find('xpath', $css_selector_converter->toXPath('.order-total-line-value'))->getText();
   }
-  
+
   /**
    * @param string $label
    * @param string|null $value
@@ -708,7 +705,7 @@ class MultiplePaymentsCheckoutTest extends CommerceBrowserTestBase {
     $cart_manager = \Drupal::service('commerce_cart.cart_manager');
     /** @var \Drupal\commerce_cart\CartProviderInterface $cart_provider */
     $cart_provider = \Drupal::service('commerce_cart.cart_provider');
-    
+
     $cart_provider->clearCaches();
 
     $variations = $this->product->getVariations();

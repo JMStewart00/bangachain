@@ -24,7 +24,7 @@ class TestStateBasedSectionStorage extends SectionStorageBase {
   public function getSections() {
     // Return a custom section.
     $section = new Section('layout_onecol');
-    $section->appendComponent(new SectionComponent('fake-uuid', 'content', [
+    $section->appendComponent(SectionComponent::create('fake-uuid', 'content', [
       'id' => 'system_powered_by_block',
       'label' => 'Test block title',
       'label_display' => 'visible',

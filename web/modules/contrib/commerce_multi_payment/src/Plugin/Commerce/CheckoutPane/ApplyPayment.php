@@ -29,8 +29,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class ApplyPayment extends CheckoutPaneBase implements CheckoutPaneInterface {
-  
-  
+
+
   /**
    * @var \Drupal\commerce_multi_payment\MultiplePaymentManagerInterface
    */
@@ -92,7 +92,7 @@ class ApplyPayment extends CheckoutPaneBase implements CheckoutPaneInterface {
    */
   public function defaultConfiguration() {
     return [
-      'display_label' => $this->t('Apply Multiple Payments'), 
+      'display_label' => $this->t('Apply Multiple Payments'),
         'wrapper_element' => 'fieldset',
     ] + parent::defaultConfiguration();
   }
@@ -111,7 +111,7 @@ class ApplyPayment extends CheckoutPaneBase implements CheckoutPaneInterface {
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildConfigurationForm($form, $form_state);
-    
+
     $form['display_label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Display label'),
@@ -122,7 +122,7 @@ class ApplyPayment extends CheckoutPaneBase implements CheckoutPaneInterface {
       '#title' => $this->t('Wrapper Element'),
       '#default_value' => $this->configuration['wrapper_element'],
     ];
-    
+
     return $form;
   }
 
@@ -146,7 +146,7 @@ class ApplyPayment extends CheckoutPaneBase implements CheckoutPaneInterface {
     $payment_gateways = $this->multiplePaymentManager->getMultiPaymentGateways($this->order);
     return !empty($payment_gateways);
   }
-  
+
 
   /**
    * {@inheritdoc}
@@ -174,16 +174,15 @@ class ApplyPayment extends CheckoutPaneBase implements CheckoutPaneInterface {
       /** @var \Drupal\commerce_payment\Entity\PaymentGatewayInterface $payment_gateway */
       /** @var \Drupal\commerce_multi_payment\MultiplePaymentGatewayInterface $payment_gateway_plugin */
       $payment_gateway_plugin = $payment_gateway->getPlugin();
-      
-      $payment_gateway_form = [
+
+      $pane_form['form'][$payment_gateway->id()] = [
         '#type' => 'container',
-        '#element_ajax' => [
-          [CheckoutFlowWithPanesBase::class, 'ajaxRefreshPanes'],
-        ],
+        '#payment_gateway_id' => $payment_gateway->id(),
+        '#element_ajax' => [],
+        '#parents' => array_merge($pane_form['#parents'], ['form', $payment_gateway->id()]),
       ];
-      
-      $payment_gateway_form['#payment_gateway_id'] =  $payment_gateway->id();
-      $pane_form[$payment_gateway->id()] = $payment_gateway_plugin->multiPaymentBuildForm($payment_gateway_form, $form_state, $complete_form, $this->order);
+
+      $pane_form['form'][$payment_gateway->id()] = $payment_gateway_plugin->multiPaymentBuildForm($pane_form['form'][$payment_gateway->id()], $form_state, $complete_form, $this->order);
     }
     return $pane_form;
   }

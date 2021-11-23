@@ -67,7 +67,7 @@ class StoreCredit extends MultiplePaymentGatewayBase implements StoreCreditPayme
    */
   public function getDisplayLabel() {
     $label = parent::getDisplayLabel();
-    
+
     return $label;
   }
 
@@ -91,13 +91,13 @@ class StoreCredit extends MultiplePaymentGatewayBase implements StoreCreditPayme
         $staged_payment->save();
         $order = $staged_payment->getOrder();
         $order->save();
-        
+
         throw $e;
       }
       $staged_payment->setPayment($payment);
       $staged_payment->setState(StagedPaymentInterface::STATE_COMPLETED);
       $staged_payment->save();
-    
+
   }
 
   /**
@@ -128,7 +128,7 @@ class StoreCredit extends MultiplePaymentGatewayBase implements StoreCreditPayme
   public function multiPaymentCapturePayment(StagedPaymentInterface $staged_payment) {
     // There is nothing to do here because we captured in the authorize step.
   }
-  
+
 
   /**
    * @inheritDoc
@@ -141,19 +141,19 @@ class StoreCredit extends MultiplePaymentGatewayBase implements StoreCreditPayme
    * @inheritDoc
    */
   public function multiPaymentBuildForm(array $payment_form, FormStateInterface $form_state, array &$complete_form, OrderInterface $order) {
-    try {
-      $balance = $this->getBalance($order->getCustomerId());
-      $payment_form['form'] = [
-          '#type' => 'commerce_multi_payment_example_storecredit_form',
-          '#order_id' => $order->id(),
-          '#payment_gateway_id' => $payment_form['#payment_gateway_id'],
-          '#balance' => $balance,
-        ] + $payment_form;
-    }
-    catch (DeclineException $e) {
-      // if there is no balance, we should not show the form.
-      return [];
-    }
+    $balance = $this->getBalance($order->getCustomerId());
+
+    /** @var \Drupal\commerce\InlineFormManager $inline_form_manager */
+    $inline_form_manager = \Drupal::service('plugin.manager.commerce_inline_form');
+
+    $inline_form = $inline_form_manager->createInstance('commerce_multi_payment_example_storecredit_form', [
+      'order_id' => $order->id(),
+      'payment_gateway_id' => $payment_form['#payment_gateway_id'],
+      'balance' => $balance,
+    ]);
+
+    $payment_form = $inline_form->buildInlineForm($payment_form, $form_state);
+
     return $payment_form;
   }
 

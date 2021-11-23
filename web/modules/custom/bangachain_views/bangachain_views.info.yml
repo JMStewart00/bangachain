@@ -2,4 +2,4 @@ name: Bangachain Views
 description: Views Helpers for the bangachain site
 package: Bang-A-Chain
 type: module
-core: 8.x
+core_version_requirement: ^8 || ^9

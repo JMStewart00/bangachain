@@ -1,29 +1,31 @@
 <?php
 
+/**
+ * @see       https://github.com/laminas/laminas-feed for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-feed/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-feed/blob/master/LICENSE.md New BSD License
+ */
+
 namespace Laminas\Feed\Reader\Http;
 
 use Laminas\Feed\Reader\Exception;
-
-use function get_class;
-use function gettype;
-use function intval;
-use function is_numeric;
-use function is_object;
 use function is_string;
-use function method_exists;
-use function sprintf;
-use function strtolower;
-use function trim;
 
 class Response implements HeaderAwareResponseInterface
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     private $body;
 
-    /** @var array */
+    /**
+     * @var array
+     */
     private $headers;
 
-    /** @var int */
+    /**
+     * @var int
+     */
     private $statusCode;
 
     /**
@@ -64,15 +66,18 @@ class Response implements HeaderAwareResponseInterface
     public function getHeaderLine($name, $default = null)
     {
         $normalizedName = strtolower($name);
-        return $this->headers[$normalizedName] ?? $default;
+        return isset($this->headers[$normalizedName])
+            ? $this->headers[$normalizedName]
+            : $default;
     }
 
     /**
      * Validate that we have a status code argument that will work for our context.
      *
      * @param int $statusCode
-     * @throws Exception\InvalidArgumentException For arguments not castable
+     * @throws Exception\InvalidArgumentException for arguments not castable
      *     to integer HTTP status codes.
+     *
      * @return void
      */
     private function validateStatusCode($statusCode)
@@ -80,7 +85,7 @@ class Response implements HeaderAwareResponseInterface
         if (! is_numeric($statusCode) || (is_string($statusCode) && trim($statusCode) !== $statusCode)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s expects a numeric status code; received %s',
-                self::class,
+                __CLASS__,
                 is_object($statusCode) ? get_class($statusCode) : gettype($statusCode)
             ));
         }
@@ -88,15 +93,15 @@ class Response implements HeaderAwareResponseInterface
         if (100 > $statusCode || 599 < $statusCode) {
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s expects an integer status code between 100 and 599 inclusive; received %s',
-                self::class,
+                __CLASS__,
                 $statusCode
             ));
         }
 
-        if (intval($statusCode) !== $statusCode) {
+        if (intval($statusCode) != $statusCode) {
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s expects an integer status code; received %s',
-                self::class,
+                __CLASS__,
                 $statusCode
             ));
         }
@@ -106,8 +111,9 @@ class Response implements HeaderAwareResponseInterface
      * Validate that we have a body argument that will work for our context.
      *
      * @param mixed $body
-     * @throws Exception\InvalidArgumentException For arguments not castable
+     * @throws Exception\InvalidArgumentException for arguments not castable
      *     to strings.
+     *
      * @return void
      */
     private function validateBody($body)
@@ -122,7 +128,7 @@ class Response implements HeaderAwareResponseInterface
 
         throw new Exception\InvalidArgumentException(sprintf(
             '%s expects a string body, or an object that can cast to string; received %s',
-            self::class,
+            __CLASS__,
             is_object($body) ? get_class($body) : gettype($body)
         ));
     }
@@ -131,6 +137,7 @@ class Response implements HeaderAwareResponseInterface
      * Validate header values.
      *
      * @throws Exception\InvalidArgumentException
+     *
      * @return void
      */
     private function validateHeaders(array $headers)
@@ -139,7 +146,7 @@ class Response implements HeaderAwareResponseInterface
             if (! is_string($name) || is_numeric($name) || empty($name)) {
                 throw new Exception\InvalidArgumentException(sprintf(
                     'Header names provided to %s must be non-empty, non-numeric strings; received %s',
-                    self::class,
+                    __CLASS__,
                     $name
                 ));
             }
@@ -147,7 +154,7 @@ class Response implements HeaderAwareResponseInterface
             if (! is_string($value) && ! is_numeric($value)) {
                 throw new Exception\InvalidArgumentException(sprintf(
                     'Individual header values provided to %s must be a string or numeric; received %s for header %s',
-                    self::class,
+                    __CLASS__,
                     is_object($value) ? get_class($value) : gettype($value),
                     $name
                 ));

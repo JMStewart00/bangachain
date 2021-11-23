@@ -1,13 +1,16 @@
 <?php
 
+/**
+ * @see       https://github.com/laminas/laminas-feed for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-feed/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-feed/blob/master/LICENSE.md New BSD License
+ */
+
 namespace Laminas\Feed\Writer\Renderer;
 
 use DOMDocument;
 use DOMElement;
 use Laminas\Feed\Writer;
-
-use function is_bool;
-use function stripos;
 
 class AbstractRenderer
 {
@@ -18,16 +21,24 @@ class AbstractRenderer
      */
     protected $extensions = [];
 
-    /** @var Writer\AbstractFeed */
+    /**
+     * @var Writer\AbstractFeed
+     */
     protected $container;
 
-    /** @var DOMDocument */
+    /**
+     * @var DOMDocument
+     */
     protected $dom;
 
-    /** @var bool */
+    /**
+     * @var bool
+     */
     protected $ignoreExceptions = false;
 
-    /** @var array */
+    /**
+     * @var array
+     */
     protected $exceptions = [];
 
     /**
@@ -45,7 +56,9 @@ class AbstractRenderer
      */
     protected $type;
 
-    /** @var DOMElement */
+    /**
+     * @var DOMElement
+     */
     protected $rootElement;
 
     /**
@@ -199,13 +212,14 @@ class AbstractRenderer
      *
      * @return void
      */
-    // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
+    // @codingStandardsIgnoreStart
     protected function _loadExtensions()
     {
+        // @codingStandardsIgnoreEnd
         Writer\Writer::registerCoreExtensions();
         $manager = Writer\Writer::getExtensionManager();
         $all     = Writer\Writer::getExtensions();
-        $exts    = stripos(static::class, 'entry')
+        $exts    = stripos(get_class($this), 'entry')
             ? $all['entryRenderer']
             : $all['feedRenderer'];
         foreach ($exts as $extension) {

@@ -1,7 +1,7 @@
 name: Bang-A-Chain Layout
 description: Custom layout functionality for Bang-A-Chain.
 type: module
-core: 8.x
+core_version_requirement: ^8 || ^9
 package: Bang-A-Chain
 
 dependencies:

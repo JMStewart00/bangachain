@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * @see       https://github.com/laminas/laminas-feed for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-feed/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-feed/blob/master/LICENSE.md New BSD License
+ */
+
 namespace Laminas\Feed\Writer\Renderer\Entry;
 
 use DateTime;
@@ -8,9 +14,6 @@ use DOMElement;
 use Laminas\Feed\Uri;
 use Laminas\Feed\Writer;
 use Laminas\Feed\Writer\Renderer;
-
-use function array_key_exists;
-use function ctype_digit;
 
 class Rss extends Renderer\AbstractRenderer implements Renderer\RendererInterface
 {
@@ -52,18 +55,19 @@ class Rss extends Renderer\AbstractRenderer implements Renderer\RendererInterfac
         return $this;
     }
 
-    // phpcs:disable PSR2.Methods.MethodDeclaration.Underscore
-
     /**
      * Set entry title
      *
+     * @param  DOMDocument $dom
+     * @param  DOMElement $root
      * @return void
      * @throws Writer\Exception\InvalidArgumentException
      */
+    // @codingStandardsIgnoreStart
     protected function _setTitle(DOMDocument $dom, DOMElement $root)
     {
-        if (
-            ! $this->getDataContainer()->getDescription()
+        // @codingStandardsIgnoreEnd
+        if (! $this->getDataContainer()->getDescription()
             && ! $this->getDataContainer()->getTitle()
         ) {
             $message   = 'RSS 2.0 entry elements SHOULD contain exactly one'
@@ -86,13 +90,16 @@ class Rss extends Renderer\AbstractRenderer implements Renderer\RendererInterfac
     /**
      * Set entry description
      *
+     * @param  DOMDocument $dom
+     * @param  DOMElement $root
      * @return void
      * @throws Writer\Exception\InvalidArgumentException
      */
+    // @codingStandardsIgnoreStart
     protected function _setDescription(DOMDocument $dom, DOMElement $root)
     {
-        if (
-            ! $this->getDataContainer()->getDescription()
+        // @codingStandardsIgnoreEnd
+        if (! $this->getDataContainer()->getDescription()
             && ! $this->getDataContainer()->getTitle()
         ) {
             $message   = 'RSS 2.0 entry elements SHOULD contain exactly one'
@@ -119,10 +126,14 @@ class Rss extends Renderer\AbstractRenderer implements Renderer\RendererInterfac
     /**
      * Set date entry was last modified
      *
+     * @param  DOMDocument $dom
+     * @param  DOMElement $root
      * @return void
      */
+    // @codingStandardsIgnoreStart
     protected function _setDateModified(DOMDocument $dom, DOMElement $root)
     {
+        // @codingStandardsIgnoreEnd
         if (! $this->getDataContainer()->getDateModified()) {
             return;
         }
@@ -138,10 +149,14 @@ class Rss extends Renderer\AbstractRenderer implements Renderer\RendererInterfac
     /**
      * Set date entry was created
      *
+     * @param  DOMDocument $dom
+     * @param  DOMElement $root
      * @return void
      */
+    // @codingStandardsIgnoreStart
     protected function _setDateCreated(DOMDocument $dom, DOMElement $root)
     {
+        // @codingStandardsIgnoreEnd
         if (! $this->getDataContainer()->getDateCreated()) {
             return;
         }
@@ -155,10 +170,14 @@ class Rss extends Renderer\AbstractRenderer implements Renderer\RendererInterfac
     /**
      * Set entry authors
      *
+     * @param  DOMDocument $dom
+     * @param  DOMElement $root
      * @return void
      */
+    // @codingStandardsIgnoreStart
     protected function _setAuthors(DOMDocument $dom, DOMElement $root)
     {
+        // @codingStandardsIgnoreEnd
         $authors = $this->container->getAuthors();
         if (! $authors || empty($authors)) {
             return;
@@ -178,11 +197,15 @@ class Rss extends Renderer\AbstractRenderer implements Renderer\RendererInterfac
     /**
      * Set entry enclosure
      *
+     * @param  DOMDocument $dom
+     * @param  DOMElement $root
      * @return void
      * @throws Writer\Exception\InvalidArgumentException
      */
+    // @codingStandardsIgnoreStart
     protected function _setEnclosure(DOMDocument $dom, DOMElement $root)
     {
+        // @codingStandardsIgnoreEnd
         $data = $this->container->getEnclosure();
         if (! $data || empty($data)) {
             return;
@@ -226,10 +249,14 @@ class Rss extends Renderer\AbstractRenderer implements Renderer\RendererInterfac
     /**
      * Set link to entry
      *
+     * @param  DOMDocument $dom
+     * @param  DOMElement $root
      * @return void
      */
+    // @codingStandardsIgnoreStart
     protected function _setLink(DOMDocument $dom, DOMElement $root)
     {
+        // @codingStandardsIgnoreEnd
         if (! $this->getDataContainer()->getLink()) {
             return;
         }
@@ -242,12 +269,15 @@ class Rss extends Renderer\AbstractRenderer implements Renderer\RendererInterfac
     /**
      * Set entry identifier
      *
+     * @param  DOMDocument $dom
+     * @param  DOMElement $root
      * @return void
      */
+    // @codingStandardsIgnoreStart
     protected function _setId(DOMDocument $dom, DOMElement $root)
     {
-        if (
-            ! $this->getDataContainer()->getId()
+        // @codingStandardsIgnoreEnd
+        if (! $this->getDataContainer()->getId()
             && ! $this->getDataContainer()->getLink()
         ) {
             return;
@@ -273,10 +303,14 @@ class Rss extends Renderer\AbstractRenderer implements Renderer\RendererInterfac
     /**
      * Set link to entry comments
      *
+     * @param  DOMDocument $dom
+     * @param  DOMElement $root
      * @return void
      */
+    // @codingStandardsIgnoreStart
     protected function _setCommentLink(DOMDocument $dom, DOMElement $root)
     {
+        // @codingStandardsIgnoreEnd
         $link = $this->getDataContainer()->getCommentLink();
         if (! $link) {
             return;
@@ -290,10 +324,14 @@ class Rss extends Renderer\AbstractRenderer implements Renderer\RendererInterfac
     /**
      * Set entry categories
      *
+     * @param DOMDocument $dom
+     * @param DOMElement $root
      * @return void
      */
+    // @codingStandardsIgnoreStart
     protected function _setCategories(DOMDocument $dom, DOMElement $root)
     {
+        // @codingStandardsIgnoreEnd
         $categories = $this->getDataContainer()->getCategories();
         if (! $categories) {
             return;
@@ -308,6 +346,4 @@ class Rss extends Renderer\AbstractRenderer implements Renderer\RendererInterfac
             $root->appendChild($category);
         }
     }
-
-    // phpcs:enable PSR2.Methods.MethodDeclaration.Underscore
 }

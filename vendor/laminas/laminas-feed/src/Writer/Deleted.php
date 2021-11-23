@@ -1,14 +1,16 @@
 <?php
 
+/**
+ * @see       https://github.com/laminas/laminas-feed for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-feed/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-feed/blob/master/LICENSE.md New BSD License
+ */
+
 namespace Laminas\Feed\Writer;
 
 use DateTime;
 use DateTimeInterface;
 use Laminas\Feed\Uri;
-
-use function array_key_exists;
-use function is_int;
-use function is_string;
 
 class Deleted
 {
@@ -30,13 +32,14 @@ class Deleted
     /**
      * Set the feed character encoding
      *
-     * @param  null|string $encoding
-     * @return static
+     * @param  string $encoding
+     * @return null|string
+     * @return Deleted
      * @throws Exception\InvalidArgumentException
      */
     public function setEncoding($encoding)
     {
-        if (empty($encoding)) {
+        if (empty($encoding) || ! is_string($encoding)) {
             throw new Exception\InvalidArgumentException('Invalid parameter: parameter must be a non-empty string');
         }
         $this->data['encoding'] = $encoding;
@@ -169,8 +172,7 @@ class Deleted
     public function setBy(array $by)
     {
         $author = [];
-        if (
-            ! array_key_exists('name', $by)
+        if (! array_key_exists('name', $by)
             || empty($by['name'])
             || ! is_string($by['name'])
         ) {
@@ -188,8 +190,7 @@ class Deleted
             $author['email'] = $by['email'];
         }
         if (isset($by['uri'])) {
-            if (
-                empty($by['uri'])
+            if (empty($by['uri'])
                 || ! is_string($by['uri'])
                 || ! Uri::factory($by['uri'])->isValid()
             ) {

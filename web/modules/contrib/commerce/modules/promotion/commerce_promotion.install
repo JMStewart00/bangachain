@@ -319,3 +319,23 @@ function commerce_promotion_update_8211() {
     $definition_update_manager->installFieldStorageDefinition($name, 'commerce_promotion_coupon', 'commerce_promotion', $definition);
   }
 }
+
+/**
+ * Allow specifying whether a promotion requires a coupon code to apply.
+ */
+function commerce_promotion_update_8212() {
+  $definition = BaseFieldDefinition::create('boolean')
+    ->setLabel(t('Require a coupon to apply this promotion'))
+    ->setDefaultValue(FALSE)
+    ->setDisplayOptions('form', [
+      'type' => 'boolean_checkbox',
+      'settings' => [
+        'display_label' => TRUE,
+      ],
+    ])
+    ->setDisplayConfigurable('view', TRUE)
+    ->setDisplayConfigurable('form', TRUE);
+
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $definition_update_manager->installFieldStorageDefinition('require_coupon', 'commerce_promotion', 'commerce_promotion', $definition);
+}

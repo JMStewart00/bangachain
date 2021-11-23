@@ -56,7 +56,7 @@ layout_builder.component:
       type: sequence
       label: 'Third party settings'
       sequence:
-        type: ignore
+        type: '[%parent.%parent.%type].third_party.[%key]'
 
 inline_block:
   type: block_settings

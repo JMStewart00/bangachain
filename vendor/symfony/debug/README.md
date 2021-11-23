@@ -12,7 +12,7 @@ Getting Started
 ---------------
 
 ```
-$ composer require symfony/debug
+$ composer install symfony/debug
 ```
 
 ```php

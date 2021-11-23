@@ -6,8 +6,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\UseCacheBackendTrait;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\RequestException;
-use Drupal\Core\Extension\ModuleHandlerInterface;
+use GuzzleHttp\Exception\TransferException;
 
 /**
  * Fetches and caches oEmbed resources.
@@ -31,13 +30,6 @@ class ResourceFetcher implements ResourceFetcherInterface {
   protected $providers;
 
   /**
-   * The module handler service.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
    * Constructs a ResourceFetcher object.
    *
    * @param \GuzzleHttp\ClientInterface $http_client
@@ -47,12 +39,11 @@ class ResourceFetcher implements ResourceFetcherInterface {
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   (optional) The cache backend.
    */
-  public function __construct(ClientInterface $http_client, ProviderRepositoryInterface $providers, ModuleHandlerInterface $moduleHandler, CacheBackendInterface $cache_backend = NULL) {
+  public function __construct(ClientInterface $http_client, ProviderRepositoryInterface $providers, CacheBackendInterface $cache_backend = NULL) {
     $this->httpClient = $http_client;
     $this->providers = $providers;
     $this->cacheBackend = $cache_backend;
     $this->useCaches = isset($cache_backend);
-    $this->moduleHandler = $moduleHandler;
   }
 
   /**
@@ -69,7 +60,7 @@ class ResourceFetcher implements ResourceFetcherInterface {
     try {
       $response = $this->httpClient->get($url);
     }
-    catch (RequestException $e) {
+    catch (TransferException $e) {
       throw new ResourceException('Could not retrieve the oEmbed resource.', $url, [], $e);
     }
 
@@ -79,15 +70,17 @@ class ResourceFetcher implements ResourceFetcherInterface {
     if (strstr($format, 'text/xml') || strstr($format, 'application/xml')) {
       $data = $this->parseResourceXml($content, $url);
     }
-    elseif (strstr($format, 'text/javascript') || strstr($format, 'application/json')) {
-      $data = Json::decode($content);
-    }
-    // If the response is neither XML nor JSON, we are in bat country.
+    // By default, try to parse the resource data as JSON.
     else {
-      throw new ResourceException('The fetched resource did not have a valid Content-Type header.', $url);
-    }
+      $data = Json::decode($content);
 
-    $this->moduleHandler->alter('oembed_resource_data', $data, $url);
+      if (json_last_error() !== JSON_ERROR_NONE) {
+        throw new ResourceException('Error decoding oEmbed resource: ' . json_last_error_msg(), $url);
+      }
+    }
+    if (empty($data) || !is_array($data)) {
+      throw new ResourceException('The oEmbed resource could not be decoded.', $url);
+    }
 
     $this->cacheSet($cache_id, $data);
 

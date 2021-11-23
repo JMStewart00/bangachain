@@ -1,8 +1,12 @@
 <?php
 
-namespace Laminas\Feed\PubSubHubbub;
+/**
+ * @see       https://github.com/laminas/laminas-feed for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-feed/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-feed/blob/master/LICENSE.md New BSD License
+ */
 
-use Laminas\Http\PhpEnvironment\Response;
+namespace Laminas\Feed\PubSubHubbub;
 
 interface CallbackInterface
 {
@@ -14,7 +18,7 @@ interface CallbackInterface
      * @param null|array $httpData GET/POST data if available and not in $_GET/POST
      * @param bool $sendResponseNow Whether to send response now or when asked
      */
-    public function handle(?array $httpData = null, $sendResponseNow = false);
+    public function handle(array $httpData = null, $sendResponseNow = false);
 
     /**
      * Send the response, including all headers.
@@ -31,7 +35,7 @@ interface CallbackInterface
      * Laminas\Feed\Pubsubhubbub\HttpResponse which shares an unenforced interface with
      * (i.e. not inherited from) Laminas\Feed\Pubsubhubbub\AbstractCallback.
      *
-     * @param HttpResponse|Response $httpResponse
+     * @param HttpResponse|\Laminas\Http\PhpEnvironment\Response $httpResponse
      */
     public function setHttpResponse($httpResponse);
 
@@ -40,7 +44,7 @@ interface CallbackInterface
      * Laminas\Feed\Pubsubhubbub\HttpResponse which shares an unenforced interface with
      * (i.e. not inherited from) Laminas\Feed\Pubsubhubbub\AbstractCallback.
      *
-     * @return HttpResponse|Response
+     * @return HttpResponse|\Laminas\Http\PhpEnvironment\Response
      */
     public function getHttpResponse();
 }

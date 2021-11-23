@@ -67,7 +67,7 @@ class SectionRenderTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $layout_plugin_manager = $this->prophesize(LayoutPluginManagerInterface::class);
@@ -133,7 +133,7 @@ class SectionRenderTest extends UnitTestCase {
     $block->getPreviewFallbackString()->willReturn($placeholder_label);
 
     $section = [
-      new SectionComponent('some_uuid', 'content', ['id' => 'block_plugin_id']),
+      SectionComponent::create('some_uuid', 'content', ['id' => 'block_plugin_id']),
     ];
     $expected = [
       'content' => [
@@ -159,7 +159,7 @@ class SectionRenderTest extends UnitTestCase {
     $block->getCacheMaxAge()->willReturn(Cache::PERMANENT);
 
     $section = [
-      new SectionComponent('some_uuid', 'content', ['id' => 'block_plugin_id']),
+      SectionComponent::create('some_uuid', 'content', ['id' => 'block_plugin_id']),
     ];
     $expected = [
       'content' => [
@@ -214,7 +214,7 @@ class SectionRenderTest extends UnitTestCase {
     $block->getPreviewFallbackString()->willReturn($placeholder_label);
 
     $section = [
-      new SectionComponent('some_uuid', 'content', ['id' => 'block_plugin_id']),
+      SectionComponent::create('some_uuid', 'content', ['id' => 'block_plugin_id']),
     ];
     $expected = [
       'content' => [
@@ -275,7 +275,7 @@ class SectionRenderTest extends UnitTestCase {
     $block->getPreviewFallbackString()->willReturn($placeholder_label);
 
     $section = [
-      new SectionComponent('some_uuid', 'content', ['id' => 'block_plugin_id']),
+      SectionComponent::create('some_uuid', 'content', ['id' => 'block_plugin_id']),
     ];
     $expected = [
       'content' => [
@@ -292,7 +292,7 @@ class SectionRenderTest extends UnitTestCase {
   public function testToRenderArrayMissingPluginId() {
     $this->expectException(PluginException::class);
     $this->expectExceptionMessage('No plugin ID specified for component with "some_uuid" UUID');
-    (new Section('layout_onecol', [], [new SectionComponent('some_uuid', 'content')]))->toRenderArray();
+    (new Section('layout_onecol', [], [SectionComponent::create('some_uuid', 'content')]))->toRenderArray();
   }
 
 }

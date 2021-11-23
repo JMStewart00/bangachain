@@ -80,6 +80,9 @@ class PromotionAvailabilityTest extends OrderKernelTestBase {
     ]);
     $promotion->save();
     $this->assertTrue($promotion->available($this->order));
+    $promotion->set('require_coupon', TRUE);
+    $this->assertFalse($promotion->available($this->order));
+    $promotion->set('require_coupon', FALSE);
 
     $promotion->setEnabled(FALSE);
     $this->assertFalse($promotion->available($this->order));

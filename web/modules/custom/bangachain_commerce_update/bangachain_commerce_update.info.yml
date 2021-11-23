@@ -1,7 +1,7 @@
 name: Bang-A-Chain Commerce Update
 description: Custom commerce functionality for Bang-A-Chain.
 type: module
-core: 8.x
+core_version_requirement: ^8 || ^9
 package: Bang-A-Chain
 
 dependencies:

@@ -1,17 +1,19 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @see       https://github.com/laminas/laminas-stdlib for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-stdlib/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-stdlib/blob/master/LICENSE.md New BSD License
+ */
 
 namespace Laminas\Stdlib;
-
-use Traversable;
 
 interface MessageInterface
 {
     /**
      * Set metadata
      *
-     * @param string|int|array|Traversable $spec
+     * @param  string|int|array|\Traversable $spec
      * @param  mixed $value
      */
     public function setMetadata($spec, $value = null);

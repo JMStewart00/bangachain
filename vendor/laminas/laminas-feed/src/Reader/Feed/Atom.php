@@ -1,14 +1,16 @@
 <?php
 
+/**
+ * @see       https://github.com/laminas/laminas-feed for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-feed/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-feed/blob/master/LICENSE.md New BSD License
+ */
+
 namespace Laminas\Feed\Reader\Feed;
 
 use DateTime;
 use DOMDocument;
 use Laminas\Feed\Reader;
-
-use function array_key_exists;
-use function count;
-use function is_array;
 
 class Atom extends AbstractFeed
 {
@@ -41,15 +43,17 @@ class Atom extends AbstractFeed
      * Get a single author
      *
      * @param  int $index
-     * @return null|array<string, string>
+     * @return null|string
      */
     public function getAuthor($index = 0)
     {
         $authors = $this->getAuthors();
 
-        return isset($authors[$index]) && is_array($authors[$index])
-            ? $authors[$index]
-            : null;
+        if (isset($authors[$index])) {
+            return $authors[$index];
+        }
+
+        return;
     }
 
     /**
@@ -143,6 +147,7 @@ class Atom extends AbstractFeed
      */
     public function getLastBuildDate()
     {
+        return;
     }
 
     /**
@@ -370,8 +375,7 @@ class Atom extends AbstractFeed
      */
     protected function indexEntries()
     {
-        if (
-            $this->getType() === Reader\Reader::TYPE_ATOM_10
+        if ($this->getType() === Reader\Reader::TYPE_ATOM_10
             || $this->getType() === Reader\Reader::TYPE_ATOM_03
         ) {
             $entries = $this->xpath->evaluate('//atom:entry');

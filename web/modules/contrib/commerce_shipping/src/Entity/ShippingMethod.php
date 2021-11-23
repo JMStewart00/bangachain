@@ -6,6 +6,7 @@ use Drupal\commerce\ConditionGroup;
 use Drupal\commerce\Plugin\Commerce\Condition\ConditionInterface;
 use Drupal\commerce\Plugin\Commerce\Condition\ParentEntityAwareInterface;
 use Drupal\Core\Entity\ContentEntityBase;
+use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 
@@ -68,6 +69,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  * )
  */
 class ShippingMethod extends ContentEntityBase implements ShippingMethodInterface {
+  use EntityChangedTrait;
 
   /**
    * {@inheritdoc}
@@ -363,7 +365,34 @@ class ShippingMethod extends ContentEntityBase implements ShippingMethodInterfac
         'weight' => 20,
       ]);
 
+    $fields['created'] = BaseFieldDefinition::create('created')
+      ->setLabel(t('Created'))
+      ->setDescription(t('The time when the shipping method was created.'))
+      ->setTranslatable(TRUE)
+      ->setDisplayConfigurable('form', FALSE)
+      ->setDisplayConfigurable('view', FALSE);
+
+    $fields['changed'] = BaseFieldDefinition::create('changed')
+      ->setLabel(t('Changed'))
+      ->setDescription(t('The time when the shipping method was last edited.'))
+      ->setTranslatable(TRUE);
+
     return $fields;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCreatedTime() {
+    return $this->get('created')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setCreatedTime($timestamp) {
+    $this->set('created', $timestamp);
+    return $this;
   }
 
 }

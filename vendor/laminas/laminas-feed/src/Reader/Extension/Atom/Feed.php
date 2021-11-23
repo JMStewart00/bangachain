@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * @see       https://github.com/laminas/laminas-feed for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-feed/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-feed/blob/master/LICENSE.md New BSD License
+ */
+
 namespace Laminas\Feed\Reader\Extension\Atom;
 
 use DateTime;
@@ -8,11 +14,6 @@ use Laminas\Feed\Reader;
 use Laminas\Feed\Reader\Collection;
 use Laminas\Feed\Reader\Extension;
 use Laminas\Feed\Uri;
-
-use function array_key_exists;
-use function count;
-use function is_string;
-use function strlen;
 
 class Feed extends Extension\AbstractFeed
 {
@@ -26,11 +27,11 @@ class Feed extends Extension\AbstractFeed
     {
         $authors = $this->getAuthors();
 
-        if (isset($authors[$index]) && is_string($authors[$index])) {
+        if (isset($authors[$index])) {
             return $authors[$index];
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -81,11 +82,19 @@ class Feed extends Extension\AbstractFeed
             return $this->data['copyright'];
         }
 
-        $copyright = $this->getType() === Reader\Reader::TYPE_ATOM_03
-            ? $this->xpath->evaluate('string(' . $this->getXpathPrefix() . '/atom:copyright)')
-            : $this->xpath->evaluate('string(' . $this->getXpathPrefix() . '/atom:rights)');
+        $copyright = null;
 
-        $this->data['copyright'] = is_string($copyright) ? $copyright : null;
+        if ($this->getType() === Reader\Reader::TYPE_ATOM_03) {
+            $copyright = $this->xpath->evaluate('string(' . $this->getXpathPrefix() . '/atom:copyright)');
+        } else {
+            $copyright = $this->xpath->evaluate('string(' . $this->getXpathPrefix() . '/atom:rights)');
+        }
+
+        if (! $copyright) {
+            $copyright = null;
+        }
+
+        $this->data['copyright'] = $copyright;
 
         return $this->data['copyright'];
     }
@@ -157,11 +166,19 @@ class Feed extends Extension\AbstractFeed
             return $this->data['description'];
         }
 
-        $description = $this->getType() === Reader\Reader::TYPE_ATOM_03
-            ? $this->xpath->evaluate('string(' . $this->getXpathPrefix() . '/atom:tagline)')
-            : $this->xpath->evaluate('string(' . $this->getXpathPrefix() . '/atom:subtitle)');
+        $description = null;
 
-        $this->data['description'] = is_string($description) ? $description : null;
+        if ($this->getType() === Reader\Reader::TYPE_ATOM_03) {
+            $description = $this->xpath->evaluate('string(' . $this->getXpathPrefix() . '/atom:tagline)');
+        } else {
+            $description = $this->xpath->evaluate('string(' . $this->getXpathPrefix() . '/atom:subtitle)');
+        }
+
+        if (! $description) {
+            $description = null;
+        }
+
+        $this->data['description'] = $description;
 
         return $this->data['description'];
     }
@@ -301,10 +318,8 @@ class Feed extends Extension\AbstractFeed
         $link = null;
 
         $list = $this->xpath->query(
-            $this->getXpathPrefix()
-            . '/atom:link[@rel="alternate"]/@href|'
-            . $this->getXpathPrefix()
-            . '/atom:link[not(@rel)]/@href'
+            $this->getXpathPrefix() . '/atom:link[@rel="alternate"]/@href' . '|'
+            . $this->getXpathPrefix() . '/atom:link[not(@rel)]/@href'
         );
 
         if ($list->length) {
@@ -377,7 +392,7 @@ class Feed extends Extension\AbstractFeed
 
         $title = $this->xpath->evaluate('string(' . $this->getXpathPrefix() . '/atom:title)');
 
-        if (empty($title)) {
+        if (! $title) {
             $title = null;
         }
 
@@ -431,6 +446,7 @@ class Feed extends Extension\AbstractFeed
      * Get an author entry in RSS format
      *
      * @return array<string,null|string>|null
+     *
      * @psalm-return array{email?: null|string, name?: null|string, uri?: null|string}|null
      */
     protected function getAuthorFromElement(DOMElement $element)
@@ -486,8 +502,7 @@ class Feed extends Extension\AbstractFeed
      */
     protected function registerNamespaces()
     {
-        if (
-            $this->getType() === Reader\Reader::TYPE_ATOM_10
+        if ($this->getType() === Reader\Reader::TYPE_ATOM_10
             || $this->getType() === Reader\Reader::TYPE_ATOM_03
         ) {
             return; // pre-registered at Feed level
@@ -513,14 +528,12 @@ class Feed extends Extension\AbstractFeed
         $dom          = $this->getDomDocument();
         $prefixAtom03 = $dom->lookupPrefix(Reader\Reader::NAMESPACE_ATOM_03);
         $prefixAtom10 = $dom->lookupPrefix(Reader\Reader::NAMESPACE_ATOM_10);
-        if (
-            $dom->isDefaultNamespace(Reader\Reader::NAMESPACE_ATOM_10)
+        if ($dom->isDefaultNamespace(Reader\Reader::NAMESPACE_ATOM_10)
             || ! empty($prefixAtom10)
         ) {
             return Reader\Reader::TYPE_ATOM_10;
         }
-        if (
-            $dom->isDefaultNamespace(Reader\Reader::NAMESPACE_ATOM_03)
+        if ($dom->isDefaultNamespace(Reader\Reader::NAMESPACE_ATOM_03)
             || ! empty($prefixAtom03)
         ) {
             return Reader\Reader::TYPE_ATOM_03;

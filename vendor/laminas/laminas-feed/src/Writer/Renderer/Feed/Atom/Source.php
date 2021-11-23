@@ -1,13 +1,17 @@
 <?php
 
+/**
+ * @see       https://github.com/laminas/laminas-feed for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-feed/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-feed/blob/master/LICENSE.md New BSD License
+ */
+
 namespace Laminas\Feed\Writer\Renderer\Feed\Atom;
 
 use DOMDocument;
 use DOMElement;
 use Laminas\Feed\Writer;
 use Laminas\Feed\Writer\Renderer;
-
-use function array_key_exists;
 
 class Source extends AbstractAtom implements Renderer\RendererInterface
 {
@@ -57,11 +61,14 @@ class Source extends AbstractAtom implements Renderer\RendererInterface
     /**
      * Set feed generator string
      *
+     * @param  DOMDocument $dom
+     * @param  DOMElement $root
      * @return void
      */
-    // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
+    // @codingStandardsIgnoreStart
     protected function _setGenerator(DOMDocument $dom, DOMElement $root)
     {
+        // @codingStandardsIgnoreEnd
         if (! $this->getDataContainer()->getGenerator()) {
             return;
         }

@@ -1,21 +1,16 @@
 <?php
 
+/**
+ * @see       https://github.com/laminas/laminas-feed for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-feed/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-feed/blob/master/LICENSE.md New BSD License
+ */
+
 namespace Laminas\Feed\Writer;
 
-use BadMethodCallException;
 use DateTime;
 use DateTimeInterface;
 use Laminas\Feed\Uri;
-
-use function array_key_exists;
-use function get_class;
-use function gettype;
-use function in_array;
-use function is_int;
-use function is_numeric;
-use function is_object;
-use function is_string;
-use function sprintf;
 
 class Entry
 {
@@ -65,8 +60,7 @@ class Entry
     public function addAuthor(array $author)
     {
         // Check array values
-        if (
-            ! array_key_exists('name', $author)
+        if (! array_key_exists('name', $author)
             || empty($author['name'])
             || ! is_string($author['name'])
         ) {
@@ -83,8 +77,7 @@ class Entry
             }
         }
         if (isset($author['uri'])) {
-            if (
-                empty($author['uri']) || ! is_string($author['uri'])
+            if (empty($author['uri']) || ! is_string($author['uri'])
                 || ! Uri::factory($author['uri'])->isValid()
             ) {
                 throw new Exception\InvalidArgumentException(
@@ -102,7 +95,6 @@ class Entry
      * Set an array with feed authors
      *
      * @see addAuthor
-     *
      * @return $this
      */
     public function addAuthors(array $authors)
@@ -284,13 +276,12 @@ class Entry
     /**
      * Set the number of comments associated with this entry
      *
-     * @param  int|float|string $count
+     * @param  int $count
      * @return $this
      * @throws Exception\InvalidArgumentException
      */
     public function setCommentCount($count)
     {
-        // phpcs:ignore SlevomatCodingStandard.Operators.DisallowEqualOperators.DisallowedNotEqualOperator
         if (! is_numeric($count) || (int) $count != $count || (int) $count < 0) {
             throw new Exception\InvalidArgumentException(
                 'Invalid parameter: "count" must be a positive integer number or zero'
@@ -483,6 +474,7 @@ class Entry
         return $this->data['link'];
     }
 
+
     /**
      * Get all links
      *
@@ -564,8 +556,7 @@ class Entry
             );
         }
         if (isset($category['scheme'])) {
-            if (
-                empty($category['scheme'])
+            if (empty($category['scheme'])
                 || ! is_string($category['scheme'])
                 || ! Uri::factory($category['scheme'])->isValid()
             ) {
@@ -673,23 +664,14 @@ class Entry
      * Return an Extension object with the matching name (postfixed with _Entry)
      *
      * @param  string $name
-     * @return null|object
+     * @return object
      */
     public function getExtension($name)
     {
-        $extensionClassName = $name . '\\Entry';
-        if (! isset($this->extensions[$extensionClassName])) {
-            return null;
+        if (array_key_exists($name . '\\Entry', $this->extensions)) {
+            return $this->extensions[$name . '\\Entry'];
         }
-
-        if (! is_object($this->extensions[$extensionClassName])) {
-            throw new Exception\RuntimeException(sprintf(
-                'Extension is of invalid type; expected object, received "%s"',
-                gettype($this->extensions[$extensionClassName])
-            ));
-        }
-
-        return $this->extensions[$extensionClassName];
+        return;
     }
 
     /**
@@ -722,7 +704,7 @@ class Entry
      * @param  string $method
      * @param  array $args
      * @return mixed
-     * @throws Exception\BadMethodCallException If no extensions implements the method.
+     * @throws Exception\BadMethodCallException if no extensions implements the method
      */
     public function __call($method, $args)
     {
@@ -730,7 +712,7 @@ class Entry
             try {
                 $callback = [$extension, $method];
                 return $callback(...$args);
-            } catch (BadMethodCallException $e) {
+            } catch (\BadMethodCallException $e) {
             }
         }
         throw new Exception\BadMethodCallException(
@@ -768,22 +750,14 @@ class Entry
     }
 
     /**
-     * @return null|Source
+     * @return Source
      */
     public function getSource()
     {
-        if (! isset($this->data['source'])) {
-            return null;
+        if (isset($this->data['source'])) {
+            return $this->data['source'];
         }
-
-        if (! $this->data['source'] instanceof Source) {
-            throw new Exception\RuntimeException(sprintf(
-                'Entry source is of invalid type ("%s")',
-                is_object($this->data['source']) ? get_class($this->data['source']) : gettype($this->data['source'])
-            ));
-        }
-
-        return $this->data['source'];
+        return;
     }
 
     /**
@@ -791,9 +765,10 @@ class Entry
      *
      * @return void
      */
-    // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
+    // @codingStandardsIgnoreStart
     protected function _loadExtensions()
     {
+        // @codingStandardsIgnoreEnd
         $all     = Writer::getExtensions();
         $manager = Writer::getExtensionManager();
         $exts    = $all['entry'];

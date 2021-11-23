@@ -45,7 +45,7 @@ class GiftCard extends MultiplePaymentGatewayBase implements GiftCardPaymentGate
     $this->assertPaymentState($payment, ['authorization']);
     // If not specified, capture the entire amount.
     $amount = $amount ?: $payment->getAmount();
-    
+
     $payment->setState('completed');
     $payment->setAmount($amount);
     $payment->save();
@@ -58,7 +58,7 @@ class GiftCard extends MultiplePaymentGatewayBase implements GiftCardPaymentGate
     $this->assertPaymentState($payment, ['authorization']);
 
     // Normally, you'd do something to void the transaction here.
-    
+
     $payment->setState('authorization_voided');
     $payment->save();
   }
@@ -90,7 +90,7 @@ class GiftCard extends MultiplePaymentGatewayBase implements GiftCardPaymentGate
    */
   public function getDisplayLabel() {
     $label = parent::getDisplayLabel();
-    
+
     return $label;
   }
 
@@ -142,7 +142,7 @@ class GiftCard extends MultiplePaymentGatewayBase implements GiftCardPaymentGate
     $staged_payment->setState(StagedPaymentInterface::STATE_COMPLETED);
     $staged_payment->save();
   }
-  
+
   /**
    * @inheritDoc
    */
@@ -155,14 +155,17 @@ class GiftCard extends MultiplePaymentGatewayBase implements GiftCardPaymentGate
    * @inheritDoc
    */
   public function multiPaymentBuildForm(array $payment_form, FormStateInterface $form_state, array &$complete_form, OrderInterface $order) {
-    
-        $payment_form['form'] = [
-          '#type' => 'commerce_multi_payment_example_giftcard_form',
-          '#order_id' => $order->id(),
-          '#payment_gateway_id' => $payment_form['#payment_gateway_id'],
-        ] + $payment_form;
-      
-        return $payment_form;
+    /** @var \Drupal\commerce\InlineFormManager $inline_form_manager */
+    $inline_form_manager = \Drupal::service('plugin.manager.commerce_inline_form');
+
+    $inline_form = $inline_form_manager->createInstance('commerce_multi_payment_example_giftcard_form', [
+      'order_id' => $order->id(),
+      'payment_gateway_id' => $payment_form['#payment_gateway_id'],
+    ]);
+
+    $payment_form = $inline_form->buildInlineForm($payment_form, $form_state);
+
+    return $payment_form;
   }
 
   /**

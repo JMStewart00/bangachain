@@ -1,12 +1,16 @@
 <?php
 
+/**
+ * @see       https://github.com/laminas/laminas-feed for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-feed/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-feed/blob/master/LICENSE.md New BSD License
+ */
+
 namespace Laminas\Feed\Writer\Extension\Content\Renderer;
 
 use DOMDocument;
 use DOMElement;
 use Laminas\Feed\Writer\Extension;
-
-use function strtolower;
 
 class Entry extends Extension\AbstractRenderer
 {
@@ -35,15 +39,15 @@ class Entry extends Extension\AbstractRenderer
         }
     }
 
-    // phpcs:disable PSR2.Methods.MethodDeclaration.Underscore
-
     /**
      * Append namespaces to root element
      *
      * @return void
      */
+    // @codingStandardsIgnoreStart
     protected function _appendNamespaces()
     {
+        // @codingStandardsIgnoreEnd
         $this->getRootElement()->setAttribute(
             'xmlns:content',
             'http://purl.org/rss/1.0/modules/content/'
@@ -53,10 +57,14 @@ class Entry extends Extension\AbstractRenderer
     /**
      * Set entry content
      *
+     * @param  DOMDocument $dom
+     * @param  DOMElement $root
      * @return void
      */
+    // @codingStandardsIgnoreStart
     protected function _setContent(DOMDocument $dom, DOMElement $root)
     {
+        // @codingStandardsIgnoreEnd
         $content = $this->getDataContainer()->getContent();
         if (! $content) {
             return;
@@ -67,6 +75,4 @@ class Entry extends Extension\AbstractRenderer
         $element->appendChild($cdata);
         $this->called = true;
     }
-
-    // phpcs:enable PSR2.Methods.MethodDeclaration.Underscore
 }

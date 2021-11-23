@@ -88,3 +88,26 @@ function commerce_shipping_update_8203() {
     ->setInitialValueFromField('amount');
   $entity_definition_update->installFieldStorageDefinition('original_amount', 'commerce_shipment', 'commerce_shipping', $storage_definition);
 }
+
+/**
+ * Add created and changed fields to shipping methods.
+ */
+function commerce_shipping_update_8204() {
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+
+  $storage_definitions['created'] = BaseFieldDefinition::create('created')
+    ->setLabel(t('Created'))
+    ->setDescription(t('The time when the shipping method was created.'))
+    ->setTranslatable(TRUE)
+    ->setDisplayConfigurable('form', FALSE)
+    ->setDisplayConfigurable('view', FALSE);
+
+  $storage_definitions['changed'] = BaseFieldDefinition::create('changed')
+    ->setLabel(t('Changed'))
+    ->setDescription(t('The time when the shipping method was last edited.'))
+    ->setTranslatable(TRUE);
+
+  foreach ($storage_definitions as $name => $definition) {
+    $definition_update_manager->installFieldStorageDefinition($name, 'commerce_shipping_method', 'commerce_shipping', $definition);
+  }
+}

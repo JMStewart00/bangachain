@@ -20,6 +20,7 @@ third_party_settings:
                 entity: layout_builder.entity
               id: 'extra_field_block:entity_test:bundle_with_extra_fields:display_extra_field'
             additional: {  }
+            third_party_settings: {  }
             weight: 1
     allow_custom: false
     enabled: true

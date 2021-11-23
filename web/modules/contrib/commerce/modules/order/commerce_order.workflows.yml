@@ -17,7 +17,7 @@ order_default:
     cancel:
       label: 'Cancel order'
       from: [draft]
-      to:   canceled
+      to: canceled
 
 order_default_validation:
   id: order_default_validation
@@ -36,7 +36,7 @@ order_default_validation:
     place:
       label: 'Place order'
       from: [draft]
-      to:   validation
+      to: validation
     validate:
       label: 'Validate order'
       from: [validation]
@@ -44,7 +44,7 @@ order_default_validation:
     cancel:
       label: 'Cancel order'
       from: [draft, validation]
-      to:   canceled
+      to: canceled
 
 order_fulfillment:
   id: order_fulfillment
@@ -63,7 +63,7 @@ order_fulfillment:
     place:
       label: 'Place order'
       from: [draft]
-      to:   fulfillment
+      to: fulfillment
     fulfill:
       label: 'Fulfill order'
       from: [fulfillment]
@@ -71,7 +71,7 @@ order_fulfillment:
     cancel:
       label: 'Cancel order'
       from: [draft, fulfillment]
-      to:   canceled
+      to: canceled
 
 order_fulfillment_validation:
   id: order_fulfillment_validation
@@ -92,11 +92,11 @@ order_fulfillment_validation:
     place:
       label: 'Place order'
       from: [draft]
-      to:   validation
+      to: validation
     validate:
       label: 'Validate order'
       from: [validation]
-      to:   fulfillment
+      to: fulfillment
     fulfill:
       label: 'Fulfill order'
       from: [fulfillment]
@@ -104,4 +104,4 @@ order_fulfillment_validation:
     cancel:
       label: 'Cancel order'
       from: [draft, validation, fulfillment]
-      to:   canceled
+      to: canceled

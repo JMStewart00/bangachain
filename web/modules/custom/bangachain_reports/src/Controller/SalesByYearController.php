@@ -7,10 +7,10 @@ namespace Drupal\bangachain_reports\Controller;
 use Drupal\commerce_order\Entity\Order;
 use Drupal\commerce_order\Entity\OrderItem;
 use Drupal\commerce_order\Entity\OrderType;
+use Drupal\commerce_payment\Entity\Payment;
 use Drupal\commerce_product\Entity\Product;
 use Drupal\commerce_product\Entity\ProductVariation;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Render\Markup;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -31,6 +31,8 @@ class SalesByYearController extends ControllerBase {
       ->getQuery()
       ->condition('completed', $start_unix_date, '>=')
       ->condition('completed', $end_unix_date, '<=')
+      ->condition('state', 'completed')
+      ->sort('completed', 'DESC')
       ->execute();
 
     $orders = $this->buildRows($order_ids);
@@ -39,16 +41,15 @@ class SalesByYearController extends ControllerBase {
       [
         '#type' => 'table',
         '#header' => [
-          'total_retail' => t('total_retail'),
-          'total_collected' => t('total_collected'),
-          'custom_adj' => t('custom_adj'),
-          'fee_adjustments' => t('fee_adjustments'),
-          'payout_adjustments' => t('payout_adjustments'),
-          'pos' => t('pos'),
-          'paypal' => t('paypal'),
-          'square' => t('square'),
-          'cash' => t('cash'),
-          'unknown' => t('unknown'),
+          'total_retail' => t('Subtotal'),
+          'total_collected' => t('Total Collected'),
+          'custom_adj' => t('Adjustments (GC & Fees)'),
+          'payout_adjustments' => t('Payout Used'),
+          'pos' => t('POS Total'),
+          'cash' => t('Cash Total'),
+          'pos_gift_card' => t('POS Gift Card'),
+          'paypal' => t('Paypal'),
+          'square' => t('Square'),
         ],
         '#rows' => [$orders['total_payments']],
         '#empty' => t('No content has been found.'),
@@ -57,9 +58,11 @@ class SalesByYearController extends ControllerBase {
         '#type' => 'table',
         '#header' => [
           'order' => t('Order'),
-          'order_type' => t('Order Type'),
+          'completed_date' => t('Date'),
+          'order_type' => t('Payment Type'),
+          'payment_gateway' => t('Gateway'),
           'subtotal' => t('Subtotal'),
-          'adjustments' => t('Payment Adjustments'),
+          'adjustments' => t('Adjustments'),
           'total' => t('Paid Amount'),
         ],
         '#rows' => $orders['rows'],
@@ -82,43 +85,88 @@ class SalesByYearController extends ControllerBase {
     $rows = [];
     $total_retail = 0;
     $total_collected = 0;
-    $custom_adjustment_total = 0;
-    $fee_adjustment_total = 0;
+    $misc_adjustments = 0;
     $payout_adjustment_total = 0;
 
     $pos_total = 0;
     $paypal_total = 0;
     $square_total = 0;
     $cash_total = 0;
-    $unknown_total = 0;
+    $pos_giftcard_total = 0;
 
     foreach ($ids as $id) {
       $order = Order::load($id);
 
-      $payment_type = '';
-      if ($payment = $order->get('payment_gateway')->entity) {
-        $payment_type = $payment->id();
-      } else {
-        $payment_type = $order->get('type')->entity->id();
+      $subtotal = floatval($order->getSubtotalPrice()->getNumber());
+      $paid_amount = floatval($order->getTotalPaid()->getNumber());
+
+      $total_retail += $subtotal;
+      $total_collected += $paid_amount;
+
+      if ($payment = Payment::load($id)) {
+        $payment_type = $payment->bundle();
+        $payment_gateway = $payment->getPaymentGatewayId();
+      }
+      else if ($payment_id = \Drupal::entityQuery('commerce_payment')->condition('order_id', $id)->execute()) {
+        $payment = Payment::load(array_shift($payment_id));
+        $payment_type = $payment->bundle();
+        $payment_gateway = $payment->getPaymentGatewayId();
+      }
+      else {
+        $payment_type = '';
+        $payment_gateway = 'ALL PAYOUT';
       }
 
+      // Payment methods logic, pos v. paypal, square, cash, unknown.
+      if ($payment_type === 'payment_manual') {
+        switch ($payment_gateway) {
+          case 'pos_cash':
+          case 'cash_payment':
+            $cash_total += $paid_amount;
+            break;
+          case 'pos_credit':
+            $square_total += $paid_amount;
+            break;
+          case 'pos_gift_card':
+            $pos_giftcard_total += $paid_amount;
+            break;
+
+          default:
+            # code...
+            break;
+        }
+
+        if (substr($payment_gateway, 0, 4) === 'pos_') {
+          $pos_total += $paid_amount;
+        }
+      }
+      else {
+        switch ($payment_gateway) {
+          case 'square':
+            $square_total += $paid_amount;
+            break;
+          case 'paypal':
+            $paypal_total += $paid_amount;
+            break;
+          default:
+            break;
+        }
+      }
+
+      $total_adjustments = 0;
       if ($adjustments = $order->get('adjustments')->getAdjustments()) {
-        $total_adjustments = 0;
         foreach ($adjustments as $adj) {
           if ($adj_total = $adj->getAmount()->getNumber()) {
-            $total_adjustments += $adj_total;
+            $total_adjustments += abs($adj_total);
             $adj_type = $adj->getType();
-            $payment_type .= ', ' . $adj_type;
 
             switch ($adj_type) {
               case 'custom':
-                $custom_adjustment_total += $adj_total;
-                break;
               case 'fee':
-                $fee_adjustment_total += $adj_total;
+                $misc_adjustments += abs($adj_total);
                 break;
               case 'commerce_giftcard':
-                $payout_adjustment_total += $adj_total;
+                $payout_adjustment_total += abs($adj_total);
                 break;
 
               default:
@@ -129,53 +177,39 @@ class SalesByYearController extends ControllerBase {
         }
       }
 
-      $total_retail += $order->getSubtotalPrice()->getNumber();
-      $total_collected += $order->getTotalPaid()->getNumber();
-
-      if ($order->get('payment_gateway')->entity) {
-        $payment_type = $order->get('payment_gateway')->entity->id();
-
-        switch ($payment) {
-          case 'cash_payment':
-            $cash_total += $order->getTotalPaid()->getNumber();
-            break;
-          default:
-            # code...
-            break;
-        }
-      }
-
-      // $order_items = $order->get('order_items')->referencedEntities();
-      // foreach ($order_items as $oi) {
-      //   $purchased_entity = $oi->getPurchasedEntityId();
-      //   dd(Product::load($purchased_entity));
-      //   dd($purchased_entity);
-      // }
-      // dd($order_items);
-
       array_push($rows, [
         $order->get('order_number')->value,
+        date("m.d.y", intval($order->get('completed')->value)),
         $payment_type,
-        $order->getSubtotalPrice(),
-        $total_adjustments,
-        $order->getTotalPaid()
+        $payment_gateway,
+        $this::formatMoney($subtotal),
+        $this::formatMoney($total_adjustments),
+        $this::formatMoney($paid_amount),
       ]);
+
     }
     return [
       'rows' => $rows,
       'total_payments' => [
-        'total_retail' => $total_retail,
-        'total_collected' => $total_collected,
-        'custom_adj' => $custom_adjustment_total,
-        'fee_adj' => $fee_adjustment_total,
-        'payout_adj' => $payout_adjustment_total,
-        'pos' => 0,
-        'paypal' => 0,
-        'square' => 0,
-        'cash' => 0,
-        'unknown' => 0,
+        'total_retail' => $this::formatMoney($total_retail),
+        'total_collected' => $this::formatMoney($total_collected),
+        'custom_adj' => $this::formatMoney($misc_adjustments),
+        'payout_adj' => $this::formatMoney($payout_adjustment_total),
+        'pos' => $this::formatMoney($pos_total),
+        'cash' => $this::formatMoney($cash_total),
+        'pos_gift_card' => $this::formatMoney($pos_giftcard_total),
+        'paypal' => $this::formatMoney($paypal_total),
+        'square' => $this::formatMoney($square_total),
       ]
     ];
   }
 
+  /**
+   * Returns money formatted number.
+   *
+   * @param mixed $value
+   */
+  protected static function formatMoney($value): string {
+    return '$' . number_format(floatval($value), 2);
+  }
 }

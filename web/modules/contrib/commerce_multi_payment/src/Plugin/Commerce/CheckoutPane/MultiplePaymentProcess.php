@@ -62,13 +62,13 @@ class MultiplePaymentProcess extends PaymentProcess {
         }
         catch (DeclineException $e) {
           $message = $this->t('We encountered an error processing your payment method. Please verify your details and try again.');
-          drupal_set_message($message, 'error');
+          $this->messenger()->addError($message);
           break;
         }
         catch (PaymentGatewayException $e) {
           \Drupal::logger('commerce_payment')->error($e->getMessage());
           $message = $this->t('We encountered an unexpected error processing your payment method. Please try again later.');
-          drupal_set_message($message, 'error');
+          $this->messenger()->addError($message);
           break;
         }
       }
@@ -138,7 +138,7 @@ class MultiplePaymentProcess extends PaymentProcess {
                 '@label' => $payment->getPaymentGateway()->label(),
                 '@order_id' => $this->order->id(),
               ]);
-              drupal_set_message($message, 'error');
+              $this->messenger()->addError($message);
             }
           }
           $this->redirectToPreviousStep(TRUE);
@@ -232,11 +232,11 @@ class MultiplePaymentProcess extends PaymentProcess {
       } catch (DeclineException $e) {
         \Drupal::logger('commerce_payment')->error($e->getMessage());
         $message = $this->t('We encountered an error processing your payment method. Please verify your details and try again.');
-        drupal_set_message($message, 'error');
+        $this->messenger()->addError($message);
       } catch (PaymentGatewayException $e) {
         \Drupal::logger('commerce_payment')->error($e->getMessage());
         $message = $this->t('We encountered an unexpected error processing your payment method. Please try again later.');
-        drupal_set_message($message, 'error');
+        $this->messenger()->addError($message);
       }
     }
   }
@@ -322,7 +322,7 @@ class MultiplePaymentProcess extends PaymentProcess {
   public function originalBuildPaneForm(array $pane_form, FormStateInterface $form_state, array &$complete_form) {
     // The payment gateway is currently always required to be set.
     if ($this->order->get('payment_gateway')->isEmpty()) {
-      drupal_set_message($this->t('No payment gateway selected.'), 'error');
+      $this->messenger()->addError($this->t('No payment gateway selected.'));
       $this->redirectToPreviousStep();
     }
 
@@ -348,13 +348,13 @@ class MultiplePaymentProcess extends PaymentProcess {
       }
       catch (DeclineException $e) {
         $message = $this->t('We encountered an error processing your payment method. Please verify your details and try again.');
-        drupal_set_message($message, 'error');
+        $this->messenger()->addError($message);
         $this->redirectToPreviousStep();
       }
       catch (PaymentGatewayException $e) {
         \Drupal::logger('commerce_payment')->error($e->getMessage());
         $message = $this->t('We encountered an unexpected error processing your payment method. Please try again later.');
-        drupal_set_message($message, 'error');
+        $this->messenger()->addError($message);
         $this->redirectToPreviousStep();
       }
     }
@@ -391,7 +391,7 @@ class MultiplePaymentProcess extends PaymentProcess {
       catch (PaymentGatewayException $e) {
         \Drupal::logger('commerce_payment')->error($e->getMessage());
         $message = $this->t('We encountered an unexpected error processing your payment. Please try again later.');
-        drupal_set_message($message, 'error');
+        $this->messenger()->addError($message);
         $this->redirectToPreviousStep();
       }
     }

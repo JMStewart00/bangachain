@@ -3,6 +3,6 @@ name: Artwork Upload Pane
 description: A custom pane with an upload field for dye artwork
 package: Bang-A-Chain
 type: module
-core: '8.x'
+core_version_requirement: ^8 || ^9
 dependencies:
   - drupal:commerce

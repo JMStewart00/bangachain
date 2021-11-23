@@ -14,16 +14,20 @@
             "email": "nathan.dentzau@gmail.com"
         }
     ],
-    "repositories": [
-        {
+    "repositories": {
+        "lenient": {
+            "type": "composer",
+            "url": "https://packages.drupal.org/lenient"
+        },
+        "0": {
             "type": "composer",
             "url": "https://packages.drupal.org/8"
         },
-        {
+        "1": {
             "type": "composer",
             "url": "https://asset-packagist.org"
         },
-        {
+        "2": {
             "type": "package",
             "package": {
                 "name": "ckeditor/font",
@@ -35,7 +39,7 @@
                 }
             }
         },
-        {
+        "3": {
             "type": "package",
             "package": {
                 "name": "ckeditor/colorbutton",
@@ -47,7 +51,7 @@
                 }
             }
         },
-        {
+        "4": {
             "type": "package",
             "package": {
                 "name": "ckeditor/panelbutton",
@@ -59,56 +63,56 @@
                 }
             }
         },
-        {
+        "5": {
             "type": "package",
             "package": {
-              "name": "furf/jquery-ui-touch-punch",
-              "version": "0.0.1",
-              "type": "drupal-library",
-              "source": {
-                "url": "https://github.com/furf/jquery-ui-touch-punch",
-                "type": "git",
-                "reference": "master"
-              }
+                "name": "furf/jquery-ui-touch-punch",
+                "version": "0.0.1",
+                "type": "drupal-library",
+                "source": {
+                    "url": "https://github.com/furf/jquery-ui-touch-punch",
+                    "type": "git",
+                    "reference": "master"
+                }
             }
         },
-        {
+        "6": {
             "type": "package",
             "package": {
-              "name": "bgrins/spectrum",
-              "version": "1.8.1",
-              "type": "drupal-library",
-              "dist": {
-                "url": "https://github.com/bgrins/spectrum/archive/1.8.0.zip",
-                "type": "zip"
-              }
+                "name": "bgrins/spectrum",
+                "version": "1.8.1",
+                "type": "drupal-library",
+                "dist": {
+                    "url": "https://github.com/bgrins/spectrum/archive/1.8.0.zip",
+                    "type": "zip"
+                }
             }
         },
-        {
+        "7": {
             "type": "package",
             "package": {
-              "name": "recurser/jquery-simple-color",
-              "version": "1.2.3",
-              "type": "drupal-library",
-              "dist": {
-                "url": "https://github.com/recurser/jquery-simple-color/archive/v1.2.3.zip",
-                "type": "zip"
-              }
+                "name": "recurser/jquery-simple-color",
+                "version": "1.2.3",
+                "type": "drupal-library",
+                "dist": {
+                    "url": "https://github.com/recurser/jquery-simple-color/archive/v1.2.3.zip",
+                    "type": "zip"
+                }
             }
         },
-        {
+        "8": {
             "type": "package",
             "package": {
-              "name": "enyo/dropzone",
-              "version": "5.7.0",
-              "type": "drupal-library",
-              "dist": {
-                "url": "https://github.com/enyo/dropzone/archive/v5.7.0.zip",
-                "type": "zip"
-              }
+                "name": "enyo/dropzone",
+                "version": "5.7.0",
+                "type": "drupal-library",
+                "dist": {
+                    "url": "https://github.com/enyo/dropzone/archive/v5.7.0.zip",
+                    "type": "zip"
+                }
             }
         },
-        {
+        "9": {
             "type": "package",
             "package": {
                 "name": "jackmoore/colorbox",
@@ -120,7 +124,7 @@
                 }
             }
         }
-    ],
+    },
     "require": {
         "ext-json": "^1.6",
         "bgrins/spectrum": "1.8.1",
@@ -153,7 +157,7 @@
         "drupal/commerce_feeds": "^1.0@alpha",
         "drupal/commerce_giftcard": "1.0.x-dev",
         "drupal/commerce_loyalty_points": "^1.0",
-        "drupal/commerce_multi_payment": "^1.0",
+        "drupal/commerce_multi_payment": "1.x-dev@dev",
         "drupal/commerce_paypal": "^1.0",
         "drupal/commerce_pos": "2.x-dev",
         "drupal/commerce_product_limits": "^1.0",
@@ -163,11 +167,12 @@
         "drupal/commerce_square": "^1.3",
         "drupal/commerce_stock": "1.x-dev@dev",
         "drupal/config_ignore": "^2.2",
-        "drupal/config_installer": "^1.8",
         "drupal/config_split": "^1.3",
         "drupal/contact_storage": "^1.1",
-        "drupal/core": "^8.6",
-        "drupal/core-composer-scaffold": "^8.9",
+        "drupal/core": "^9.0",
+        "drupal/core-composer-scaffold": "^9",
+        "drupal/core-project-message": "^9",
+        "drupal/core-recommended": "^9",
         "drupal/ctools": "^3.2",
         "drupal/devel": "^4.0",
         "drupal/dropzonejs": "^2.3",
@@ -178,10 +183,11 @@
         "drupal/extlink": "^1.2",
         "drupal/feeds_tamper": "^2.0@beta",
         "drupal/field_group": "^3.1",
-        "drupal/flexi_cart": "^1.2",
         "drupal/fontawesome": "^2.17",
+        "drupal/gin": "^3.0@alpha",
+        "drupal/gin_login": "^1.0",
         "drupal/google_tag": "^1.3",
-        "drupal/honeypot": "^1.27",
+        "drupal/honeypot": "^2.0",
         "drupal/htmlmail": "^3.0@alpha",
         "drupal/iframe": "^2.10",
         "drupal/jquery_ui_accordion": "^1.0",
@@ -218,7 +224,7 @@
         "drupal/swiftmailer": "^2.0@beta",
         "drupal/token": "^1.9",
         "drupal/twig_tweak": "^2.6",
-        "drupal/upgrade_status": "^3.0",
+        "drupal/upgrade_status": "^3.12",
         "drupal/user_registrationpassword": "^1.0@alpha",
         "drupal/view_unpublished": "1.x-dev",
         "drupal/views_aggregator": "1.x-dev@dev",
@@ -226,7 +232,7 @@
         "drupal/views_data_export": "^1.0",
         "drupal/views_infinite_scroll": "1.x-dev@dev",
         "drupal/viewsreference": "^1.4",
-        "drush/drush": "^9.2",
+        "drush/drush": "^10",
         "enyo/dropzone": "^5.7",
         "furf/jquery-ui-touch-punch": "^0.0.1",
         "jackmoore/colorbox": "1.6.4",
@@ -250,11 +256,14 @@
         "sort-packages": true
     },
     "scripts": {
+        "remove-git-submodules": "find . -mindepth 2 -type d -name .git | xargs rm -rf",
         "post-install-cmd": [
-            "DrupalComposer\\DrupalScaffold\\Plugin::scaffold"
+            "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
+            "@remove-git-submodules"
         ],
         "post-update-cmd": [
-            "DrupalComposer\\DrupalScaffold\\Plugin::scaffold"
+            "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
+            "@remove-git-submodules"
         ]
     },
     "extra": {
@@ -295,14 +304,12 @@
                 "Creating a block that uses Ajax adds multiple blocks": "https://www.drupal.org/files/issues/2019-05-04/3042190-3.patch",
                 "Error: Call to a member function getEntityTypeId() on null (Layout Builder)": "https://www.drupal.org/files/issues/2019-06-25/drupal-layout_builder_inline_block_empty_block_error-3049332-8.7.x_0.patch",
                 "Cloned entities don't retain their Inline Block usage": "https://www.drupal.org/files/issues/2020-03-06/3062819-inline-cloned-COMBINED_2.patch",
-                "Support third party settings for components within a section": "https://www.drupal.org/files/issues/2019-12-05/3015152-tps-26.patch",
-                "Add a hook to modify oEmbed resource data": "https://www.drupal.org/files/issues/2019-03-25/media_hook-oembed-resource-data-alter__example.patch",
                 "Conflict with field_group, missing options in sidebar when creating/updating a node": "https://www.drupal.org/files/issues/2019-11-29/claro-fix_node_sidebar_accordion_items-3097407-4--fix-only.patch",
                 "Layout builder incorrectly resolves global contexts values when viewing layouts": "https://www.drupal.org/files/issues/2020-06-19/3099968-35.patch",
                 "Break long text strings in layout edit": "https://www.drupal.org/files/issues/2020-08-10/break-long-text-strings-in-layout-3016507-32.patch",
-                "Nested Paragraphs create multiple drag handles": "https://www.drupal.org/files/issues/2019-11-13/claro-nested_paragraphs_multiple_drag_handles-3092181-5.patch",
                 "Views file name suggestions often missing from Twig debugging": "https://www.drupal.org/files/issues/views-template-suggestions-2839945-2.patch",
-                "'Negate' form value for condition plugins should be cast to boolean in validation.": "https://www.drupal.org/files/issues/2021-01-06/3114467-16.patch"
+                "'Negate' form value for condition plugins should be cast to boolean in validation.": "https://www.drupal.org/files/issues/2021-01-06/3114467-16.patch",
+                "Support third party settings for components within a section": "https://www.drupal.org/files/issues/2021-01-29/3015152-tps-9.2.x-116.patch"
             },
             "drupal/block_class": {
                 "Integration with Drupal core's new Layout Builder": "https://www.drupal.org/files/issues/2019-06-28/block_class-support-layout-builder-2998114-45.patch"
@@ -322,9 +329,6 @@
             },
             "drupal/jquery_ui_touch_punch": {
                 "Download the library": "https://www.drupal.org/files/issues/2020-11-19/3159222-32.patch"
-            },
-            "drupal/commerce_multi_payment": {
-                "Fatal error": "https://www.drupal.org/files/issues/2020-02-09/3112228-2.patch"
             },
             "drupal/simple_image_rotate": {
                 "Undefined methond getThirdPartySettings()": "https://www.drupal.org/files/issues/2020-08-26/simple-image-rotate-issue-3126067-undefined-getThirdPartySettings-method.patch"
@@ -351,9 +355,6 @@
             },
             "drupal/feeds": {
                 "Undefined Index: allowed_extensions AJAX error when creating feed types.": "https://www.drupal.org/files/issues/2019-02-06/3031019-undefined-index-ajax-2.patch"
-            },
-            "drupal/commerce_stock": {
-                "Nullpointer exception during cron run for optimal cron run mode.": "https://www.drupal.org/files/issues/2021-08-25/nullpointer-exception-cron-run-3229773-2.patch"
             }
         },
         "enable-patching": true,

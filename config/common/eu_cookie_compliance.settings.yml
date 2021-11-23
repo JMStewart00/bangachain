@@ -5,7 +5,13 @@ domains_option: 1
 domains_list: ''
 eu_only: false
 eu_only_js: false
-exclude_paths: "/admin\n/admin/*\n/batch\n/node/add*\n/node/*/*\n/user/*/*"
+exclude_paths: |-
+  /admin
+  /admin/*
+  /batch
+  /node/add*
+  /node/*/*
+  /user/*/*
 exclude_admin_theme: false
 langcode: en
 popup_agreed:

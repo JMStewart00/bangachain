@@ -43,7 +43,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
   protected $blockManager;
 
   /**
-   * Dataprovider for test functions that should test block types.
+   * Data provider for test functions that should test block types.
    */
   public function providerBlockTypes() {
     return [
@@ -55,7 +55,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->blockManager = $this->prophesize(BlockManagerInterface::class);
@@ -106,7 +106,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
     $block->build()->willReturn($block_content);
     $this->blockManager->createInstance('some_block_id', ['id' => 'some_block_id'])->willReturn($block->reveal());
 
-    $component = new SectionComponent('some-uuid', 'some-region', ['id' => 'some_block_id']);
+    $component = SectionComponent::create('some-uuid', 'some-region', ['id' => 'some_block_id']);
     $in_preview = FALSE;
     $event = new SectionComponentBuildRenderArrayEvent($component, $contexts, $in_preview);
 
@@ -176,7 +176,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
     $block->build()->willReturn($block_content);
     $this->blockManager->createInstance('some_block_id', ['id' => 'some_block_id'])->willReturn($block->reveal());
 
-    $component = new SectionComponent('some-uuid', 'some-region', ['id' => 'some_block_id']);
+    $component = SectionComponent::create('some-uuid', 'some-region', ['id' => 'some_block_id']);
     $in_preview = FALSE;
     $event = new SectionComponentBuildRenderArrayEvent($component, $contexts, $in_preview);
 
@@ -248,7 +248,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
     $block->build()->willReturn($block_content);
     $this->blockManager->createInstance('some_block_id', ['id' => 'some_block_id'])->willReturn($block->reveal());
 
-    $component = new SectionComponent('some-uuid', 'some-region', ['id' => 'some_block_id']);
+    $component = SectionComponent::create('some-uuid', 'some-region', ['id' => 'some_block_id']);
     $in_preview = FALSE;
     $event = new SectionComponentBuildRenderArrayEvent($component, $contexts, $in_preview);
 
@@ -307,7 +307,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
     $block->build()->willReturn($block_content);
     $this->blockManager->createInstance('some_block_id', ['id' => 'some_block_id'])->willReturn($block->reveal());
 
-    $component = new SectionComponent('some-uuid', 'some-region', ['id' => 'some_block_id']);
+    $component = SectionComponent::create('some-uuid', 'some-region', ['id' => 'some_block_id']);
     $in_preview = TRUE;
     $event = new SectionComponentBuildRenderArrayEvent($component, $contexts, $in_preview);
 
@@ -363,7 +363,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
     $block->build()->willReturn($block_content);
     $this->blockManager->createInstance('some_block_id', ['id' => 'some_block_id'])->willReturn($block->reveal());
 
-    $component = new SectionComponent('some-uuid', 'some-region', ['id' => 'some_block_id']);
+    $component = SectionComponent::create('some-uuid', 'some-region', ['id' => 'some_block_id']);
     $event = new SectionComponentBuildRenderArrayEvent($component, [], TRUE);
 
     $subscriber = new BlockComponentRenderArray($this->account->reveal());
@@ -421,7 +421,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
     ]);
     $this->blockManager->createInstance('some_block_id', ['id' => 'some_block_id'])->willReturn($block->reveal());
 
-    $component = new SectionComponent('some-uuid', 'some-region', ['id' => 'some_block_id']);
+    $component = SectionComponent::create('some-uuid', 'some-region', ['id' => 'some_block_id']);
     $event = new SectionComponentBuildRenderArrayEvent($component, [], FALSE);
 
     $subscriber = new BlockComponentRenderArray($this->account->reveal());
@@ -469,7 +469,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
     $block->build()->willReturn($block_content);
     $this->blockManager->createInstance('some_block_id', ['id' => 'some_block_id'])->willReturn($block->reveal());
 
-    $component = new SectionComponent('some-uuid', 'some-region', ['id' => 'some_block_id']);
+    $component = SectionComponent::create('some-uuid', 'some-region', ['id' => 'some_block_id']);
     $event = new SectionComponentBuildRenderArrayEvent($component, [], FALSE);
 
     $subscriber = new BlockComponentRenderArray($this->account->reveal());
@@ -497,7 +497,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
   public function testOnBuildRenderNoBlock() {
     $this->blockManager->createInstance('some_block_id', ['id' => 'some_block_id'])->willReturn(NULL);
 
-    $component = new SectionComponent('some-uuid', 'some-region', ['id' => 'some_block_id']);
+    $component = SectionComponent::create('some-uuid', 'some-region', ['id' => 'some_block_id']);
     $contexts = [];
     $in_preview = FALSE;
     $event = new SectionComponentBuildRenderArrayEvent($component, $contexts, $in_preview);

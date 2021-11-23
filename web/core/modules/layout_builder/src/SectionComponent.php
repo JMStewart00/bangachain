@@ -53,6 +53,12 @@ class SectionComponent implements ThirdPartySettingsInterface {
    * Any additional properties and values.
    *
    * @var mixed[]
+   *
+   * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0.
+   *   Additional component properties should be set
+   *   via ::setThirdPartySetting().
+   *
+   * @see https://www.drupal.org/node/3100177
    */
   protected $additional = [];
 
@@ -66,13 +72,6 @@ class SectionComponent implements ThirdPartySettingsInterface {
   protected $thirdPartySettings = [];
 
   /**
-   * The third party settings module key for the legacy 'additional' property.
-   *
-   * @var string
-   */
-  private $legacyAdditionalModuleKey = '_layout_builder';
-
-  /**
    * Constructs a new SectionComponent.
    *
    * @param string $uuid
@@ -82,19 +81,53 @@ class SectionComponent implements ThirdPartySettingsInterface {
    * @param mixed[] $configuration
    *   The plugin configuration.
    * @param mixed[] $additional
-   *   An additional values.
+   *   (optional) Additional values.
    * @param array[] $third_party_settings
    *   (optional) Any third party settings.
+   * @param bool $instantiated_by_create
+   *   (optional) Whether the object is being instantiated by ::create().
+   *
+   * @todo Change constructor from public to private in
+   *   https://www.drupal.org/project/drupal/issues/3160644 when the
+   *   drupal:10.0.x branch is opened.
+   * @todo Remove $additional and $instantiated_by_create arguments in
+   *   https://www.drupal.org/project/drupal/issues/3160644 when the
+   *   drupal:10.0.x branch is opened.
    */
-  public function __construct($uuid, $region, array $configuration = [], array $additional = [], array $third_party_settings = []) {
+  public function __construct($uuid, $region, array $configuration = [], array $additional = [], array $third_party_settings = [], $instantiated_by_create = FALSE) {
     $this->uuid = $uuid;
     $this->region = $region;
     $this->configuration = $configuration;
+    // @todo Remove below $additional code when the drupal:10.0.x branch is opened.
+    // @see https://www.drupal.org/project/drupal/issues/3160644
     $this->additional = $additional;
     if ($additional) {
-      $third_party_settings[$this->legacyAdditionalModuleKey] = $additional;
+      @trigger_error('Setting additional properties is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Additional component properties should be set via ::setThirdPartySetting(). See https://www.drupal.org/node/3100177', E_USER_DEPRECATED);
     }
     $this->thirdPartySettings = $third_party_settings;
+    // @todo Remove below conditional when the drupal:10.0.x branch is opened.
+    // @see https://www.drupal.org/project/drupal/issues/3160644
+    if (!$instantiated_by_create) {
+      @trigger_error('Instantiating a SectionComponent object directly is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. SectionComponents should be instantiated using the SectionComponent::create() method instead. See https://www.drupal.org/node/3100177', E_USER_DEPRECATED);
+    }
+  }
+
+  /**
+   * Create a new SectionComponent object.
+   *
+   * @param string $uuid
+   *   The UUID.
+   * @param string $region
+   *   The region.
+   * @param mixed[] $configuration
+   *   The plugin configuration.
+   * @param array[] $third_party_settings
+   *   (optional) Any third party settings.
+   *
+   * @return static
+   */
+  public static function create(string $uuid, string $region, array $configuration = [], array $third_party_settings = []) {
+    return new static($uuid, $region, $configuration, [], $third_party_settings, TRUE);
   }
 
   /**
@@ -110,7 +143,7 @@ class SectionComponent implements ThirdPartySettingsInterface {
    */
   public function toRenderArray(array $contexts = [], $in_preview = FALSE) {
     $event = new SectionComponentBuildRenderArrayEvent($this, $contexts, $in_preview);
-    $this->eventDispatcher()->dispatch(LayoutBuilderEvents::SECTION_COMPONENT_BUILD_RENDER_ARRAY, $event);
+    $this->eventDispatcher()->dispatch($event, LayoutBuilderEvents::SECTION_COMPONENT_BUILD_RENDER_ARRAY);
     $output = $event->getBuild();
     $event->getCacheableMetadata()->applyTo($output);
     return $output;
@@ -122,6 +155,12 @@ class SectionComponent implements ThirdPartySettingsInterface {
    * @param string $property
    *   The property to retrieve.
    *
+   * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0.
+   *   Additional component properties should be gotten
+   *   via ::setThirdPartySetting().
+   *
+   * @see https://www.drupal.org/node/3100177
+   *
    * @return mixed
    *   The value for that property, or NULL if the property does not exist.
    */
@@ -130,8 +169,9 @@ class SectionComponent implements ThirdPartySettingsInterface {
       $value = isset($this->{$property}) ? $this->{$property} : NULL;
     }
     else {
-      $value = $this->getThirdPartySetting($this->legacyAdditionalModuleKey, $property);
+      $value = isset($this->additional[$property]) ? $this->additional[$property] : NULL;
     }
+    @trigger_error('Getting additional properties is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Additional component properties should be gotten via ::setThirdPartySetting(). See https://www.drupal.org/node/3100177', E_USER_DEPRECATED);
     return $value;
   }
 
@@ -143,6 +183,12 @@ class SectionComponent implements ThirdPartySettingsInterface {
    * @param mixed $value
    *   The value to set.
    *
+   * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0.
+   *   Additional component properties should be set
+   *   via ::setThirdPartySetting().
+   *
+   * @see https://www.drupal.org/node/3100177
+   *
    * @return $this
    */
   public function set($property, $value) {
@@ -150,9 +196,9 @@ class SectionComponent implements ThirdPartySettingsInterface {
       $this->{$property} = $value;
     }
     else {
-      @trigger_error('Additional component properties should set via ::setThirdPartySetting().', E_USER_DEPRECATED);
-      $this->setThirdPartySetting($this->legacyAdditionalModuleKey, $property, $value);
+      $this->additional[$property] = $value;
     }
+    @trigger_error('Setting additional properties is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Additional component properties should be set via ::setThirdPartySetting(). See https://www.drupal.org/node/3100177', E_USER_DEPRECATED);
     return $this;
   }
 
@@ -296,7 +342,7 @@ class SectionComponent implements ThirdPartySettingsInterface {
   /**
    * Wraps the event dispatcher.
    *
-   * @return \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   * @return \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
    *   The event dispatcher.
    */
   protected function eventDispatcher() {
@@ -316,7 +362,9 @@ class SectionComponent implements ThirdPartySettingsInterface {
       'uuid' => $this->getUuid(),
       'region' => $this->getRegion(),
       'configuration' => $this->getConfiguration(),
-      'additional' => $this->getThirdPartysettings($this->legacyAdditionalModuleKey),
+      // @todo Remove below key/value when the drupal:10.0.x branch is opened.
+      // @see https://www.drupal.org/project/drupal/issues/3160644
+      'additional' => $this->additional,
       'weight' => $this->getWeight(),
       'third_party_settings' => $this->thirdPartySettings,
     ];
@@ -337,17 +385,26 @@ class SectionComponent implements ThirdPartySettingsInterface {
     // Ensure expected array keys are present.
     $component += [
       'uuid' => '',
-      'region' => [],
+      'region' => '',
       'configuration' => [],
+      // @todo Remove below key/value when the drupal:10.0.x branch is opened.
+      // @see https://www.drupal.org/project/drupal/issues/3160644
       'additional' => [],
       'third_party_settings' => [],
     ];
+    // @todo Use create() method when the drupal:10.0.x branch is opened.
+    // @see https://www.drupal.org/project/drupal/issues/3160644
     return (new static(
       $component['uuid'],
       $component['region'],
       $component['configuration'],
+      // @todo Remove below argument when the drupal:10.0.x branch is opened.
+      // @see https://www.drupal.org/project/drupal/issues/3160644
       $component['additional'],
-      $component['third_party_settings']
+      $component['third_party_settings'],
+      // @todo Remove below argument when the drupal:10.0.x branch is opened.
+      // @see https://www.drupal.org/project/drupal/issues/3160644
+      TRUE,
     ))->setWeight($component['weight']);
   }
 
@@ -393,7 +450,7 @@ class SectionComponent implements ThirdPartySettingsInterface {
    *   The list of third parties.
    */
   public function getThirdPartyProviders() {
-    return array_diff(array_keys($this->thirdPartySettings), [$this->legacyAdditionalModuleKey]);
+    return array_keys($this->thirdPartySettings);
   }
 
 }

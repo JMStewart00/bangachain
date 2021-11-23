@@ -12,9 +12,6 @@
         "drupal/core": "^8.8.2 || ^9",
         "drupal/typed_data": "^1.0"
     },
-    "require-dev": {
-        "drupal/typed_data": "1.x-dev"
-    },
     "minimum-stability": "dev",
     "extra": {
         "drush": {

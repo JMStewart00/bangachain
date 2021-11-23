@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * @see       https://github.com/laminas/laminas-feed for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-feed/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-feed/blob/master/LICENSE.md New BSD License
+ */
+
 namespace Laminas\Feed\Writer\Extension;
 
 use DOMDocument;
@@ -7,22 +13,34 @@ use DOMElement;
 
 abstract class AbstractRenderer implements RendererInterface
 {
-    /** @var DOMDocument */
+    /**
+     * @var DOMDocument
+     */
     protected $dom;
 
-    /** @var mixed */
+    /**
+     * @var mixed
+     */
     protected $entry;
 
-    /** @var DOMElement */
+    /**
+     * @var DOMElement
+     */
     protected $base;
 
-    /** @var mixed */
+    /**
+     * @var mixed
+     */
     protected $container;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $type;
 
-    /** @var DOMElement */
+    /**
+     * @var DOMElement
+     */
     protected $rootElement;
 
     /**
@@ -136,6 +154,7 @@ abstract class AbstractRenderer implements RendererInterface
      *
      * @return void
      */
-    // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
+    // @codingStandardsIgnoreStart
     abstract protected function _appendNamespaces();
+    // @codingStandardsIgnoreEnd
 }

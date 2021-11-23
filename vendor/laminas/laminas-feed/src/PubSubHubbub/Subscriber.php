@@ -1,31 +1,19 @@
 <?php
 
+/**
+ * @see       https://github.com/laminas/laminas-feed for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-feed/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-feed/blob/master/LICENSE.md New BSD License
+ */
+
 namespace Laminas\Feed\PubSubHubbub;
 
 use DateInterval;
 use DateTime;
 use Laminas\Feed\Uri;
-use Laminas\Http\Client;
 use Laminas\Http\Request as HttpRequest;
 use Laminas\Stdlib\ArrayUtils;
 use Traversable;
-
-use function array_key_exists;
-use function array_search;
-use function array_unique;
-use function gettype;
-use function hash;
-use function implode;
-use function in_array;
-use function intval;
-use function is_array;
-use function is_string;
-use function md5;
-use function rand;
-use function rtrim;
-use function time;
-use function uksort;
-use function uniqid;
 
 class Subscriber
 {
@@ -310,8 +298,7 @@ class Subscriber
      */
     public function setPreferredVerificationMode($mode)
     {
-        if (
-            $mode !== PubSubHubbub::VERIFICATION_MODE_SYNC
+        if ($mode !== PubSubHubbub::VERIFICATION_MODE_SYNC
             && $mode !== PubSubHubbub::VERIFICATION_MODE_ASYNC
         ) {
             throw new Exception\InvalidArgumentException(
@@ -448,7 +435,7 @@ class Subscriber
     /**
      * Add an optional parameter to the (un)subscribe requests
      *
-     * @param  string|array<string, string> $name
+     * @param  string      $name
      * @param  null|string $value
      * @return $this
      * @throws Exception\InvalidArgumentException
@@ -606,8 +593,6 @@ class Subscriber
         return $this->asyncHubs;
     }
 
-    // phpcs:disable PSR2.Methods.MethodDeclaration.Underscore
-
     /**
      * Executes an (un)subscribe request
      *
@@ -615,8 +600,10 @@ class Subscriber
      * @return void
      * @throws Exception\RuntimeException
      */
+    // @codingStandardsIgnoreStart
     protected function _doRequest($mode)
     {
+        // @codingStandardsIgnoreEnd
         $client = $this->_getHttpClient();
         $hubs   = $this->getHubUrls();
         if (empty($hubs)) {
@@ -632,10 +619,9 @@ class Subscriber
                 $client->setAuth($auth[0], $auth[1]);
             }
             $client->setUri($url);
-            $client->setRawBody($this->_getRequestParameters($url, $mode));
+            $client->setRawBody($params = $this->_getRequestParameters($url, $mode));
             $response = $client->send();
-            if (
-                $response->getStatusCode() !== 204
+            if ($response->getStatusCode() !== 204
                 && $response->getStatusCode() !== 202
             ) {
                 $this->errors[] = [
@@ -650,7 +636,7 @@ class Subscriber
              * are using async verification modes so they may update Models and
              * move these to asynchronous processes.
              */
-            } elseif ($response->getStatusCode() === 202) {
+            } elseif ($response->getStatusCode() == 202) {
                 $this->asyncHubs[] = [
                     'response' => $response,
                     'hubUrl'   => $url,
@@ -662,10 +648,12 @@ class Subscriber
     /**
      * Get a basic prepared HTTP client for use
      *
-     * @return Client
+     * @return \Laminas\Http\Client
      */
+    // @codingStandardsIgnoreStart
     protected function _getHttpClient()
     {
+        // @codingStandardsIgnoreEnd
         $client = PubSubHubbub::getHttpClient();
         $client->setMethod(HttpRequest::METHOD_POST);
         $client->setOptions([
@@ -683,8 +671,10 @@ class Subscriber
      * @return string
      * @throws Exception\InvalidArgumentException
      */
+    // @codingStandardsIgnoreStart
     protected function _getRequestParameters($hubUrl, $mode)
     {
+        // @codingStandardsIgnoreEnd
         if (! in_array($mode, ['subscribe', 'unsubscribe'])) {
             throw new Exception\InvalidArgumentException(
                 'Invalid mode specified: "' . $mode . '" which should have been "subscribe" or "unsubscribe"'
@@ -745,22 +735,19 @@ class Subscriber
             $expires = $now->add(new DateInterval('PT' . $params['hub.lease_seconds'] . 'S'))
                 ->format('Y-m-d H:i:s');
         }
-
-        // phpcs:disable Generic.Files.LineLength.TooLong
         $data = [
-            'id'            => $key,
-            'topic_url'     => $params['hub.topic'],
-            'hub_url'       => $hubUrl,
-            'created_time'  => $now->format('Y-m-d H:i:s'),
-            'lease_seconds' => $params['hub.lease_seconds'],
-            /** @psalm-suppress PossiblyInvalidCast */
-            'verify_token'       => hash('sha256', (string) $params['hub.verify_token']),
-            'secret'             => null,
-            'expiration_time'    => $expires,
-            'subscription_state' => $mode === 'unsubscribe' ? PubSubHubbub::SUBSCRIPTION_TODELETE : PubSubHubbub::SUBSCRIPTION_NOTVERIFIED,
+            'id'              => $key,
+            'topic_url'       => $params['hub.topic'],
+            'hub_url'         => $hubUrl,
+            'created_time'    => $now->format('Y-m-d H:i:s'),
+            'lease_seconds'   => $params['hub.lease_seconds'],
+            'verify_token'    => hash('sha256', $params['hub.verify_token']),
+            'secret'          => null,
+            'expiration_time' => $expires,
+            // @codingStandardsIgnoreStart
+            'subscription_state' => ($mode == 'unsubscribe') ? PubSubHubbub::SUBSCRIPTION_TODELETE : PubSubHubbub::SUBSCRIPTION_NOTVERIFIED,
+            // @codingStandardsIgnoreEnd
         ];
-        // phpcs:enable Generic.Files.LineLength.TooLong
-
         $this->getStorage()->setSubscription($data);
 
         return $this->_toByteValueOrderedString(
@@ -775,8 +762,10 @@ class Subscriber
      *
      * @return string
      */
+    // @codingStandardsIgnoreStart
     protected function _generateVerifyToken()
     {
+        // @codingStandardsIgnoreEnd
         if (! empty($this->testStaticToken)) {
             return $this->testStaticToken;
         }
@@ -791,10 +780,14 @@ class Subscriber
      * @param  string $hubUrl The Hub Server URL for which this token will apply
      * @return string
      */
+    // @codingStandardsIgnoreStart
     protected function _generateSubscriptionKey(array $params, $hubUrl)
     {
+        // @codingStandardsIgnoreEnd
         $keyBase = $params['hub.topic'] . $hubUrl;
-        return md5($keyBase);
+        $key     = md5($keyBase);
+
+        return $key;
     }
 
     /**
@@ -803,8 +796,10 @@ class Subscriber
      * @param  array $params
      * @return array
      */
+    // @codingStandardsIgnoreStart
     protected function _urlEncode(array $params)
     {
+        // @codingStandardsIgnoreEnd
         $encoded = [];
         foreach ($params as $key => $value) {
             if (is_array($value)) {
@@ -826,8 +821,10 @@ class Subscriber
      * @param  array $params
      * @return string
      */
+    // @codingStandardsIgnoreStart
     protected function _toByteValueOrderedString(array $params)
     {
+        // @codingStandardsIgnoreEnd
         $return = [];
         uksort($params, 'strnatcmp');
         foreach ($params as $key => $value) {
@@ -842,20 +839,11 @@ class Subscriber
         return implode('&', $return);
     }
 
-    // phpcs:enable PSR2.Methods.MethodDeclaration.Underscore
-
     /**
      * This is STRICTLY for testing purposes only...
-     *
-     * @internal
-     *
-     * @var null|string
      */
     protected $testStaticToken;
 
-    /**
-     * @internal
-     */
     final public function setTestStaticToken(string $token)
     {
         $this->testStaticToken = (string) $token;

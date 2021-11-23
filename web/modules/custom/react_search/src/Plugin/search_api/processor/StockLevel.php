@@ -59,7 +59,7 @@ class StockLevel extends ProcessorPluginBase {
 
       foreach($productVariationIds as $variation) {
         /*Load Product Variations*/
-        $entity_manager = \Drupal::entityManager();
+        $entity_manager = \Drupal::entityTypeManager();
         $product_variation = $entity_manager->getStorage('commerce_product_variation')->load((int)$variation);
         if ($product_variation->status->value) {
           $context = commerce_stock_enforcement_get_context($product_variation);

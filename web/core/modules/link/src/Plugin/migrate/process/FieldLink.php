@@ -59,6 +59,13 @@ class FieldLink extends ProcessPluginBase {
    * @see \Drupal\link\Plugin\Field\FieldWidget\LinkWidget::getUserEnteredStringAsUri()
    */
   protected function canonicalizeUri($uri) {
+    // If the path starts with 2 slashes then it is always considered an
+    // external URL without an explicit protocol part.
+    // @todo Remove this when https://www.drupal.org/node/2744729 lands.
+    if (strpos($uri, '//') === 0) {
+      return $this->configuration['uri_scheme'] . ltrim($uri, '/');
+    }
+
     // If we already have a scheme, we're fine.
     if (parse_url($uri, PHP_URL_SCHEME)) {
       return $uri;
@@ -79,6 +86,7 @@ class FieldLink extends ProcessPluginBase {
       // and &#x00FF; (except × &#x00D7; and ÷ &#x00F7;) with the addition of
       // &#x0152;, &#x0153; and &#x0178;.
       // @see https://git.drupalcode.org/project/link/blob/7.x-1.5-beta2/link.module#L1382
+      // cSpell:disable-next-line
       $link_ichars = '¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿŒœŸ';
 
       // Pattern specific to internal links.

@@ -1,6 +1,10 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @see       https://github.com/laminas/laminas-stdlib for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-stdlib/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-stdlib/blob/master/LICENSE.md New BSD License
+ */
 
 namespace Laminas\Stdlib;
 
@@ -21,7 +25,7 @@ interface ParametersInterface extends ArrayAccess, Countable, Serializable, Trav
      *
      * @param array $values
      */
-    public function __construct(?array $values = null);
+    public function __construct(array $values = null);
 
     /**
      * From array
@@ -38,7 +42,7 @@ interface ParametersInterface extends ArrayAccess, Countable, Serializable, Trav
      *
      * Allow deserialization from raw body; e.g., for PUT requests
      *
-     * @param string $string
+     * @param $string
      * @return mixed
      */
     public function fromString($string);

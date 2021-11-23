@@ -17,14 +17,6 @@ Cloned entities don't retain their Inline Block usage
 Source: https://www.drupal.org/files/issues/2020-03-06/3062819-inline-cloned-COMBINED_2.patch
 
 
-Support third party settings for components within a section
-Source: https://www.drupal.org/files/issues/2019-12-05/3015152-tps-26.patch
-
-
-Add a hook to modify oEmbed resource data
-Source: https://www.drupal.org/files/issues/2019-03-25/media_hook-oembed-resource-data-alter__example.patch
-
-
 Conflict with field_group, missing options in sidebar when creating/updating a node
 Source: https://www.drupal.org/files/issues/2019-11-29/claro-fix_node_sidebar_accordion_items-3097407-4--fix-only.patch
 
@@ -37,15 +29,15 @@ Break long text strings in layout edit
 Source: https://www.drupal.org/files/issues/2020-08-10/break-long-text-strings-in-layout-3016507-32.patch
 
 
-Nested Paragraphs create multiple drag handles
-Source: https://www.drupal.org/files/issues/2019-11-13/claro-nested_paragraphs_multiple_drag_handles-3092181-5.patch
-
-
 Views file name suggestions often missing from Twig debugging
 Source: https://www.drupal.org/files/issues/views-template-suggestions-2839945-2.patch
 
 
 'Negate' form value for condition plugins should be cast to boolean in validation.
 Source: https://www.drupal.org/files/issues/2021-01-06/3114467-16.patch
+
+
+Support third party settings for components within a section
+Source: https://www.drupal.org/files/issues/2021-01-29/3015152-tps-9.2.x-116.patch
 
 

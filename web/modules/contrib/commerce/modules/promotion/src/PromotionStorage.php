@@ -54,7 +54,12 @@ class PromotionStorage extends CommerceContentEntityStorage implements Promotion
     }
     // Only load promotions without coupons. Promotions with coupons are loaded
     // coupon-first in a different process.
-    $query->notExists('coupons');
+    $coupon_condition = $query->orConditionGroup()
+      ->notExists('require_coupon')
+      ->condition('require_coupon', 0, '=');
+    $query
+      ->condition($coupon_condition)
+      ->notExists('coupons');
     $result = $query->execute();
     if (empty($result)) {
       return [];

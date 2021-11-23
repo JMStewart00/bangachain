@@ -14,7 +14,7 @@ abstract class SectionStorageTestBase extends EntityKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'layout_builder',
     'layout_discovery',
     'layout_test',
@@ -33,14 +33,12 @@ abstract class SectionStorageTestBase extends EntityKernelTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->installSchema('system', ['key_value_expire']);
-
     $section_data = [
       new Section('layout_test_plugin', [], [
-        'first-uuid' => new SectionComponent('first-uuid', 'content', ['id' => 'foo']),
+        'first-uuid' => SectionComponent::create('first-uuid', 'content', ['id' => 'foo']),
       ]),
       new Section('layout_test_plugin', ['setting_1' => 'bar'], [
-        'second-uuid' => new SectionComponent('second-uuid', 'content', ['id' => 'foo']),
+        'second-uuid' => SectionComponent::create('second-uuid', 'content', ['id' => 'foo']),
       ]),
     ];
     $this->sectionStorage = $this->getSectionStorage($section_data);
@@ -63,10 +61,10 @@ abstract class SectionStorageTestBase extends EntityKernelTestBase {
   public function testGetSections() {
     $expected = [
       new Section('layout_test_plugin', ['setting_1' => 'Default'], [
-        'first-uuid' => new SectionComponent('first-uuid', 'content', ['id' => 'foo']),
+        'first-uuid' => SectionComponent::create('first-uuid', 'content', ['id' => 'foo']),
       ]),
       new Section('layout_test_plugin', ['setting_1' => 'bar'], [
-        'second-uuid' => new SectionComponent('second-uuid', 'content', ['id' => 'foo']),
+        'second-uuid' => SectionComponent::create('second-uuid', 'content', ['id' => 'foo']),
       ]),
     ];
     $this->assertSections($expected);
@@ -94,11 +92,11 @@ abstract class SectionStorageTestBase extends EntityKernelTestBase {
   public function testInsertSection() {
     $expected = [
       new Section('layout_test_plugin', ['setting_1' => 'Default'], [
-        'first-uuid' => new SectionComponent('first-uuid', 'content', ['id' => 'foo']),
+        'first-uuid' => SectionComponent::create('first-uuid', 'content', ['id' => 'foo']),
       ]),
       new Section('layout_onecol'),
       new Section('layout_test_plugin', ['setting_1' => 'bar'], [
-        'second-uuid' => new SectionComponent('second-uuid', 'content', ['id' => 'foo']),
+        'second-uuid' => SectionComponent::create('second-uuid', 'content', ['id' => 'foo']),
       ]),
     ];
 
@@ -112,10 +110,10 @@ abstract class SectionStorageTestBase extends EntityKernelTestBase {
   public function testAppendSection() {
     $expected = [
       new Section('layout_test_plugin', ['setting_1' => 'Default'], [
-        'first-uuid' => new SectionComponent('first-uuid', 'content', ['id' => 'foo']),
+        'first-uuid' => SectionComponent::create('first-uuid', 'content', ['id' => 'foo']),
       ]),
       new Section('layout_test_plugin', ['setting_1' => 'bar'], [
-        'second-uuid' => new SectionComponent('second-uuid', 'content', ['id' => 'foo']),
+        'second-uuid' => SectionComponent::create('second-uuid', 'content', ['id' => 'foo']),
       ]),
       new Section('layout_onecol'),
     ];
@@ -156,7 +154,7 @@ abstract class SectionStorageTestBase extends EntityKernelTestBase {
   public function testRemoveSection() {
     $expected = [
       new Section('layout_test_plugin', ['setting_1' => 'bar'], [
-        'second-uuid' => new SectionComponent('second-uuid', 'content', ['id' => 'foo']),
+        'second-uuid' => SectionComponent::create('second-uuid', 'content', ['id' => 'foo']),
       ]),
     ];
 

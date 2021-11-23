@@ -83,6 +83,7 @@ class PromotionTest extends OrderKernelTestBase {
    * @covers ::setOwner
    * @covers ::getOwnerId
    * @covers ::setOwnerId
+   * @covers ::requiresCoupon
    */
   public function testPromotion() {
     $order_type = OrderType::load('default');
@@ -186,6 +187,10 @@ class PromotionTest extends OrderKernelTestBase {
     $this->assertEquals(900, $promotion->getOwnerId());
     $promotion->save();
     $this->assertEquals(0, $promotion->getOwnerId());
+
+    $this->assertFalse($promotion->requiresCoupon());
+    $promotion->set('require_coupon', TRUE);
+    $this->assertTrue($promotion->requiresCoupon());
   }
 
   /**

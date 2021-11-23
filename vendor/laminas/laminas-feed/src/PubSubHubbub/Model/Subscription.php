@@ -1,14 +1,16 @@
 <?php
 
+/**
+ * @see       https://github.com/laminas/laminas-feed for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-feed/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-feed/blob/master/LICENSE.md New BSD License
+ */
+
 namespace Laminas\Feed\PubSubHubbub\Model;
 
 use DateInterval;
 use DateTime;
 use Laminas\Feed\PubSubHubbub;
-
-use function array_key_exists;
-use function count;
-use function is_string;
 
 class Subscription extends AbstractModel implements SubscriptionPersistenceInterface
 {
@@ -33,12 +35,10 @@ class Subscription extends AbstractModel implements SubscriptionPersistenceInter
             );
         }
         $result = $this->db->select(['id' => $data['id']]);
-        if (0 < count($result)) {
-            /** @psalm-suppress UndefinedInterfaceMethod */
+        if ($result && (0 < count($result))) {
             $data['created_time'] = $result->current()->created_time;
             $now                  = $this->getNow();
-            if (
-                array_key_exists('lease_seconds', $data)
+            if (array_key_exists('lease_seconds', $data)
                 && $data['lease_seconds']
             ) {
                 $data['expiration_time'] = $now->add(new DateInterval('PT' . $data['lease_seconds'] . 'S'))
@@ -70,8 +70,7 @@ class Subscription extends AbstractModel implements SubscriptionPersistenceInter
             );
         }
         $result = $this->db->select(['id' => $key]);
-        if (count($result)) {
-            /** @psalm-suppress UndefinedInterfaceMethod */
+        if ($result && count($result)) {
             return $result->current()->getArrayCopy();
         }
         return false;
@@ -92,7 +91,7 @@ class Subscription extends AbstractModel implements SubscriptionPersistenceInter
             );
         }
         $result = $this->db->select(['id' => $key]);
-        if (count($result)) {
+        if ($result && count($result)) {
             return true;
         }
         return false;
@@ -107,7 +106,7 @@ class Subscription extends AbstractModel implements SubscriptionPersistenceInter
     public function deleteSubscription($key)
     {
         $result = $this->db->select(['id' => $key]);
-        if (count($result)) {
+        if ($result && count($result)) {
             $this->db->delete(
                 ['id' => $key]
             );

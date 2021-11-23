@@ -1,11 +1,13 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @see       https://github.com/laminas/laminas-stdlib for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-stdlib/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-stdlib/blob/master/LICENSE.md New BSD License
+ */
 
 namespace Laminas\Stdlib\Guard;
 
-use Exception;
-use Laminas\Stdlib\Exception\InvalidArgumentException;
 use Traversable;
 
 use function get_class;
@@ -22,18 +24,17 @@ trait ArrayOrTraversableGuardTrait
     /**
      * Verifies that the data is an array or Traversable
      *
-     * @param mixed  $data           the data to verify
-     * @param string $dataName       the data name
-     * @param string $exceptionClass FQCN for the exception
-     * @return void
-     * @throws Exception
+     * @param  mixed  $data           the data to verify
+     * @param  string $dataName       the data name
+     * @param  string $exceptionClass FQCN for the exception
+     * @throws \Exception
      */
     protected function guardForArrayOrTraversable(
         $data,
         $dataName = 'Argument',
-        $exceptionClass = InvalidArgumentException::class
+        $exceptionClass = 'Laminas\Stdlib\Exception\InvalidArgumentException'
     ) {
-        if (! is_array($data) && ! $data instanceof Traversable) {
+        if (! is_array($data) && ! ($data instanceof Traversable)) {
             $message = sprintf(
                 "%s must be an array or Traversable, [%s] given",
                 $dataName,

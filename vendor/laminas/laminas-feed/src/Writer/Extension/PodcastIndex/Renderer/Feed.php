@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * @see       https://github.com/laminas/laminas-feed for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-feed/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-feed/blob/master/LICENSE.md New BSD License
+ */
+
 namespace Laminas\Feed\Writer\Extension\PodcastIndex\Renderer;
 
 use DOMDocument;
@@ -35,9 +41,10 @@ class Feed extends Extension\AbstractRenderer
     /**
      * Append feed namespaces
      */
-    // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
+    // @codingStandardsIgnoreStart
     protected function _appendNamespaces(): void
     {
+        // @codingStandardsIgnoreEnd
         $this->getRootElement()->setAttribute(
             'xmlns:podcast',
             'https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md'

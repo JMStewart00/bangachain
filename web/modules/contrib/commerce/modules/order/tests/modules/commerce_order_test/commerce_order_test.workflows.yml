@@ -17,4 +17,4 @@ test_workflow:
     cancel:
       label: 'Cancel order'
       from: [draft]
-      to:   canceled
+      to: canceled

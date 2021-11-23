@@ -1,6 +1,10 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @see       https://github.com/laminas/laminas-stdlib for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-stdlib/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-stdlib/blob/master/LICENSE.md New BSD License
+ */
 
 namespace Laminas\Stdlib;
 
@@ -18,8 +22,7 @@ use function ucwords;
 
 abstract class AbstractOptions implements ParameterObjectInterface
 {
-    // phpcs:disable PSR2.Classes.PropertyDeclaration.Underscore,WebimpressCodingStandard.NamingConventions.ValidVariableName.NotCamelCapsProperty
-
+    // @codingStandardsIgnoreStart
     /**
      * We use the __ prefix to avoid collisions with properties in
      * user-implementations.
@@ -27,8 +30,7 @@ abstract class AbstractOptions implements ParameterObjectInterface
      * @var bool
      */
     protected $__strictMode__ = true;
-
-    // phpcs:enable
+    // @codingStandardsIgnoreEnd
 
     /**
      * Constructor
@@ -62,7 +64,7 @@ abstract class AbstractOptions implements ParameterObjectInterface
                     __METHOD__,
                     'array',
                     'Traversable',
-                    self::class
+                    'Laminas\Stdlib\AbstractOptions'
                 )
             );
         }
@@ -82,21 +84,17 @@ abstract class AbstractOptions implements ParameterObjectInterface
     public function toArray()
     {
         $array = [];
-
-        /** @param string[] $letters */
-        $transform = function (array $letters): string {
+        $transform = function ($letters) {
             $letter = array_shift($letters);
             return '_' . strtolower($letter);
         };
-
         foreach ($this as $key => $value) {
             if ($key === '__strictMode__') {
                 continue;
             }
-            $normalizedKey         = preg_replace_callback('/([A-Z])/', $transform, $key);
+            $normalizedKey = preg_replace_callback('/([A-Z])/', $transform, $key);
             $array[$normalizedKey] = $value;
         }
-
         return $array;
     }
 
@@ -104,7 +102,6 @@ abstract class AbstractOptions implements ParameterObjectInterface
      * Set a configuration property
      *
      * @see ParameterObject::__set()
-     *
      * @param string $key
      * @param mixed $value
      * @throws Exception\BadMethodCallException
@@ -134,7 +131,6 @@ abstract class AbstractOptions implements ParameterObjectInterface
      * Get a configuration property
      *
      * @see ParameterObject::__get()
-     *
      * @param string $key
      * @throws Exception\BadMethodCallException
      * @return mixed
@@ -156,9 +152,7 @@ abstract class AbstractOptions implements ParameterObjectInterface
 
     /**
      * Test if a configuration property is null
-     *
      * @see ParameterObject::__isset()
-     *
      * @param string $key
      * @return bool
      */
@@ -173,7 +167,6 @@ abstract class AbstractOptions implements ParameterObjectInterface
      * Set a configuration property to NULL
      *
      * @see ParameterObject::__unset()
-     *
      * @param string $key
      * @throws Exception\InvalidArgumentException
      * @return void

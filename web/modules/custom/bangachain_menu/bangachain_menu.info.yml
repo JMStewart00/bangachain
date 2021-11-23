@@ -1,7 +1,7 @@
 name: Bangachain Menu
 description: Custom functionality for Bangachain menus.
 type: module
-core: 8.x
+core_version_requirement: ^8 || ^9
 package: Bang-A-Chain
 
 dependencies:

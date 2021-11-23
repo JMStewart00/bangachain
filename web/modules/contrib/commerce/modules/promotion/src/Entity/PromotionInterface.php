@@ -449,4 +449,12 @@ interface PromotionInterface extends ContentEntityInterface, EntityStoresInterfa
    */
   public function setCreatedTime($timestamp);
 
+  /**
+   * Checks whether a coupon is required for the promotion to apply.
+   *
+   * @return bool
+   *   TRUE if the promotion requires a coupon, FALSE otherwise.
+   */
+  public function requiresCoupon();
+
 }

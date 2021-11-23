@@ -22,6 +22,11 @@ class PromotionRouteProvider extends AdminHtmlRouteProvider {
         $collection->add('entity.commerce_promotion.' . $operation . '_form', $form_route);
       }
     }
+    if ($entity_type->hasLinkTemplate('reorder')) {
+      $reorder_form_route = $this->getCollectionRoute($entity_type);
+      $reorder_form_route->setPath($entity_type->getLinkTemplate('reorder'));
+      $collection->add('entity.commerce_promotion.reorder', $reorder_form_route);
+    }
 
     return $collection;
   }

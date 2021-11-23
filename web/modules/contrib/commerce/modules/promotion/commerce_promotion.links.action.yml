@@ -3,6 +3,7 @@ entity.commerce_promotion.add_form:
   title: 'Add promotion'
   appears_on:
     - entity.commerce_promotion.collection
+    - entity.commerce_promotion.reorder
 
 entity.commerce_promotion_coupon.add_form:
   route_name: entity.commerce_promotion_coupon.add_form

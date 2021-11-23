@@ -4,6 +4,7 @@ namespace Drupal\commerce_shipping\Entity;
 
 use Drupal\commerce_store\Entity\EntityStoresInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityChangedInterface;
 
 /**
  * Defines the interface for shipping methods.
@@ -12,7 +13,7 @@ use Drupal\Core\Entity\ContentEntityInterface;
  * Implemented as a content entity type to allow each store to have its own
  * shipping methods.
  */
-interface ShippingMethodInterface extends ContentEntityInterface, EntityStoresInterface {
+interface ShippingMethodInterface extends ContentEntityInterface, EntityStoresInterface, EntityChangedInterface {
 
   /**
    * Gets the shipping method plugin.
@@ -124,5 +125,23 @@ interface ShippingMethodInterface extends ContentEntityInterface, EntityStoresIn
    *   TRUE if shipping method applies, FALSE otherwise.
    */
   public function applies(ShipmentInterface $shipment);
+
+  /**
+   * Gets the shipping method creation timestamp.
+   *
+   * @return int
+   *   The shipping method creation timestamp.
+   */
+  public function getCreatedTime();
+
+  /**
+   * Sets the shipping method creation timestamp.
+   *
+   * @param int $timestamp
+   *   The shipping method creation timestamp.
+   *
+   * @return $this
+   */
+  public function setCreatedTime($timestamp);
 
 }

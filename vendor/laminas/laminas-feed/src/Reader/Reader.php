@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * @see       https://github.com/laminas/laminas-feed for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-feed/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-feed/blob/master/LICENSE.md New BSD License
+ */
+
 namespace Laminas\Feed\Reader;
 
 use DOMDocument;
@@ -9,63 +15,35 @@ use Laminas\Feed\Reader\Exception\InvalidHttpClientException;
 use Laminas\Http as LaminasHttp;
 use Laminas\Stdlib\ErrorHandler;
 
-use function array_unique;
-use function file_get_contents;
-use function function_exists;
-use function get_class;
-use function gettype;
-use function in_array;
-use function ini_restore;
-use function ini_set;
-use function is_object;
-use function is_string;
-use function libxml_disable_entity_loader;
-use function libxml_get_last_error;
-use function libxml_use_internal_errors;
-use function md5;
-use function serialize;
-use function sprintf;
-use function strlen;
-use function strpos;
-use function trigger_error;
-use function trim;
-use function unserialize;
-
-use const E_NOTICE;
-use const E_USER_NOTICE;
-use const E_WARNING;
-use const LIBXML_VERSION;
-use const XML_DOCUMENT_TYPE_NODE;
-
 class Reader implements ReaderImportInterface
 {
     /**
      * Namespace constants
      */
-    public const NAMESPACE_ATOM_03 = 'http://purl.org/atom/ns#';
-    public const NAMESPACE_ATOM_10 = 'http://www.w3.org/2005/Atom';
-    public const NAMESPACE_RDF     = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
-    public const NAMESPACE_RSS_090 = 'http://my.netscape.com/rdf/simple/0.9/';
-    public const NAMESPACE_RSS_10  = 'http://purl.org/rss/1.0/';
+    const NAMESPACE_ATOM_03 = 'http://purl.org/atom/ns#';
+    const NAMESPACE_ATOM_10 = 'http://www.w3.org/2005/Atom';
+    const NAMESPACE_RDF     = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
+    const NAMESPACE_RSS_090 = 'http://my.netscape.com/rdf/simple/0.9/';
+    const NAMESPACE_RSS_10  = 'http://purl.org/rss/1.0/';
 
     /**
      * Feed type constants
      */
-    public const TYPE_ANY              = 'any';
-    public const TYPE_ATOM_03          = 'atom-03';
-    public const TYPE_ATOM_10          = 'atom-10';
-    public const TYPE_ATOM_10_ENTRY    = 'atom-10-entry';
-    public const TYPE_ATOM_ANY         = 'atom';
-    public const TYPE_RSS_090          = 'rss-090';
-    public const TYPE_RSS_091          = 'rss-091';
-    public const TYPE_RSS_091_NETSCAPE = 'rss-091n';
-    public const TYPE_RSS_091_USERLAND = 'rss-091u';
-    public const TYPE_RSS_092          = 'rss-092';
-    public const TYPE_RSS_093          = 'rss-093';
-    public const TYPE_RSS_094          = 'rss-094';
-    public const TYPE_RSS_10           = 'rss-10';
-    public const TYPE_RSS_20           = 'rss-20';
-    public const TYPE_RSS_ANY          = 'rss';
+    const TYPE_ANY              = 'any';
+    const TYPE_ATOM_03          = 'atom-03';
+    const TYPE_ATOM_10          = 'atom-10';
+    const TYPE_ATOM_10_ENTRY    = 'atom-10-entry';
+    const TYPE_ATOM_ANY         = 'atom';
+    const TYPE_RSS_090          = 'rss-090';
+    const TYPE_RSS_091          = 'rss-091';
+    const TYPE_RSS_091_NETSCAPE = 'rss-091n';
+    const TYPE_RSS_091_USERLAND = 'rss-091u';
+    const TYPE_RSS_092          = 'rss-092';
+    const TYPE_RSS_093          = 'rss-093';
+    const TYPE_RSS_094          = 'rss-094';
+    const TYPE_RSS_10           = 'rss-10';
+    const TYPE_RSS_20           = 'rss-20';
+    const TYPE_RSS_ANY          = 'rss';
 
     /**
      * Cache instance
@@ -88,13 +66,10 @@ class Reader implements ReaderImportInterface
      */
     protected static $httpMethodOverride = false;
 
-    /** @var bool */
     protected static $httpConditionalGet = false;
 
-    /** @var null|ExtensionManagerInterface */
     protected static $extensionManager;
 
-    /** @var array<string, string[]> */
     protected static $extensions = [
         'feed'  => [
             'DublinCore\Feed',
@@ -122,7 +97,6 @@ class Reader implements ReaderImportInterface
      *
      * If we are using libxml >= 2.9, XML entity loading is disabled by default.
      *
-     * @param bool $flag
      * @return bool
      */
     public static function disableEntityLoader($flag = true)
@@ -266,7 +240,7 @@ class Reader implements ReaderImportInterface
                     'Feed failed to load, got response code ' . $response->getStatusCode()
                 );
             }
-            if ((int) $response->getStatusCode() === 304) {
+            if ($response->getStatusCode() == 304) {
                 $responseXml = $data;
             } else {
                 $responseXml = $response->getBody();
@@ -320,7 +294,7 @@ class Reader implements ReaderImportInterface
      *
      * @param  string $uri
      * @return Feed\FeedInterface
-     * @throws Exception\RuntimeException If response is not an Http\ResponseInterface.
+     * @throws Exception\RuntimeException if response is not an Http\ResponseInterface
      */
     public static function importRemoteFeed($uri, Http\ClientInterface $client)
     {
@@ -333,7 +307,7 @@ class Reader implements ReaderImportInterface
             ));
         }
 
-        if ($response->getStatusCode() !== 200) {
+        if ((int) $response->getStatusCode() !== 200) {
             throw new Exception\RuntimeException(
                 'Feed failed to load, got response code ' . $response->getStatusCode()
             );
@@ -348,6 +322,7 @@ class Reader implements ReaderImportInterface
      *
      * @param string $string
      * @return Feed\FeedInterface
+     *
      * @throws Exception\InvalidArgumentException
      * @throws Exception\RuntimeException
      */
@@ -546,8 +521,7 @@ class Reader implements ReaderImportInterface
         if ($xpath->query('/rdf:RDF')->length) {
             $xpath->registerNamespace('rss', self::NAMESPACE_RSS_10);
 
-            if (
-                $xpath->query('/rdf:RDF/rss:channel')->length
+            if ($xpath->query('/rdf:RDF/rss:channel')->length
                 || $xpath->query('/rdf:RDF/rss:image')->length
                 || $xpath->query('/rdf:RDF/rss:item')->length
                 || $xpath->query('/rdf:RDF/rss:textinput')->length
@@ -557,8 +531,7 @@ class Reader implements ReaderImportInterface
 
             $xpath->registerNamespace('rss', self::NAMESPACE_RSS_090);
 
-            if (
-                $xpath->query('/rdf:RDF/rss:channel')->length
+            if ($xpath->query('/rdf:RDF/rss:channel')->length
                 || $xpath->query('/rdf:RDF/rss:image')->length
                 || $xpath->query('/rdf:RDF/rss:item')->length
                 || $xpath->query('/rdf:RDF/rss:textinput')->length
@@ -574,7 +547,11 @@ class Reader implements ReaderImportInterface
         }
 
         if ($xpath->query('//atom:entry')->length) {
-            return $specOnly === true ? self::TYPE_ATOM_10 : self::TYPE_ATOM_10_ENTRY;
+            if ($specOnly == true) {
+                return self::TYPE_ATOM_10;
+            } else {
+                return self::TYPE_ATOM_10_ENTRY;
+            }
         }
 
         $xpath->registerNamespace('atom', self::NAMESPACE_ATOM_03);
@@ -614,7 +591,7 @@ class Reader implements ReaderImportInterface
      *
      * @param  string $name
      * @return void
-     * @throws Exception\RuntimeException If unable to resolve Extension class.
+     * @throws Exception\RuntimeException if unable to resolve Extension class
      */
     public static function registerExtension($name)
     {
@@ -654,8 +631,7 @@ class Reader implements ReaderImportInterface
     {
         $feedName  = $extensionName . '\Feed';
         $entryName = $extensionName . '\Entry';
-        if (
-            in_array($feedName, static::$extensions['feed'])
+        if (in_array($feedName, static::$extensions['feed'])
             || in_array($entryName, static::$extensions['entry'])
         ) {
             return true;
@@ -730,7 +706,7 @@ class Reader implements ReaderImportInterface
                     . ' %1$s\Extension\GooglePlayPodcast\Entry and %1$s\Extension\GooglePlayPodcast\Feed.',
                     __NAMESPACE__
                 ),
-                E_USER_NOTICE
+                \E_USER_NOTICE
             );
 
         // Added in development; check for it conditionally
@@ -742,7 +718,7 @@ class Reader implements ReaderImportInterface
                     . ' %1$s\Extension\PodcastIndex\Entry and %1$s\Extension\PodcastIndex\Feed.',
                     __NAMESPACE__
                 ),
-                E_USER_NOTICE
+                \E_USER_NOTICE
             );
     }
 
@@ -750,6 +726,7 @@ class Reader implements ReaderImportInterface
      * Utility method to apply array_unique operation to a multidimensional
      * array.
      *
+     * @param  array
      * @return array
      */
     public static function arrayUnique(array $array)

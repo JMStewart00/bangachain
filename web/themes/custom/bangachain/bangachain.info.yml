@@ -2,7 +2,7 @@ name: 'Bang-A-Chain'
 type: theme
 base theme: classy
 description: 'A custom responsive theme for Bang-A-Chain.'
-core: 8.x
+core_version_requirement: ^8 || ^9
 
 # Libraries
 libraries:

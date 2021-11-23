@@ -2,6 +2,10 @@
 
 namespace Drupal\Tests\layout_builder\Unit;
 
+use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Layout\LayoutInterface;
+use Drupal\Core\Layout\LayoutPluginManagerInterface;
+use Drupal\Core\Plugin\Context\ContextHandlerInterface;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionComponent;
 use Drupal\Tests\UnitTestCase;
@@ -22,16 +26,16 @@ class SectionTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->section = new Section(
       'layout_onecol',
       [],
       [
-        new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']),
-        (new SectionComponent('second-uuid', 'ordered-region', ['id' => 'second-block-id']))->setWeight(3),
-        (new SectionComponent('first-uuid', 'ordered-region', ['id' => 'first-block-id']))->setWeight(2),
+        SectionComponent::create('existing-uuid', 'some-region', ['id' => 'existing-block-id']),
+        SectionComponent::create('second-uuid', 'ordered-region', ['id' => 'second-block-id'])->setWeight(3),
+        SectionComponent::create('first-uuid', 'ordered-region', ['id' => 'first-block-id'])->setWeight(2),
       ],
       [
         'bad_judgement' => ['blink_speed' => 'fast', 'spin_direction' => 'clockwise'],
@@ -47,9 +51,9 @@ class SectionTest extends UnitTestCase {
    */
   public function testGetComponents() {
     $expected = [
-      'existing-uuid' => (new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']))->setWeight(0),
-      'second-uuid' => (new SectionComponent('second-uuid', 'ordered-region', ['id' => 'second-block-id']))->setWeight(3),
-      'first-uuid' => (new SectionComponent('first-uuid', 'ordered-region', ['id' => 'first-block-id']))->setWeight(2),
+      'existing-uuid' => SectionComponent::create('existing-uuid', 'some-region', ['id' => 'existing-block-id'])->setWeight(0),
+      'second-uuid' => SectionComponent::create('second-uuid', 'ordered-region', ['id' => 'second-block-id'])->setWeight(3),
+      'first-uuid' => SectionComponent::create('first-uuid', 'ordered-region', ['id' => 'first-block-id'])->setWeight(2),
     ];
 
     $this->assertComponents($expected, $this->section);
@@ -68,7 +72,7 @@ class SectionTest extends UnitTestCase {
    * @covers ::getComponent
    */
   public function testGetComponent() {
-    $expected = new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']);
+    $expected = SectionComponent::create('existing-uuid', 'some-region', ['id' => 'existing-block-id']);
 
     $this->assertEquals($expected, $this->section->getComponent('existing-uuid'));
   }
@@ -79,8 +83,8 @@ class SectionTest extends UnitTestCase {
    */
   public function testRemoveComponent() {
     $expected = [
-      'existing-uuid' => (new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']))->setWeight(0),
-      'second-uuid' => (new SectionComponent('second-uuid', 'ordered-region', ['id' => 'second-block-id']))->setWeight(3),
+      'existing-uuid' => SectionComponent::create('existing-uuid', 'some-region', ['id' => 'existing-block-id'])->setWeight(0),
+      'second-uuid' => SectionComponent::create('second-uuid', 'ordered-region', ['id' => 'second-block-id'])->setWeight(3),
     ];
 
     $this->section->removeComponent('first-uuid');
@@ -94,13 +98,13 @@ class SectionTest extends UnitTestCase {
    */
   public function testAppendComponent() {
     $expected = [
-      'existing-uuid' => (new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']))->setWeight(0),
-      'second-uuid' => (new SectionComponent('second-uuid', 'ordered-region', ['id' => 'second-block-id']))->setWeight(3),
-      'first-uuid' => (new SectionComponent('first-uuid', 'ordered-region', ['id' => 'first-block-id']))->setWeight(2),
-      'new-uuid' => (new SectionComponent('new-uuid', 'some-region', []))->setWeight(1),
+      'existing-uuid' => SectionComponent::create('existing-uuid', 'some-region', ['id' => 'existing-block-id'])->setWeight(0),
+      'second-uuid' => SectionComponent::create('second-uuid', 'ordered-region', ['id' => 'second-block-id'])->setWeight(3),
+      'first-uuid' => SectionComponent::create('first-uuid', 'ordered-region', ['id' => 'first-block-id'])->setWeight(2),
+      'new-uuid' => SectionComponent::create('new-uuid', 'some-region', [])->setWeight(1),
     ];
 
-    $this->section->appendComponent(new SectionComponent('new-uuid', 'some-region'));
+    $this->section->appendComponent(SectionComponent::create('new-uuid', 'some-region'));
     $this->assertComponents($expected, $this->section);
   }
 
@@ -109,13 +113,13 @@ class SectionTest extends UnitTestCase {
    */
   public function testInsertAfterComponent() {
     $expected = [
-      'existing-uuid' => (new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']))->setWeight(0),
-      'second-uuid' => (new SectionComponent('second-uuid', 'ordered-region', ['id' => 'second-block-id']))->setWeight(4),
-      'first-uuid' => (new SectionComponent('first-uuid', 'ordered-region', ['id' => 'first-block-id']))->setWeight(2),
-      'new-uuid' => (new SectionComponent('new-uuid', 'ordered-region', []))->setWeight(3),
+      'existing-uuid' => SectionComponent::create('existing-uuid', 'some-region', ['id' => 'existing-block-id'])->setWeight(0),
+      'second-uuid' => SectionComponent::create('second-uuid', 'ordered-region', ['id' => 'second-block-id'])->setWeight(4),
+      'first-uuid' => SectionComponent::create('first-uuid', 'ordered-region', ['id' => 'first-block-id'])->setWeight(2),
+      'new-uuid' => SectionComponent::create('new-uuid', 'ordered-region', [])->setWeight(3),
     ];
 
-    $this->section->insertAfterComponent('first-uuid', new SectionComponent('new-uuid', 'ordered-region'));
+    $this->section->insertAfterComponent('first-uuid', SectionComponent::create('new-uuid', 'ordered-region'));
     $this->assertComponents($expected, $this->section);
   }
 
@@ -125,7 +129,7 @@ class SectionTest extends UnitTestCase {
   public function testInsertAfterComponentValidUuidRegionMismatch() {
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage('Invalid preceding UUID "existing-uuid"');
-    $this->section->insertAfterComponent('existing-uuid', new SectionComponent('new-uuid', 'ordered-region'));
+    $this->section->insertAfterComponent('existing-uuid', SectionComponent::create('new-uuid', 'ordered-region'));
   }
 
   /**
@@ -134,7 +138,7 @@ class SectionTest extends UnitTestCase {
   public function testInsertAfterComponentInvalidUuid() {
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage('Invalid preceding UUID "invalid-uuid"');
-    $this->section->insertAfterComponent('invalid-uuid', new SectionComponent('new-uuid', 'ordered-region'));
+    $this->section->insertAfterComponent('invalid-uuid', SectionComponent::create('new-uuid', 'ordered-region'));
   }
 
   /**
@@ -143,13 +147,13 @@ class SectionTest extends UnitTestCase {
    */
   public function testInsertComponent() {
     $expected = [
-      'existing-uuid' => (new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']))->setWeight(0),
-      'second-uuid' => (new SectionComponent('second-uuid', 'ordered-region', ['id' => 'second-block-id']))->setWeight(4),
-      'first-uuid' => (new SectionComponent('first-uuid', 'ordered-region', ['id' => 'first-block-id']))->setWeight(3),
-      'new-uuid' => (new SectionComponent('new-uuid', 'ordered-region', []))->setWeight(2),
+      'existing-uuid' => SectionComponent::create('existing-uuid', 'some-region', ['id' => 'existing-block-id'])->setWeight(0),
+      'second-uuid' => SectionComponent::create('second-uuid', 'ordered-region', ['id' => 'second-block-id'])->setWeight(4),
+      'first-uuid' => SectionComponent::create('first-uuid', 'ordered-region', ['id' => 'first-block-id'])->setWeight(3),
+      'new-uuid' => SectionComponent::create('new-uuid', 'ordered-region', [])->setWeight(2),
     ];
 
-    $this->section->insertComponent(0, new SectionComponent('new-uuid', 'ordered-region'));
+    $this->section->insertComponent(0, SectionComponent::create('new-uuid', 'ordered-region'));
     $this->assertComponents($expected, $this->section);
   }
 
@@ -158,13 +162,13 @@ class SectionTest extends UnitTestCase {
    */
   public function testInsertComponentAppend() {
     $expected = [
-      'existing-uuid' => (new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']))->setWeight(0),
-      'second-uuid' => (new SectionComponent('second-uuid', 'ordered-region', ['id' => 'second-block-id']))->setWeight(3),
-      'first-uuid' => (new SectionComponent('first-uuid', 'ordered-region', ['id' => 'first-block-id']))->setWeight(2),
-      'new-uuid' => (new SectionComponent('new-uuid', 'ordered-region', []))->setWeight(4),
+      'existing-uuid' => SectionComponent::create('existing-uuid', 'some-region', ['id' => 'existing-block-id'])->setWeight(0),
+      'second-uuid' => SectionComponent::create('second-uuid', 'ordered-region', ['id' => 'second-block-id'])->setWeight(3),
+      'first-uuid' => SectionComponent::create('first-uuid', 'ordered-region', ['id' => 'first-block-id'])->setWeight(2),
+      'new-uuid' => SectionComponent::create('new-uuid', 'ordered-region', [])->setWeight(4),
     ];
 
-    $this->section->insertComponent(2, new SectionComponent('new-uuid', 'ordered-region'));
+    $this->section->insertComponent(2, SectionComponent::create('new-uuid', 'ordered-region'));
     $this->assertComponents($expected, $this->section);
   }
 
@@ -174,7 +178,7 @@ class SectionTest extends UnitTestCase {
   public function testInsertComponentInvalidDelta() {
     $this->expectException(\OutOfBoundsException::class);
     $this->expectExceptionMessage('Invalid delta "7" for the "new-uuid" component');
-    $this->section->insertComponent(7, new SectionComponent('new-uuid', 'ordered-region'));
+    $this->section->insertComponent(7, SectionComponent::create('new-uuid', 'ordered-region'));
   }
 
   /**
@@ -360,6 +364,42 @@ class SectionTest extends UnitTestCase {
     $this->assertSame(['bad_judgement', 'hunt_and_peck'], $this->section->getThirdPartyProviders());
     $this->section->unsetThirdPartySetting('hunt_and_peck', 'delay');
     $this->assertSame(['bad_judgement'], $this->section->getThirdPartyProviders());
+  }
+
+  /**
+   * @covers ::getLayout
+   * @dataProvider providerTestGetLayout
+   */
+  public function testGetLayout(array $contexts, bool $should_context_apply) {
+    $layout = $this->prophesize(LayoutInterface::class);
+    $layout_plugin_manager = $this->prophesize(LayoutPluginManagerInterface::class);
+    $layout_plugin_manager->createInstance('layout_onecol', [])->willReturn($layout->reveal());
+
+    $context_handler = $this->prophesize(ContextHandlerInterface::class);
+    if ($should_context_apply) {
+      $context_handler->applyContextMapping($layout->reveal(), $contexts)->shouldBeCalled();
+    }
+    else {
+      $context_handler->applyContextMapping($layout->reveal(), $contexts)->shouldNotBeCalled();
+    }
+
+    $container = new ContainerBuilder();
+    $container->set('plugin.manager.core.layout', $layout_plugin_manager->reveal());
+    $container->set('context.handler', $context_handler->reveal());
+    \Drupal::setContainer($container);
+
+    $output = $this->section->getLayout($contexts);
+    $this->assertSame($layout->reveal(), $output);
+  }
+
+  /**
+   * Provides test data for ::testGetLayout().
+   */
+  public function providerTestGetLayout() {
+    $data = [];
+    $data['contexts'] = [['foo' => 'bar'], TRUE];
+    $data['no contexts'] = [[], FALSE];
+    return $data;
   }
 
 }

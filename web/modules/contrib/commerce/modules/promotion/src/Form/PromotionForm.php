@@ -37,6 +37,8 @@ class PromotionForm extends ContentEntityForm {
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
+    /** @var \Drupal\commerce_promotion\Entity\PromotionInterface $promotion */
+    $promotion = $this->entity;
     $form['#tree'] = TRUE;
     // By default an offer is preselected on the add form because the field
     // is required. Select an empty value instead, to force the user to choose.
@@ -59,6 +61,21 @@ class PromotionForm extends ContentEntityForm {
     if ($translating && $hide_non_translatable_fields) {
       return $form;
     }
+    if (isset($form['require_coupon'])) {
+      if (!$promotion->hasCoupons()) {
+        $description = 'There are no coupons defined for this promotion yet.';
+      }
+      else {
+        $coupons_count = $promotion->get('coupons')->count();
+        $coupon_code = '';
+        if ($coupons_count === 1) {
+          $coupons = $promotion->getCoupons();
+          $coupon_code = $coupons[0]->getCode();
+        }
+        $description = $this->formatPlural($coupons_count, 'There is one coupon defined for this promotion: @coupon_code.', 'There are @count coupons defined for this promotion.', ['@coupon_code' => $coupon_code]);
+      }
+      $form['require_coupon']['widget']['value']['#description'] = $description;
+    }
 
     $form['#theme'] = ['commerce_promotion_form'];
     $form['#attached']['library'][] = 'commerce_promotion/form';
@@ -80,6 +97,12 @@ class PromotionForm extends ContentEntityForm {
       '#title' => $this->t('Dates'),
       '#group' => 'advanced',
     ];
+    $form['coupon_details'] = [
+      '#type' => 'details',
+      '#open' => TRUE,
+      '#title' => $this->t('Coupons'),
+      '#group' => 'advanced',
+    ];
     $form['usage_details'] = [
       '#type' => 'details',
       '#open' => TRUE,
@@ -98,6 +121,7 @@ class PromotionForm extends ContentEntityForm {
       'weight' => 'option_details',
       'order_types' => 'option_details',
       'stores' => 'option_details',
+      'require_coupon' => 'coupon_details',
       'start_date' => 'date_details',
       'end_date' => 'date_details',
       'usage_limit' => 'usage_details',

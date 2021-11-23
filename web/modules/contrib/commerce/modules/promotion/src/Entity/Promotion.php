@@ -84,6 +84,7 @@ use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
  *     "delete-form" = "/promotion/{commerce_promotion}/delete",
  *     "delete-multiple-form" = "/admin/commerce/promotions/delete",
  *     "collection" = "/admin/commerce/promotions",
+ *     "reorder" = "/admin/commerce/promotions/reorder",
  *     "drupal:content-translation-overview" = "/promotion/{commerce_promotion}/translations",
  *     "drupal:content-translation-add" = "/promotion/{commerce_promotion}/translations/add/{source}/{target}",
  *     "drupal:content-translation-edit" = "/promotion/{commerce_promotion}/translations/edit/{language}",
@@ -502,8 +503,20 @@ class Promotion extends CommerceContentEntityBase implements PromotionInterface 
   /**
    * {@inheritdoc}
    */
+  public function requiresCoupon() {
+    return !empty($this->get('require_coupon')->value);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function available(OrderInterface $order) {
     if (!$this->isEnabled()) {
+      return FALSE;
+    }
+    // A promotion that requires a coupon to apply should reference coupons
+    // to apply.
+    if ($this->requiresCoupon() && !$this->hasCoupons()) {
       return FALSE;
     }
     if (!in_array($order->bundle(), $this->getOrderTypeIds())) {
@@ -775,6 +788,7 @@ class Promotion extends CommerceContentEntityBase implements PromotionInterface 
       ->setLabel(t('Offer type'))
       ->setCardinality(1)
       ->setRequired(TRUE)
+      ->setSetting('allowed_values_function', [static::class, 'getOfferOptions'])
       ->setDisplayOptions('form', [
         'type' => 'commerce_plugin_select',
         'weight' => 3,
@@ -865,6 +879,18 @@ class Promotion extends CommerceContentEntityBase implements PromotionInterface 
         'weight' => 4,
       ]);
 
+    $fields['require_coupon'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Require a coupon to apply this promotion'))
+      ->setDefaultValue(FALSE)
+      ->setDisplayOptions('form', [
+        'type' => 'boolean_checkbox',
+        'settings' => [
+          'display_label' => TRUE,
+        ],
+      ])
+      ->setDisplayConfigurable('view', TRUE)
+      ->setDisplayConfigurable('form', TRUE);
+
     $fields['status'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Status'))
       ->setDescription(t('Whether the promotion is enabled.'))
@@ -933,6 +959,23 @@ class Promotion extends CommerceContentEntityBase implements PromotionInterface 
       self::COMPATIBLE_ANY => t('Any promotion'),
       self::COMPATIBLE_NONE => t('Not with any other promotions'),
     ];
+  }
+
+  /**
+   * Gets the allowed values for the 'offer' base field.
+   *
+   * @return array
+   *   The allowed values.
+   */
+  public static function getOfferOptions() {
+    /** @var \Drupal\commerce_promotion\PromotionOfferManager $offer_manager */
+    $offer_manager = \Drupal::getContainer()->get('plugin.manager.commerce_promotion_offer');
+    $plugins = array_map(static function ($definition) {
+      return $definition['label'];
+    }, $offer_manager->getDefinitions());
+    asort($plugins);
+
+    return $plugins;
   }
 
 }

@@ -1,26 +1,21 @@
 <?php
 
+/**
+ * @see       https://github.com/laminas/laminas-feed for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-feed/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-feed/blob/master/LICENSE.md New BSD License
+ */
+
 namespace Laminas\Feed\Reader\Extension\Atom;
 
 use DateTime;
 use DOMDocument;
 use DOMElement;
-use DOMNodeList;
 use Laminas\Feed\Reader;
 use Laminas\Feed\Reader\Collection;
 use Laminas\Feed\Reader\Extension;
 use Laminas\Feed\Uri;
 use stdClass;
-
-use function array_key_exists;
-use function count;
-use function is_string;
-use function preg_replace;
-use function strlen;
-use function trim;
-use function version_compare;
-
-use const PHP_VERSION;
 
 class Entry extends Extension\AbstractEntry
 {
@@ -34,9 +29,11 @@ class Entry extends Extension\AbstractEntry
     {
         $authors = $this->getAuthors();
 
-        return isset($authors[$index]) && is_string($authors[$index])
-            ? $authors[$index]
-            : null;
+        if (isset($authors[$index])) {
+            return $authors[$index];
+        }
+
+        return;
     }
 
     /**
@@ -53,14 +50,14 @@ class Entry extends Extension\AbstractEntry
         $authors = [];
         $list    = $this->getXpath()->query($this->getXpathPrefix() . '//atom:author');
 
-        if (! $list instanceof DOMNodeList || ! $list->length) {
+        if (! $list->length) {
             /**
              * TODO: Limit query to feed level els only!
              */
             $list = $this->getXpath()->query('//atom:author');
         }
 
-        if ($list instanceof DOMNodeList && $list->length) {
+        if ($list->length) {
             foreach ($list as $author) {
                 $author = $this->getAuthorFromElement($author);
                 if (! empty($author)) {
@@ -127,7 +124,7 @@ class Entry extends Extension\AbstractEntry
             $content = $this->getDescription();
         }
 
-        $this->data['content'] = trim($content ?? '');
+        $this->data['content'] = trim($content);
 
         return $this->data['content'];
     }
@@ -142,7 +139,7 @@ class Entry extends Extension\AbstractEntry
     protected function collectXhtml($xhtml, $prefix)
     {
         if (! empty($prefix)) {
-            $prefix .= ':';
+            $prefix = $prefix . ':';
         }
         $matches = [
             '/<\?xml[^<]*>[^<]*<' . $prefix . 'div[^>]*>/',
@@ -158,7 +155,7 @@ class Entry extends Extension\AbstractEntry
     /**
      * Get the entry creation date
      *
-     * @return null|DateTime
+     * @return string
      */
     public function getDateCreated()
     {
@@ -186,7 +183,7 @@ class Entry extends Extension\AbstractEntry
     /**
      * Get the entry modification date
      *
-     * @return null|DateTime
+     * @return string
      */
     public function getDateModified()
     {
@@ -236,7 +233,7 @@ class Entry extends Extension\AbstractEntry
     /**
      * Get the entry enclosure
      *
-     * @return null|object{href: string, length: int, type: string}
+     * @return string
      */
     public function getEnclosure()
     {
@@ -248,13 +245,11 @@ class Entry extends Extension\AbstractEntry
 
         $nodeList = $this->getXpath()->query($this->getXpathPrefix() . '/atom:link[@rel="enclosure"]');
 
-        if ($nodeList instanceof DOMNodeList && $nodeList->length > 0) {
-            /** @var DOMElement $node */
-            $node              = $nodeList->item(0);
+        if ($nodeList->length > 0) {
             $enclosure         = new stdClass();
-            $enclosure->url    = $node->getAttribute('href');
-            $enclosure->length = $node->getAttribute('length');
-            $enclosure->type   = $node->getAttribute('type');
+            $enclosure->url    = $nodeList->item(0)->getAttribute('href');
+            $enclosure->length = $nodeList->item(0)->getAttribute('length');
+            $enclosure->type   = $nodeList->item(0)->getAttribute('type');
         }
 
         $this->data['enclosure'] = $enclosure;
@@ -322,7 +317,7 @@ class Entry extends Extension\AbstractEntry
      * Get a specific link
      *
      * @param  int $index
-     * @return null|string
+     * @return string
      */
     public function getLink($index = 0)
     {
@@ -330,9 +325,11 @@ class Entry extends Extension\AbstractEntry
             $this->getLinks();
         }
 
-        return isset($this->data['links']) && is_string($this->data['links'])
-            ? $this->data['links']
-            : null;
+        if (isset($this->data['links'][$index])) {
+            return $this->data['links'][$index];
+        }
+
+        return;
     }
 
     /**
@@ -349,13 +346,11 @@ class Entry extends Extension\AbstractEntry
         $links = [];
 
         $list = $this->getXpath()->query(
-            $this->getXpathPrefix()
-            . '//atom:link[@rel="alternate"]/@href|'
-            . $this->getXpathPrefix()
-            . '//atom:link[not(@rel)]/@href'
+            $this->getXpathPrefix() . '//atom:link[@rel="alternate"]/@href' . '|'
+            . $this->getXpathPrefix() . '//atom:link[not(@rel)]/@href'
         );
 
-        if ($list instanceof DOMNodeList && $list->length) {
+        if ($list->length) {
             foreach ($list as $link) {
                 $links[] = $this->absolutiseUri($link->value);
             }
@@ -373,8 +368,7 @@ class Entry extends Extension\AbstractEntry
      */
     public function getPermalink()
     {
-        $permalink = $this->getLink(0);
-        return is_string($permalink) ? $permalink : '';
+        return $this->getLink(0);
     }
 
     /**
@@ -390,7 +384,7 @@ class Entry extends Extension\AbstractEntry
 
         $title = $this->getXpath()->evaluate('string(' . $this->getXpathPrefix() . '/atom:title)');
 
-        if (! is_string($title)) {
+        if (! $title) {
             $title = null;
         }
 
@@ -417,7 +411,7 @@ class Entry extends Extension\AbstractEntry
             $this->getXpathPrefix() . '//atom:link[@rel="replies"]/@thread10:count'
         );
 
-        if ($list instanceof DOMNodeList && $list->length) {
+        if ($list->length) {
             $count = $list->item(0)->value;
         }
 
@@ -443,7 +437,7 @@ class Entry extends Extension\AbstractEntry
             $this->getXpathPrefix() . '//atom:link[@rel="replies" and @type="text/html"]/@href'
         );
 
-        if ($list instanceof DOMNodeList && $list->length) {
+        if ($list->length) {
             $link = $list->item(0)->value;
             $link = $this->absolutiseUri($link);
         }
@@ -471,7 +465,7 @@ class Entry extends Extension\AbstractEntry
             $this->getXpathPrefix() . '//atom:link[@rel="replies" and @type="application/' . $type . '+xml"]/@href'
         );
 
-        if ($list instanceof DOMNodeList && $list->length) {
+        if ($list->length) {
             $link = $list->item(0)->value;
             $link = $this->absolutiseUri($link);
         }
@@ -504,7 +498,7 @@ class Entry extends Extension\AbstractEntry
             $list = $this->getXpath()->query($this->getXpathPrefix() . '//atom10:category');
         }
 
-        if ($list instanceof DOMNodeList && $list->length) {
+        if ($list->length) {
             $categoryCollection = new Collection\Category();
             foreach ($list as $category) {
                 $categoryCollection[] = [
@@ -537,7 +531,7 @@ class Entry extends Extension\AbstractEntry
         // TODO: Investigate why _getAtomType() fails here. Is it even needed?
         if ($this->getType() === Reader\Reader::TYPE_ATOM_10) {
             $list = $this->getXpath()->query($this->getXpathPrefix() . '/atom:source[1]');
-            if ($list instanceof DOMNodeList && $list->length) {
+            if ($list->length) {
                 $element = $list->item(0);
                 $source  = new Reader\Feed\Atom\Source($element, $this->getXpathPrefix());
             }
@@ -571,6 +565,7 @@ class Entry extends Extension\AbstractEntry
      * Get an author entry
      *
      * @return array<string,null|string>|null
+     *
      * @psalm-return array{email?: null|string, name?: null|string, uri?: null|string}|null
      */
     protected function getAuthorFromElement(DOMElement $element)
@@ -624,14 +619,12 @@ class Entry extends Extension\AbstractEntry
         $dom          = $this->getDomDocument();
         $prefixAtom03 = $dom->lookupPrefix(Reader\Reader::NAMESPACE_ATOM_03);
         $prefixAtom10 = $dom->lookupPrefix(Reader\Reader::NAMESPACE_ATOM_10);
-        if (
-            $dom->isDefaultNamespace(Reader\Reader::NAMESPACE_ATOM_03)
+        if ($dom->isDefaultNamespace(Reader\Reader::NAMESPACE_ATOM_03)
             || ! empty($prefixAtom03)
         ) {
             return Reader\Reader::TYPE_ATOM_03;
         }
-        if (
-            $dom->isDefaultNamespace(Reader\Reader::NAMESPACE_ATOM_10)
+        if ($dom->isDefaultNamespace(Reader\Reader::NAMESPACE_ATOM_10)
             || ! empty($prefixAtom10)
         ) {
             return Reader\Reader::TYPE_ATOM_10;

@@ -1,7 +1,10 @@
-<?php // phpcs:disable WebimpressCodingStandard.NamingConventions.AbstractClass.Prefix
+<?php
 
-
-declare(strict_types=1);
+/**
+ * @see       https://github.com/laminas/laminas-stdlib for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-stdlib/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-stdlib/blob/master/LICENSE.md New BSD License
+ */
 
 namespace Laminas\Stdlib;
 
@@ -9,6 +12,7 @@ use ErrorException;
 
 use function array_pop;
 use function count;
+use function get_called_class;
 use function restore_error_handler;
 use function set_error_handler;
 
@@ -51,12 +55,11 @@ abstract class ErrorHandler
      * Starting the error handler
      *
      * @param int $errorLevel
-     * @return void
      */
     public static function start($errorLevel = E_WARNING)
     {
         if (! static::$stack) {
-            set_error_handler([static::class, 'addError'], $errorLevel);
+            set_error_handler([get_called_class(), 'addError'], $errorLevel);
         }
 
         static::$stack[] = null;
@@ -67,7 +70,7 @@ abstract class ErrorHandler
      *
      * @param  bool $throw Throw the ErrorException if any
      * @return null|ErrorException
-     * @throws ErrorException If an error has been caught and $throw is true.
+     * @throws ErrorException If an error has been caught and $throw is true
      */
     public static function stop($throw = false)
     {
@@ -113,7 +116,7 @@ abstract class ErrorHandler
      */
     public static function addError($errno, $errstr = '', $errfile = '', $errline = 0)
     {
-        $stack = &static::$stack[count(static::$stack) - 1];
+        $stack = & static::$stack[count(static::$stack) - 1];
         $stack = new ErrorException($errstr, 0, $errno, $errfile, $errline, $stack);
     }
 }

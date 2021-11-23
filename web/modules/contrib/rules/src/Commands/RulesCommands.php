@@ -304,4 +304,86 @@ class RulesCommands extends DrushCommands {
     }
   }
 
+  /**
+   * Show a list of Rules events.
+   *
+   * @command rules:events
+   * @aliases rules-events
+   */
+  public function listEvents() {
+    $this->formatOutput('plugin.manager.rules_event', 'Available Rules Events:');
+  }
+
+  /**
+   * Show a list of Rules conditions.
+   *
+   * @command rules:conditions
+   * @aliases rules-conditions
+   */
+  public function listConditions() {
+    $this->formatOutput('plugin.manager.condition', 'Available Rules Conditions:');
+  }
+
+  /**
+   * Show a list of Rules actions.
+   *
+   * @command rules:actions
+   * @aliases rules-actions
+   */
+  public function listActions() {
+    $this->formatOutput('plugin.manager.rules_action', 'Available Rules Actions:');
+  }
+
+  /**
+   * Show a list of Rules expressions.
+   *
+   * @command rules:expressions
+   * @aliases rules-expressions
+   */
+  public function listExpressions() {
+    $this->formatOutput('plugin.manager.rules_expression', 'Available Rules Expressions:');
+  }
+
+  /**
+   * Helper function to format command output.
+   */
+  protected function formatOutput($plugin_manager_service, $title, $categories = TRUE, $short = FALSE) {
+    $definitions = \Drupal::service($plugin_manager_service)->getDefinitions();
+    $plugins = [];
+    foreach ($definitions as $plugin) {
+      if ($categories) {
+        if ($short) {
+          $plugins[(string) $plugin['category']][] = $plugin['id'];
+        }
+        else {
+          $plugins[(string) $plugin['category']][] = $plugin['label'] . '   (' . $plugin['id'] . ')';
+        }
+      }
+      else {
+        if ($short) {
+          $plugins[] = $plugin['id'];
+        }
+        else {
+          $plugins[] = $plugin['label'] . '   (' . $plugin['id'] . ')';
+        }
+      }
+    }
+
+    $this->output()->writeln(dt($title));
+    if ($categories) {
+      ksort($plugins);
+      foreach ($plugins as $category => $plugin_list) {
+        $this->output()->writeln('  ' . $category);
+        sort($plugin_list);
+        $this->output()->writeln('    ' . implode(PHP_EOL . '    ', $plugin_list));
+        $this->output()->writeln('');
+      }
+    }
+    else {
+      $unique = array_unique($plugins);
+      sort($unique);
+      $this->output()->writeln('  ' . implode(PHP_EOL . '  ', $unique) . PHP_EOL);
+    }
+  }
+
 }

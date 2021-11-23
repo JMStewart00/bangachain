@@ -4,3 +4,9 @@ layout_builder.section.third_party.layout_builder_defaults_test:
     which_party:
       label: 'Which party?'
       type: string
+layout_builder.component.third_party.layout_builder_defaults_test:
+  type: mapping
+  mapping:
+    harold:
+      type: string
+      label: Some arbitrary string.

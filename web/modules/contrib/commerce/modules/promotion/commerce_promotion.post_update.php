@@ -498,3 +498,15 @@ function commerce_promotion_post_update_12() {
   ]);
   return implode('<br>', $result->getFailed());
 }
+
+/**
+ * Import the promotions view.
+ */
+function commerce_promotion_post_update_13() {
+  /** @var \Drupal\commerce\Config\ConfigUpdaterInterface $config_updater */
+  $config_updater = \Drupal::service('commerce.config_updater');
+  $result = $config_updater->import([
+    'views.view.commerce_promotions',
+  ]);
+  return implode('<br>', $result->getFailed());
+}

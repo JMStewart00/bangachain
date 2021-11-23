@@ -32,7 +32,7 @@ interface LogTemplateInterface {
    * Gets the template.
    *
    * @return string
-   *   The template
+   *   The template.
    */
   public function getTemplate();
 

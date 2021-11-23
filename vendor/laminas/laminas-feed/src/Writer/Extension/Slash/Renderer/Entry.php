@@ -1,12 +1,16 @@
 <?php
 
+/**
+ * @see       https://github.com/laminas/laminas-feed for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-feed/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-feed/blob/master/LICENSE.md New BSD License
+ */
+
 namespace Laminas\Feed\Writer\Extension\Slash\Renderer;
 
 use DOMDocument;
 use DOMElement;
 use Laminas\Feed\Writer\Extension;
-
-use function strtolower;
 
 class Entry extends Extension\AbstractRenderer
 {
@@ -35,15 +39,15 @@ class Entry extends Extension\AbstractRenderer
         }
     }
 
-    // phpcs:disable PSR2.Methods.MethodDeclaration.Underscore
-
     /**
      * Append entry namespaces
      *
      * @return void
      */
+    // @codingStandardsIgnoreStart
     protected function _appendNamespaces()
     {
+        // @codingStandardsIgnoreEnd
         $this->getRootElement()->setAttribute(
             'xmlns:slash',
             'http://purl.org/rss/1.0/modules/slash/'
@@ -53,10 +57,14 @@ class Entry extends Extension\AbstractRenderer
     /**
      * Set entry comment count
      *
+     * @param  DOMDocument $dom
+     * @param  DOMElement $root
      * @return void
      */
+    // @codingStandardsIgnoreStart
     protected function _setCommentCount(DOMDocument $dom, DOMElement $root)
     {
+        // @codingStandardsIgnoreEnd
         $count = $this->getDataContainer()->getCommentCount();
         if (! $count) {
             $count = 0;
@@ -66,6 +74,4 @@ class Entry extends Extension\AbstractRenderer
         $root->appendChild($tcount);
         $this->called = true;
     }
-
-    // phpcs:enable PSR2.Methods.MethodDeclaration.Underscore
 }

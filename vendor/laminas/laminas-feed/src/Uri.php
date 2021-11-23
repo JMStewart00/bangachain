@@ -1,44 +1,62 @@
 <?php
 
-namespace Laminas\Feed;
+/**
+ * @see       https://github.com/laminas/laminas-feed for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-feed/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-feed/blob/master/LICENSE.md New BSD License
+ */
 
-use function in_array;
-use function parse_url;
-use function strpos;
+namespace Laminas\Feed;
 
 class Uri
 {
-    /** @var null|string */
+    /**
+     * @var string
+     */
     protected $fragment;
 
-    /** @var null|string */
+    /**
+     * @var string
+     */
     protected $host;
 
-    /** @var null|string */
+    /**
+     * @var string
+     */
     protected $pass;
 
-    /** @var null|string */
+    /**
+     * @var string
+     */
     protected $path;
 
-    /** @var null|int */
+    /**
+     * @var int
+     */
     protected $port;
 
-    /** @var null|string */
+    /**
+     * @var string
+     */
     protected $query;
 
-    /** @var null|string */
+    /**
+     * @var string
+     */
     protected $scheme;
 
-    /** @var null|string */
+    /**
+     * @var string
+     */
     protected $user;
 
-    /** @var null|bool */
+    /**
+     * @var bool
+     */
     protected $valid;
 
     /**
      * Valid schemes
-     *
-     * @var string[]
      */
     protected $validSchemes = [
         'http',
@@ -57,14 +75,14 @@ class Uri
             return;
         }
 
-        $this->scheme   = $parsed['scheme'] ?? '';
-        $this->host     = $parsed['host'] ?? '';
-        $this->port     = $parsed['port'] ?? null;
-        $this->user     = $parsed['user'] ?? null;
-        $this->pass     = $parsed['pass'] ?? null;
-        $this->path     = $parsed['path'] ?? '';
-        $this->query    = $parsed['query'] ?? null;
-        $this->fragment = $parsed['fragment'] ?? null;
+        $this->scheme   = isset($parsed['scheme']) ? $parsed['scheme'] : null;
+        $this->host     = isset($parsed['host']) ? $parsed['host'] : null;
+        $this->port     = isset($parsed['port']) ? $parsed['port'] : null;
+        $this->user     = isset($parsed['user']) ? $parsed['user'] : null;
+        $this->pass     = isset($parsed['pass']) ? $parsed['pass'] : null;
+        $this->path     = isset($parsed['path']) ? $parsed['path'] : null;
+        $this->query    = isset($parsed['query']) ? $parsed['query'] : null;
+        $this->fragment = isset($parsed['fragment']) ? $parsed['fragment'] : null;
     }
 
     /**
@@ -121,7 +139,7 @@ class Uri
             return false;
         }
 
-        if ($this->scheme && ! in_array($this->scheme, $this->validSchemes, true)) {
+        if ($this->scheme && ! in_array($this->scheme, $this->validSchemes)) {
             return false;
         }
 
@@ -160,6 +178,6 @@ class Uri
      */
     public function isAbsolute()
     {
-        return ! empty($this->scheme);
+        return $this->scheme !== null;
     }
 }

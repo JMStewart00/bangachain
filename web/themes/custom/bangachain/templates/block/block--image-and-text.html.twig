@@ -3,7 +3,7 @@
 {% block content %}
 
   {# Set order of display #}
-  {% set ordering = content.field_image_position.value == 'right' ? 'c-image-and-text--right' : 'c-image-and-text--left' %}
+  {% set ordering = content.field_image_position.0['#markup'] == 'right' ? 'c-image-and-text--right' : 'c-image-and-text--left' %}
 
   {%
     set classes = [

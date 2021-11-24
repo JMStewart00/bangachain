@@ -2,6 +2,7 @@
   cursor: pointer;
   display: inline-block;
   padding: spacer(0.5) spacer(1);
+  border: 1px solid;
 
   @include hover-focus() {
     text-decoration: none;
@@ -10,7 +11,7 @@
   &--primary {
     padding: spacer(0.5) spacer(2.5);
     background-color: $white;
-    border: 0;
+    border: 1px solid $brand-blue;
     color: $brand-blue;
     letter-spacing: rem(0.5);
     text-transform: uppercase;
@@ -130,5 +131,5 @@
 }
 
 .draw-border {
-  @include btn-border-drawing($brand-blue, $orange, 4px, bottom, right);
+  // @include btn-border-drawing($brand-blue, $orange, 2px, bottom, right);
 }

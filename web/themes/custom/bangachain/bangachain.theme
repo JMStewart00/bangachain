@@ -97,6 +97,17 @@ function bangachain_preprocess_input(&$variables) {
       return;
     }
 
+    if (strpos($variables['element']['#name'], 'op') !== false) {
+      if ($value = $variables['element']['#value']->render()) {
+        if ($value == 'Update cart') {
+          $variables['attributes']['class'][] = 'o-btn o-btn--primary';
+        } else {
+          $variables['attributes']['class'][] = 'o-btn o-btn--secondary';
+        }
+      }
+      return;
+    }
+
     // run through all types and set custom classes on the elements
     switch ($type_html) {
       case 'text':

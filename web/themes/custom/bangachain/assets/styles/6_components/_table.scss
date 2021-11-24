@@ -20,14 +20,15 @@ div:not(.bangachain-table) {
     }
 
     thead tr {
-      background-color: $brand-blue;
-      color: #ffffff;
+      color: $brand-blue;
       text-align: left;
+      border: 1px solid $gray-light;
     }
 
     th,
     td {
       padding: 12px 15px;
+      min-height: rem(48);
     }
 
     tbody tr {

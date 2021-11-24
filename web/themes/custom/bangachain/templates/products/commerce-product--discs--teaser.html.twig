@@ -39,11 +39,11 @@
               <img src="/themes/custom/bangachain/assets/images/default-disc.png" alt="Bang-A-Chain logo" style="width: 300px;">
             </div>
           {% endif %}
+          <div class="c-product__brand">{{ product.field_brand }}</div>
         </div>
 
         <div class="c-product__title">
           <div class="u-color__blue h2">{{ product.title }}</div>
-          <div class="u-color__blue-gray">{{ product.field_brand }}</div>
         </div>
 
       {% if product.field_speed|render %}

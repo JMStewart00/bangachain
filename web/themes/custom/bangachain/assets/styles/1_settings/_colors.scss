@@ -19,8 +19,8 @@ $gray-light: #eee;
 // Development colors
 // Font
 $body-color: $black;
-$link-color: $orange;
-$link-hover-color: darken($orange, 20%);
+$link-color: $brand-blue;
+$link-hover-color: lighten($brand-blue, 20%);
 
 // Border
 $button-border: $gray-dark;

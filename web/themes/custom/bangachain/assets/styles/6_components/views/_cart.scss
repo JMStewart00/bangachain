@@ -1,3 +1,12 @@
 .c-view-commerce-cart-form {
   padding: rvr(4) rvr(1);
+
+  .form-actions {
+    @include media-breakpoint-down(md) {
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 10px;
+      margin-top: 10px;
+    }
+  }
 }

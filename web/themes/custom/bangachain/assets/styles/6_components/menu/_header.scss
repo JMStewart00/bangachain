@@ -18,7 +18,7 @@
     }
 
     img {
-      width: rem(325);
+      width: rem(275);
 
       @include media-breakpoint-down(xl) {
         display: block;
@@ -31,6 +31,7 @@
   &__main-menu {
     flex: 2;
     position: relative;
+    border-top: 1px solid $gray-light;
 
     @include media-breakpoint-down(lg) {
       display: hidden;
@@ -42,6 +43,11 @@
   }
 
   &__search {
+    .path-cart &,
+    .path-checkout & {
+      display: none;
+    }
+
     flex-grow: 1;
     max-width: 500px;
     margin-left: auto;
@@ -92,6 +98,7 @@
     justify-content: center;
     line-height: rem(16);
     padding: rem(16);
+    color: $brand-blue;
 
     @include media-breakpoint-up(md) {
       position: absolute;

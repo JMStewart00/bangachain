@@ -6,18 +6,20 @@
     }
 
     .c-field-media-image {
-      margin-left: 0;
-      margin-right: auto;
-
-      @include media-breakpoint-up(lg) {
-        margin-left: auto;
-        margin-right: 0;
-      }
+      width: 100%;
+      object-fit: contain;
+      aspect-ratio: 1 / 1;
     }
   }
 
   &__title {
     margin-bottom: rvr(0.25);
+
+    @include media-breakpoint-down(md) {
+      h1 {
+        font-size: rem(32);
+      }
+    }
 
     .h2 {
       position: relative;
@@ -42,6 +44,7 @@
       }
     }
 
+    .c-product__image,
     .c-field-media-image {
       margin: auto;
       overflow: hidden;
@@ -51,6 +54,12 @@
   &__description {
     padding-top: rvr(2);
     border-top: 3px solid $blue-gray;
+
+    @include media-breakpoint-down(md) {
+      h2 {
+        font-size: rem(32);
+      }
+    }
   }
 
   &__flight-numbers {
@@ -115,9 +124,26 @@
 
   &__image {
     margin-bottom: rvr(0.25);
+    position: relative;
+    width: 100%;
+    object-fit: contain;
+    aspect-ratio: 1 / 1;
 
     img {
       transition: $transition-base;
+      width: 100%;
+      object-fit: contain;
+      aspect-ratio: 1 / 1;
     }
+  }
+
+  &__brand {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 5px 10px;
+    color: $brand-blue;
+    background-color: $gray-light;
+    font-size: 12px;
   }
 }

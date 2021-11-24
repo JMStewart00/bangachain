@@ -37,11 +37,11 @@ export const SiteWideResult = ({ hit }) => {
             ) : (
               <img src={'/themes/custom/bangachain/assets/images/default-disc.png'} alt={'Default Disc Image'} width="200" height="200" />
             )}
+            <div class="c-product__brand">{brand}</div>
           </div>
 
           <div class="c-product__title">
             <div class="u-color__blue h2">{title }</div>
-            <div class="u-color__blue-gray">{brand}</div>
           </div>
 
           {speed &&

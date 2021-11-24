@@ -98,7 +98,8 @@ function bangachain_preprocess_input(&$variables) {
     }
 
     if (strpos($variables['element']['#name'], 'op') !== false && $type_html == 'submit') {
-      if ($variables['element']['#value']) {
+      if ($variables['element']['#value'] && method_exists($variables['element']['#value'], 'render')) {
+
         $value = $variables['element']['#value']->render();
         if ($value == 'Update cart') {
           $variables['attributes']['class'][] = 'o-btn o-btn--primary';

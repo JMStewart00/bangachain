@@ -7787,9 +7787,9 @@ svg.ext {
   border: 0; }
 
 .alert {
-  background-color: #EE6C4D;
+  background-color: #ef233c;
   color: #fcfffc;
-  padding: calc(var(--lh__base) * 1 * var(--rvr-multiplier)) calc(var(--lh__base) * 2 * var(--rvr-multiplier)) calc(var(--lh__base) * 0.5 * var(--rvr-multiplier));
+  padding: calc(var(--lh__base) * 2 * var(--rvr-multiplier));
   position: relative;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -7798,8 +7798,22 @@ svg.ext {
   -ms-flex-pack: center;
   justify-content: center; }
 
-.alert a {
-  color: #E0FBFC !important; }
+.alert-primary {
+  background-color: #FFE74C;
+  color: #293241; }
+
+.alert-primary a {
+  color: #EE6C4D !important; }
+
+.alert-high {
+  background-color: #ef233c;
+  color: #fcfffc; }
+
+.alert-high a {
+  color: #999 !important; }
+
+.alert .c-message {
+  margin: auto; }
 
 .alert button.close {
   font-size: 1.5625rem;
@@ -7813,6 +7827,9 @@ svg.ext {
 .block-commerce-cart-flyout {
   margin-left: calc(var(--lh__base) * 1 * var(--rvr-multiplier));
   margin-right: calc(var(--lh__base) * 1 * var(--rvr-multiplier)); }
+
+#edit-shipping-information-shipments {
+  margin-top: calc(var(--lh__base) * 2 * var(--rvr-multiplier)); }
 
 .cart-block--summary {
   position: relative; }
@@ -8569,7 +8586,8 @@ div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
   font-weight: 400;
   padding: 0.5rem 1rem; }
 
-.c-form__text {
+.c-form__text,
+.c-form .sq-input {
   -webkit-box-sizing: border-box !important;
   box-sizing: border-box !important;
   font-weight: 400;

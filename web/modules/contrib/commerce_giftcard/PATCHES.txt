@@ -5,7 +5,3 @@ Gift card should generate standard commerce events
 Source: https://www.drupal.org/files/issues/2020-11-24/commerce_giftcard-modify-giftcard-entity.patch
 
 
-Theme hook commerce_giftcard_redemption_form not found
-Source: https://www.drupal.org/files/issues/2020-11-06/theme_hook_commerce_giftcard_redemption_form_not_found-3180964-3.patch
-
-

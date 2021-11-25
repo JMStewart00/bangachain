@@ -21,8 +21,9 @@ class HoursBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function build() {
+    $config = $this->getConfiguration();
     return [
-      '#markup' => $this->configuration['content'],
+      '#markup' => $config['content']['value'],
     ];
   }
 
@@ -59,7 +60,7 @@ class HoursBlock extends BlockBase {
   public function blockSubmit($form, FormStateInterface $form_state) {
     parent::blockSubmit($form, $form_state);
     $values = $form_state->getValues();
-    $this->configuration['content'] = $values['content']['value'];
+    $this->configuration['content'] = $values['content'];
   }
 
 }

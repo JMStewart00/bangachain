@@ -5,11 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\bangachain_reports\Controller;
 
 use Drupal\commerce_order\Entity\Order;
-use Drupal\commerce_order\Entity\OrderItem;
-use Drupal\commerce_order\Entity\OrderType;
 use Drupal\commerce_payment\Entity\Payment;
-use Drupal\commerce_product\Entity\Product;
-use Drupal\commerce_product\Entity\ProductVariation;
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -41,11 +37,11 @@ class SalesByYearController extends ControllerBase {
       [
         '#type' => 'table',
         '#header' => [
-          'total_retail' => t('Subtotal'),
-          'total_collected' => t('Total Collected'),
-          'custom_adj' => t('Adjustments (GC & Fees)'),
-          'payout_adjustments' => t('Payout Used'),
+          'total_retail' => t('Total Orders'),
+          'total_collected' => t('Total $ Collected'),
           'pos' => t('POS Total'),
+          'payout_adjustments' => t('Payout Used'),
+          'custom_adj' => t('Adjustments (GC & Fees)'),
           'cash' => t('Cash Total'),
           'pos_gift_card' => t('POS Gift Card'),
           'paypal' => t('Paypal'),
@@ -59,6 +55,12 @@ class SalesByYearController extends ControllerBase {
     return [
       '#type' => '#markup',
       '#markup' => render($build),
+      '#cache' => [
+        'keys' => [$year . '_reports'],
+        'contexts' => ['user.roles'],
+        'max-age' => 1000 * 60 * 60 * 24,
+        'tags' => [$year . '_reports'],
+      ],
     ];
   }
 
@@ -178,9 +180,9 @@ class SalesByYearController extends ControllerBase {
       'total_payments' => [
         'total_retail' => $this::formatMoney($total_retail),
         'total_collected' => $this::formatMoney($total_collected),
-        'custom_adj' => $this::formatMoney($misc_adjustments),
-        'payout_adj' => $this::formatMoney($payout_adjustment_total),
         'pos' => $this::formatMoney($pos_total),
+        'payout_adj' => $this::formatMoney($payout_adjustment_total),
+        'custom_adj' => $this::formatMoney($misc_adjustments),
         'cash' => $this::formatMoney($cash_total),
         'pos_gift_card' => $this::formatMoney($pos_giftcard_total),
         'paypal' => $this::formatMoney($paypal_total),

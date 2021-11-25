@@ -115,7 +115,8 @@
     padding: spacer(0.5) spacer(1);
   }
 
-  &__text {
+  &__text,
+  .sq-input {
     box-sizing: border-box !important;
     font-weight: $fw-medium;
     color: $gray-800;

@@ -34,15 +34,15 @@ configuration:
       auto_recalculate: true
       require_shipping_profile: false
       step: order_information
-      weight: 2
+      weight: 4
     multi_payment_apply:
       display_label: 'Apply Multiple Payments'
       wrapper_element: fieldset
       step: order_information
-      weight: 3
+      weight: 2
     payment_information:
       step: order_information
-      weight: 4
+      weight: 3
     review:
       step: review
       weight: 5
@@ -69,18 +69,18 @@ configuration:
       weight: 10
     giftcards_view_pane:
       step: _sidebar
-      weight: 11
+      weight: 13
     artwork_upload_pane_file_upload:
       step: _sidebar
-      weight: 12
+      weight: 14
     commerce_giftcard_redemption:
       allow_multiple: true
       step: _sidebar
-      weight: 13
+      weight: 12
     coupon_redemption:
       allow_multiple: true
       step: _sidebar
-      weight: 14
+      weight: 11
     login:
       allow_guest_checkout: true
       allow_registration: false

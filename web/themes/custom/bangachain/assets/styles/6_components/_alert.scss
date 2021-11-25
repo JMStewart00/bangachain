@@ -1,14 +1,34 @@
 .alert {
-  background-color: $orange;
+  background-color: $imperial-red;
   color: $white;
-  padding: rvr(1) rvr(2) rvr(0.5);
+  padding: rvr(2);
   position: relative;
   display: flex;
   justify-content: center;
 
-  a {
-    color: $cyan !important;
+  &-primary {
+    background-color: $minion-yellow;
+    color: $gray-dark;
+
+    a {
+      color: $orange !important;
+    }
   }
+
+  &-high {
+    background-color: $imperial-red;
+    color: $white;
+
+    a {
+      color: $gray-medium !important;
+    }
+  }
+
+  .c-message {
+    margin: auto;
+  }
+
+
 
   button.close {
     font-size: rem(25);

@@ -1,5 +1,5 @@
 show_on_admin: 0
-alert_styles: primary|Default
+alert_styles: "primary|Default, low urgency\r\nhigh|Extremely Important\r\n"
 refresh_interval: '15'
 _core:
   default_config_hash: YEjSLd1HQIdOiDkPxqaz7CqyvZrtIEUc3brlRw2RxWM

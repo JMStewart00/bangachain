@@ -1,0 +1,57 @@
+{#
+/**
+ * @file
+ *
+ * Default product template for food.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the wrapper.
+ * - product: The rendered product fields.
+ *   Use 'product' to print them all, or print a subset such as
+ *   'product.title'. Use the following code to exclude the
+ *   printing of a given field:
+ *   @code
+ *   {{ product|without('title') }}
+ *   @endcode
+ * - product_entity: The product entity.
+ * - product_url: The product URL.
+ *
+ * @ingroup themeable
+ */
+#}
+
+{%
+  set classes = [
+    'c-gift-card',
+    'u-vr__px--3',
+    'u-vr__py--3',
+  ]
+%}
+
+<article{{attributes.addClass(classes)}}>
+
+  <div class="c-gift-card__title">
+    <h1 class="u-color__blue">{{ product.title }}</h1>
+  </div>
+
+  {% if product.field_description|render %}
+    <div class="c-gift-card__description">
+      {{- product.field_description -}}
+    </div>
+  {% endif %}
+
+  <div class="c-gift-card__image">
+    {% if product.field_default_image|render %}
+      {{ product.field_default_image }}
+    {% else %}
+      <div class="c-field-media-image">
+        <img src="/themes/custom/bangachain/assets/images/logo-no-chains--blue.png" alt="Bang-A-Chain logo" style="width: 300px;">
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="">
+    {{ drupal_view('variations_on_product_page', 'block_1') }}
+  </div>
+
+</article>

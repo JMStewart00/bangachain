@@ -1,0 +1,23 @@
+uuid: 2a1cb91b-82c4-4e73-a318-8b1c7aa7257b
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_variation_type.gift_card
+    - field.storage.commerce_product_variation.field_loyalty_points
+id: commerce_product_variation.gift_card.field_loyalty_points
+field_name: field_loyalty_points
+entity_type: commerce_product_variation
+bundle: gift_card
+label: 'Loyalty points offered'
+description: 'For example, Loyalty points offered a to customer per dollar spent on this product. This value will be multiplied with price of product on successful checkout and the resulting points offered to customer as loyalty points.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: float

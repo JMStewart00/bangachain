@@ -5,6 +5,7 @@ namespace Drupal\commerce_giftcard\EventSubscriber;
 use Drupal\commerce_giftcard\Entity\GiftcardInterface;
 use Drupal\commerce_giftcard\Event\GiftcardAmountCalculateEvent;
 use Drupal\commerce_giftcard\Event\GiftcardEvents;
+use Drupal\commerce_giftcard\Event\GiftcardOrderPlaceEvent;
 use Drupal\commerce_giftcard\GiftcardCodeGenerator;
 use Drupal\commerce_order\Entity\OrderInterface;
 use Drupal\commerce_order\Entity\OrderItemInterface;
@@ -117,14 +118,14 @@ class OrderEventSubscriber implements EventSubscriberInterface {
     foreach ($items as $item) {
       $purchased_entity = $item->getPurchasedEntity();
       if (!$purchased_entity) {
-        return;
+        continue;
       }
       if (!$purchased_entity->hasField('commerce_giftcard_type') || $purchased_entity->get('commerce_giftcard_type')->isEmpty()) {
-        return;
+        continue;
       }
       $giftcard_amount = $this->getAmountFromItem($item);
       if (!$giftcard_amount instanceof Price) {
-        return;
+        continue;
       }
       $codes = $this->codeGenerator->generateCodes($purchased_entity->get('commerce_giftcard_type')->entity, $item->getQuantity());
 
@@ -145,7 +146,7 @@ class OrderEventSubscriber implements EventSubscriberInterface {
         $giftcard->save();
 
         $transaction = $this->entityTypeManager->getStorage('commerce_giftcard_transaction')->create([
-          'giftcard' => $giftcard->id(),
+          'giftcard' => $giftcard,
           'amount' => $giftcard_amount,
           'reference_type' => $item->getEntityTypeId(),
           'reference_id' => $item->id(),
@@ -153,6 +154,9 @@ class OrderEventSubscriber implements EventSubscriberInterface {
           'variables' => ['@product' => $purchased_entity->label()],
         ]);
         $transaction->save();
+
+        $event = new GiftcardOrderPlaceEvent($order, $giftcard);
+        $this->eventDispatcher->dispatch(GiftcardEvents::GIFTCARD_ORDER_PLACE, $event);
       }
     }
   }

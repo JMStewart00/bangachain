@@ -5,8 +5,6 @@
  * Primary module hooks for Commerce Gift Card module.
  */
 
-use Drupal\commerce_giftcard\Event\GiftcardEvent;
-use Drupal\commerce_giftcard\GiftcardStorage;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 
@@ -40,15 +38,13 @@ function commerce_giftcard_entity_base_field_info(EntityTypeInterface $entity_ty
 }
 
 /**
- * Implements hook_entity_type_build().
+ * Implements hook_theme().
  */
-function commerce_giftcard_entity_type_build(array &$entity_types) {
-
-  // Override the handlers (required as modified after installation).
-  if (isset($entity_types['commerce_giftcard'])) {
-    $entity_types['commerce_giftcard']->setHandlerClass('event', GiftcardEvent::class);
-    $entity_types['commerce_giftcard']->setHandlerClass('storage', GiftcardStorage::class);
-  }
-
-
+function commerce_giftcard_theme() {
+  return [
+    'commerce_giftcard_redemption_form' => [
+      'render element' => 'form',
+    ],
+  ];
 }
+

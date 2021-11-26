@@ -1,3 +1,12 @@
+.c-gift-card {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: rem(20);
+  text-align: center;
+}
+
 .checkout-pane-commerce-giftcard-redemption {
   input[name="apply_giftcard"] {
     display: block !important;

@@ -340,7 +340,9 @@
                 "Allow media entity reference fields to be displayed as a gallery in a colorbox": "https://www.drupal.org/files/issues/2020-04-24/2957030-27.patch"
             },
             "drupal/commerce_giftcard": {
-                "Gift card should generate standard commerce events": "https://www.drupal.org/files/issues/2020-11-24/commerce_giftcard-modify-giftcard-entity.patch"
+                "Theme hook commerce_giftcard_redemption_form not found": "https://www.drupal.org/files/issues/2020-11-06/theme_hook_commerce_giftcard_redemption_form_not_found-3180964-3.patch",
+                "Gift cards not created when other items exist in the checkout before the gift card item": "https://git.drupalcode.org/project/commerce_giftcard/-/merge_requests/4.diff",
+                "Event for new giftcard purchase": "https://git.drupalcode.org/project/commerce_giftcard/-/merge_requests/2.diff"
             },
             "drupal/commerce_reports": {
                 "Anonymous users can see Purchased Items Report": "https://www.drupal.org/files/issues/2019-06-07/3004989-17.patch",

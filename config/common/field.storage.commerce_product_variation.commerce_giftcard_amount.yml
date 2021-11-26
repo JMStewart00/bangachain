@@ -1,0 +1,19 @@
+uuid: 8e4ba57b-d002-4e65-91c7-b76c7c43a8ec
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_price
+    - commerce_product
+id: commerce_product_variation.commerce_giftcard_amount
+field_name: commerce_giftcard_amount
+entity_type: commerce_product_variation
+type: commerce_price
+settings: {  }
+module: commerce_price
+locked: true
+cardinality: 1
+translatable: false
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

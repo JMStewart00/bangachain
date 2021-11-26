@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '5a558768539995a08836af3e7d7bf5c42ce7cd1a',
+    'reference' => 'e2e1e37aa2c6214622c70e8d1079cd3afc517282',
     'name' => 'oomphinc/drupal-scaffold',
   ),
   'versions' => 
@@ -2728,7 +2728,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '5a558768539995a08836af3e7d7bf5c42ce7cd1a',
+      'reference' => 'e2e1e37aa2c6214622c70e8d1079cd3afc517282',
     ),
     'orno/di' => 
     array (

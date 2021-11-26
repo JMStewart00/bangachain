@@ -1,0 +1,9 @@
+uuid: 6d929b58-3f82-4765-96e4-ebb6eacf4c74
+langcode: en
+status: true
+dependencies: {  }
+id: purchased
+label: Purchased
+display_label: 'BAC Gift Card'
+generate:
+  length: 12

@@ -6,3 +6,11 @@ bangachain_reports.yearly_sales:
   requirements:
     _permission: 'view any unpublished content'
     year: '^[0-9_]+'
+
+bangachain_reports.coupon_sales:
+  path: '/admin/commerce/reports/coupon-sales'
+  defaults:
+    _controller: '\Drupal\bangachain_reports\Controller\CouponSales::content'
+    _title: 'Coupon Generated Sales'
+  requirements:
+    _permission: 'view any unpublished content'

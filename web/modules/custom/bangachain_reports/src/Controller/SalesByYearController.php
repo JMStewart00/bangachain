@@ -49,7 +49,21 @@ class SalesByYearController extends ControllerBase {
         ],
         '#rows' => [$orders['total_payments']],
         '#empty' => t('No content has been found.'),
-      ]
+      ],
+      [
+        '#type' => 'table',
+        '#header' => [
+          'order' => t('Order'),
+          'completed_date' => t('Date'),
+          'order_type' => t('Payment Type'),
+          'payment_gateway' => t('Gateway'),
+          'subtotal' => t('Subtotal'),
+          'adjustments' => t('Adjustments'),
+          'total' => t('Paid Amount'),
+        ],
+        '#rows' => $orders['rows'],
+        '#empty' => t('No content has been found.'),
+      ],
     ];
 
     return [
@@ -165,18 +179,19 @@ class SalesByYearController extends ControllerBase {
         }
       }
 
-      // array_push($rows, [
-      //   $order->get('order_number')->value,
-      //   date("m.d.y", intval($order->get('completed')->value)),
-      //   $payment_type,
-      //   $payment_gateway,
-      //   $this::formatMoney($subtotal),
-      //   $this::formatMoney($total_adjustments),
-      //   $this::formatMoney($paid_amount),
-      // ]);
+      array_push($rows, [
+        $order->get('order_number')->value,
+        date("m.d.y", intval($order->get('completed')->value)),
+        $payment_type,
+        $payment_gateway,
+        $this::formatMoney($subtotal),
+        $this::formatMoney($total_adjustments),
+        $this::formatMoney($paid_amount),
+      ]);
 
     }
     return [
+      'rows' => $rows,
       'total_payments' => [
         'total_retail' => $this::formatMoney($total_retail),
         'total_collected' => $this::formatMoney($total_collected),

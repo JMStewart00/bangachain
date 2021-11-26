@@ -360,7 +360,7 @@ display:
         title: 'Out of Stock Report'
         description: ''
         expanded: false
-        parent: 'menu_link_content:942bded5-1853-4272-afb5-9162f90ab30f'
+        parent: 'menu_link_content:07ca046b-9d1d-4ad5-8c91-88b28dca5bec'
         weight: 3
         context: '0'
         menu_name: admin

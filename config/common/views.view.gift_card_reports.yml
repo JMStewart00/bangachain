@@ -294,7 +294,7 @@ display:
         title: 'Gift Card Transactions'
         description: ''
         expanded: false
-        parent: commerce_reports.overview
+        parent: 'menu_link_content:07ca046b-9d1d-4ad5-8c91-88b28dca5bec'
         weight: 0
         context: '0'
         menu_name: admin

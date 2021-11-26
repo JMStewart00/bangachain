@@ -5,7 +5,6 @@ dependencies:
   config:
     - commerce_order.commerce_order_item_type.food_order_item
     - field.storage.commerce_order_item.field_side_item
-    - system.menu.admin
   module:
     - commerce
     - commerce_order
@@ -1268,7 +1267,7 @@ display:
         ajax_history: {  }
       path: admin/commerce/orders/food
       menu:
-        type: normal
+        type: none
         title: 'Food Orders'
         description: ''
         expanded: false

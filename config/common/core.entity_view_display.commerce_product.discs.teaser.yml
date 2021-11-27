@@ -13,6 +13,7 @@ dependencies:
     - field.field.commerce_product.discs.field_fade
     - field.field.commerce_product.discs.field_glide
     - field.field.commerce_product.discs.field_meta_tags
+    - field.field.commerce_product.discs.field_no_payout_allowed
     - field.field.commerce_product.discs.field_restock_date
     - field.field.commerce_product.discs.field_speed
     - field.field.commerce_product.discs.field_stability_category
@@ -133,6 +134,7 @@ hidden:
   created: true
   feeds_item: true
   field_meta_tags: true
+  field_no_payout_allowed: true
   field_restock_date: true
   search_api_excerpt: true
   stores: true

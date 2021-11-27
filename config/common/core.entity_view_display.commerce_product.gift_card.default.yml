@@ -6,6 +6,7 @@ dependencies:
     - commerce_product.commerce_product_type.gift_card
     - field.field.commerce_product.gift_card.field_default_image
     - field.field.commerce_product.gift_card.field_description
+    - field.field.commerce_product.gift_card.field_no_payout_allowed
   module:
     - commerce_product
     - text
@@ -29,6 +30,16 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: text_default
+    region: content
+  field_no_payout_allowed:
+    weight: 13
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
     region: content
   title:
     label: hidden

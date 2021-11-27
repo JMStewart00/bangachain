@@ -158,7 +158,7 @@ class ActionForm implements ExpressionFormInterface {
     }
 
     $action_definition = $this->actionManager->getDefinition($action_id);
-    $context_config = $this->getContextConfigFromFormValues($form_state, $action_definition['context_definitions']);
+    $context_config = $this->getContextConfigFromFormValues($form, $form_state, $action_definition['context_definitions']);
 
     // Rename provided variables, if any.
     if ($provided_variables = $form_state->getValue('provides')) {

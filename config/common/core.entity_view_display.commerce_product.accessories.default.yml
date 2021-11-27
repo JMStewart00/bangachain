@@ -9,6 +9,7 @@ dependencies:
     - field.field.commerce_product.accessories.field_default_image
     - field.field.commerce_product.accessories.field_description
     - field.field.commerce_product.accessories.field_meta_tags
+    - field.field.commerce_product.accessories.field_no_payout_allowed
     - field.field.commerce_product.accessories.field_restock_date
     - field.field.commerce_product.accessories.field_video
   module:
@@ -58,6 +59,16 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: metatag_empty_formatter
+    region: content
+  field_no_payout_allowed:
+    weight: 9
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
     region: content
   field_restock_date:
     weight: 7

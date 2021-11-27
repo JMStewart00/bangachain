@@ -12,6 +12,7 @@ dependencies:
     - field.field.commerce_product.discs.field_fade
     - field.field.commerce_product.discs.field_glide
     - field.field.commerce_product.discs.field_meta_tags
+    - field.field.commerce_product.discs.field_no_payout_allowed
     - field.field.commerce_product.discs.field_restock_date
     - field.field.commerce_product.discs.field_speed
     - field.field.commerce_product.discs.field_stability_category
@@ -86,6 +87,16 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: metatag_empty_formatter
+    region: content
+  field_no_payout_allowed:
+    weight: 22
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
     region: content
   field_restock_date:
     weight: 21

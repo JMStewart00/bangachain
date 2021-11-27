@@ -7,6 +7,7 @@ dependencies:
     - field.field.commerce_product.apparel.body
     - field.field.commerce_product.apparel.field_default_image
     - field.field.commerce_product.apparel.field_meta_tags
+    - field.field.commerce_product.apparel.field_no_payout_allowed
     - field.field.commerce_product.apparel.field_restock_date
   module:
     - commerce
@@ -51,6 +52,13 @@ content:
       sidebar: true
     third_party_settings: {  }
     type: metatag_firehose
+    region: content
+  field_no_payout_allowed:
+    weight: 10
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
     region: content
   field_restock_date:
     weight: 2

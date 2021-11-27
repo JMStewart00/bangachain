@@ -3981,7 +3981,8 @@
                 "patches_applied": {
                     "Theme hook commerce_giftcard_redemption_form not found": "https://www.drupal.org/files/issues/2020-11-06/theme_hook_commerce_giftcard_redemption_form_not_found-3180964-3.patch",
                     "Gift cards not created when other items exist in the checkout before the gift card item": "https://git.drupalcode.org/project/commerce_giftcard/-/merge_requests/4.diff",
-                    "Event for new giftcard purchase": "https://git.drupalcode.org/project/commerce_giftcard/-/merge_requests/2.diff"
+                    "Event for new giftcard purchase": "https://git.drupalcode.org/project/commerce_giftcard/-/merge_requests/2.diff",
+                    "Don't allow payout on certain items": "./patches/commerce_giftcard_custom_patch_no_payout_allowed.patch"
                 }
             },
             "installation-source": "source",
@@ -9835,6 +9836,9 @@
                     "services": {
                         "drush.services.yml": "^9 || ^10"
                     }
+                },
+                "patches_applied": {
+                    "Integrate Typed Data Widgets": "https://www.drupal.org/files/issues/2021-06-22/2471481-146.integrate-typed-data-widgets.patch"
                 }
             },
             "installation-source": "source",

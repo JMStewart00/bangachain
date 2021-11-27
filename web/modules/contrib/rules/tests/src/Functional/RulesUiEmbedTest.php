@@ -31,8 +31,8 @@ class RulesUiEmbedTest extends RulesBrowserTestBase {
     $this->clickLink('Add condition');
     $this->fillField('Condition', 'rules_data_comparison');
     $this->pressButton('Continue');
-    $this->fillField('context_definitions[data][setting]', '@user.current_user_context:current_user.uid.value');
-    $this->fillField('context_definitions[value][setting]', '234');
+    $this->fillField('context_definitions[data][value]', '@user.current_user_context:current_user.uid.value');
+    $this->fillField('context_definitions[value][value]', '234');
     $this->pressButton('Save');
 
     // Now the condition should be listed. Try editing it.
@@ -40,9 +40,9 @@ class RulesUiEmbedTest extends RulesBrowserTestBase {
     $assert = $this->assertSession();
     $assert->pageTextContains('Data comparison');
     $this->clickLink('Edit');
-    $assert->fieldValueEquals('context_definitions[data][setting]', '@user.current_user_context:current_user.uid.value');
-    $assert->fieldValueEquals('context_definitions[value][setting]', '234');
-    $this->fillField('context_definitions[value][setting]', '123');
+    $assert->fieldValueEquals('context_definitions[data][value]', '@user.current_user_context:current_user.uid.value');
+    $assert->fieldValueEquals('context_definitions[value][value]', '234');
+    $this->fillField('context_definitions[value][value]', '123');
     $this->pressButton('Save');
     $assert->pageTextContains('Data comparison');
 

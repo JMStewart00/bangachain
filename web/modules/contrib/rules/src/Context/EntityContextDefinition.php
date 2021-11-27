@@ -127,4 +127,22 @@ class EntityContextDefinition extends EntityContextDefinitionCore implements Con
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getWidgetId($dataType) {
+    // @todo This is a temporary work-round. This function will be moving to the
+    // Typed Data module. See src/context/ContextDefinition.
+    return (new ContextDefinition())->getWidgetId($dataType);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getWidgetSettings() {
+    // @todo This is a temporary work-round. This function will be moving to the
+    // Typed Data module. See src/context/ContextDefinition.
+    return [];
+  }
+
 }

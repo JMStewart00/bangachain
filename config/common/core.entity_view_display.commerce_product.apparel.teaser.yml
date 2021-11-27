@@ -8,6 +8,7 @@ dependencies:
     - field.field.commerce_product.apparel.body
     - field.field.commerce_product.apparel.field_default_image
     - field.field.commerce_product.apparel.field_meta_tags
+    - field.field.commerce_product.apparel.field_no_payout_allowed
     - field.field.commerce_product.apparel.field_restock_date
   module:
     - commerce_product
@@ -50,6 +51,7 @@ hidden:
   created: true
   field_default_image: true
   field_meta_tags: true
+  field_no_payout_allowed: true
   field_restock_date: true
   search_api_excerpt: true
   stores: true

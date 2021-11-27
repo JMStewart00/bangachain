@@ -1,0 +1,51 @@
+uuid: 3381adbe-26c9-4c9f-bd0b-76c563cffb23
+langcode: en
+status: true
+dependencies: {  }
+id: gift_card_purchased
+label: 'Gift Card Purchased'
+events:
+  -
+    event_name: 'rules_entity_insert:commerce_giftcard--purchased'
+description: ''
+tags: {  }
+config_version: '3'
+expression:
+  id: rules_rule
+  uuid: ff6e7e5a-95a7-43ec-99cb-c41866894c91
+  weight: 0
+  conditions:
+    id: rules_and
+    uuid: 0a1a88c9-96c5-4b5f-b5e9-6bbb9138b2e1
+    weight: 0
+    conditions: {  }
+  actions:
+    id: rules_action_set
+    uuid: 1cee6a13-1bc4-4752-bd66-3498a7ac29e8
+    weight: 0
+    actions:
+      -
+        id: rules_action
+        uuid: 4f57bc1a-f357-44f5-96e0-a7228203d696
+        weight: 0
+        context_values:
+          to:
+            - '{{ commerce_giftcard.uid.entity.mail.value }}'
+          subject: 'Giftcard from BangAChain.com!'
+          message: '<p>Hey {{commerce_giftcard.uid.entity.name.value}}!</p><p>You purchased a new giftcard worth ${{commerce_giftcard.balance.number}} from www.bangachain.com.</p><p>To use this giftcard you will need the 12 digit code in this email.</p><br><h2>Your giftcard code is {{commerce_giftcard.code.value}}</h2><br><p>If you have trouble with anything, please reach out to us on our <a href="https://bangachain.com/contact" target="_blank">Contact Us Page</a>.</p><p>Thanks!</p><p>The BangAChain Team</p>'
+          reply: no-reply@bangachain.com
+          language: null
+        context_mapping: {  }
+        context_processors:
+          to:
+            rules_tokens: {  }
+          subject:
+            rules_tokens: {  }
+          message:
+            rules_tokens: {  }
+          reply:
+            rules_tokens: {  }
+          language:
+            rules_tokens: {  }
+        provides_mapping: {  }
+        action_id: rules_send_email

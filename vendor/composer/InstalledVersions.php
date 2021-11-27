@@ -19,7 +19,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'e2e1e37aa2c6214622c70e8d1079cd3afc517282',
+    'reference' => 'f0b1bf774a6369bc7d152633cfe3e142988e9fd4',
     'name' => 'oomphinc/drupal-scaffold',
   ),
   'versions' => 
@@ -2741,7 +2741,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'e2e1e37aa2c6214622c70e8d1079cd3afc517282',
+      'reference' => 'f0b1bf774a6369bc7d152633cfe3e142988e9fd4',
     ),
     'orno/di' => 
     array (

@@ -226,6 +226,20 @@ class GiftcardRedemption extends InlineFormBase {
       return;
     }
 
+    // Verify the order doesn't contain items that aren't purchasable with payout.
+    if ($giftcard->get('type')->getValue()[0]['target_id'] === 'payout') {
+      foreach ($order->getItems() as $item) {
+        $parent_product = $item->getPurchasedEntity()->getProduct();
+        if (
+          $parent_product->hasField('field_no_payout_allowed') &&
+          $parent_product->get('field_no_payout_allowed')->value
+        ) {
+          $form_state->setErrorByName($giftcard_code_path, $this->t('An item in your order, "' . $parent_product->getTitle() . '", is not able to be purchased with Payout. Apologies for any inconvenience.'));
+          return;
+        }
+      }
+    }
+
     // Save the gift card ID for applyGiftcard.
     $inline_form['code']['#giftcard_id'] = $giftcard->id();
   }

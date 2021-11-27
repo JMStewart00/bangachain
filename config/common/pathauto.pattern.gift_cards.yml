@@ -1,0 +1,23 @@
+uuid: ccf4563b-848c-4ef5-ab46-7d9d188299b6
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_product
+    - ctools
+id: gift_cards
+label: 'Gift Cards'
+type: 'canonical_entities:commerce_product'
+pattern: 'buy/[commerce_product:title]'
+selection_criteria:
+  cc1c9e0c-f984-4568-9aab-b89b76aadfef:
+    id: 'entity_bundle:commerce_product'
+    bundles:
+      gift_card: gift_card
+    negate: false
+    context_mapping:
+      commerce_product: commerce_product
+    uuid: cc1c9e0c-f984-4568-9aab-b89b76aadfef
+selection_logic: and
+weight: -5
+relationships: {  }

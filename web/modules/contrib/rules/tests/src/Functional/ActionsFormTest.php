@@ -53,6 +53,9 @@ class ActionsFormTest extends RulesBrowserTestBase {
       'administer site configuration',
     ]);
     $this->drupalLogin($this->account);
+
+    // Create a named role for use in conditions and actions.
+    $this->createRole(['administer nodes'], 'test-editor', 'Test Editor');
   }
 
   /**
@@ -64,7 +67,7 @@ class ActionsFormTest extends RulesBrowserTestBase {
    *
    * @dataProvider dataActionsFormWidgets
    */
-  public function testActionsFormWidgets($id, $values = [], $widgets = [], $selectors = []) {
+  public function testActionsFormWidgets($id, $required = [], $defaulted = [], $widgets = [], $selectors = [], $provides = []) {
     $expressionManager = $this->container->get('plugin.manager.rules_expression');
     $storage = $this->container->get('entity_type.manager')->getStorage('rules_reaction_rule');
 
@@ -77,7 +80,7 @@ class ActionsFormTest extends RulesBrowserTestBase {
     $action = $expressionManager->createAction($id);
     $rule->addExpressionObject($action);
     // Save the configuration.
-    $expr_id = 'test_action_' . str_replace(':', '_', $id);
+    $expr_id = 'action_' . str_replace(':', '_', $id);
     $config_entity = $storage->create([
       'id' => $expr_id,
       'expression' => $rule->getConfiguration(),
@@ -90,8 +93,15 @@ class ActionsFormTest extends RulesBrowserTestBase {
     $assert->statusCodeEquals(200);
     $assert->pageTextContains('Edit ' . $action->getLabel());
 
+    // Assert that the fields use the correct widgets, identified by class.
+    if (!empty($widgets)) {
+      foreach ($widgets as $name => $widget_id) {
+        $assert->elementExists('xpath', "//fieldset[@id='edit-context-definitions-$name' and contains(@class, 'widget-$widget_id')]");
+      }
+    }
+
     // If any field values have been specified then fill in the form and save.
-    if (!empty($values)) {
+    if (!empty($required) || !empty($defaulted)) {
 
       // Switch to data selector if required by the test settings.
       if (!empty($selectors)) {
@@ -102,9 +112,16 @@ class ActionsFormTest extends RulesBrowserTestBase {
         }
       }
 
-      // Fill each given field with the value provided.
-      foreach ($values as $name => $value) {
-        $this->fillField('edit-context-definitions-' . $name . '-setting', $value);
+      // Try to save the form before entering the required values.
+      if (!empty($required)) {
+        $this->pressButton('Save');
+        // Check that the form has not been saved.
+        $assert->pageTextContains('Error message');
+        $assert->pageTextContains('field is required');
+        // Fill each required field with the value provided.
+        foreach ($required as $name => $value) {
+          $this->fillField('edit-context-definitions-' . $name . '-value', $value);
+        }
       }
 
       // Check that the action can be saved.
@@ -118,6 +135,16 @@ class ActionsFormTest extends RulesBrowserTestBase {
 
       // Check that re-edit and re-save works OK.
       $this->clickLink('Edit');
+      if (!empty($defaulted) || !empty($provides)) {
+        // Fill each previously defaulted field with the value provided.
+        foreach ($defaulted as $name => $value) {
+          $this->fillField('edit-context-definitions-' . $name . '-value', $value);
+        }
+        foreach ($provides as $name => $value) {
+          $this->fillField('edit-provides-' . $name . '-name', $value);
+        }
+      }
+
       $this->pressButton('Save');
       $assert->pageTextNotContains('Error message');
       $assert->addressMatches('#admin/config/workflow/rules/reactions/edit/' . $expr_id . '(\?uuid=' . $action->getUuid() . '|)$#');
@@ -136,47 +163,63 @@ class ActionsFormTest extends RulesBrowserTestBase {
    *   The test data array. The top level keys are free text but should be short
    *   and relate to the test case. The values are ordered arrays of test case
    *   data with elements that must appear in the following order:
-   *   - Machine name of the condition being tested.
-   *   - (optional) Values to enter on the Context form. This is an associative
+   *   - Machine name of the action being tested.
+   *   - (optional) Required values to enter on the Context form. This is an
+   *     associative array with keys equal to the field names and values equal
+   *     to the required field values.
+   *   - (optional) Values for fields that have defaults. This is an associative
    *     array with keys equal to the field names and values equal to the field
-   *     values.
+   *     values. These are used on the second edit, to alter the fields that
+   *     have been saved with their default value.
    *   - (optional) Widget types we expect to see on the Context form. This is
    *     an associative array with keys equal to the field names as above, and
    *     values equal to expected widget type.
    *   - (optional) Names of fields for which the selector/direct input button
    *     needs pressing to 'data selection' before the field value is entered.
+   *   - (optional) Provides values. This is an associative array with keys
+   *     equal to the field names and values equal to values to set.
    */
   public function dataActionsFormWidgets() {
     // Instead of directly returning the full set of test data, create variable
     // $data to hold it. This allows for manipulation before the final return.
     $data = [
+      // Data.
       'Data calculate value' => [
         // Machine name.
         'rules_data_calculate_value',
-        // Values.
+        // Required values.
         [
           'input-1' => '3',
           'operator' => '*',
           'input-2' => '4',
         ],
+        // Defaulted values.
+        [],
         // Widgets.
         [
           'input-1' => 'text-input',
           'operator' => 'text-input',
           'input-2' => 'text-input',
         ],
+        // Selectors.
+        [],
+        // Provides.
+        ['result' => 'new_named_variable'],
       ],
       'Data convert' => [
         'rules_data_convert',
         ['value' => 'node.uid', 'target-type' => 'string'],
+        ['rounding-behavior' => '?'],
       ],
       'List item add' => [
         'rules_list_item_add',
         [
           'list' => 'node.uid.entity.roles',
           'item' => '1',
+        ],
+        [
           'unique' => TRUE,
-          'position' => 'start',
+          'position' => 'validated? start',
         ],
       ],
       'List item remove' => [
@@ -185,26 +228,25 @@ class ActionsFormTest extends RulesBrowserTestBase {
       ],
       'Data set - direct' => [
         'rules_data_set',
-        ['data' => 'node.title', 'value' => 'abc'],
+        ['data' => 'node.title'],
+        ['value' => 'abc'],
       ],
       'Data set - selector' => [
-        // Machine name.
         'rules_data_set',
-        // Values.
-        ['data' => 'node.title', 'value' => '@user.current_user_context:current_user.name.value'],
-        // Widgets.
+        [
+          'data' => 'node.title',
+          'value' => '@user.current_user_context:current_user.name.value',
+        ],
         [],
-        // Selectors.
+        [],
         ['value'],
       ],
-      'Entity create node' => [
-        'rules_entity_create:node',
-        ['type' => 'article', 'title' => 'abc'],
+      'Variable add' => [
+        'rules_variable_add',
+        ['type' => 'integer', 'value' => 'node.nid'],
       ],
-      'Entity create user' => [
-        'rules_entity_create:user',
-        ['name' => 'fred'],
-      ],
+
+      // Entity.
       'Entity delete' => [
         'rules_entity_delete',
         ['entity' => 'node'],
@@ -212,6 +254,7 @@ class ActionsFormTest extends RulesBrowserTestBase {
       'Entity fetch by field - selector' => [
         'rules_entity_fetch_by_field',
         ['type' => 'node', 'field-name' => 'abc', 'field-value' => 'node.uid'],
+        ['limit' => 5],
         [],
         ['field-value'],
       ],
@@ -219,13 +262,16 @@ class ActionsFormTest extends RulesBrowserTestBase {
         'rules_entity_fetch_by_id',
         ['type' => 'node', 'entity-id' => 123],
       ],
-      'Entity path alias create' => [
-        'rules_entity_path_alias_create:entity:node',
-        ['entity' => 'node', 'alias' => 'abc'],
-      ],
       'Entity save' => [
         'rules_entity_save',
-        ['entity' => 'node', 'immediate' => TRUE],
+        ['entity' => 'node'],
+        ['immediate' => TRUE],
+      ],
+
+      // Content.
+      'Entity create node' => [
+        'rules_entity_create:node',
+        ['type' => 'article', 'title' => 'abc'],
       ],
       'Node make sticky' => [
         'rules_node_make_sticky',
@@ -251,9 +297,16 @@ class ActionsFormTest extends RulesBrowserTestBase {
         'rules_node_unpromote',
         ['node' => 'node'],
       ],
+
+      // Path.
       'Path alias create' => [
         'rules_path_alias_create',
         ['source' => '/node/1', 'alias' => 'abc'],
+        ['language' => '?'],
+      ],
+      'Entity path alias create' => [
+        'rules_entity_path_alias_create:entity:node',
+        ['entity' => 'node', 'alias' => 'abc'],
       ],
       'Path alias delete by alias' => [
         'rules_path_alias_delete_by_alias',
@@ -263,22 +316,26 @@ class ActionsFormTest extends RulesBrowserTestBase {
         'rules_path_alias_delete_by_path',
         ['path' => '/node/1'],
       ],
+
+      // System.
       'Page redirect' => [
         'rules_page_redirect',
         ['url' => '/node/1'],
       ],
-      'Send account email' => [
-        'rules_send_account_email',
-        ['user' => 'node.uid', 'email-type' => 'abc'],
-      ],
-      'Email to all users of role' => [
+      'Email to users of role' => [
         'rules_email_to_users_of_role',
-        ['roles' => 'editor', 'subject' => 'Hello', 'message' => 'Some text'],
+        [
+          'roles' => 'test-editor',
+          'subject' => 'Hello',
+          'message' => "Some text\nLine two",
+        ],
+        ['reply' => 'test@example.com', 'language' => '?'],
         ['message' => 'textarea'],
       ],
       'System message' => [
         'rules_system_message',
         ['message' => 'Some text'],
+        ['type' => 'warning', 'repeat' => 0],
       ],
       'Send email - direct input' => [
         'rules_send_email',
@@ -287,6 +344,7 @@ class ActionsFormTest extends RulesBrowserTestBase {
           'subject' => 'Some testing subject',
           'message' => 'Test with direct input of recipients',
         ],
+        ['reply' => 'test@example.com', 'language' => '?'],
         ['message' => 'textarea'],
       ],
       'Send email - data selector for address' => [
@@ -296,53 +354,92 @@ class ActionsFormTest extends RulesBrowserTestBase {
           'subject' => 'Some testing subject',
           'message' => 'Test with selector input of node author',
         ],
+        ['reply' => 'test@example.com', 'language' => '?'],
         ['message' => 'textarea'],
         ['to'],
+      ],
+
+      // User.
+      'Entity create user' => [
+        'rules_entity_create:user',
+        // The name should be required, but can save with blank name.
+        // @todo fix this. Then move 'name' into the required array.
+        [],
+        ['name' => 'fred'],
+      ],
+      'Send account email' => [
+        'rules_send_account_email',
+        ['user' => 'node.uid', 'email-type' => 'abc'],
       ],
       'User block' => [
         'rules_user_block',
         ['user' => '@user.current_user_context:current_user'],
         [],
+        [],
         ['user'],
       ],
       'User role add' => [
         'rules_user_role_add',
-        ['user' => '@user', 'roles' => 'Editor'],
+        [
+          'user' => '@user.current_user_context:current_user',
+          'roles' => 'test-editor',
+        ],
+        [],
+        [],
+        ['user'],
       ],
       'User role remove' => [
         'rules_user_role_remove',
-        ['user' => '@user', 'roles' => 'Editor'],
+        [
+          'user' => '@user.current_user_context:current_user',
+          'roles' => 'test-editor',
+        ],
+        [],
+        [],
+        ['user'],
       ],
       'Unblock user' => [
         'rules_user_unblock',
-        ['user' => '@user'],
+        ['user' => '@user.current_user_context:current_user'],
+        [],
+        [],
+        ['user'],
       ],
-      'Variable add' => [
-        'rules_variable_add',
-        ['type' => 'integer', 'value' => 'node.nid'],
-      ],
+
+      // Ban.
       'Ban IP - empty' => [
         'rules_ban_ip',
+        [],
         ['ip' => ''],
       ],
       'Ban IP - value' => [
         'rules_ban_ip',
+        [],
         ['ip' => '192.0.2.1'],
       ],
       'Unban IP' => [
         'rules_unban_ip',
+        [],
         ['ip' => '192.0.2.1'],
       ],
     ];
+
     // Selecting the 'to' email address using data selector will not work until
     // single data selector values with multiple = True are converted to arrays.
+    // Error "Expected a list data type ... but got a email data type instead".
     // @see https://www.drupal.org/project/rules/issues/2723259
     // @todo Delete this unset() when the above issue is fixed.
     unset($data['Send email - data selector for address']);
 
+    // Two list actions fail with "Cannot set a list with a non-array value".
+    // These run OK without the widget integration.
+    // @todo Needs investigation.
+    unset($data['List item add']);
+    unset($data['List item remove']);
+
     // Use unset $data['The key to remove']; to remove a temporarily unwanted
-    // item, use return [$data['The key to test']]; to selectively test just one
-    // item, or have return $data; to test everything.
+    // item, use return [$data['Key to test'], $data['Another']]; to selectively
+    // test some items, or use return $data; to test everything.
     return $data;
   }
 

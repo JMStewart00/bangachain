@@ -342,7 +342,8 @@
             "drupal/commerce_giftcard": {
                 "Theme hook commerce_giftcard_redemption_form not found": "https://www.drupal.org/files/issues/2020-11-06/theme_hook_commerce_giftcard_redemption_form_not_found-3180964-3.patch",
                 "Gift cards not created when other items exist in the checkout before the gift card item": "https://git.drupalcode.org/project/commerce_giftcard/-/merge_requests/4.diff",
-                "Event for new giftcard purchase": "https://git.drupalcode.org/project/commerce_giftcard/-/merge_requests/2.diff"
+                "Event for new giftcard purchase": "https://git.drupalcode.org/project/commerce_giftcard/-/merge_requests/2.diff",
+                "Don't allow payout on certain items": "./patches/commerce_giftcard_custom_patch_no_payout_allowed.patch"
             },
             "drupal/commerce_reports": {
                 "Anonymous users can see Purchased Items Report": "https://www.drupal.org/files/issues/2019-06-07/3004989-17.patch",
@@ -357,6 +358,9 @@
             },
             "drupal/feeds": {
                 "Undefined Index: allowed_extensions AJAX error when creating feed types.": "https://www.drupal.org/files/issues/2019-02-06/3031019-undefined-index-ajax-2.patch"
+            },
+            "drupal/rules": {
+                "Integrate Typed Data Widgets": "https://www.drupal.org/files/issues/2021-06-22/2471481-146.integrate-typed-data-widgets.patch"
             }
         },
         "enable-patching": true,

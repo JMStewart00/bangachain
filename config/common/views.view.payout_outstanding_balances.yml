@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - commerce_giftcard.giftcard_type.payout
+    - system.menu.admin
   module:
     - commerce
     - commerce_giftcard
@@ -281,6 +282,15 @@ display:
       display_extenders:
         ajax_history: {  }
       path: admin/commerce/reports/payout-outstanding-balances
+      menu:
+        type: normal
+        title: 'Outstanding Payout Balances'
+        description: ''
+        expanded: false
+        parent: 'menu_link_content:07ca046b-9d1d-4ad5-8c91-88b28dca5bec'
+        weight: 0
+        context: '0'
+        menu_name: admin
     cache_metadata:
       max-age: -1
       contexts:

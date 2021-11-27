@@ -13,3 +13,7 @@ Event for new giftcard purchase
 Source: https://git.drupalcode.org/project/commerce_giftcard/-/merge_requests/2.diff
 
 
+Don't allow payout on certain items
+Source: ./patches/commerce_giftcard_custom_patch_no_payout_allowed.patch
+
+

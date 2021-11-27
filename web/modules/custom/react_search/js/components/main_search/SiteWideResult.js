@@ -22,9 +22,9 @@ export const SiteWideResult = ({ hit }) => {
     const images = indexedImageField.filter(a => a.length > 0);
     if (images.length > 0) {
       newImageUrl = images[0].split('/');
-      newImageUrl.splice(4, 0, 'styles/square/public');
+      newImageUrl.splice(4, 0, 'styles/responsive_1_1_550w/public');
       newImageUrl = newImageUrl.join('/');
-      // newImageUrl += '.webp';
+      newImageUrl += '.webp';
     }
   }
 

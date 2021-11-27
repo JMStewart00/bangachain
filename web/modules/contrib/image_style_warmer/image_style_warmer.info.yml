@@ -1,0 +1,15 @@
+name: Image Style Warmer
+description: Create image styles of an image on upload or via queue worker.
+configure: image_style_warmer.settings
+package: Performance
+
+type: module
+core_version_requirement: ^8.8 || ^9
+
+dependencies:
+  - drupal:image
+
+# Information added by Drupal.org packaging script on 2021-03-18
+version: '8.x-1.1'
+project: 'image_style_warmer'
+datestamp: 1616082950

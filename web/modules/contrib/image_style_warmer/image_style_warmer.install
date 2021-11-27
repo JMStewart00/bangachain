@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the image_style_warmer module.
+ */
+
+/**
+ * Rename upload to initial image styles in image_style_warmer.settings.
+ */
+function image_style_warmer_update_8001() {
+  $config_factory = \Drupal::configFactory();
+
+  $settingsConfig = $config_factory->getEditable('image_style_warmer.settings');
+  $uploadImageStyles = $settingsConfig->get('upload_image_styles');
+  $queueImageStyles = $settingsConfig->get('queue_image_styles');
+
+  $settingsConfig->clear('upload_image_styles');
+  $settingsConfig->clear('queue_image_styles');
+
+  $settingsConfig->set('initial_image_styles', $uploadImageStyles);
+  $settingsConfig->set('queue_image_styles', $queueImageStyles);
+  $settingsConfig->save();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function image_style_warmer_uninstall($is_syncing) {
+  \Drupal::service('queue')
+    ->get('image_style_warmer_pregenerator')
+    ->deleteQueue();
+}

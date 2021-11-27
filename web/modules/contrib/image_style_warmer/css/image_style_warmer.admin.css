@@ -1,0 +1,7 @@
+@media screen and (min-width: 960px) {
+
+  .fieldgroup.image-style-warmer.image-styles {
+    float: left;
+    width: 49.5%;
+  }
+}

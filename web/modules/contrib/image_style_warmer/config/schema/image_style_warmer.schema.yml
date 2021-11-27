@@ -1,0 +1,12 @@
+# Schema for the configuration files of the image_style_warmer module.
+
+image_style_warmer.settings:
+  type: config_object
+  label: 'Image Style Warmer settings'
+  mapping:
+    initial_image_styles:
+      type: ignore
+      label: 'Initial image styles array'
+    queue_image_styles:
+      type: ignore
+      label: 'Queue image styles array'

@@ -1,0 +1,70 @@
+<?php
+
+/**
+ * @file
+ * ISW Module file creates image styles on image upload and via queue.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\file\FileInterface;
+use Drupal\file\Entity\File;
+
+/**
+ * Implements hook_help().
+ */
+function image_style_warmer_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.image_style_warmer':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Image Style Warmer module provides options to create image styles during upload or via queue worker. So configured image derivates already exists when they are requested.. For more information, see the <a href=":image_style_warmer">online documentation for the Image Style Warmer module</a>.', [':image_style_warmer' => 'https://www.drupal.org/documentation/modules/image_style_warmer']) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Configuration of Image Style Warmer module') . '</dt>';
+      $output .= '<dd>' . t('Go to <em>Manage > Configuration > Development > Performance > Image Style Warmer</em>.') . '<br>';
+      $output .= t('Select image styles which should be created during upload.') . '<br>';
+      $output .= t('Select image style which should be created via queue worker.') . '<br>';
+      $output .= t('Save Image Style Warmer settings.') . '</dd>';
+      $output .= '<dt>' . t('Image Style Warmer queue') . '</dt>';
+      $output .= '<dd>' . t('Enable queue worker via <em>drush queue-run image_style_warmer_pregenerator</em>.') . '</dd>';
+      $output .= '</dl>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_ENTITY_insert() for file entity.
+ */
+function image_style_warmer_file_insert(FileInterface $file) {
+  \Drupal::service('image_style_warmer.warmer')->warmUp($file);
+}
+
+/**
+ * Implements hook_ENTITY_update() for file entity.
+ */
+function image_style_warmer_file_update(FileInterface $file) {
+  \Drupal::service('image_style_warmer.warmer')->warmUp($file);
+}
+
+/**
+ * Implements hook_ENTITY_insert() for crop entity.
+ */
+function image_style_warmer_crop_insert(EntityInterface $entity) {
+  if ($entity->get('entity_type')->value == 'file') {
+    if ($file = File::load($entity->get('entity_id')->value)) {
+      \Drupal::service('image_style_warmer.warmer')->warmUp($file);
+    }
+  }
+}
+
+/**
+ * Implements hook_ENTITY_update() for crop entity.
+ */
+function image_style_warmer_crop_update(EntityInterface $entity) {
+  if ($entity->get('entity_type')->value == 'file') {
+    if ($file = File::load($entity->get('entity_id')->value)) {
+      \Drupal::service('image_style_warmer.warmer')->warmUp($file);
+    }
+  }
+}

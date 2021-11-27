@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '09f381058f8da2f57f5c4c664efe75e355f78179',
+    'reference' => '070ac2a48d2c113859993a0e5906a3ea8371c65d',
     'name' => 'oomphinc/drupal-scaffold',
   ),
   'versions' => 
@@ -1530,6 +1530,15 @@
         0 => '9.2.9',
       ),
     ),
+    'drupal/image_style_warmer' => 
+    array (
+      'pretty_version' => '1.1.0',
+      'version' => '1.1.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8.x-1.1',
+    ),
     'drupal/imageapi_optimize' => 
     array (
       'pretty_version' => '4.0.0',
@@ -2755,7 +2764,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '09f381058f8da2f57f5c4c664efe75e355f78179',
+      'reference' => '070ac2a48d2c113859993a0e5906a3ea8371c65d',
     ),
     'orno/di' => 
     array (

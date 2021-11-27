@@ -191,6 +191,7 @@
         "drupal/honeypot": "^2.0",
         "drupal/htmlmail": "^3.0@alpha",
         "drupal/iframe": "^2.10",
+        "drupal/image_style_warmer": "^1.1",
         "drupal/imageapi_optimize": "^4.0",
         "drupal/imageapi_optimize_webp": "^2.0@beta",
         "drupal/jquery_ui_accordion": "^1.0",

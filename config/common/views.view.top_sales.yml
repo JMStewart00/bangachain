@@ -648,8 +648,8 @@ display:
         title: 'Items Sold Report'
         description: ''
         expanded: false
-        parent: commerce_reports.overview
-        weight: 0
+        parent: 'menu_link_content:c9412221-5518-427c-89f3-954ddf64b731'
+        weight: 4
         context: '0'
         menu_name: admin
     cache_metadata:

@@ -1367,8 +1367,8 @@ display:
         title: 'Inventory Report'
         description: ''
         expanded: false
-        parent: 'menu_link_content:07ca046b-9d1d-4ad5-8c91-88b28dca5bec'
-        weight: 0
+        parent: 'menu_link_content:c9412221-5518-427c-89f3-954ddf64b731'
+        weight: 3
         context: '0'
         menu_name: admin
       display_description: ''
@@ -1399,8 +1399,8 @@ display:
         title: 'Low Stock Report'
         description: ''
         expanded: false
-        parent: 'menu_link_content:07ca046b-9d1d-4ad5-8c91-88b28dca5bec'
-        weight: 0
+        parent: 'menu_link_content:c9412221-5518-427c-89f3-954ddf64b731'
+        weight: 5
         context: '0'
         menu_name: admin
       display_description: ''
@@ -2027,8 +2027,8 @@ display:
         title: 'Unpublished Report'
         description: ''
         expanded: false
-        parent: 'menu_link_content:07ca046b-9d1d-4ad5-8c91-88b28dca5bec'
-        weight: 0
+        parent: 'menu_link_content:c9412221-5518-427c-89f3-954ddf64b731'
+        weight: 9
         context: '0'
         menu_name: admin
       display_description: ''
@@ -2344,8 +2344,8 @@ display:
         title: 'Needs Pictures Report'
         description: ''
         expanded: false
-        parent: 'menu_link_content:07ca046b-9d1d-4ad5-8c91-88b28dca5bec'
-        weight: 0
+        parent: 'menu_link_content:c9412221-5518-427c-89f3-954ddf64b731'
+        weight: 6
         context: '0'
         menu_name: admin
       display_description: ''

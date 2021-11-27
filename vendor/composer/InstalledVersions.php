@@ -19,7 +19,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'f0b1bf774a6369bc7d152633cfe3e142988e9fd4',
+    'reference' => '09f381058f8da2f57f5c4c664efe75e355f78179',
     'name' => 'oomphinc/drupal-scaffold',
   ),
   'versions' => 
@@ -1290,6 +1290,15 @@ private static $installed = array (
       ),
       'reference' => '8.x-1.15',
     ),
+    'drupal/easy_responsive_images' => 
+    array (
+      'pretty_version' => '1.1.0',
+      'version' => '1.1.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '1.1.0',
+    ),
     'drupal/editor' => 
     array (
       'replaced' => 
@@ -1533,6 +1542,24 @@ private static $installed = array (
       array (
         0 => '9.2.9',
       ),
+    ),
+    'drupal/imageapi_optimize' => 
+    array (
+      'pretty_version' => '4.0.0',
+      'version' => '4.0.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '4.0.0',
+    ),
+    'drupal/imageapi_optimize_webp' => 
+    array (
+      'pretty_version' => '2.0.0-beta3',
+      'version' => '2.0.0.0-beta3',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '2.0.0-beta3',
     ),
     'drupal/inline_entity_form' => 
     array (
@@ -2741,7 +2768,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'f0b1bf774a6369bc7d152633cfe3e142988e9fd4',
+      'reference' => '09f381058f8da2f57f5c4c664efe75e355f78179',
     ),
     'orno/di' => 
     array (

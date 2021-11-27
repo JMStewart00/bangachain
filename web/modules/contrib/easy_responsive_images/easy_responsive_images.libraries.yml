@@ -1,0 +1,5 @@
+resizer:
+  js:
+    js/resizer.js: {}
+  dependencies:
+    - core/drupal

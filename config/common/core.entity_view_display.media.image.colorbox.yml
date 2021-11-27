@@ -5,8 +5,8 @@ dependencies:
   config:
     - core.entity_view_mode.media.colorbox
     - field.field.media.image.field_media_image
-    - image.style.scaled_width_800
-    - image.style.thumbnail
+    - image.style.responsive_1_1_150w
+    - image.style.responsive_4_3_950w
     - media.type.image
   module:
     - colorbox
@@ -25,9 +25,9 @@ content:
   field_media_image:
     label: visually_hidden
     settings:
-      colorbox_node_style: thumbnail
+      colorbox_node_style: responsive_1_1_150w
       colorbox_node_style_first: ''
-      colorbox_image_style: scaled_width_800
+      colorbox_image_style: responsive_4_3_950w
       colorbox_gallery: post
       colorbox_gallery_custom: ''
       colorbox_caption: none
@@ -39,5 +39,6 @@ content:
 hidden:
   created: true
   name: true
+  search_api_excerpt: true
   thumbnail: true
   uid: true

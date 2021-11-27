@@ -1,0 +1,4 @@
+easy_responsive_images.generate:
+  route_name: easy_responsive_images.generate
+  title: 'Generate image styles'
+  base_route: entity.image_style.collection

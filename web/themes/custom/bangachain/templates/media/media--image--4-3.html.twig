@@ -1,0 +1,19 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display an image.
+ */
+#}
+{{ attach_library('easy_responsive_images/resizer') }}
+
+{% set file = media.field_media_image.entity %}
+{% set src = file.uri.value|image_url('responsive_4_3_50w') %}
+{% set srcset = [
+  file.uri.value|image_url('responsive_4_3_150w')|render ~ ' 150w',
+  file.uri.value|image_url('responsive_4_3_350w')|render ~ ' 350w',
+  file.uri.value|image_url('responsive_4_3_550w')|render ~ ' 550w',
+  file.uri.value|image_url('responsive_4_3_950w')|render ~ ' 950w',
+  file.uri.value|image_url('responsive_4_3_1250w')|render ~ ' 1250w',
+  file.uri.value|image_url('responsive_4_3_1450w')|render ~ ' 1450w',
+] %}
+<img src="{{ src }}" data-srcset="{{ srcset|join(',') }}" alt="{{ media.field_media_image.alt }}" loading="lazy" />

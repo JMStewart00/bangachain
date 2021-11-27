@@ -24,6 +24,7 @@ export const SiteWideResult = ({ hit }) => {
       newImageUrl = images[0].split('/');
       newImageUrl.splice(4, 0, 'styles/square/public');
       newImageUrl = newImageUrl.join('/');
+      newImageUrl += '.webp';
     }
   }
 

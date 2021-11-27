@@ -1,0 +1,16 @@
+uuid: 6e477b33-241a-4ed3-af73-5f2cb3494b64
+langcode: en
+status: true
+dependencies: {  }
+name: responsive_150w
+label: responsive_150w
+effects:
+  a0a7809f-005e-48c8-96a7-36574e3af55b:
+    uuid: a0a7809f-005e-48c8-96a7-36574e3af55b
+    id: image_scale
+    weight: null
+    data:
+      width: 150
+      height: null
+      upscale: true
+pipeline: __default__

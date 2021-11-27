@@ -1,0 +1,5 @@
+services:
+  easy_responsive_images.image_url:
+    class: Drupal\easy_responsive_images\TwigExtension\ImageUrl
+    tags:
+      - { name: twig.extension }

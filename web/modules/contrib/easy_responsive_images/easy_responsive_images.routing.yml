@@ -1,0 +1,7 @@
+easy_responsive_images.generate:
+  path: '/admin/config/media/image-styles/generate'
+  defaults:
+    _form: '\Drupal\easy_responsive_images\Form\Config\GenerateImageStyles'
+    _title: 'Generate image styles'
+  requirements:
+    _permission: 'administer image styles'

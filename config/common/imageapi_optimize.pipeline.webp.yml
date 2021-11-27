@@ -1,0 +1,15 @@
+uuid: 25b7f2eb-606b-4a94-91b6-334473f2fc21
+langcode: en
+status: true
+dependencies:
+  module:
+    - imageapi_optimize_webp
+name: webp
+label: WebP
+processors:
+  506cbfd0-b8a6-4a35-8d8b-0e6a3aa8e6ec:
+    uuid: 506cbfd0-b8a6-4a35-8d8b-0e6a3aa8e6ec
+    id: imageapi_optimize_webp
+    weight: 1
+    data:
+      quality: '75'

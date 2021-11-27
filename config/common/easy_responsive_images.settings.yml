@@ -1,0 +1,7 @@
+threshold_width: '200'
+minimum_width: '150'
+maximum_width: '1450'
+aspect_ratios: "1:1\r\n4:3"
+threshold_height: ''
+minimum_height: ''
+maximum_height: ''

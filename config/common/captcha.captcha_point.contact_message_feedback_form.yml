@@ -1,9 +1,0 @@
-uuid: bfd2e419-2dac-4081-b3fc-032728896d46
-langcode: en
-status: true
-dependencies: {  }
-_core:
-  default_config_hash: MbTbUeeaumH8DjENUwT0-8uW9UuxyNHbF6jbKCLhYkk
-formId: contact_message_feedback_form
-captchaType: recaptcha/reCAPTCHA
-label: contact-message-feedback-form

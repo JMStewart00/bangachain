@@ -18,6 +18,9 @@ $config['config_split.config_split.dev']['status'] = FALSE;
 $config['config_split.config_split.uat']['status'] = FALSE;
 $config['config_split.config_split.prod']['status'] = FALSE;
 
+$config['image.settings']['suppress_itok_output'] = TRUE;
+$config['image.settings']['allow_insecure_derivatives'] = TRUE;
+
 if (getenv('LANDO_INFO') && !defined('PANTHEON_ENVIRONMENT')) {
   $lando_info = json_decode(getenv('LANDO_INFO'), TRUE);
 

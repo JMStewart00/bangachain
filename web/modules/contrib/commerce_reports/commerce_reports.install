@@ -8,7 +8,7 @@
 /**
  * Regenerate all order reports which have been duplicated.
  */
-function commerce_reports_update_9001(&$sandbox) {
+function commerce_reports_update_8001(&$sandbox) {
 
   // Get all order ids with duplicate order reports.
   $select = \Drupal::database()->select('commerce_order_report', 'r')

@@ -352,7 +352,8 @@
             "drupal/commerce_reports": {
                 "Anonymous users can see Purchased Items Report": "https://www.drupal.org/files/issues/2019-06-07/3004989-17.patch",
                 "Generating Order Reports throws toArray() error": "https://www.drupal.org/files/issues/2019-10-18/3088183-3.patch",
-                "Argument 4 null": "./patches/argument-4.patch"
+                "Argument 4 null": "./patches/argument-4.patch",
+                "Order generation subscriber results in duplicates or missing report items": "https://www.drupal.org/files/issues/2021-10-08/3023518-14.patch"
             },
             "drupal/commerce_pos": {
                 "Auto set register to id of 1": "./patches/load-only-register-1b.patch"

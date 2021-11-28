@@ -95,7 +95,7 @@ function commerce_reports_views_pre_build(ViewExecutable $view) {
 /**
  * Implements hook_update_N().
  */
-function commerce_reports_update_8001(&$sandbox) {
+function commerce_reports_update_9001(&$sandbox) {
   $config_factory = \Drupal::configFactory();
   $view = $config_factory->getEditable('views.view.purchased_items_report');
 

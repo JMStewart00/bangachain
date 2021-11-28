@@ -18,7 +18,18 @@ expression:
     id: rules_and
     uuid: 0a1a88c9-96c5-4b5f-b5e9-6bbb9138b2e1
     weight: 0
-    conditions: {  }
+    conditions:
+      -
+        id: rules_condition
+        uuid: 9008aa91-b2de-480c-a171-acea11aed32c
+        weight: 0
+        context_values: {  }
+        context_mapping:
+          data: commerce_giftcard.uid.target_id
+        context_processors: {  }
+        provides_mapping: {  }
+        condition_id: rules_data_is_empty
+        negate: true
   actions:
     id: rules_action_set
     uuid: 1cee6a13-1bc4-4752-bd66-3498a7ac29e8
@@ -31,8 +42,9 @@ expression:
         context_values:
           to:
             - '{{ commerce_giftcard.uid.entity.mail.value }}'
+            - 'bangachain2021@gmail.com'
           subject: 'Giftcard from BangAChain.com!'
-          message: '<p>Hey {{commerce_giftcard.uid.entity.name.value}}!</p><p>You purchased a new giftcard worth ${{commerce_giftcard.balance.number}} from www.bangachain.com.</p><p>To use this giftcard you will need the 12 digit code in this email.</p><br><h2>Your giftcard code is {{commerce_giftcard.code.value}}</h2><br><p>If you have trouble with anything, please reach out to us on our <a href="https://bangachain.com/contact" target="_blank">Contact Us Page</a>.</p><p>Thanks!</p><p>The BangAChain Team</p>'
+          message: '<p>How''s it going?!</p><p>You purchased a new giftcard from www.bangachain.com.</p><p>To use this giftcard you will need the 12 digit code in this email.</p><br><h2>Your giftcard code is {{commerce_giftcard.code.value}}</h2><br><p>If you have trouble with anything, please reach out to us on our <a href="https://bangachain.com/contact" target="_blank">Contact Us Page</a>.</p><p>Thanks!</p><p>The BangAChain Team</p>'
           reply: no-reply@bangachain.com
           language: null
         context_mapping: {  }

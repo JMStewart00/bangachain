@@ -98,6 +98,3 @@ if (isset($_SERVER['PANTHEON_ENVIRONMENT'])) {
     setcookie('NO_CACHE', '1', time()+0, $_SERVER['REQUEST_URI'], $domain);
   }
 }
-
-ini_set('max_execution_time', 300);
-ini_set('memory_limit', '256M');

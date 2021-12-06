@@ -201,3 +201,6 @@ if (empty($settings['file_scan_ignore_directories'])) {
     'bower_components',
   ];
 }
+
+ini_set('max_execution_time', 12000);
+ini_set('memory_limit', '256M');

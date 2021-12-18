@@ -42,7 +42,7 @@ expression:
         context_values:
           to:
             - '{{ commerce_giftcard.uid.entity.mail.value }}'
-            - 'bangachain2021@gmail.com'
+            - bangachain2012@gmail.com
           subject: 'Giftcard from BangAChain.com!'
           message: '<p>How''s it going?!</p><p>You purchased a new giftcard from www.bangachain.com.</p><p>To use this giftcard you will need the 12 digit code in this email.</p><br><h2>Your giftcard code is {{commerce_giftcard.code.value}}</h2><br><p>If you have trouble with anything, please reach out to us on our <a href="https://bangachain.com/contact" target="_blank">Contact Us Page</a>.</p><p>Thanks!</p><p>The BangAChain Team</p>'
           reply: no-reply@bangachain.com

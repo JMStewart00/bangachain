@@ -45,6 +45,20 @@ $sidebar-size-small: 275px;
     }
   }
 
+  &--products {
+    grid-template-areas:
+      'gallery'
+      'details';
+
+    grid-template-columns: minmax(0, 1fr);
+
+    @include media-breakpoint-up(lg) {
+      grid-template-areas: 'details gallery';
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-gap: 60px;
+    }
+  }
+
   // Content grid
   &__content {
     gap: 60px;

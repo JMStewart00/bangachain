@@ -1,0 +1,40 @@
+/**
+ * @file
+ * Detailed stylings are all yours, get yourself dirty.
+ */
+
+.splide--skin--boxed .slide__content {
+  background: #fff;
+  border: 1px solid #f3f3f3;
+  border-bottom: 2px solid #f3f3f3;
+  border-radius: 4px;
+  margin: 10px;
+  overflow: hidden;
+  padding: 20px;
+  position: relative;
+  /* -webkit-transition: box-shadow 0.3s 0.5s ease, border 0.3s 0.5s ease;
+  transition: box-shadow 0.3s 0.5s ease, border 0.3s 0.5s ease; */
+}
+
+.splide--skin--boxed .slide__content:hover {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+  border-color: #9bacc3;
+}
+
+.splide--skin--boxed .slide__caption {
+  padding: 0;
+}
+
+.splide--skin--boxed.splide--slider .splide__slide .slide__caption {
+  visibility: hidden;
+}
+
+.splide--skin--boxed.splide--slider .splide__slide.is-active .slide__caption {
+  visibility: visible;
+}
+
+@media (min-width: 48em) {
+  .splide--skin--boxed > .splide__slider > .splide__list {
+    margin: 0 60px;
+  }
+}

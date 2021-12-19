@@ -1,0 +1,49 @@
+/**
+ * @file.
+ * Provided basic styling for the Splide.
+ */
+
+.splide-wrapper,
+.splide,
+.splide * {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.splide img {
+  height: auto;
+  will-change: auto !important; /* csslint allow: known-properties, important */
+}
+
+.splide img,
+.splide iframe {
+  border: 0;
+  max-width: 100%;
+}
+
+/* Prevents overflowing nested slides. */
+.splide,
+.splide-wrapper {
+  max-width: 100%;
+  position: relative;
+}
+
+/** Prevents from being hidden due to layering issues with arrow down. */
+.splide__arrows {
+  z-index: 9;
+}
+
+/* Above the arrows to allow hover thumbnail with pagination. */
+.splide .splide__pagination {
+  z-index: 10;
+}
+
+/* Fix for destroy. */
+.unsplide.splide .splide__list {
+  display: block;
+  width: 100%;
+}
+
+.unsplide.splide .splide__slide {
+  width: 100%;
+}

@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - splide_x
+id: x_fullscreen
+name: x_fullscreen
+label: 'X Fullscreen'
+weight: -6
+group: main
+skin: fullscreen
+breakpoint: 0
+optimized: true
+options:
+  settings:
+    type: loop
+    focus: center
+    lazyLoad: blazy
+    easing: 'cubic-bezier(0.680, -0.550, 0.265, 1.550)'
+    width: '100vw'
+    height: '100vh'

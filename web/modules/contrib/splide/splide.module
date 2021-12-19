@@ -1,0 +1,92 @@
+<?php
+
+/**
+ * @file
+ * Splide slider integration, the vanilla JavaScript Slider.
+ */
+
+use Drupal\Component\Utility\NestedArray;
+use Drupal\blazy\Blazy;
+use Drupal\splide\SplideDefault;
+
+/**
+ * Provides a convenient shortcut for procedural hooks.
+ *
+ * @param string $key
+ *   Identifier of the service.
+ *
+ * @return class
+ *   The required Splide class instance.
+ */
+function splide($key = 'manager') {
+  static $manager;
+  static $skin_manager;
+
+  if (!isset($manager)) {
+    $manager = \Drupal::service('splide.manager');
+    $skin_manager = \Drupal::service('splide.skin_manager');
+  }
+
+  switch ($key) {
+    case 'skin':
+      return $skin_manager;
+
+    default:
+      return $manager;
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function splide_theme() {
+  $themes = [];
+  foreach (['splide', 'slide', 'minimal', 'wrapper'] as $item) {
+    $key = $item == 'splide' ? $item : 'splide_' . $item;
+    $themes[$key] = [
+      'render element' => 'element',
+      'file' => 'templates/splide.theme.inc',
+    ];
+  }
+  return $themes;
+}
+
+/**
+ * Implements hook_library_info_build().
+ */
+function splide_library_info_build() {
+  return splide('skin')->libraryInfoBuild();
+}
+
+/**
+ * Implements hook_config_schema_info_alter().
+ */
+function splide_config_schema_info_alter(array &$definitions) {
+  Blazy::configSchemaInfoAlter($definitions, 'splide_base', SplideDefault::extendedSettings());
+}
+
+/**
+ * Implements hook_library_info_alter().
+ */
+function splide_library_info_alter(&$libraries, $extension) {
+  if ($extension === 'splide') {
+    splide('skin')->libraryInfoAlter($libraries, $extension);
+  }
+}
+
+/**
+ * Implements hook_page_attachments().
+ */
+function splide_page_attachments(array &$attachments) {
+  $sitewide = splide()->configLoad('sitewide', 'splide.settings');
+
+  if (!empty($sitewide) && $sitewide > 0) {
+    if (!\Drupal::service('router.admin_context')->isAdminRoute()) {
+      $splides = splide()->attach([
+        '_unload' => $sitewide == 2 || $sitewide == 3,
+        '_vanilla' => $sitewide == 2,
+      ]);
+      $attachments['#attached'] = empty($attachments['#attached']) ? $splides : NestedArray::mergeDeep($splides, $attachments['#attached']);
+    }
+  }
+}

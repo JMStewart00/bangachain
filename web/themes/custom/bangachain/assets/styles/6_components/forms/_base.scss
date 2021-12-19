@@ -12,31 +12,28 @@
   }
 
   .form-select {
-    width: 70%;
+    width: 100%;
     height: 50px;
     font-size: 100%;
     font-weight: bold;
     cursor: pointer;
     border-radius: 0;
-    background-color: $brand-blue;
+    background-color: transparent;
     border: none;
-    border-bottom: 2px solid $orange;
-    color: white;
+    border: 1px solid $brand-blue;
+    color: $brand-blue;
     padding: 10px;
-    appearance: none;
     transition: all ease 0.5s;
 
     @include hover-focus() {
       color: darken($brand-blue, 20%);
       background-color: $cyan;
-      border-bottom-color: $brand-blue;
     }
 
     /* For IE <= 11 */
     &::-ms-expand {
       display: none;
     }
-
   }
 
   &--news-events {

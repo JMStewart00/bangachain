@@ -1,0 +1,27 @@
+{
+    "name": "drupal/splide",
+    "description": "Splide, the JavaScript Slider.",
+    "keywords": ["carousel", "slideshow", "Drupal"],
+    "type": "drupal-module",
+    "license": "GPL-2.0-or-later",
+    "homepage": "https://drupal.org/project/splide",
+    "authors": [
+        {
+            "name": "Gaus Surahman",
+            "homepage": "https://www.drupal.org/user/159062",
+            "role": "Maintainer"
+        },
+        {
+            "name": "Contributors",
+            "homepage": "https://www.drupal.org/node/3215092/committers",
+            "role": "Contributor"
+        }
+    ],
+    "support": {
+        "issues": "https://drupal.org/project/issues/splide",
+        "source": "https://git.drupalcode.org/project/splide"
+    },
+    "require": {
+        "drupal/blazy": "~2.0"
+    }
+}

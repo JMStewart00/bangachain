@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - splide_x
+id: x_grid
+name: x_grid
+label: 'X Grid'
+weight: -5
+group: main
+skin: grid
+breakpoint: 0
+optimized: true
+options:
+  settings:
+    type: loop
+    lazyLoad: blazy

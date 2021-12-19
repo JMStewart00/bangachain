@@ -1,0 +1,13 @@
+name: 'Splide UI'
+type: module
+description: 'Provides Splide slider configuration UI.'
+core_version_requirement: ^8.8 || ^9
+package: Splide
+configure: entity.splide.collection
+dependencies:
+  - splide:splide
+
+# Information added by Drupal.org packaging script on 2021-10-15
+version: '1.0.1'
+project: 'splide'
+datestamp: 1634286788

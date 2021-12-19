@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - splide_test
+id: test
+name: test
+label: 'Test'
+weight: 9
+group: 'main'
+skin: ''
+breakpoint: 0
+optimized: true
+options:
+  settings:
+    lazyLoad: sequential
+    perPage: 1

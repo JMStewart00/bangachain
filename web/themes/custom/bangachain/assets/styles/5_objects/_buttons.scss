@@ -33,8 +33,7 @@
     transition: background-color 0.2s ease-in;
 
     @include hover-focus() {
-      color: $brand-blue;
-      background-color: $cyan;
+      background-color: darken($brand-blue, 25%);
     }
   }
 

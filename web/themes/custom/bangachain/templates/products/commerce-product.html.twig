@@ -1,0 +1,65 @@
+{#
+/**
+ * @file
+ *
+ * Default product template for discs.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the wrapper.
+ * - product: The rendered product fields.
+ *   Use 'product' to print them all, or print a subset such as
+ *   'product.title'. Use the following code to exclude the
+ *   printing of a given field:
+ *   @code
+ *   {{ product|without('title') }}
+ *   @endcode
+ * - product_entity: The product entity.
+ * - product_url: The product URL.
+ *
+ * @ingroup themeable
+ */
+#}
+
+{%
+  set classes = [
+    'c-product',
+  ]
+%}
+
+{{ attach_library('bangachain/product-gallery') }}
+
+<article{{attributes.addClass(classes)}}>
+  <div class="l-container">
+    <div class="l-grid l-grid--products u-vr__mt--2 u-vr__mb--2">
+      <div class="c-product__details">
+        {% block details %}
+          <div class="c-product__title u-vr__mb--1">
+            <h2 class="u-color__blue-gray">{{ product.field_brand }}</h2>
+            <h1 class="u-color__blue">{{ product.title }}</h1>
+          </div>
+          {{product.variations}}
+
+          {% if product.field_description|render %}
+            <div class="c-product__description">
+              {{- product.field_description -}}
+              <div class="c-product__video u-vr__my--2">
+                {{ product.field_video }}
+              </div>
+            </div>
+          {% endif %}
+        {% endblock %}
+      </div>
+
+      {% block gallery %}
+          {% if product.variation_field_product_image.0|render %}
+            {{ product.variation_field_product_image }}
+          {% else %}
+            <div class="c-field-media-image">
+              <img src="/themes/custom/bangachain/assets/images/logo-no-chains--blue.png" alt="Bang-A-Chain logo" style="width: 300px;">
+            </div>
+          {% endif %}
+      {% endblock %}
+
+    </div>
+  </div>
+</article>

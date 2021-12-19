@@ -1,0 +1,81 @@
+/**
+ * @file.
+ * Adds a vertical tabs like thumbnail navigation.
+ */
+
+.is-wrapper-verticaltabs {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.splide--skin--vtabs {
+  box-sizing: border-box; /** dups due to CSSLint not recognizing parent. */
+  height: 100%;
+  margin: 0;
+  min-height: 420px;
+  padding: 42px 0;
+  position: absolute;
+  right: 0;
+  text-align: left;
+  top: 0;
+  width: 210px;
+  z-index: 9;
+}
+
+.splide--skin--vtabs .splide__arrows {
+  bottom: 0;
+  height: 100%;
+  left: 50%;
+  margin-left: -1px;
+  position: absolute;
+  top: 0;
+  width: 2px;
+}
+
+.splide--skin--vtabs .splide__arrow {
+  left: 50%;
+  margin-left: -21px;
+  -ms-transform: rotate(90deg);
+  -webkit-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+
+.splide--skin--vtabs .splide__arrow--prev {
+  top: 0;
+}
+
+.splide--skin--vtabs .splide__arrow--next {
+  top: auto;
+  bottom: 0;
+}
+
+.splide--skin--vtabs .splide__slide {
+  background: #222;
+  width: 100%;
+}
+
+.splide--skin--vtabs .splide.is-active {
+  background: #000;
+}
+
+.splide--skin--vtabs.is-captioned {
+  width: 280px;
+}
+
+.splide--skin--vtabs.is-captioned .splide__slide {
+  padding: 0 5px;
+}
+
+.splide--skin--vtabs.is-captioned img {
+  float: left;
+  max-width: 68px;
+}
+
+.splide--skin--vtabs.is-captioned .slide__caption {
+  color: #fff;
+  font-size: 14px;
+  font-size: 0.875rem;
+  margin-left: 80px;
+  padding: 2px 0;
+  width: auto;
+}

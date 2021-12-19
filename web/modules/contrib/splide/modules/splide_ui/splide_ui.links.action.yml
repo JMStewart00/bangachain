@@ -1,0 +1,6 @@
+splide.optionset_page_add:
+  route_name: splide.optionset_page_add
+  title: 'Add splide optionset'
+  weight: 10
+  appears_on:
+    - entity.splide.collection

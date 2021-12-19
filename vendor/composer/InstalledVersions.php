@@ -19,7 +19,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'c60002aa20b8de4772b9fdb649b62f54a04e6e34',
+    'reference' => 'cb5f5cab0d1948ff2abdaf53e81a2838fb0b0ad8',
     'name' => 'oomphinc/drupal-scaffold',
   ),
   'versions' => 
@@ -493,6 +493,15 @@ private static $installed = array (
       array (
         0 => '9.2.9',
       ),
+    ),
+    'drupal/blazy' => 
+    array (
+      'pretty_version' => '2.5.0',
+      'version' => '2.5.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8.x-2.5',
     ),
     'drupal/block' => 
     array (
@@ -2167,6 +2176,15 @@ private static $installed = array (
       ),
       'reference' => '8.x-2.8',
     ),
+    'drupal/splide' => 
+    array (
+      'pretty_version' => '1.0.1',
+      'version' => '1.0.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '1.0.1',
+    ),
     'drupal/standard' => 
     array (
       'replaced' => 
@@ -2761,6 +2779,15 @@ private static $installed = array (
       ),
       'reference' => NULL,
     ),
+    'npm-asset/splidejs--splide' => 
+    array (
+      'pretty_version' => '3.6.4',
+      'version' => '3.6.4.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => NULL,
+    ),
     'oomphinc/composer-installers-extender' => 
     array (
       'pretty_version' => '2.0.0',
@@ -2777,7 +2804,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'c60002aa20b8de4772b9fdb649b62f54a04e6e34',
+      'reference' => 'cb5f5cab0d1948ff2abdaf53e81a2838fb0b0ad8',
     ),
     'orno/di' => 
     array (

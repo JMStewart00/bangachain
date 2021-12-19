@@ -1,0 +1,36 @@
+{#
+/**
+ * @file
+ * Default theme implementation for a splide wrapper.
+ *
+ * Available variables:
+ * - items: A list of items containing main and thumbnail of splide.html.twig
+ *   which can be re-position using option Thumbnail position.
+ * - attributes: HTML attributes to be applied to the list.
+ * - settings: An array containing the given settings.
+ *
+ * @ingroup themeable
+ */
+#}
+{%
+  set classes = [
+    'splide-wrapper',
+    settings.skin ? 'splide-wrapper--' ~ settings.skin|clean_class,
+    settings.skin_nav ? 'splide-wrapper--' ~ settings.skin_nav|clean_class,
+    settings.vertical ? 'is-wrapper-vertical',
+    settings.vertical_nav ? 'is-wrapper-vertical--nav',
+    settings.nav ? 'is-wrapper-nav',
+    settings.navpos ? 'is-wrapper-nav--' ~ settings.navpos|clean_class,
+    'over' in settings.navpos ? 'is-wrapper-nav--overlay',
+    'over' in settings.navpos ? 'is-wrapper-nav--' ~ settings.navpos|replace({ 'over-' : '' })
+  ]
+%}
+{% spaceless %}
+  {% if settings.nav %}
+    <div{{ attributes.addClass(classes)|without('id') }}>
+      {{ items }}
+    </div>
+  {% else %}
+    {{ items }}
+  {% endif %}
+{% endspaceless %}

@@ -1,0 +1,110 @@
+/**
+ * @file
+ * Thumbnails hoverable inside dots.
+ */
+
+/* The main thumbnail container is splide__pagination modifier */
+.splide.is-paginated--fx-hover {
+  list-style: none;
+  overflow: visible;
+  position: relative;
+  text-align: center;
+  width: 100%;
+  z-index: 3;
+}
+
+.splide.is-paginated--fx-hover::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.splide.is-paginated--fx-hover .splide__pagination li {
+  overflow: hidden;
+  position: relative;
+  vertical-align: top;
+  /* Individual thumbnail, adjust accordingly to actual thumbnail size */
+}
+
+.splide.is-paginated--fx-hover .splide__pagination li img {
+  background: #fff;
+  border: 2px solid transparent;
+  display: block;
+  margin: auto;
+  opacity: .6;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  /* Overrides core > 1.3.11, otherwise thumbnails are non-clickable */
+  pointer-events: auto;
+}
+
+.splide.is-paginated--fx-hover .splide__pagination li .splide__pagination__tn {
+  bottom: 140%;
+  left: 50%;
+  margin: 0;
+  min-width: 120px;
+  opacity: 0;
+  overflow: visible;
+  position: absolute;
+  visibility: hidden;
+  width: 120px;
+  z-index: -1;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  -webkit-transform: translate(-50%, 0);
+  transform: translate(-50%, 0);
+}
+
+.splide.is-paginated--fx-hover .splide__pagination li .splide__pagination__tn img {
+  pointer-events: none;
+}
+
+.splide.is-paginated--fx-hover .splide__pagination li .splide__pagination__tn::after {
+  border: 7px solid transparent;
+  border-bottom: 0;
+  border-top-color: #ff6d2c;
+  bottom: -7px;
+  content: '';
+  display: block;
+  height: 0;
+  left: 50%;
+  margin: 0 0 0 -7px;
+  position: absolute;
+  width: 0;
+}
+
+.splide.is-paginated--fx-hover .splide__pagination li:hover {
+  overflow: visible;
+}
+
+.splide.is-paginated--fx-hover .splide__pagination li:hover .splide__pagination__tn {
+  bottom: 120%;
+  margin-top: -20px;
+  opacity: 1;
+  visibility: visible;
+  -webkit-transition-delay: 0s;
+  transition-delay: 0s;
+  z-index: 3;
+}
+
+.splide.is-paginated--fx-hover .splide__pagination li:hover img,
+.splide.is-paginated--fx-hover .splide__pagination .is-active img {
+  border: 2px solid #ff6d2c;
+  opacity: 1;
+  -webkit-transition-delay: 0s;
+  transition-delay: 0s;
+}
+
+/**
+ * Misc.
+ */
+.block .splide.is-paginated--fx-hover {
+  margin-left: 0;
+  padding: 0;
+}
+
+@media (min-width: 720px) {
+  .splide.is-paginated--fx-hover {
+    position: absolute;
+  }
+}

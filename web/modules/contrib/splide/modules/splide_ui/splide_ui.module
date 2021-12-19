@@ -1,0 +1,53 @@
+<?php
+
+/**
+ * @file
+ * Provides Splide slider configuration entity UI.
+ */
+
+/**
+ * Implements hook_entity_type_build().
+ */
+function splide_ui_entity_type_build(array &$entity_types) {
+  /** @var \Drupal\Core\Entity\EntityTypeInterface $entity_types */
+  $splide = $entity_types['splide'];
+  $splide->setListBuilderClass('Drupal\splide_ui\Controller\SplideListBuilder');
+  $splide->setFormClass('add', 'Drupal\splide_ui\Form\SplideForm');
+  $splide->setFormClass('edit', 'Drupal\splide_ui\Form\SplideForm');
+  $splide->setFormClass('delete', 'Drupal\splide_ui\Form\SplideDeleteForm');
+  $splide->setFormClass('duplicate', 'Drupal\splide_ui\Form\SplideForm');
+
+  $splide->set('admin_permission', 'administer splide');
+
+  $splide->setLinkTemplate('add-form', '/admin/config/media/splide/add');
+  $splide->setLinkTemplate('edit-form', '/admin/config/media/splide/{splide}');
+  $splide->setLinkTemplate('delete-form', '/admin/config/media/splide/{splide}/delete');
+  $splide->setLinkTemplate('duplicate-form', '/admin/config/media/splide/{splide}/duplicate');
+  $splide->setLinkTemplate('collection', '/admin/config/media/splide');
+}
+
+/**
+ * Implements hook_help().
+ */
+function splide_ui_help($route_name) {
+  if ($route_name == 'help.page.splide_ui') {
+    $output = '';
+    $items = [
+      'README',
+      'FAQS',
+      'FORMATTER',
+      'PARAGRAPHS',
+      'VIEWS',
+      'TROUBLESHOOTING',
+      'CONTRIBUTION',
+      'MAINTAINERS',
+    ];
+
+    foreach ($items as $key) {
+      $output .= file_get_contents(dirname(dirname(dirname(__FILE__))) . "/docs/{$key}.md");
+    }
+
+    return function_exists('blazy_parse_markdown') ? blazy_parse_markdown($output) : '<pre>' . $output . '</pre>';
+  }
+  return '';
+}

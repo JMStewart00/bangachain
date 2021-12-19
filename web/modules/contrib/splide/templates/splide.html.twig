@@ -1,0 +1,83 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the Splide slider template.
+ *
+ * This template holds 3 displays: main, thumbnail and overlay splides in one.
+ *
+ * Available variables:
+ * - items: The array of items containing main image/video/audio, optional
+ *     image/video/audio overlay and captions, and optional thumbnail
+ *     texts/images.
+ * - settings: A cherry-picked settings that mostly defines the slide HTML or
+ *     layout, and none of JS settings/options which are defined at data-splide.
+ * - attributes: The array of attributes to hold the main container classes, id.
+ * - content_attributes: The array of attributes to hold optional RTL, id and
+ *     data-splide containing JSON object aka JS settings the Splide expects to
+ *     override default options. We don't store these JS settings in the normal
+ *     <head>, but inline within data-splide attribute instead.
+ *
+ * Debug:
+ * @see https://www.drupal.org/node/1906780
+ * @see https://www.drupal.org/node/1903374
+ * Use Kint: {{ kint(variable) }}
+ * Dump all available variables and their contents: {{ dump() }}
+ * Dump only the available variable keys: {{ dump(_context|keys) }}
+ */
+#}
+{%
+  set classes = [
+    settings.unsplide ? 'unsplide',
+    settings.nav ? 'splide--' ~ display|clean_class,
+    settings.skin ? 'splide--skin--' ~ settings.skin|clean_class,
+    'boxed' in settings.skin ? 'splide--skin--boxed',
+    'split' in settings.skin ? 'splide--skin--split',
+    settings.optionset ? 'splide--optionset--' ~ settings.optionset|clean_class,
+    settings.perPage > 1 ? 'is-carousel',
+    settings.count <= settings.perPage ? 'is-less',
+    settings.vertical ? 'is-vertical',
+    display == 'main' and settings.media_switch ? 'is-' ~ settings.media_switch|clean_class,
+    display == 'nav' and settings.nav_caption ? 'is-captioned',
+    settings.skin_arrows or arrow_down_attributes is defined ? 'is-arrowed',
+    arrow_down_attributes is defined ? 'is-arrowed--down',
+    settings.skin_arrows ? 'is-arrowed--' ~ settings.skin_arrows|clean_class,
+    settings.pagination ? 'is-paginated',
+    settings.pagination_fx ? 'is-paginated--fx-' ~ settings.pagination_fx|clean_class,
+    settings.skin_dots ? 'is-paginated--' ~ settings.skin_dots|clean_class,
+    settings.attributes.class ? settings.attributes.class|join(' '),
+  ]
+%}
+<div{{ attributes.addClass(classes) }}>
+  {% if not settings.unsplide %}
+    <div{{ content_attributes.addClass('splide__slider') }}>
+  {% endif %}
+
+  {% block splide_content %}
+    <div class="splide__track">
+      <ul class="splide__list">{{ items }}</ul>
+    </div>
+  {% endblock %}
+
+  {% if not settings.unsplide %}
+    </div>
+
+    {% if settings.autoplay %}
+      {% block splide_autoplay %}
+        <div class="splide__autoplay">
+          <button class="splide__play" aria-label="{{ 'Play'|t }}">{{ 'Play'|t }}</button>
+          <button class="splide__pause" aria-label="{{ 'Pause'|t }}">{{ 'Pause'|t }}</button>
+        </div>
+      {% endblock %}
+    {% endif %}
+  {% endif %}
+
+  {% block splide_arrow %}
+    {% if arrow_down_attributes is defined %}
+      <button{{ arrow_down_attributes.addClass('splide__arrow--down')
+        .setAttribute('type', 'button')
+        .setAttribute('data-target', settings.downTarget)
+        .setAttribute('data-offset', settings.downOffset) }}></button>
+        {% endif %}
+  {% endblock %}
+
+</div>

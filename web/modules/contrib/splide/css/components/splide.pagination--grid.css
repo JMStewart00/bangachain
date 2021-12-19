@@ -1,0 +1,70 @@
+/**
+ * @file
+ * Thumbnails displayed as a static grid instead of dots.
+ */
+
+.splide.is-paginated--fx-grid {
+  bottom: 0;
+  padding: 15px 0;
+  position: relative;
+}
+
+.splide.is-paginated--fx-grid .splide__slider {
+  margin-bottom: 15px;
+}
+
+.splide.is-paginated--fx-grid .splide__pagination {
+  position: relative;
+}
+
+.splide.is-paginated--fx-grid .splide__pagination li {
+  display: inline-block;
+  height: auto;
+  position: relative;
+  vertical-align: top;
+  width: 120px;
+}
+
+.splide.is-paginated--fx-grid .splide__pagination button {
+  background: none;
+  cursor: pointer;
+  display: block;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  position: absolute;
+  visibility: visible;
+  width: 100%;
+  z-index: 8;
+}
+
+.splide.is-paginated--fx-grid .splide__pagination img {
+  border: 2px solid transparent;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+}
+
+.splide.is-paginated--fx-grid .splide__pagination__tn {
+  pointer-events: none;
+}
+
+.splide.is-paginated--fx-grid .splide__pagination li:hover img,
+.splide.is-paginated--fx-grid .splide__pagination .is-active ~ .splide__pagination__tn img {
+  border-color: #ff6d2c;
+  -webkit-transition-delay: 0s;
+  transition-delay: 0s;
+}
+
+.splide.is-arrowed--down.is-paginated--fx-grid > .splide__arrows {
+  bottom: 160px;
+}
+
+/**
+ * Enable if the grid is displayed side by side to the Main image.
+
+.splide.is-paginated--fx-grid::after,
+.splide.is-paginated--fx-grid .splide__pagination__tn::after {
+  clear: none;
+  display: none;
+}
+ */

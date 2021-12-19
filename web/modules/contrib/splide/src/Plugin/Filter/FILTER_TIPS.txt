@@ -1,0 +1,73 @@
+<h3 id="splide">Splide</h3>
+<p>Create a slideshow/ carousel with a shortcode. Pay attention to attributes,
+slashes, single and double quotes:</p>
+<ol>
+  <li><b>Basic</b>, with inline HTML: <br>
+  <code>[splide]...[slide]...[/slide]...[/splide]</code></li>
+  <li><b>With self-closing
+  <code>data=ENTITY_TYPE:ID:FIELD_NAME:FIELD_IMAGE</code></b>, without inline
+  HTML: <br><code>[splide data="node:44:field_media" /]</code><br>
+  <code>[splide data="node:44:field_media:field_media_image" /]</code><br>
+  <b>Required</b>: <code>ENTITY_TYPE:ID:FIELD_NAME</code>, where
+  <code>ENTITY_TYPE</code> is <b>node</b> -- only tested with node,
+  <code>ID</code> is <b>node ID</b>, <code>FIELD_NAME</code> can be field Media,
+  Entityreference, Image, Text (long or with summary), must be multi-value,
+  or unlimited. <br><b>Optional</b>: <code>FIELD_IMAGE</code> named
+  <code>field_media_image</code> as found at Media Image/ Video for hires
+  poster image, must be similar and single-value field image for all media
+  entities to have mixed media correctly. This is not field image at Node, it is
+  at Media.</li>
+  <li><b>With settings and or options</b>, to override Splide filter settings:
+  <br>
+  <code>[splide settings="{}" options="{}"]..[slide]..[/slide]..[/splide]</code>
+  <br>
+  Where <code>settings</code> is HTML settings as seen at Filter, Field or Views
+  UI forms, and <code>options</code> is JavaScript options as seen at Optionset
+  UI forms.</li>
+  <li><b>Options only</b>: any JavaScript options relevant from
+  <code>splide/config/install/splide.optionset.default.yml</code>:<br>
+    <code>[splide options="{'type':  'loop', 'arrows': false,
+    'pagination': true}"]...[/splide]</code>
+  </li>
+  <li><b>HTML settings only</b>: any HTML settings relevant from
+  <code>SplideDefault/ BlazyDefault</code> methods:<br>
+     <code>[splide settings="{'optionset': 'x_main', 'skin': 'fullwidth',
+     'layout': 'bottom'}"]...[/splide]</code><br>
+     To force disabling enabled navigation, add <code>'nav': false</code>
+  </li>
+  <li><b>With grid</b>: similar to Blazy grid + visible items:<br>
+     <code>STYLE:SMALL-MEDIUM-LARGE:VISIBLE_ITEMS</code>
+     <code>[splide grid="nativegrid:2-3-4:8" /]</code><br>
+  </li>
+  <li><b>With HTML caption</b> for each <code>[slide]</code>, if not using
+  Filter caption for a reason: <br>
+  <code>[slide caption='Read <a href="https://mysite.com">more</a>']...</code>
+  <br>Use single quotes for HTML caption, else broken. The link is normally
+  converted automatically when using WYSIWYG. This will replace Filter caption
+  if they both exist.</li>
+</ol>
+<p><br><b>Tips</b>, if any issues:</p>
+<ul>
+  <li>Attributes <code>data, settings, options</code> can be put together into
+  one <code>[splide]</code>.</li>
+  <li><code>[slide]</code> can have attributes, including <code>caption</code>,
+  e.g.: <br>
+  <code>[slide class="slide--custom-class" caption='Read more...']</code>.</li>
+  <li>Except for self-closing one-liner <code>data</code> attribute, be sure
+  slide items are stacked, separated by line breaks, or any relevant HTML tags,
+  and wrapped each with <code>[slide]</code>:<br>
+<code>
+[splide]<br>
+  &nbsp;&nbsp;[slide]<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;IMG&gt;<br>&nbsp;&nbsp;[/slide]<br>
+  &nbsp;&nbsp;[slide]<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;IFRAME&gt;<br>&nbsp;&nbsp;[/slide]<br>
+  &nbsp;&nbsp;[slide]<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;p&gt;Any non-media HTML
+  content&lt;/p&gt;<br>&nbsp;&nbsp;[/slide]<br>
+[/splide]
+</code><br>
+    <code>IMG/ IFRAME</code>, or other HTML as slide contents can be wrapped
+    with any relevant tags, no problem.
+    </li>
+  <li>Except for <code>[slide]</code>, avoid using the reserved square bracket
+  characters <code>[</code> and <code>]</code> or other inner shortcodes inside
+  <code>[splide]...[/splide]</code> blocks till we support nested splides.</li>
+</ul>

@@ -4,4 +4,4 @@ status: true
 dependencies: {  }
 id: disc_plastic
 label: 'Disc Plastic'
-elementType: radios
+elementType: commerce_product_rendered_attribute

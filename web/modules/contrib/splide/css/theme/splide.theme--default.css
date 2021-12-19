@@ -1,0 +1,11 @@
+/**
+ * @file
+ */
+
+.splide-wrapper {
+  margin-bottom: 60px;
+}
+
+.slide .field-type-text-long {
+  padding: 20px 0 10px;
+}

@@ -1,0 +1,8 @@
+admin.vtabs:
+  version: VERSION
+  css:
+    theme:
+      css/splide.admin--vertical-tabs.css: {}
+  dependencies:
+    - core/drupal.vertical-tabs
+    - blazy/admin

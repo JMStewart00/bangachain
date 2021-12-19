@@ -1,0 +1,39 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - splide_x
+id: x_main
+name: x_main
+label: 'X Main'
+weight: -4
+group: main
+skin: fullwidth
+breakpoint: 3
+optimized: true
+options:
+  settings:
+    type: loop
+    focus: center
+    down: true
+    downTarget: '#main'
+    downOffset: 120
+    lazyLoad: blazy
+    easing: 'cubic-bezier(0.445, 0.050, 0.550, 0.950)'
+  breakpoints:
+    -
+      breakpoint: 900
+      unsplide: false
+      settings:
+        focus: center
+    -
+      breakpoint: 480
+      unsplide: false
+      settings:
+        focus: center
+    -
+      breakpoint: 320
+      unsplide: false
+      settings:
+        focus: center

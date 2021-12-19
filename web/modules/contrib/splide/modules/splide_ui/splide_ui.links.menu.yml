@@ -1,0 +1,12 @@
+entity.splide.collection:
+  title: Splide
+  route_name: entity.splide.collection
+  description: 'Manage Splide optionset.'
+  parent: system.admin_config_media
+
+splide.settings:
+  title: Splide UI
+  route_name: splide.settings
+  description: 'Manage Splide UI.'
+  parent: entity.splide.collection
+  weight: 21

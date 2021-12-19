@@ -1,0 +1,32 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - splide_test
+id: test_nav
+name: test_nav
+label: 'Test nav'
+weight: -1
+group: thumbnail
+skin: asnavfor
+breakpoint: 2
+optimized: true
+options:
+  settings:
+    focus: 'center'
+    lazyLoad: nearby
+    perPage: 7
+  breakpoints:
+    -
+      breakpoint: 769
+      unsplide: false
+      settings:
+        focus: 'center'
+        perPage: 5
+    -
+      breakpoint: 481
+      unsplide: false
+      settings:
+        focus: 'center'
+        perPage: 3

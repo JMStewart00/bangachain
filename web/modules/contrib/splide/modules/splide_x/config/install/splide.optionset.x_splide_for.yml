@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - splide_x
+id: x_splide_for
+name: x_splide_for
+label: 'X Splide for'
+weight: -2
+group: main
+skin: classic
+breakpoint: 0
+optimized: true
+options:
+  settings:
+    type: loop
+    arrows: 'false'
+    lazyLoad: blazy

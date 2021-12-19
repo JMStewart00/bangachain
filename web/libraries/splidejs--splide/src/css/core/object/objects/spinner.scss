@@ -1,0 +1,29 @@
+$size: 20px !default;
+$border: 2px solid #999 !default;
+
+.splide {
+  $root: &;
+
+  &__spinner {
+    border: $border;
+    border-left-color: transparent;
+    border-radius: 50%;
+    bottom: 0;
+    display: inline-block;
+    height: $size;
+    left: 0;
+    margin: auto;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: $size;
+  }
+
+  &__slide {
+    &.is-loading {
+      #{ $root }__spinner {
+        animation: splide-loading 1s infinite linear;
+      }
+    }
+  }
+}

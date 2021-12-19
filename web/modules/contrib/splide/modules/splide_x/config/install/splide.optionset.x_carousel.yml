@@ -1,0 +1,41 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - splide_x
+id: x_carousel
+name: x_carousel
+label: 'X Carousel'
+weight: -8
+group: main
+skin: boxed-carousel
+breakpoint: 2
+optimized: true
+options:
+  settings:
+    type: loop
+    perPage: 5
+    perMove: 3
+    focus: center
+    padding: '10'
+    easing: 'cubic-bezier(0.550, 0.085, 0.680, 0.530)'
+    easingOverride: easeInQuad
+    lazyLoad: blazy
+    trimSpace: 'false'
+    wheel: false
+  breakpoints:
+    -
+      breakpoint: 900
+      unsplide: false
+      settings:
+        perPage: 3
+        perMove: 3
+        focus: center
+    -
+      breakpoint: 641
+      unsplide: false
+      settings:
+        perPage: 1
+        perMove: 1
+        focus: center

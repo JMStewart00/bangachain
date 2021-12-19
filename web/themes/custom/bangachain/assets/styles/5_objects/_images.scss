@@ -1,0 +1,7 @@
+.o-img {
+  &--4-3 {
+    width: 100%;
+    object-fit: contain;
+    aspect-ratio: 4 / 3;
+  }
+}

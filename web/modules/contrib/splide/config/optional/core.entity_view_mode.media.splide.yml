@@ -1,0 +1,12 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - splide
+  module:
+    - media
+id: media.splide
+label: 'Splide slider'
+targetEntityType: media
+cache: true

@@ -1,0 +1,362 @@
+# Schema for the configuration files of the Splide module.
+
+# Splide global settings managed by UI.
+splide.settings:
+  type: config_object
+  label: 'Splide settings'
+  mapping:
+    module_css:
+      type: boolean
+      label: 'Enable Splide module splide.theme.css'
+    splide_css:
+      type: boolean
+      label: 'Enable Splide library splide.min.css'
+    sitewide:
+      type: integer
+      label: 'Load splide globally'
+
+# Splide JS settings managed by UI.
+splide_optionset:
+  type: mapping
+  label: Settings
+  mapping:
+    type:
+      type: string
+      label: Type
+    mediaQuery:
+      type: string
+      label: 'Media query'
+    rewind:
+      type: boolean
+      label: Rewind
+    speed:
+      type: integer
+      label: Speed
+    rewindSpeed:
+      type: integer
+      label: 'Rewind speed'
+    waitForTransition:
+      type: boolean
+      label: 'Wait for transition'
+    width:
+      type: string
+      label: Width # number|string
+    height:
+      type: string
+      label: Height  # number|string
+    fixedWidth:
+      type: string
+      label: 'Fixed width'  # number|string
+    fixedHeight:
+      type: string
+      label: 'Fixed height' # number|string
+    heightRatio:
+      type: integer
+      label: 'Height ratio'
+    autoWidth:
+      type: boolean
+      label: 'Auto width'
+    autoHeight:
+      type: boolean
+      label: 'Auto height'
+    perPage:
+      type: integer
+      label: 'Per page'
+    perMove:
+      type: integer
+      label: 'Per move'
+    clones:
+      type: integer
+      label: Clones
+    start:
+      type: integer
+      label: 'Initial slide'
+    focus:
+      type: string
+      label: Focus # boolean|number|string'
+    gap:
+      type: string
+      label: Gap # number|string
+    padding:
+      type: string
+      label: Padding # object, false
+    easing:
+      type: string
+      label: Easing
+    arrows:
+      type: string
+      label: Arrows # boolean|string default: true
+    arrowPath:
+      type: string
+      label: 'Arrow path'
+    pagination:
+      type: string
+      label: Pagination # boolean|string default: true
+    autoplay:
+      type: boolean
+      label: Autoplay
+    interval:
+      type: integer
+      label: Interval
+    pauseOnHover:
+      type: boolean
+      label: 'Pause on hover'
+    pauseOnFocus:
+      type: boolean
+      label: 'Pause on focus'
+    resetProgress:
+      type: boolean
+      label: 'Reset progress'
+    lazyLoad:
+      type: string
+      label: 'Lazy load'
+    preloadPages:
+      type: integer
+      label: 'Preload pages'
+    keyboard:
+      type: string
+      label: Keyboard # boolean|string
+    drag:
+      type: string # boolean|string at v3
+      label: Drag
+    dragMinThreshold:
+      type: integer
+      label: 'Drag min threshold'
+    swipeDistanceThreshold:
+      type: integer
+      label: 'Swipe distance threshold'
+    flickVelocityThreshold:
+      type: float
+      label: 'Flick velocity threshold'
+    flickPower:
+      type: integer
+      label: 'Flick power'
+    flickMaxPages:
+      type: integer
+      label: 'Flick max pages'
+    direction:
+      type: string
+      label: Direction
+    cover:
+      type: boolean
+      label: Cover
+    slideFocus:
+      type: boolean
+      label: 'Slide focus'
+    isNavigation:
+      type: boolean
+      label: 'Is navigation'
+    trimSpace:
+      type: string
+      label: 'Trim space' # boolean|string
+    updateOnMove:
+      type: boolean
+      label: 'Update on move'
+    classes:
+      type: string
+      label: Classes # object
+    i18n:
+      type: string
+      label: i18n # object
+    video:
+      type: string
+      label: 'Video options'
+
+    # Module features
+    down:
+      type: boolean
+      label: 'Down arrow'
+    downTarget:
+      type: string
+      label: 'Arrow down target'
+    downOffset:
+      type: integer
+      label: 'Down offset'
+    easingOverride:
+      type: string
+      label: 'Easing override'
+    randomize:
+      type: boolean
+      label: Randomize
+    fullscreen:
+      type: boolean
+      label: Fullscreen
+    wheel:
+      type: boolean
+      label: Mousewheel
+    zoom:
+      type: string
+      label: Zoom
+
+# Individual Splide JS settings managed by UI.
+splide.optionset.*:
+  type: config_entity
+  label: 'Splide optionset'
+  mapping:
+    id:
+      type: string
+      label: ID
+    name:
+      type: string
+      label: Name
+    weight:
+      type: integer
+      label: Weight
+    label:
+      type: label
+      label: Label
+    uuid:
+      type: string
+      label: UUID
+    group:
+      type: string
+      label: Group
+    skin:
+      type: string
+      label: Skin
+    breakpoint:
+      type: integer
+      label: 'Breakpoint number'
+    optimized:
+      type: boolean
+      label: Optimized
+    options:
+      type: mapping
+      label: Options
+      mapping:
+        options__active_tab:
+          type: string
+        settings:
+          type: splide_optionset
+          label: Settings
+        breakpoints:
+          type: sequence
+          label: 'Responsive display'
+          sequence:
+            - type: mapping
+              mapping:
+                breakpoint:
+                  type: integer
+                  label: Responsive
+                unsplide:
+                  type: boolean
+                  label: Unsplide
+                settings:
+                  type: splide_optionset
+                  label: 'Responsive settings'
+
+
+# HTML content/layout-related settings managed by Splide formatters and Views.
+splide_base:
+  type: blazy_base
+  label: 'Splide display format base settings'
+  mapping:
+    overridables:
+      type: sequence
+      label: 'Overridable options'
+      sequence:
+        - type: string
+          label: Overridable
+
+# Splide image base settings.
+splide_image:
+  type: splide_base
+  label: 'Splide image display format settings'
+
+# Splide fieldable entity or Views settings.
+splide_extended:
+  type: splide_image
+  label: 'Splide fieldable display format extended settings'
+
+# The Splide text formatter settings.
+field.formatter.settings.splide_text:
+  type: splide_base
+  label: 'Splide text display format settings'
+
+# The Splide image formatter settings.
+field.formatter.settings.splide_image:
+  type: splide_image
+  label: 'Splide image display format settings'
+
+# The Splide file formatter settings.
+# @deprecated TBD; to be removed.
+field.formatter.settings.splide_file:
+  type: splide_image
+  label: 'Splide image with ME display format settings'
+
+splide_media:
+  type: splide_extended
+  label: 'Splide media base display format settings'
+
+field.formatter.settings.splide_media:
+  type: splide_media
+  label: 'Splide media display format settings'
+
+# Entity reference
+splide_entityreference:
+  type: splide_base
+  label: 'Splide Entity Reference base display format settings'
+
+field.formatter.settings.splide_entityreference:
+  type: splide_entityreference
+  label: 'Splide Entity Reference display format settings'
+
+# Paragraphs
+splide_paragraphs:
+  type: splide_base
+  label: 'Splide Paragraphs base display format settings'
+
+field.formatter.settings.splide_paragraphs:
+  type: splide_paragraphs
+  label: 'Splide Paragraphs Media display format settings'
+
+field.formatter.settings.splide_paragraphs_vanilla:
+  type: splide_paragraphs
+  label: 'Splide Paragraphs Vanilla display format settings'
+
+# Views
+splide_extended_views:
+  type: splide_extended
+  label: 'Splide views settings'
+  mapping:
+    grouping:
+      type: sequence
+      label: 'Grouping field number %i'
+      sequence:
+        type: mapping
+        label: 'Field'
+        mapping:
+          field:
+            type: string
+            label: 'Field'
+          rendered:
+            type: boolean
+            label: 'Use rendered output to group rows'
+          rendered_strip:
+            type: boolean
+            label: 'Remove tags from rendered output'
+    grouping_limit:
+      type: integer
+      label: 'Grouping limit'
+    grouping_optionset:
+      type: string
+      label: 'Grouping optionset'
+
+views.style.splide:
+  type: splide_extended_views
+  label: 'Splide Slider'
+
+views.style.splide_grouping:
+  type: splide_extended_views
+  label: 'Splide Grouping'
+
+filter_settings.splide_filter:
+  type: splide_base
+  label: 'Splide filter'
+  mapping:
+    overridables:
+      type: sequence
+      label: Overridables
+      sequence:
+        - type: string
+          label: override

@@ -1,0 +1,19 @@
+services:
+  splide.manager:
+    class: Drupal\splide\SplideManager
+    parent: blazy.manager.base
+    calls:
+      - [setSkinManager, ['@splide.skin_manager']]
+
+  splide.formatter:
+    class: Drupal\splide\SplideFormatter
+    parent: blazy.formatter
+
+  splide.admin:
+    class: Drupal\splide\Form\SplideAdmin
+    arguments: ['@blazy.admin.extended', '@splide.manager']
+
+  splide.skin_manager:
+    class: Drupal\splide\SplideSkinManager
+    parent: default_plugin_manager
+    arguments: ['@app.root', '@config.factory']

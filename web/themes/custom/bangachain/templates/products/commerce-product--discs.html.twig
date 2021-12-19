@@ -1,93 +1,54 @@
-{#
-/**
- * @file
- *
- * Default product template for discs.
- *
- * Available variables:
- * - attributes: HTML attributes for the wrapper.
- * - product: The rendered product fields.
- *   Use 'product' to print them all, or print a subset such as
- *   'product.title'. Use the following code to exclude the
- *   printing of a given field:
- *   @code
- *   {{ product|without('title') }}
- *   @endcode
- * - product_entity: The product entity.
- * - product_url: The product URL.
- *
- * @ingroup themeable
- */
-#}
+{% extends "commerce-product.html.twig" %}
 
-{%
-  set classes = [
-    'c-product',
-  ]
-%}
+{% block details %}
+  <h2 class="u-color__blue-gray">{{ product.field_brand }}</h2>
+  <h1 class="u-color__blue">{{ product.title }}</h1>
+  {{product.variations}}
 
-<article{{attributes.addClass(classes)}}>
-  <div class="l-container">
-    <div class="l-grid l-grid--sidebar-right u-vr__mt--2 u-vr__mb--2">
+  {% if product.field_description|render %}
+    <div class="c-product__description">{{ product.field_description }}</div>
+  {% endif %}
 
-      <div class="l-grid__main l-main">
+  {% if product.field_speed|render %}
+    <div class="c-product__flight-numbers u-vr__mb--1">
+      <h2 class="u-color__blue">{{'Flight Numbers'|t}}</h2>
+      <ul class="o-list-inline d-flex justify-content-start">
+        <li class="c-product__speed o-list-inline__item u-color__blue" title="Speed">
+          <span>Speed</span>
+          <span>{{ product.field_speed }}</span>
+        </li>
+        <li class="c-product__glide o-list-inline__item u-color__blue" title="Glide">
+          <span>Glide</span>
+          <span>{{ product.field_glide }}</span>
+        </li>
+        <li class="c-product__turn o-list-inline__item u-color__blue" title="Turn">
+          <span>Turn</span>
+          <span>{{ product.field_turn }}</span>
+        </li>
+        <li class="c-product__fade o-list-inline__item u-color__blue" title="Fade">
+          <span>Fade</span>
+          <span>{{ product.field_fade }}</span>
+        </li>
+      </ul>
+    </div>
+  {% endif %}
+{% endblock %}
 
-        <div class="c-product__image u-vr__mb--1">
-          {% if product.variation_field_product_image.0|render %}
-            {{ product.variation_field_product_image }}
-          {% else %}
-            <div class="c-field-media-image">
-              <img src="/themes/custom/bangachain/assets/images/default-disc.png" alt="Bang-A-Chain logo" style="width: 300px;">
-            </div>
-          {% endif %}
-        </div>
-
-      </div>
-
-      <div class="l-grid__sidebar l-sidebar">
-
-        <div class="c-product__title u-vr__mb--1">
-          <h1 class="u-color__blue">{{ product.title }}</h1>
-          <h2 class="u-color__blue-gray">{{ product.field_brand }}</h2>
-        </div>
-
-
-        {% if product.field_speed|render %}
-        <div class="c-product__flight-numbers u-vr__mb--1">
-          <h3 class="u-color__blue">{{'Flight Numbers'|t}}</h3>
-          <ul class="o-list-inline d-flex justify-content-start">
-            <li class="c-product__speed o-list-inline__item u-color__blue" title="Speed">
-              <span>Speed</span>
-              <span>{{ product.field_speed }}</span>
-            </li>
-            <li class="c-product__glide o-list-inline__item u-color__blue" title="Glide">
-              <span>Glide</span>
-              <span>{{ product.field_glide }}</span>
-            </li>
-            <li class="c-product__turn o-list-inline__item u-color__blue" title="Turn">
-              <span>Turn</span>
-              <span>{{ product.field_turn }}</span>
-            </li>
-            <li class="c-product__fade o-list-inline__item u-color__blue" title="Fade">
-              <span>Fade</span>
-              <span>{{ product.field_fade }}</span>
-            </li>
-          </ul>
-        </div>
-        {% endif %}
-
+{% block gallery %}
+  <div class="c-product__gallery" style="display: flex; flex-direction: column;">
+    <div id="gallery-slider" class="splide">
+      <div class="splide__track">
+        <ul class="splide__list">
+          {{ product_gallery_images }}
+        </ul>
       </div>
     </div>
-
-    <div class="c-product__variations u-vr__mb--4">
-      {{ drupal_view('variations_on_product_page', 'block_1') }}
-    </div>
-
-    {% if product.field_description|render %}
-      <div class="c-product__description u-vr__mb--4">
-        <h2>About the {{ product.title.0['#context'].value }}</h2>
-        {{- product.field_description -}}
+    <div id="thumbnail-slider" class="splide">
+      <div class="splide__track">
+        <ul class="splide__list">
+          {{ product_gallery_images }}
+        </ul>
       </div>
-    {% endif %}
+    </div>
   </div>
-</article>
+{% endblock %}

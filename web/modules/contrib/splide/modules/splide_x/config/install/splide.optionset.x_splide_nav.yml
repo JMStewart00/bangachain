@@ -1,0 +1,33 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - splide_x
+id: x_splide_nav
+name: x_splide_nav
+label: 'X Splide nav'
+weight: -1
+group: nav
+skin: asnavfor
+breakpoint: 2
+optimized: true
+options:
+  settings:
+    type: loop
+    focus: center
+    lazyLoad: blazy
+    pagination: 'false'
+    perPage: 7
+    isNavigation: true
+  breakpoints:
+    -
+      breakpoint: 769
+      unsplide: false
+      settings:
+        perPage: 5
+    -
+      breakpoint: 481
+      unsplide: false
+      settings:
+        perPage: 3

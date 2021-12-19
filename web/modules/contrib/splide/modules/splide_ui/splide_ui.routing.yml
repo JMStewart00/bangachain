@@ -1,0 +1,50 @@
+# The routing.yml file defines the routes for the management pages: collection,
+# add, edit, delete.
+
+splide.settings:
+  path: '/admin/config/media/splide/ui'
+  defaults:
+    _form: '\Drupal\splide_ui\Form\SplideSettingsForm'
+    _title: 'Splide UI'
+  requirements:
+    _permission: 'administer splide'
+
+entity.splide.collection:
+  path: '/admin/config/media/splide'
+  defaults:
+    _entity_list: 'splide'
+    _title: 'Splide Configuration'
+  requirements:
+    _permission: 'administer splide'
+
+splide.optionset_page_add:
+  path: '/admin/config/media/splide/add'
+  defaults:
+    _entity_form: 'splide.add'
+    _title: 'Add splide'
+  requirements:
+    _permission: 'administer splide'
+
+entity.splide.edit_form:
+  path: '/admin/config/media/splide/{splide}'
+  defaults:
+    _entity_form: 'splide.edit'
+    _title: 'Edit splide'
+  requirements:
+    _permission: 'administer splide'
+
+entity.splide.duplicate_form:
+  path: '/admin/config/media/splide/{splide}/duplicate'
+  defaults:
+    _entity_form: 'splide.duplicate'
+    _title: 'Duplicate splide optionset'
+  requirements:
+    _permission: 'administer splide'
+
+entity.splide.delete_form:
+  path: '/admin/config/media/splide/{splide}/delete'
+  defaults:
+    _entity_form: 'splide.delete'
+    _title: 'Delete splide'
+  requirements:
+    _permission: 'administer splide'

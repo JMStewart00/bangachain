@@ -149,7 +149,7 @@ content:
     region: content
     label: hidden
     settings:
-      combine: true
+      combine: false
     third_party_settings: {  }
 hidden:
   add_to_cart_link: true

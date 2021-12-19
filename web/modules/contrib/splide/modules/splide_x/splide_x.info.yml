@@ -1,0 +1,15 @@
+name: Splide X
+type: module
+description: 'Provides Splide Slider extras and examples.'
+core_version_requirement: ^8 || ^9
+package: Splide
+dependencies:
+  - splide:splide
+
+# Add a fake version so local drush and Git checkouts do not fail dependencies.
+# version: 1.x
+
+# Information added by Drupal.org packaging script on 2021-10-15
+version: '1.0.1'
+project: 'splide'
+datestamp: 1634286788

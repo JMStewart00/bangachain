@@ -225,6 +225,7 @@
         "drupal/sitewide_alert": "^1.3",
         "drupal/smtp": "^1.0",
         "drupal/social_media_links": "^2.7",
+        "drupal/splide": "^1.0",
         "drupal/swiftmailer": "^2.0@beta",
         "drupal/token": "^1.9",
         "drupal/twig_tweak": "^2.6",
@@ -245,6 +246,7 @@
         "npm-asset/mburger-css": "^1.3",
         "npm-asset/mmenu-js": "8.5",
         "npm-asset/slick-carousel": "^1.8",
+        "npm-asset/splidejs--splide": "^3.6",
         "oomphinc/composer-installers-extender": "^1.1 || ^2",
         "recurser/jquery-simple-color": "1.2.3",
         "zaporylie/composer-drupal-optimizations": "^1.0"

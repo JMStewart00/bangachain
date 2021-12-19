@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\commerce_product\Entity\ProductVariation;
 use Drupal\file\Entity\File;
 use Drupal\node\NodeInterface;
 use Drupal\recurring_events\Entity\EventSeries;
@@ -36,13 +37,44 @@ function bangachain_theme_suggestions_form_alter(array &$suggestions, array $var
  *
  * This is used to add a class to the <form> for styling.
  */
-function bangachain_form_alter(&$form, &$form_state) {
+function bangachain_form_alter(&$form, &$form_state, $form_id) {
   // Do not add classes for Layout Builder forms.
   if (strpos($form['#form_id'], 'layout') !== false) {
     return;
   }
 
   $form['#attributes']['class'][] = 'c-form';
+
+  // Commerce Add to Cart form.
+  if ((strpos($form_id, 'commerce_order_item_add_to_cart_form_commerce_product_') === 0)) {
+    $selected_id = $form_state->getUserInput() ? $form_state->getUserInput()['purchased_entity'][0]['variation'] : NULL;
+    $selected_variation = $selected_id ? ProductVariation::load($selected_id) : $form_state->get('product')->getDefaultVariation();
+    if (isset($selected_variation)) {
+      // Set form data attribute for the product variation id.
+      $form['#attributes']['data-product-variation-id'] = $selected_variation->id();
+
+      $form['price'] = [
+        '#type'   => 'markup',
+        '#markup' => '<div class="c-product__price">$' . number_format($selected_variation->getPrice()->getNumber(), 2) . '</div>',
+      ];
+      $form['price']['#weight'] = -100;
+    }
+
+    switch ($selected_variation->bundle()) {
+      case 'discs':
+        $form['purchased_entity']['widget'][0]['variation']['#title'] = 'Disc - Plastic, Color, Weight';
+        break;
+
+      case 'apparel':
+        $form['purchased_entity']['widget'][0]['variation']['#title'] = 'Product - Size, Color';
+        break;
+
+      default:
+        $form['purchased_entity']['widget'][0]['variation']['#title'] = 'Select one:';
+        break;
+    }
+
+  }
 }
 
 /**
@@ -279,6 +311,66 @@ function bangachain_preprocess_address_plain(&$variables) {
   $link = $link_base .= urlencode($link_query);
 
   $variables['google_map_link'] = $link;
+}
+
+
+/**
+ * Implements template_preprocess_commerce_product().
+ */
+function bangachain_preprocess_commerce_product(&$variables) {
+  if (isset($variables['elements']['#commerce_product'])) {
+    // Get view mode & assign variable.
+    $view_mode = $variables['elements']['#view_mode'];
+    $variables['view_mode'] = $view_mode;
+
+    // Get product and variations.
+    $product = $variables['elements']['#commerce_product'];
+    $product_variations = $product->getVariations();
+
+    // Product gallery images: The product gallery always looks like this:
+    //
+    // * Primary product image
+    // * Product Variation images
+    // * Additional product images (if available)
+    //
+    // Multiple variations can share a single image, which might in turn be
+    // the same as the product primary image, so we make sure each
+    // referenced entity is only included once.
+
+    $product_gallery_images = [];
+
+    // Primary product image
+    if ($product->hasField('field_default_image') && isset($product->field_default_image->entity)) {
+      $product_gallery_images[$product->field_default_image->target_id] = [
+        'image' => $variables['product']['field_default_image'],
+      ];
+    }
+
+    // Product Variation images
+    if (!empty($product_variations)) {
+      // Get the variation field renderer so we can use it to render out any
+      // image fields that are present
+      $variation_view_builder = \Drupal::entityTypeManager()->getViewBuilder('commerce_product_variation');
+      $stockServiceManager = \Drupal::service('commerce_stock.service_manager');
+
+      foreach ($product_variations as $key => $variation) {
+        $stock = intval($stockServiceManager->getStockLevel($variation));
+        // If variation is active.
+        if ($variation->status->value == '1' && $stock > 0) {
+          // If variation has an image.
+          if (isset($variation->field_product_image->entity)) {
+            $product_gallery_images[$variation->field_product_image->target_id]['image'] = $variation_view_builder->viewField($variation->get('field_product_image'), $view_mode) ?: NULL;
+          }
+        }
+      }
+    }
+
+    // TODO: Additional product images
+// dd($product_gallery_images);
+    $variables['product_gallery_images'] = $product_gallery_images;
+
+    // ...
+  }
 }
 
 

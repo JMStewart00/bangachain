@@ -1,0 +1,172 @@
+/**
+ * @file.
+ * Provided basic styling for the Splide based on custom settings.
+ *
+ * @todo remove no-longer relevant overrides.
+ */
+
+@keyframes splide-loading {
+  0% {
+    transform: rotate(0);
+  }
+
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+/**
+ * Misc overrides core splide.
+ */
+.is-mounted .splide__slider {
+  overflow: visible;
+}
+
+.splide__slider::before,
+.splide__slider::after {
+  display: table;
+  content: '';
+}
+
+.splide__slider::after {
+  clear: both;
+}
+
+/** Draggable. */
+.splide--draggable .splide__list {
+  cursor: -webkit-grab;
+  cursor: grab;
+}
+
+.splide--draggable .splide__list:active {
+  cursor: -webkit-grabbing;
+  cursor: grabbing;
+}
+
+.splide--draggable .splide__list:active a,
+.splide--draggable .splide__list:active .slide__caption {
+  cursor: -webkit-grabbing;
+  cursor: grabbing;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/*
+.splide--draggable.is-less .splide__list {
+  cursor: default;
+}
+*/
+
+.unsplide .splide__slide,
+.is-mounted .splide__slide {
+  position: relative;
+  visibility: visible;
+}
+
+/* Fix for Chrome blue outline */
+.splide__slide:focus {
+  outline: 0; /* csslint allow: outline-none */
+}
+
+/* Prevents collapsing splide when unsplide like one item. */
+.unsplide .splide__slide {
+  width: 100%;
+}
+
+.splide__slide.is-active {
+  z-index: 4;
+}
+
+/**
+ * Slide layouts, adjust accordingly per actual container slide.
+ */
+.slide__content,
+.grid__content {
+  position: relative;
+}
+
+.slide__content::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.slide__title {
+  margin: 10px 0 5px;
+  line-height: 1.2;
+}
+
+.slide__link {
+  margin: 30px auto;
+}
+
+/* Overrides .splide__slider to make caption text selectable. */
+.slide__caption {
+  cursor: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  -o-user-select: text;
+  -webkit-user-select: text;
+  user-select: text;
+  width: 100%;
+}
+
+/* Only display when JS is ready. */
+.is-loading .slide__caption {
+  visibility: hidden;
+}
+
+.splide--main .slide__caption {
+  min-height: 32%;
+  padding: 20px 0;
+  z-index: 3;
+}
+
+.splide--nav .slide__caption {
+  padding: 5px 6px;
+}
+
+/* Makes the pointer work when bullets placed over the slide. */
+/* Overrides core > 1.3.11, otherwise thumbnails are non-clickable */
+.splide button,
+.splide--nav .splide__slide img {
+  pointer-events: auto;
+}
+
+/**
+ * Media.
+ */
+.slide__media {
+  overflow: hidden;
+  position: relative;
+}
+
+/* Center the image to reduce gap at RHS with smaller image, larger container */
+.media__image {
+  margin: 0 auto;
+}
+
+/** @todo: Remove temp fix for when total <= perPage at 1.6.1+. */
+/** @see https://github.com/kenwheeler/slick/issues/262
+.is-less .splide__track {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+} */
+
+/* Fix for BigPipe CSS re-orders issue.
+.splide.is-less .splide__slide {
+  float: none;
+  display: inline-block;
+  vertical-align: top;
+}  */
+
+.splide__autoplay {
+  position: absolute;
+  right: 15px;
+  bottom: 15px;
+  z-index: 11; /* Above dots 10. */
+}

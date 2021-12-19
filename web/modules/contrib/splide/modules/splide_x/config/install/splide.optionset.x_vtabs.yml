@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - splide_x
+id: x_vtabs
+name: x_vtabs
+label: 'X VTabs'
+weight: null
+group: nav
+skin: vtabs
+breakpoint: 0
+optimized: true
+options:
+  settings:
+    type: loop
+    direction: ttb
+    focus: center
+    height: '420px'
+    lazyLoad: blazy
+    wheel: true
+    perPage: 7
+    perMove: 3
+    isNavigation: true

@@ -46,12 +46,9 @@
 %}
 
 {% for item in items %}
-  {% set quantity %}
-    {{ item.content['#value']|number_format }}
-  {% endset %}
-  {% if quantity|striptags > 0 %}
-    <div{{ attributes.addClass(classes) }}>({{- quantity -}} in stock )</div>
-  {% else %}
-    <div{{ attributes.addClass(classes) }}>Not in Stock!</div>
+  {% set quantity = item.content['#value'] %}
+
+  {% if quantity > 0 %}
+    <div{{ attributes.addClass(classes) }}>{{- quantity -}} in stock</div>
   {% endif %}
 {% endfor %}

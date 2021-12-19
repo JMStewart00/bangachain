@@ -41,7 +41,9 @@
 
             // Update the "src" with the new image and also set the "width"
             // attribute to easily check if we need a new image after resize.
-            image.setAttribute('src', responsiveImgPath);
+            if (responsiveImgPath) {
+              image.setAttribute('src', responsiveImgPath);
+            }
             image.setAttribute('width', responsiveImgWidth);
           });
         }

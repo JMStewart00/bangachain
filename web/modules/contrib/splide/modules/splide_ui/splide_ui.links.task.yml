@@ -1,0 +1,15 @@
+entity.splide.collection:
+  title: List
+  route_name: entity.splide.collection
+  base_route: entity.splide.collection
+
+entity.splide.edit_form:
+  title: Edit
+  route_name: entity.splide.edit_form
+  base_route: entity.splide.edit_form
+
+splide.settings:
+  title: UI
+  route_name: splide.settings
+  base_route: entity.splide.collection
+  # parent_id: entity.splide.collection

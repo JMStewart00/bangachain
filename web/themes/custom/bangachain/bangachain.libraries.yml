@@ -88,3 +88,20 @@ elfsight:
   version: 1.0
   js:
     assets/js/elfsight.js: {}
+
+splide:
+  version: 3.6.4
+  css:
+    theme:
+      /libraries/splidejs--splide/dist/css/splide.min.css: { weight: -1 }
+  js:
+    /libraries/splidejs--splide/dist/js/splide.min.js: { weight: -1 }
+
+product-gallery:
+  version: 1.0
+  js:
+    assets/js/product-gallery.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - bangachain/splide

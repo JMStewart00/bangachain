@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Provides Splide X utilities.
+ */
+
+/**
+ * Implements hook_help().
+ */
+function splide_x_help($route_name) {
+  if ($route_name == 'help.page.splide_x') {
+    $output = file_get_contents(dirname(__FILE__) . '/README.md');
+    return function_exists('blazy_parse_markdown') ? blazy_parse_markdown($output) : '<pre>' . $output . '</pre>';
+  }
+  return '';
+}

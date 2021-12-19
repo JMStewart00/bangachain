@@ -1,0 +1,88 @@
+# All libraries supported by Splide module.
+splide:
+  remote: https://github.com/Splidejs/splide
+  version: 2.x
+  license:
+    name: MIT
+    url: https://github.com/Splidejs/splide/blob/master/LICENSE
+    gpl-compatible: true
+  js:
+    /libraries/splide/dist/js/splide.min.js: { weight: -3, minified: true }
+  css:
+    base:
+      /libraries/splide/dist/css/splide-core.min.css: {}
+
+base:
+  version: VERSION
+  js:
+    js/splide.base.min.js: { weight: -2, minified: true }
+  css:
+    base:
+      css/splide.base.css: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - blazy/dblazy
+    - splide/splide
+
+nav:
+  version: VERSION
+  js:
+    js/splide.nav.min.js: { minified: true }
+  dependencies:
+    - splide/base
+
+load:
+  version: VERSION
+  js:
+    js/splide.load.min.js: { weight: -0.003, minified: true }
+  dependencies:
+    - splide/base
+
+vanilla:
+  version: VERSION
+  js:
+    js/splide.vanilla.min.js: { weight: -0.003, minified: true }
+  dependencies:
+    - splide/base
+
+theme:
+  version: VERSION
+  css:
+    layout:
+      css/layout/splide.module.css: {}
+    theme:
+      css/theme/splide.theme.css: {}
+  dependencies:
+    - splide/base
+
+pagination:
+  version: VERSION
+  js:
+    js/components/splide.pagination.min.js: { weight: -0.03, minified: true }
+  dependencies:
+    - splide/theme
+
+pagination.hover:
+  version: VERSION
+  css:
+    component:
+      css/components/splide.pagination--hover.css: {}
+  dependencies:
+    - splide/pagination
+
+pagination.grid:
+  version: VERSION
+  css:
+    component:
+      css/components/splide.pagination--grid.css: {}
+  dependencies:
+    - splide/pagination
+
+arrow.down:
+  version: VERSION
+  css:
+    component:
+      css/components/splide.arrows--down.css: {}
+  dependencies:
+    - splide/theme

@@ -4,4 +4,4 @@ status: true
 dependencies: {  }
 id: disc_color
 label: 'Disc Color'
-elementType: radios
+elementType: commerce_product_rendered_attribute

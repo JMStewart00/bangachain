@@ -1,0 +1,64 @@
+
+Splide 1.0.0-dev, 2021-10-08
+----------------------------
+- Issue #3241510 by gausarts: Upgrade to v3
+- Exposed the hidden Display style option for Native Grid at Views.
+- Fixed for unreliable context with AJAX loaded contents.
+- Fixed for default grid BC.
+
+Splide 1.0.0-dev, 2021-09-18
+----------------------------
+- Update to Flexbox and Native Grid as per Blazy #3233555
+
+Splide 1.0.0-dev, 2021-06-09
+----------------------------
+- Added transition API.
+
+Splide 1.0.0-dev, 2021-06-06
+----------------------------
+- Decoupled wheel zoom from wheel slide.
+- Added back Thumbnail effect (grid/hover), 99% Slick ported.
+- Fixed for erotic zoom behaviors at Splidebox.
+- Moved js/extensions into js/components to match CSS convention.
+- Moved Drupal.slide to dSplide for shorter namespace.
+
+Splide 1.0.0-dev, 2021-06-04
+----------------------------
+- Added video autoplay option relevant for Splidebox.
+
+Splide 1.0.0-dev, 2021-06-03
+----------------------------
+- Updated SwipeDetect and wheel zoom.
+
+Splide 1.0.0-dev, 2021-05-29
+----------------------------
+- Added Fullscreen API.
+
+Splide 1.0.0-dev, 2021-05-27
+----------------------------
+- Adjusted main/ nav displays to the library conventions.
+- Fixed for library themes not being picked up due to empty group.
+
+Splide 1.0.0-dev, 2021-05-25
+----------------------------
+- Moved blazy, video, mousewheel to extensions to use the library API.
+- Adopted library themes: skyblue, seagreen to re-use per instance, not global.
+
+Splide 1.0.0-dev, 2021-05-24
+----------------------------
+- Renamed `is-arrow` to `is-arrowed`, `is-pagination` to `is-paginated` for
+  consistency with `is-captioned`.
+
+Splide 1.0.0-dev, 2021-05-23
+----------------------------
+- Updated arrows and pagination classes due to troublesome option.
+- Added supports Vanilla with thumbnail navigation for Entity reference.
+- Added supports Vanilla with thumbnail navigation for Media.
+
+Splide 1.0.0-dev, 2021-05-22
+----------------------------
+- Added files.
+
+Splide 1.0.0-dev, 2021-05-19
+----------------------------
+- Initial commit.

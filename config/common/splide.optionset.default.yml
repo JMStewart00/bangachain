@@ -1,0 +1,75 @@
+uuid: f9c9dab0-c765-4cc8-879e-acf69a3de4d5
+langcode: en
+status: false
+dependencies:
+  enforced:
+    module:
+      - splide
+_core:
+  default_config_hash: LhZdVsd9NFiWg5XINEE2ewHAnj5hsjcvjnM6T9ffzjM
+id: default
+name: default
+label: Default
+weight: -10
+group: ''
+skin: default
+breakpoint: 0
+optimized: false
+options:
+  options__active_tab: ''
+  settings:
+    type: slide
+    rewind: false
+    speed: 400
+    rewindSpeed: 0
+    waitForTransition: true
+    width: '0'
+    height: '0'
+    fixedWidth: '0'
+    fixedHeight: '0'
+    heightRatio: 0
+    autoWidth: false
+    autoHeight: false
+    perPage: 1
+    perMove: 0
+    clones: 0
+    start: 0
+    focus: '0'
+    gap: '0'
+    padding: ''
+    easing: 'cubic-bezier(.42,.65,.27,.99)'
+    arrows: 'true'
+    arrowPath: ''
+    pagination: 'true'
+    autoplay: false
+    interval: 5000
+    pauseOnHover: true
+    pauseOnFocus: true
+    resetProgress: true
+    lazyLoad: ''
+    preloadPages: 1
+    keyboard: 'true'
+    drag: 'true'
+    dragMinThreshold: 15
+    swipeDistanceThreshold: 150
+    flickVelocityThreshold: 0.6
+    flickPower: 600
+    flickMaxPages: 1
+    direction: ltr
+    cover: false
+    mediaQuery: min
+    slideFocus: true
+    isNavigation: false
+    trimSpace: 'true'
+    updateOnMove: false
+    classes: ''
+    i18n: ''
+    video: ''
+    down: false
+    downTarget: ''
+    downOffset: 0
+    easingOverride: ''
+    fullscreen: false
+    randomize: false
+    wheel: false
+    zoom: ''

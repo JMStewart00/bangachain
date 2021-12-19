@@ -24,12 +24,8 @@
     });
     thumbnailSlider.on('active', function (Slide) {
       var variationSelect = document.querySelector('select[name="purchased_entity[0][variation]"]');
-      var variationId = Slide.slide.dataset.quickeditFieldId.split('/')[1];
+      var variationId = Slide.slide.dataset.variationId;
       var opts = variationSelect.options;
-      console.log({
-        variationId: variationId,
-        opts: opts
-      });
 
       for (var opt, j = 0; opt = opts[j]; j++) {
         if (opt.value == variationId) {

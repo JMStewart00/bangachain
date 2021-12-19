@@ -47,6 +47,6 @@
 %}
 
 {% for item in items %}
-  <li{{ attributes.addClass(classes) }}>{{ item.content }}</li>
+  <li{{ attributes.addClass(classes) }} data-variation-id="{{ element['#object'].variation_id.value }}">{{ item.content }}</li>
 {% endfor %}
 

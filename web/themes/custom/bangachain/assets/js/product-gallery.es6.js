@@ -26,9 +26,9 @@
     thumbnailSlider.on( 'active', (Slide) => {
       const variationSelect = document.querySelector('select[name="purchased_entity[0][variation]"]');
 
-      let variationId = Slide.slide.dataset.quickeditFieldId.split('/')[1];
+      let variationId = Slide.slide.dataset.variationId;
       let opts = variationSelect.options;
-      console.log({variationId, opts})
+
       for (let opt, j = 0; opt = opts[j]; j++) {
         if (opt.value == variationId) {
           variationSelect.selectedIndex = j;

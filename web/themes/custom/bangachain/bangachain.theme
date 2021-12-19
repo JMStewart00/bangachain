@@ -370,17 +370,4 @@ function bangachain_preprocess_commerce_product(&$variables) {
   }
 }
 
-/**
- * Implements template_preprocess_field__FIELD_NAME().
- */
-function bangachain_preprocess_field__field_product_image(&$variables) {
-  dd('heyo');
-
-  if ($variables['element']['#entity_type'] === 'node') {
-    $node = $variables['element']['#object'];
-    $nid = $node->id();
-    $variables['myurl'] = \Drupal::service('path.alias_manager')->getAliasByPath('/node/' . $nid);
-  }
-}
-
 

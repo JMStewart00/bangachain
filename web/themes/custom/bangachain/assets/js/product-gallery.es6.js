@@ -62,8 +62,8 @@
         const current_product_variation_id = $(item).data('product-variation-id');
 
         // Determine the gallery image that matches (if any)
-        if ($('#thumbnail-slider').length && $('#thumbnail-slider .splide__slide[data-quickedit-field-id*="' + current_product_variation_id +'"]').length) {
-          const $nav_item = $('#thumbnail-slider .splide__slide[data-quickedit-field-id*="' + current_product_variation_id +'"]');
+        if ($('#thumbnail-slider').length && $('#thumbnail-slider .splide__slide[data-variation-id*="' + current_product_variation_id +'"]').length) {
+          const $nav_item = $('#thumbnail-slider .splide__slide[data-variation-id*="' + current_product_variation_id +'"]');
           const item_position = $nav_item.index();
 
           // Trigger Splide to go to current variation image.

@@ -69,6 +69,13 @@
     margin-bottom: 0;
   }
 
+  .ajax-progress {
+    position: absolute;
+    top: 50%;
+    bottom: 50%;
+    right: 0;
+  }
+
   &--teaser {
     @include media-breakpoint-down(md) {
       margin: auto;

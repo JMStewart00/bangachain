@@ -8052,6 +8052,12 @@ svg.ext {
   font-size: 1.875rem;
   margin-bottom: 0; }
 
+.c-product .ajax-progress {
+  position: absolute;
+  top: 50%;
+  bottom: 50%;
+  right: 0; }
+
 @media (max-width: 991.98px) {
   .c-product--teaser {
     margin: auto;

@@ -1,0 +1,53 @@
+uuid: 60e2b5cd-8c8a-4d30-b14e-08b7144af524
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.drinks
+    - field.field.commerce_product.drinks.body
+    - field.field.commerce_product.drinks.field_default_image
+  module:
+    - commerce_product
+    - text
+id: commerce_product.drinks.default
+targetEntityType: commerce_product
+bundle: drinks
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 11
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_default_image:
+    weight: 12
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  title:
+    label: hidden
+    type: string
+    weight: -5
+    region: content
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  variations:
+    type: commerce_add_to_cart
+    weight: 10
+    region: content
+    label: above
+    settings:
+      combine: true
+    third_party_settings: {  }
+hidden:
+  add_to_cart_link: true
+  created: true
+  search_api_excerpt: true
+  stores: true
+  uid: true

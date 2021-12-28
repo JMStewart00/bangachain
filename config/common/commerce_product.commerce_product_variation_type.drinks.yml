@@ -1,0 +1,10 @@
+uuid: 80b62ac7-560b-43ea-ac15-b8de5db07493
+langcode: en
+status: true
+dependencies: {  }
+id: drinks
+label: Drinks
+orderItemType: default
+generateTitle: false
+traits: {  }
+locked: false

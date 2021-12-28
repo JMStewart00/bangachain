@@ -1,0 +1,29 @@
+uuid: 6a89837a-2872-4bdc-8de6-0f95f2223e7e
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_variation_type.drinks
+    - field.storage.commerce_product_variation.field_product_image
+    - media.type.image
+id: commerce_product_variation.drinks.field_product_image
+field_name: field_product_image
+entity_type: commerce_product_variation
+bundle: drinks
+label: 'Product Image'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

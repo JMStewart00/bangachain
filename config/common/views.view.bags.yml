@@ -747,7 +747,7 @@ display:
           relationship: commerce_stock_location_level
           group_type: group
           admin_label: ''
-          operator: '!='
+          operator: '>'
           value:
             min: ''
             max: ''

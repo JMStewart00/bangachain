@@ -1,0 +1,17 @@
+uuid: e0700528-6efe-44c5-9010-ce1779c29b7f
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_pos
+third_party_settings:
+  commerce_pos:
+    show_in_pos: true
+id: drinks
+label: Drinks
+description: ''
+variationType: drinks
+multipleVariations: true
+injectVariationFields: true
+traits: {  }
+locked: false

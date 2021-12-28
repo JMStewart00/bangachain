@@ -1,0 +1,69 @@
+uuid: 1b687cf8-b901-4aa8-83e2-e43fad1ed963
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_variation_type.drinks
+    - core.entity_view_mode.commerce_product_variation.commerce_pos_product_select
+    - field.field.commerce_product_variation.drinks.field_loyalty_points
+    - field.field.commerce_product_variation.drinks.field_product_image
+    - field.field.commerce_product_variation.drinks.field_stock
+  module:
+    - commerce_price
+    - commerce_stock_field
+    - layout_builder
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
+id: commerce_product_variation.drinks.commerce_pos_product_select
+targetEntityType: commerce_product_variation
+bundle: drinks
+mode: commerce_pos_product_select
+content:
+  field_product_image:
+    weight: 1
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_stock:
+    weight: 3
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: commerce_stock_level_simple
+    region: content
+  price:
+    label: hidden
+    type: commerce_price_default
+    weight: 2
+    region: content
+    settings:
+      strip_trailing_zeroes: false
+      currency_display: symbol
+    third_party_settings: {  }
+  sku:
+    type: string
+    weight: 4
+    region: content
+    label: inline
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  title:
+    type: string
+    weight: 0
+    region: content
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+hidden:
+  add_to_cart_link: true
+  field_loyalty_points: true
+  list_price: true
+  product_id: true
+  search_api_excerpt: true

@@ -80,9 +80,9 @@
         ]
       %}
       {% if (item.is_expanded and item.below) %}
-        {% set link_id = item.below|first.title|replace(' ', '_') %}
+        {% set link_id = item.below|first.title|replace({' ': '_'}) %}
         <li{{ item.attributes.addClass(item_classes) }}>
-          <button id="{{ link_id ~ 1 }}" class="o-menu-dropdown__toggle dropdown-toggle" data-toggle="dropdown" data-display='static' aria-haspopup="false" aria-expanded="false">
+          <button id="{{ link_id ~ 1 }}" class="o-menu-dropdown__toggle dropdown-toggle c-menu-main__link o-link" data-toggle="dropdown" data-display='static' aria-haspopup="false" aria-expanded="false">
             {{ item.title }}
             <i class="fas fa-chevron-down fa-xs"></i>
           </button>

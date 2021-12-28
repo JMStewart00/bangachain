@@ -1,1 +1,20 @@
 {% extends "commerce-product.html.twig" %}
+
+{% block gallery %}
+  <div class="c-product__gallery" style="display: flex; flex-direction: column;">
+    <div id="gallery-slider" class="splide">
+      <div class="splide__track">
+        <ul class="splide__list">
+          {{ product_gallery_images }}
+        </ul>
+      </div>
+    </div>
+    <div id="thumbnail-slider" class="splide">
+      <div class="splide__track">
+        <ul class="splide__list">
+          {{ product_gallery_images }}
+        </ul>
+      </div>
+    </div>
+  </div>
+{% endblock %}

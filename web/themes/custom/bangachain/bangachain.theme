@@ -340,7 +340,7 @@ function bangachain_preprocess_commerce_product(&$variables) {
     $product_gallery_images = [];
 
     // Primary product image
-    if ($product->hasField('field_default_image') && isset($product->field_default_image->entity)) {
+    if ($product->hasField('field_default_image') && isset($product->field_default_image->entity) && isset($variables['product']['field_default_image'])) {
       $product_gallery_images[$product->field_default_image->target_id] = [
         'image' => $variables['product']['field_default_image'],
       ];

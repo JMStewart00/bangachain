@@ -131,7 +131,6 @@ const Facets = ({ facets = [], classes = [] }) => (
         showMore
         showMoreLimit={50}
         transformItems={items => {
-          console.log('hey');
           items.sort((a, b) => {
             return a.label.localeCompare(b.label, 'en', { numeric: true })
           });

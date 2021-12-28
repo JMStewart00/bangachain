@@ -5,9 +5,15 @@ dependencies:
   config:
     - system.menu.main
   module:
+    - bangachain_layout
     - system
   theme:
     - bangachain
+third_party_settings:
+  bangachain_layout:
+    vertical_spacing:
+      top: none
+      bottom: none
 _core:
   default_config_hash: 2dZQ2FBxus_k8njQHVj1HQ-KpUFKHHvNv0KlI5aCfXo
 id: bangachain_main_menu
@@ -22,6 +28,6 @@ settings:
   provider: system
   label_display: '0'
   level: 1
-  depth: 1
-  expand_all_items: false
+  depth: 0
+  expand_all_items: true
 visibility: {  }

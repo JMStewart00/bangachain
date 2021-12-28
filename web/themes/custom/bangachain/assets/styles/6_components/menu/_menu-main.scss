@@ -13,6 +13,7 @@
   &__item {
     display: inline-block;
     margin: 0 rem(16);
+    position: relative;
   }
 
   &__link {
@@ -36,6 +37,17 @@
   flex-wrap: nowrap;
   justify-content: flex-start;
   text-transform: uppercase;
+
+  * {
+    text-transform: uppercase !important;
+    color: $brand-blue;
+  }
+
+  .dropdown-menu.show {
+    border-left: 2px solid $gray-200;
+    border-right: 2px solid $gray-200;
+    border-bottom: 2px solid $gray-200;
+  }
 
   @include media-breakpoint-down(lg) {
     #block-bangachain-main-menu & {

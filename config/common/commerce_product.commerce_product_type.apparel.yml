@@ -1,7 +1,12 @@
 uuid: cffacd56-6040-4745-8a28-d0af3b1c8c84
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - commerce_pos
+third_party_settings:
+  commerce_pos:
+    show_in_pos: true
 id: apparel
 label: Apparel
 description: ''

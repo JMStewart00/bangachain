@@ -1,7 +1,12 @@
 uuid: 5c495bc6-94fd-4e06-b834-a14d6bd31c60
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - commerce_pos
+third_party_settings:
+  commerce_pos:
+    show_in_pos: true
 id: bags
 label: Bags
 description: ''

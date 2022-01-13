@@ -104,4 +104,5 @@ product-gallery:
   dependencies:
     - core/drupal
     - core/jquery
+    - core/once
     - bangachain/splide

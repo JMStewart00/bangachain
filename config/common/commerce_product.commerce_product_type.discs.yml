@@ -1,7 +1,12 @@
 uuid: b54bf20d-76f5-4bfe-8de1-40e3864e9d41
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - commerce_pos
+third_party_settings:
+  commerce_pos:
+    show_in_pos: true
 id: discs
 label: Discs
 description: ''

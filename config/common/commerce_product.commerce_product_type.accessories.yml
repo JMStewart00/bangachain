@@ -1,7 +1,12 @@
 uuid: ec13ade0-9c2c-4a5e-8ee6-081a30aebcdc
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - commerce_pos
+third_party_settings:
+  commerce_pos:
+    show_in_pos: true
 id: accessories
 label: Accessories
 description: ''

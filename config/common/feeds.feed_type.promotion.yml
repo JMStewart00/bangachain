@@ -1,0 +1,53 @@
+uuid: bef2ff42-b5c0-491b-b8c9-ce31b012243b
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_promotion
+id: promotion
+label: Promotion
+description: ''
+help: ''
+import_period: -1
+fetcher: upload
+fetcher_configuration:
+  allowed_extensions: 'txt csv tsv xml opml'
+  directory: 'private://feeds'
+parser: csv
+parser_configuration:
+  delimiter: ','
+  no_headers: false
+  line_limit: 100
+processor: 'entity:commerce_promotion_coupon'
+processor_configuration:
+  update_existing: 2
+  update_non_existent: _keep
+  expire: -1
+  skip_hash_check: false
+  owner_id: 0
+  values: {  }
+  authorize: false
+  owner_feed_author: false
+custom_sources:
+  code:
+    label: code
+    value: code
+    machine_name: code
+  promo_id:
+    label: promo_id
+    value: promo_id
+    machine_name: promo_id
+mappings:
+  -
+    target: code
+    map:
+      value: code
+    unique: {  }
+    settings: {  }
+  -
+    target: promotion_id
+    map:
+      target_id: promo_id
+    settings:
+      reference_by: promotion_id
+      autocreate: 0

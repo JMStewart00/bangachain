@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.team_member.body
+    - field.field.node.team_member.feeds_item
     - field.field.node.team_member.field_favorite_discs
     - field.field.node.team_member.field_handedness
     - field.field.node.team_member.field_hometown
@@ -26,7 +27,7 @@ mode: default
 content:
   body:
     type: text_textarea_with_summary
-    weight: 10
+    weight: 11
     settings:
       rows: 9
       summary_rows: 3
@@ -36,12 +37,12 @@ content:
     region: content
   created:
     type: datetime_timestamp
-    weight: 4
+    weight: 5
     region: content
     settings: {  }
     third_party_settings: {  }
   field_favorite_discs:
-    weight: 11
+    weight: 12
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -51,13 +52,13 @@ content:
     type: entity_reference_autocomplete
     region: content
   field_handedness:
-    weight: 9
+    weight: 10
     settings: {  }
     third_party_settings: {  }
     type: options_select
     region: content
   field_hometown:
-    weight: 8
+    weight: 9
     settings:
       size: 60
       placeholder: ''
@@ -73,33 +74,33 @@ content:
     region: content
   field_photo:
     type: media_library_widget
-    weight: 7
+    weight: 8
     settings:
       media_types: {  }
     third_party_settings: {  }
     region: content
   field_rating:
-    weight: 2
+    weight: 3
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
     region: content
   field_social_media_links:
-    weight: 12
+    weight: 13
     settings: {  }
     third_party_settings: {  }
     type: social_media_links_field_default
     region: content
   field_team_designation:
-    weight: 27
+    weight: 2
     settings: {  }
     third_party_settings: {  }
     type: options_select
     region: content
   field_video:
     type: media_library_widget
-    weight: 26
+    weight: 14
     settings:
       media_types:
         - remote_video
@@ -108,7 +109,7 @@ content:
     region: content
   path:
     type: path
-    weight: 5
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -116,7 +117,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 6
+    weight: 7
     region: content
     third_party_settings: {  }
   title:
@@ -129,7 +130,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 3
+    weight: 4
     settings:
       match_operator: CONTAINS
       size: 60
@@ -138,5 +139,6 @@ content:
     region: content
     third_party_settings: {  }
 hidden:
+  feeds_item: true
   promote: true
   sticky: true

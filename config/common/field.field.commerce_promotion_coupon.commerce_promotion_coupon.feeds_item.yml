@@ -1,0 +1,23 @@
+uuid: ca6281c0-f672-4a24-8687-a269f26b555e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.commerce_promotion_coupon.feeds_item
+  module:
+    - commerce_promotion
+    - feeds
+id: commerce_promotion_coupon.commerce_promotion_coupon.feeds_item
+field_name: feeds_item
+entity_type: commerce_promotion_coupon
+bundle: commerce_promotion_coupon
+label: 'Feeds item'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:feeds_feed'
+  handler_settings: {  }
+field_type: feeds_item

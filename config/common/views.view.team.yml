@@ -180,7 +180,7 @@ display:
   block_2:
     display_plugin: block
     id: block_2
-    display_title: 'Champs Block'
+    display_title: 'Silverbacks Block'
     position: 1
     display_options:
       display_extenders:
@@ -260,7 +260,7 @@ display:
         operator: AND
         groups:
           1: AND
-      block_description: 'Champs Block'
+      block_description: 'Silverbacks Team List'
     cache_metadata:
       max-age: -1
       contexts:
@@ -272,7 +272,7 @@ display:
   block_3:
     display_plugin: block
     id: block_3
-    display_title: 'Chimps Block'
+    display_title: 'Gorillas Block'
     position: 1
     display_options:
       display_extenders:
@@ -352,7 +352,283 @@ display:
         operator: AND
         groups:
           1: AND
+      block_description: 'Gorillas Team List'
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - 'user.node_grants:view'
+        - user.permissions
+      tags: {  }
+  block_4:
+    display_plugin: block
+    id: block_4
+    display_title: 'Chimps Block'
+    position: 1
+    display_options:
+      display_extenders:
+        ajax_history: {  }
+      display_description: ''
+      filters:
+        status:
+          value: '1'
+          table: node_field_data
+          field: status
+          plugin_id: boolean
+          entity_type: node
+          entity_field: status
+          id: status
+          expose:
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+          group: 1
+        type:
+          id: type
+          table: node_field_data
+          field: type
+          value:
+            team_member: team_member
+          entity_type: node
+          entity_field: type
+          plugin_id: bundle
+          expose:
+            operator_limit_selection: false
+            operator_list: {  }
+        field_team_designation_value:
+          id: field_team_designation_value
+          table: node__field_team_designation
+          field: field_team_designation_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: and
+          value:
+            c: c
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          plugin_id: list_field
+      defaults:
+        filters: false
+        filter_groups: false
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
       block_description: 'Chimps Block'
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - 'user.node_grants:view'
+        - user.permissions
+      tags: {  }
+  block_5:
+    display_plugin: block
+    id: block_5
+    display_title: 'Ladies Block'
+    position: 1
+    display_options:
+      display_extenders:
+        ajax_history: {  }
+      display_description: ''
+      filters:
+        status:
+          value: '1'
+          table: node_field_data
+          field: status
+          plugin_id: boolean
+          entity_type: node
+          entity_field: status
+          id: status
+          expose:
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+          group: 1
+        type:
+          id: type
+          table: node_field_data
+          field: type
+          value:
+            team_member: team_member
+          entity_type: node
+          entity_field: type
+          plugin_id: bundle
+          expose:
+            operator_limit_selection: false
+            operator_list: {  }
+        field_team_designation_value:
+          id: field_team_designation_value
+          table: node__field_team_designation
+          field: field_team_designation_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: and
+          value:
+            d: d
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          plugin_id: list_field
+      defaults:
+        filters: false
+        filter_groups: false
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      block_description: 'Ladies Team List'
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - 'user.node_grants:view'
+        - user.permissions
+      tags: {  }
+  block_6:
+    display_plugin: block
+    id: block_6
+    display_title: 'UK Team Block'
+    position: 1
+    display_options:
+      display_extenders:
+        ajax_history: {  }
+      display_description: ''
+      filters:
+        status:
+          value: '1'
+          table: node_field_data
+          field: status
+          plugin_id: boolean
+          entity_type: node
+          entity_field: status
+          id: status
+          expose:
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+          group: 1
+        type:
+          id: type
+          table: node_field_data
+          field: type
+          value:
+            team_member: team_member
+          entity_type: node
+          entity_field: type
+          plugin_id: bundle
+          expose:
+            operator_limit_selection: false
+            operator_list: {  }
+        field_team_designation_value:
+          id: field_team_designation_value
+          table: node__field_team_designation
+          field: field_team_designation_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: and
+          value:
+            e: e
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          plugin_id: list_field
+      defaults:
+        filters: false
+        filter_groups: false
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      block_description: 'UK Team List'
     cache_metadata:
       max-age: -1
       contexts:

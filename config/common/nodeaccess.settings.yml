@@ -115,14 +115,14 @@ role_alias:
     name: Cashier
     allow: 0
   team_member:
-    alias: 'Champ Team Member'
+    alias: 'Gorilla Team Member'
     weight: '0'
-    name: 'Champ Team Member'
+    name: 'Gorilla Team Member'
     allow: 0
   chimp_team:
-    alias: 'Chimp Team'
+    alias: 'Spider Monkey Team'
     weight: '0'
-    name: 'Chimp Team'
+    name: 'Spider Monkey Team'
     allow: 0
   loyalty_points_subscriber:
     alias: 'Loyalty points subscriber'

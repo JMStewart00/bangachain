@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.node.teaser
     - field.field.node.team_member.body
+    - field.field.node.team_member.feeds_item
     - field.field.node.team_member.field_favorite_discs
     - field.field.node.team_member.field_handedness
     - field.field.node.team_member.field_hometown
@@ -42,6 +43,7 @@ content:
     third_party_settings: {  }
 hidden:
   body: true
+  feeds_item: true
   field_favorite_discs: true
   field_handedness: true
   field_hometown: true

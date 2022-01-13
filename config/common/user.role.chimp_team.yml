@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies: {  }
 id: chimp_team
-label: 'Chimp Team'
+label: 'Spider Monkey Team'
 weight: 4
 is_admin: null
 permissions: {  }

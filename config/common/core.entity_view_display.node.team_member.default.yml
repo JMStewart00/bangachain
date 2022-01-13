@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.team_member.body
+    - field.field.node.team_member.feeds_item
     - field.field.node.team_member.field_favorite_discs
     - field.field.node.team_member.field_handedness
     - field.field.node.team_member.field_hometown
@@ -117,4 +118,5 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
+  feeds_item: true
   search_api_excerpt: true

@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies: {  }
 id: team_member
-label: 'Champ Team Member'
+label: 'Gorilla Team Member'
 weight: 3
 is_admin: null
 permissions: {  }

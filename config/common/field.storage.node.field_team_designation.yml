@@ -13,10 +13,19 @@ settings:
   allowed_values:
     -
       value: a
-      label: Champs
+      label: Silverbacks
     -
       value: b
+      label: Gorillas
+    -
+      value: c
       label: Chimps
+    -
+      value: d
+      label: 'Women''s League'
+    -
+      value: e
+      label: 'Univ. of Kentucky'
   allowed_values_function: ''
 module: options
 locked: false

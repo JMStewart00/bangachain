@@ -1,0 +1,20 @@
+uuid: 27cfb599-7c73-4371-9ea7-d75ca1ae3e8a
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_promotion
+    - feeds
+id: commerce_promotion_coupon.feeds_item
+field_name: feeds_item
+entity_type: commerce_promotion_coupon
+type: feeds_item
+settings:
+  target_type: feeds_feed
+module: feeds
+locked: false
+cardinality: 1
+translatable: false
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

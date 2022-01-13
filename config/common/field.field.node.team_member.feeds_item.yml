@@ -1,0 +1,23 @@
+uuid: 628d7e28-3ffd-4bdf-af81-40cbfc64e120
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.feeds_item
+    - node.type.team_member
+  module:
+    - feeds
+id: node.team_member.feeds_item
+field_name: feeds_item
+entity_type: node
+bundle: team_member
+label: 'Feeds item'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:feeds_feed'
+  handler_settings: {  }
+field_type: feeds_item

@@ -1,0 +1,19 @@
+diff --git a/js/resizer.js b/js/resizer.js
+index 525d3bc8..167d1f1f 100644
+--- a/js/resizer.js
++++ b/js/resizer.js
+@@ -18,8 +18,12 @@
+         for (let entry of entries) {
+           const images = entry.target.querySelectorAll('img[data-srcset]');
+           images.forEach(image => {
+-            const availableWidth = Math.floor(image.parentNode.clientWidth);
+-            const attrWidth = image.getAttribute('width');
++            let availableWidth = Math.floor(image.parentNode.clientWidth);
++            var query = "(-webkit-min-device-pixel-ratio: 2), (min-device-pixel-ratio: 2), (min-resolution: 192dpi)";
++            if (matchMedia(query).matches) {
++              availableWidth = availableWidth * 2;
++            }
++            const attrWidth = image.width;
+             const sources = image.getAttribute('data-srcset').split(',');
+
+             // If the selected image is already bigger than the available width,

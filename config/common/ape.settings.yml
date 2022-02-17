@@ -1,5 +1,5 @@
 alternatives: '/commerce_pos/*'
-exclusions: ''
+exclusions: "<front>\r\n/user/*\r\n/checkout/*\r\n/checkout"
 lifetime:
   alternatives: 0
   301: 0

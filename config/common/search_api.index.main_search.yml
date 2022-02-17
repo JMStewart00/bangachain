@@ -15,6 +15,7 @@ dependencies:
     - field.storage.commerce_product.field_speed
     - field.storage.commerce_product.field_stability_category
     - field.storage.commerce_product.field_turn
+    - field.storage.commerce_product_variation.attribute_disc_plastic
     - field.storage.commerce_product_variation.field_product_image
     - search_api.server.algolia
   module:
@@ -83,6 +84,16 @@ field_settings:
     dependencies:
       config:
         - field.storage.commerce_product.field_glide
+  plastic:
+    label: 'Variations » Product variation » Disc Plastic » Product attribute value » Name'
+    datasource_id: 'entity:commerce_product'
+    property_path: 'variations:entity:attribute_disc_plastic:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.commerce_product_variation.attribute_disc_plastic
+      module:
+        - commerce_product
   product_image:
     label: 'Default Image » Media » Image » File » URI » Root-relative file URL'
     datasource_id: 'entity:commerce_product'

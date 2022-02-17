@@ -14,7 +14,7 @@ class StateItemTest extends FieldKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'entity_test',
     'field',
     'user',
@@ -25,7 +25,7 @@ class StateItemTest extends FieldKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installEntitySchema('user');
@@ -35,12 +35,12 @@ class StateItemTest extends FieldKernelTestBase {
 
   /**
    * @covers ::applyTransitionById
-   * @expectedException \InvalidArgumentException
    */
   public function testInvalidTransitionApply() {
     $entity = EntityTestWithBundle::create(['type' => 'first']);
     /** @var \Drupal\state_machine\Plugin\Field\FieldType\StateItemInterface $state_item */
     $state_item = $entity->get('field_state')->first();
+    $this->expectException(\InvalidArgumentException::class);
     $state_item->applyTransitionById('INVALID');
   }
 

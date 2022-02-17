@@ -47,7 +47,7 @@ class BuyXGetYTest extends OrderKernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_promotion',
   ];
 
@@ -248,6 +248,7 @@ class BuyXGetYTest extends OrderKernelTestBase {
 
     $adjustments = $third_order_item->getAdjustments();
     $adjustment = reset($adjustments);
+    $this->assertFalse($adjustment->isIncluded());
     $this->assertEquals('promotion', $adjustment->getType());
     $this->assertEquals('Discount', $adjustment->getLabel());
     $this->assertEquals(new Price('-3', 'USD'), $adjustment->getAmount());
@@ -255,10 +256,41 @@ class BuyXGetYTest extends OrderKernelTestBase {
 
     $adjustments = $fourth_order_item->getAdjustments();
     $adjustment = reset($adjustments);
+    $this->assertFalse($adjustment->isIncluded());
     $this->assertEquals('promotion', $adjustment->getType());
     $this->assertEquals('Discount', $adjustment->getLabel());
     $this->assertEquals(new Price('-1', 'USD'), $adjustment->getAmount());
     $this->assertEquals($this->promotion->id(), $adjustment->getSourceId());
+
+    // Test the inclusive promotion behavior.
+    $offer = $this->promotion->getOffer();
+    $offer_configuration = $offer->getConfiguration();
+    $offer_configuration['display_inclusive'] = TRUE;
+    $offer->setConfiguration($offer_configuration);
+    $this->promotion->setOffer($offer);
+    $this->container->get('commerce_order.order_refresh')->refresh($this->order);
+
+    $this->assertCount(0, $first_order_item->getAdjustments());
+    $this->assertCount(0, $second_order_item->getAdjustments());
+    $this->assertCount(1, $third_order_item->getAdjustments());
+
+    $adjustments = $third_order_item->getAdjustments();
+    $adjustment = reset($adjustments);
+    $this->assertEquals('promotion', $adjustment->getType());
+    $this->assertTrue($adjustment->isIncluded());
+    $this->assertEquals('Discount', $adjustment->getLabel());
+    $this->assertEquals(new Price('-3', 'USD'), $adjustment->getAmount());
+    $this->assertEquals($this->promotion->id(), $adjustment->getSourceId());
+    $this->assertEquals(new Price('29', 'USD'), $third_order_item->getUnitPrice());
+
+    $adjustments = $fourth_order_item->getAdjustments();
+    $adjustment = reset($adjustments);
+    $this->assertTrue($adjustment->isIncluded());
+    $this->assertEquals('promotion', $adjustment->getType());
+    $this->assertEquals('Discount', $adjustment->getLabel());
+    $this->assertEquals(new Price('-1', 'USD'), $adjustment->getAmount());
+    $this->assertEquals($this->promotion->id(), $adjustment->getSourceId());
+    $this->assertEquals(new Price('29', 'USD'), $third_order_item->getUnitPrice());
   }
 
   /**
@@ -325,15 +357,47 @@ class BuyXGetYTest extends OrderKernelTestBase {
     $adjustments = $third_order_item->getAdjustments();
     $adjustment = reset($adjustments);
     $this->assertEquals('promotion', $adjustment->getType());
+    $this->assertFalse($adjustment->isIncluded());
     $this->assertEquals('Buy X Get Y!', $adjustment->getLabel());
     $this->assertEquals(new Price('-18', 'USD'), $adjustment->getAmount());
     $this->assertEquals($this->promotion->id(), $adjustment->getSourceId());
 
     $adjustments = $fourth_order_item->getAdjustments();
     $adjustment = reset($adjustments);
+    $this->assertFalse($adjustment->isIncluded());
     $this->assertEquals('promotion', $adjustment->getType());
     $this->assertEquals('Buy X Get Y!', $adjustment->getLabel());
     $this->assertEquals(new Price('-6', 'USD'), $adjustment->getAmount());
+    $this->assertEquals($this->promotion->id(), $adjustment->getSourceId());
+
+    // Test the inclusive promotion behavior.
+    $offer = $this->promotion->getOffer();
+    $offer_configuration = $offer->getConfiguration();
+    $offer_configuration['display_inclusive'] = TRUE;
+    $offer->setConfiguration($offer_configuration);
+    $this->promotion->setOffer($offer);
+    $this->container->get('commerce_order.order_refresh')->refresh($this->order);
+    $this->assertCount(0, $first_order_item->getAdjustments());
+    $this->assertCount(0, $second_order_item->getAdjustments());
+    $this->assertCount(1, $third_order_item->getAdjustments());
+    $this->assertCount(1, $fourth_order_item->getAdjustments());
+
+    $adjustments = $third_order_item->getAdjustments();
+    $adjustment = reset($adjustments);
+    $this->assertEquals('promotion', $adjustment->getType());
+    $this->assertEquals('Buy X Get Y!', $adjustment->getLabel());
+    $this->assertTrue($adjustment->isIncluded());
+    $this->assertEquals(new Price('-18', 'USD'), $adjustment->getAmount());
+    $this->assertEquals(new Price('27', 'USD'), $third_order_item->getUnitPrice());
+    $this->assertEquals($this->promotion->id(), $adjustment->getSourceId());
+
+    $adjustments = $fourth_order_item->getAdjustments();
+    $adjustment = reset($adjustments);
+    $this->assertTrue($adjustment->isIncluded());
+    $this->assertEquals('promotion', $adjustment->getType());
+    $this->assertEquals('Buy X Get Y!', $adjustment->getLabel());
+    $this->assertEquals(new Price('-6', 'USD'), $adjustment->getAmount());
+    $this->assertEquals(new Price('27', 'USD'), $fourth_order_item->getUnitPrice());
     $this->assertEquals($this->promotion->id(), $adjustment->getSourceId());
   }
 

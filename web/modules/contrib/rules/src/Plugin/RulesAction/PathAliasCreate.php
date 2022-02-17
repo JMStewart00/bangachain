@@ -11,6 +11,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a 'Create any path alias' action.
  *
+ * @todo Add access callback information from Drupal 7.
+ *
  * @RulesAction(
  *   id = "rules_path_alias_create",
  *   label = @Translation("Create any path alias"),
@@ -25,16 +27,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *       label = @Translation("Path alias"),
  *       description = @Translation("Specify an alternative path by which this data can be accessed. For example, '/about' for an about page. Use an absolute path and do not add a trailing slash.")
  *     ),
- *     "language" = @ContextDefinition("language",
+ *     "language" = @ContextDefinition("entity:configurable_language",
  *       label = @Translation("Language"),
  *       description = @Translation("If specified, the language for which the path alias applies."),
+ *       options_provider = "\Drupal\rules\TypedData\Options\LanguageOptions",
  *       default_value = NULL,
  *       required = FALSE
  *     ),
  *   }
  * )
- *
- * @todo Add access callback information from Drupal 7.
  */
 class PathAliasCreate extends RulesActionBase implements ContainerFactoryPluginInterface {
 

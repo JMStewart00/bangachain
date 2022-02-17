@@ -59,6 +59,21 @@ class SwissVatTest extends EuropeanUnionVatTest {
     $plugin->apply($order);
     $adjustments = $order->collectAdjustments();
     $this->assertCount(0, $adjustments);
+
+    // German customer in Büsingen, CH store registered in CH,
+    // physical product.
+    $order = $this->buildOrder('DE', 'CH', '', ['CH']);
+    $billing_profile = $order->getBillingProfile();
+    $billing_profile->set('address', [
+      'country_code' => 'DE',
+      'postal_code' => '78266',
+    ]);
+    $billing_profile->save();
+    $plugin->apply($order);
+    $adjustments = $order->collectAdjustments();
+    $adjustment = reset($adjustments);
+    $this->assertCount(1, $adjustments);
+    $this->assertEquals('swiss_vat|ch|standard', $adjustment->getSourceId());
   }
 
   /**

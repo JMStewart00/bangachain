@@ -8,6 +8,8 @@ use Drupal\user\UserInterface;
 /**
  * Provides a 'User is blocked' condition.
  *
+ * @todo Add access callback information from Drupal 7.
+ *
  * @Condition(
  *   id = "rules_user_is_blocked",
  *   label = @Translation("User is blocked"),
@@ -19,8 +21,6 @@ use Drupal\user\UserInterface;
  *     ),
  *   }
  * )
- *
- * @todo Add access callback information from Drupal 7.
  */
 class UserIsBlocked extends RulesConditionBase {
 

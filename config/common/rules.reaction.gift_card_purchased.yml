@@ -23,13 +23,13 @@ expression:
         id: rules_condition
         uuid: 9008aa91-b2de-480c-a171-acea11aed32c
         weight: 0
+        condition_id: rules_data_is_empty
+        negate: true
         context_values: {  }
         context_mapping:
           data: commerce_giftcard.uid.target_id
         context_processors: {  }
         provides_mapping: {  }
-        condition_id: rules_data_is_empty
-        negate: true
   actions:
     id: rules_action_set
     uuid: 1cee6a13-1bc4-4752-bd66-3498a7ac29e8
@@ -39,6 +39,7 @@ expression:
         id: rules_action
         uuid: 4f57bc1a-f357-44f5-96e0-a7228203d696
         weight: 0
+        action_id: rules_send_email
         context_values:
           to:
             - '{{ commerce_giftcard.uid.entity.mail.value }}'
@@ -60,4 +61,3 @@ expression:
           language:
             rules_tokens: {  }
         provides_mapping: {  }
-        action_id: rules_send_email

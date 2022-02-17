@@ -57,7 +57,9 @@ class EntityViewDeriver extends DeriverBase implements ContainerDeriverInterface
       }
 
       $this->derivatives[$entity_type_id] = [
-        'label' => $this->t('@entity_type is viewed', ['@entity_type' => $entity_type->getLabel()]),
+        'label' => $this->t('Entity of type @entity_type is viewed', [
+          '@entity_type' => $entity_type->getSingularLabel(),
+        ]),
         'category' => $entity_type->getLabel(),
         'entity_type_id' => $entity_type_id,
         'context_definitions' => [

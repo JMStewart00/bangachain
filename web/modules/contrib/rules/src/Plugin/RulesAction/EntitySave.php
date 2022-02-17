@@ -8,6 +8,8 @@ use Drupal\rules\Core\RulesActionBase;
 /**
  * Provides a 'Save entity' action.
  *
+ * @todo Add access callback information from Drupal 7.
+ *
  * @RulesAction(
  *   id = "rules_entity_save",
  *   label = @Translation("Save entity"),
@@ -22,13 +24,12 @@ use Drupal\rules\Core\RulesActionBase;
  *       label = @Translation("Force saving immediately"),
  *       description = @Translation("Usually saving is postponed till the end of the evaluation, so that multiple saves can be fold into one. If this set, saving is forced to happen immediately."),
  *       assignment_restriction = "input",
+ *       options_provider = "\Drupal\rules\TypedData\Options\YesNoOptions",
  *       default_value = FALSE,
  *       required = FALSE
  *     ),
  *   }
  * )
- *
- * @todo Add access callback information from Drupal 7.
  */
 class EntitySave extends RulesActionBase {
 

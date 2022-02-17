@@ -185,6 +185,8 @@ feeds.processor.entity:
         type: ignore
     langcode:
       type: string
+    insert_new:
+      type: integer
     update_existing:
       type: integer
     update_non_existent:

@@ -2,10 +2,11 @@
 
 namespace Drupal\Tests\commerce_cart\Functional;
 
-use Behat\Mink\Driver\GoutteDriver;
+use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\Mink\Session;
 use Drupal\commerce_order\Entity\Order;
 use Drupal\commerce_order\Entity\OrderInterface;
+use Drupal\Tests\DrupalTestBrowser;
 use Drupal\user\RoleInterface;
 
 /**
@@ -18,7 +19,7 @@ class CartEntityAccessTest extends CartBrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_checkout',
   ];
 
@@ -228,7 +229,8 @@ class CartEntityAccessTest extends CartBrowserTestBase {
   protected function switchSession($name) {
     $create_session = !$this->mink->hasSession($name);
     if ($create_session) {
-      $this->mink->registerSession($name, new Session(new GoutteDriver()));
+      $client = new DrupalTestBrowser();
+      $this->mink->registerSession($name, new Session(new BrowserKitDriver($client)));
     }
     $this->mink->setDefaultSessionName($name);
 

@@ -111,6 +111,12 @@ class SearchApiAlgoliaHelper {
     foreach ($item_ids as $objectid) {
       $indexId = $index->getOption('algolia_index_name');
       if ($index->getOption('algolia_index_apply_suffix') && !empty($language)) {
+        $objectIdParsed = explode(':', $objectid);
+        if (end($objectIdParsed) !== $language) {
+          // Skip the object ids in other language.
+          continue;
+        }
+
         $indexId .= '_' . $language;
       }
 

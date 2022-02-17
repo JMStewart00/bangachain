@@ -27,10 +27,12 @@ slashes, colons, single and double quotes:</p>
   </li>
   <li>The <code>[item]</code> can have class and caption attributes, e.g.: <br>
   <code>[item class="grid--card card"
-  caption='Read <a href="https://mysite.com">more</a>']</code>. <br>
-  The classes will be moved into grid__content to make it usable such
-  as for Bootstrap well/ card. The caption into regular blazy__caption.
-  <br>Use <b>single</b> quotes for HTML caption, else broken. The link is
+  caption='Read &lt;a href="https://mysite.com"&gt;more&lt;/a&gt;']</code>. <br>
+  The classes will be moved into <code>grid__content</code> to make it usable
+  such as for Bootstrap well/ card. The caption into regular
+  <code>blazy__caption</code>. <br>
+  Use enclosing <b>single</b> quotes for HTML caption so you can have double
+  quotes inside such as enclosing link href quotes, else broken. The link is
   normally converted automatically when using WYSIWYG. This will replace Filter
   caption if they both exist.</li>
   <li><b>Grid format</b>, a convenient shortcut for settings, hyphenated:
@@ -44,8 +46,8 @@ slashes, colons, single and double quotes:</p>
     <code>[blazy grid="column:2-3-4" /]</code><br>
     <code>[blazy grid="grid:2-3-4" /]</code><br>
     <code>[blazy grid="flex:2-3-4" /]</code><br>
-    <code>[blazy grid="nativegrid:2-3-4" /]</code><br>, will be masonry
-    <code>[blazy grid="nativegrid:2-3-4x4" /]</code><br>, will repeat
+    <code>[blazy grid="nativegrid:2-3-4" /]</code>, will be masonry<br>
+    <code>[blazy grid="nativegrid:2-3-4x4" /]</code>, will repeat<br>
     <code>[blazy grid="nativegrid:2-3-4x4 4x3 2x2 2x4 2x2 2x3 2x3 4x2 4x2" /]
     </code>
     <br>is a shortcut for:<br>
@@ -71,7 +73,7 @@ slashes, colons, single and double quotes:</p>
   </ul>
   <p>The numbers represent the amount of grids/ columns for small, medium and
   large devices respectively, space delimited. Be aware! All media items will
-  be grouped regardless of their placements.</p></li>
+  be grouped regardless of their placements. That's why deprecated.</p></li>
 </ol>
 <p><br><b>Tips</b>, if any issues:</p>
 <ul>

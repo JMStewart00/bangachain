@@ -14,8 +14,8 @@ class BlazyBlazyJavaScriptTest extends BlazyJavaScriptTestBase {
    */
   public function testFormatterDisplay() {
     $data['settings']['blazy'] = TRUE;
-    $data['settings']['ratio'] = '';
-    $data['settings']['image_style'] = 'thumbnail';
+    $data['settings']['ratio'] = '1:1';
+    $data['settings']['image_style'] = '';
 
     $this->setUpContentTypeTest($this->bundle);
     $this->setUpFormatterDisplay($this->bundle, $data);

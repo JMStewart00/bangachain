@@ -17,9 +17,7 @@ class RulesEmailTest extends RulesKernelTestBase {
   protected $actionManager;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['rules'];
 

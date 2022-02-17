@@ -29,19 +29,19 @@ class MultiplePaymentProcess extends PaymentProcess {
    * @var bool
    */
   protected $redirectToPrevious = FALSE;
-  
+
   /**
    * {@inheritdoc}
    */
   public function buildPaneForm(array $pane_form, FormStateInterface $form_state, array &$complete_form) {
 
     $staged_payments = [];
-    
+
     if (!$this->order->get('staged_multi_payment')->isEmpty()) {
       // Convert payments to real payments.
       /** @var \Drupal\commerce_multi_payment\Entity\StagedPaymentInterface[] $staged_payments */
       $staged_payments = $this->order->get('staged_multi_payment')->referencedEntities();
-      
+
       foreach ($staged_payments as $staged_payment) {
         if (!$staged_payment->isActive()) {
           continue;
@@ -56,7 +56,7 @@ class MultiplePaymentProcess extends PaymentProcess {
           'payment_gateway' => $staged_payment->getPaymentGateway()->id(),
           'order_id' => $this->order->id(),
         ]);
-        
+
         try {
           $payment_gateway_plugin->multiPaymentAuthorizePayment($staged_payment, $payment);
         }
@@ -72,7 +72,7 @@ class MultiplePaymentProcess extends PaymentProcess {
           break;
         }
       }
-      
+
       // Check that all staged payments completed.
       if (!$this->checkStagedPaymentsState($staged_payments, [StagedPaymentInterface::STATE_AUTHORIZATION, StagedPaymentInterface::STATE_COMPLETED])) {
         // Reverse all the staged payments
@@ -87,6 +87,9 @@ class MultiplePaymentProcess extends PaymentProcess {
         // There will be no payment gateway.
         $pane_form = parent::buildPaneForm($pane_form, $form_state, $complete_form);
       }
+    }
+    catch (NeedsRedirectException $e){
+      // This is fine.
     }
     catch (\Error $e) {
       // If crash from main pane form processing, reverse payments and go back.
@@ -103,7 +106,7 @@ class MultiplePaymentProcess extends PaymentProcess {
       // The primary payment method must have failed.
       $this->reverseStagedPayments($staged_payments);
       $this->redirectToPreviousStep(TRUE);
-    } 
+    }
     else {
       // Primary payment successfully authorized or captured, staged payments are authorized or completed.
       // Capture the staged payments that are currently authorized.
@@ -117,15 +120,15 @@ class MultiplePaymentProcess extends PaymentProcess {
       catch (Exception $e) {
         // Well crap. We've charged their credit card, authorized all their staged payments, and yet still something
         // failed right here at the end. Let's try to clean up the mess, but may not always work.
-        
-        
+
+
         // First, reverse all the staged payments. This should work.
         $this->reverseStagedPayments($staged_payments);
-        
-        // Next, let's see if we can reverse the primary payment. Loop through the payments and 
+
+        // Next, let's see if we can reverse the primary payment. Loop through the payments and
         // try to refund or void all payments that are authorized or completed
         $payments_all_reversed = $this->reverseRealPayments();
-        
+
         if (!$payments_all_reversed) {
           // Print out errors for failures
           /** @var \Drupal\commerce_payment\PaymentStorageInterface $payment_storage */
@@ -144,20 +147,27 @@ class MultiplePaymentProcess extends PaymentProcess {
           $this->redirectToPreviousStep(TRUE);
         }
       }
-      
+
       // If we got here, all payment gateways were successful. Let's delete
-      // the staged payments to get rid of the adjustments and call it a day.
+      // the staged payments and get rid of the adjustments and call it a day.
+      $adjustments = $this->order->getAdjustments();
       foreach ($staged_payments as $staged_payment) {
         $staged_payment->delete();
+        foreach ($adjustments as $i => $adjustment) {
+          if ($adjustment->getType() === 'staged_multi_payment' && $adjustment->getSourceId() == $staged_payment->id()) {
+            unset($adjustments[$i]);
+          }
+        }
       }
+      $this->order->setAdjustments($adjustments);
       $this->order->get('staged_multi_payment')->setValue(NULL);
       $this->order->save();
       $next_step_id = $this->checkoutFlow->getNextStepId($this->getStepId());
       $this->redirectToStep($next_step_id, TRUE);
     }
-    
+
     return $pane_form;
-    
+
   }
 
   /**
@@ -206,7 +216,7 @@ class MultiplePaymentProcess extends PaymentProcess {
   /**
    * @param StagedPaymentInterface[] $staged_payments
    * @param string[] $valid_states
-   * 
+   *
    * @return TRUE
    */
   protected function checkStagedPaymentsState(array $staged_payments, array $valid_states) {

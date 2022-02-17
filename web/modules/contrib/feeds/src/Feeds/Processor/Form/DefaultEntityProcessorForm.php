@@ -71,6 +71,16 @@ class DefaultEntityProcessorForm extends ExternalPluginFormBase implements Conta
         ]);
       }
     }
+    $form['insert_new'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('Insert new @entities', $tokens),
+      '#description' => $this->t('New @entities will be determined using mappings that are a "unique target".', $tokens),
+      '#options' => [
+        ProcessorInterface::INSERT_NEW => $this->t('Insert new @entities', $tokens),
+        ProcessorInterface::SKIP_NEW => $this->t('Do not insert new @entities', $tokens),
+      ],
+      '#default_value' => $this->plugin->getConfiguration('insert_new'),
+    ];
 
     $form['update_existing'] = [
       '#type' => 'radios',

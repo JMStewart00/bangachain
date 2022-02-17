@@ -33,7 +33,7 @@ class CheckoutIntegrationTest extends OrderKernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_log',
     'commerce_checkout',
   ];
@@ -59,7 +59,7 @@ class CheckoutIntegrationTest extends OrderKernelTestBase {
       'state' => 'completed',
     ]);
     $order->save();
-    $this->container->get('event_dispatcher')->dispatch(CheckoutEvents::COMPLETION, new OrderEvent($order));
+    $this->container->get('event_dispatcher')->dispatch(new OrderEvent($order), CheckoutEvents::COMPLETION);
 
     $logs = $this->logStorage->loadMultipleByEntity($order);
     $this->assertEquals(1, count($logs));

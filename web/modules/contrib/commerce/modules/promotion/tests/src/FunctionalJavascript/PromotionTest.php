@@ -21,7 +21,7 @@ class PromotionTest extends CommerceWebDriverTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'block',
     'path',
     'commerce_product',
@@ -499,6 +499,7 @@ class PromotionTest extends CommerceWebDriverTestBase {
       'display_inclusive' => TRUE,
       'percentage' => '0.1',
       'conditions' => [],
+      'operator' => 'OR',
     ], $configuration['offers'][0]['target_plugin_configuration']);
     $this->assertEquals('order_percentage_off', $configuration['offers'][1]['target_plugin_id']);
     $this->assertEquals(['percentage' => '0.1'], $configuration['offers'][1]['target_plugin_configuration']);

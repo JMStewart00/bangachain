@@ -7,6 +7,8 @@ use Drupal\rules\Core\RulesActionBase;
 /**
  * Provides a 'Data set' action.
  *
+ * @todo 'allow NULL' for both 'data' and 'value'?
+ *
  * @RulesAction(
  *   id = "rules_data_set",
  *   label = @Translation("Set a data value"),
@@ -26,8 +28,6 @@ use Drupal\rules\Core\RulesActionBase;
  *     ),
  *   }
  * )
- *
- * @todo 'allow NULL' for both 'data' and 'value'?
  */
 class DataSet extends RulesActionBase {
 

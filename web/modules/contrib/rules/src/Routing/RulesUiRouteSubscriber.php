@@ -44,7 +44,7 @@ class RulesUiRouteSubscriber extends RouteSubscriberBase {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     $events = parent::getSubscribedEvents();
     // Should run after AdminRouteSubscriber so the routes can inherit admin
     // status of the edit routes on entities. Therefore priority -210.
@@ -72,6 +72,27 @@ class RulesUiRouteSubscriber extends RouteSubscriberBase {
       '_permission' => $ui_definition->permissions ?: $base_route->getRequirement('_permission'),
     ];
 
+    // Route for adding events.
+    $route = (new Route($base_route->getPath() . '/event-add'))
+      ->addDefaults([
+        '_form' => '\Drupal\rules\Form\AddEventForm',
+        '_title_callback' => '\Drupal\rules\Form\AddEventForm::getTitle',
+      ])
+      ->addOptions($options)
+      ->addRequirements($requirements);
+    $collection->add($ui_definition->base_route . '.event.add', $route);
+
+    // Route for deleting events.
+    $route = (new Route($base_route->getPath() . '/event-delete/{id}'))
+      ->addDefaults([
+        '_form' => '\Drupal\rules\Form\DeleteEventForm',
+        '_title' => 'Delete event',
+      ])
+      ->addOptions($options)
+      ->addRequirements($requirements);
+    $collection->add($ui_definition->base_route . '.event.delete', $route);
+
+    // Route for adding expressions in a Rule.
     $route = (new Route($base_route->getPath() . '/add/{expression_id}'))
       ->addDefaults([
         '_form' => '\Drupal\rules\Form\AddExpressionForm',

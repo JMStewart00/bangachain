@@ -8,6 +8,8 @@ use Drupal\rules\Core\RulesConditionBase;
 /**
  * Provides an 'Entity is of type' condition.
  *
+ * @todo Add access callback information from Drupal 7?
+ *
  * @Condition(
  *   id = "rules_entity_is_of_type",
  *   label = @Translation("Entity is of type"),
@@ -21,12 +23,11 @@ use Drupal\rules\Core\RulesConditionBase;
  *     "type" = @ContextDefinition("string",
  *       label = @Translation("Type"),
  *       description = @Translation("The entity type specified by the condition."),
+ *       options_provider = "\Drupal\rules\TypedData\Options\EntityTypeOptions",
  *       assignment_restriction = "input"
  *     ),
  *   }
  * )
- *
- * @todo Add access callback information from Drupal 7?
  */
 class EntityIsOfType extends RulesConditionBase {
 

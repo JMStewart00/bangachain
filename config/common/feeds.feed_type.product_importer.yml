@@ -14,13 +14,13 @@ third_party_settings:
       0ac61a3f-e7b4-418f-ae6c-2b34ea6610f8:
         separator: ','
         limit: null
+        uuid: 0ac61a3f-e7b4-418f-ae6c-2b34ea6610f8
         plugin: explode
         source: sku
         weight: 0
         label: Explode
-        uuid: 0ac61a3f-e7b4-418f-ae6c-2b34ea6610f8
-id: product_importer
 label: 'Disc Product Importer'
+id: product_importer
 description: 'Base disc product imports to associate the variations with a disc.'
 help: ''
 import_period: -1
@@ -35,24 +35,24 @@ parser_configuration:
   line_limit: 100
 processor: 'entity:commerce_product'
 processor_configuration:
+  values:
+    type: discs
   langcode: en
   update_existing: 2
   update_non_existent: _keep
+  skip_hash_check: false
+  authorize: true
   expire: -1
   owner_feed_author: false
   owner_id: 0
-  authorize: true
-  skip_hash_check: false
-  values:
-    type: discs
 custom_sources:
   sku:
-    label: SKU
     value: SKU
+    label: SKU
     machine_name: sku
   title:
-    label: Title
     value: Title
+    label: Title
     machine_name: title
 mappings:
   -
@@ -67,7 +67,7 @@ mappings:
     target: title
     map:
       value: title
-    unique:
-      value: '1'
     settings:
       language: null
+    unique:
+      value: '1'

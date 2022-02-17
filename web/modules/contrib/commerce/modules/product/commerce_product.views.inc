@@ -30,6 +30,10 @@ function commerce_product_field_views_data_alter(array &$data, FieldStorageConfi
       return;
     }
     $handler_settings = $field->getSetting('handler_settings');
+    // If the "target_bundles" setting is not defined or empty, stop here.
+    if (empty($handler_settings['target_bundles'])) {
+      return;
+    }
     $target_bundles = array_values($handler_settings['target_bundles']);
     $attribute = reset($target_bundles);
 

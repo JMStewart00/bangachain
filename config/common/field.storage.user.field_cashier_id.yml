@@ -2,11 +2,11 @@ uuid: c6b9022e-1567-42ff-9771-3314e36ef4cc
 langcode: en
 status: true
 dependencies:
+  module:
+    - user
   enforced:
     module:
       - commerce_pos
-  module:
-    - user
 _core:
   default_config_hash: BkqHhWmv7jipdvTeVzFm2VaaoJUPdYpE8ngEav2bFEI
 id: user.field_cashier_id
@@ -15,8 +15,8 @@ entity_type: user
 type: string
 settings:
   max_length: 255
-  is_ascii: false
   case_sensitive: false
+  is_ascii: false
 module: core
 locked: false
 cardinality: 1

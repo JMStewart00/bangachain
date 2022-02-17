@@ -18,6 +18,9 @@ final class BrowserTestBaseDefaultThemeRule implements Rule
 
     public function processNode(Node $node, Scope $scope): array
     {
+        if (!interface_exists(\PHPUnit\Framework\Test::class)) {
+            return [];
+        }
         assert($node instanceof Node\Stmt\Class_);
         if ($node->extends === null) {
             return [];
@@ -30,6 +33,10 @@ final class BrowserTestBaseDefaultThemeRule implements Rule
         assert($classType instanceof ObjectType);
         $browserTestBaseAncestor = $classType->getAncestorWithClassName('Drupal\\Tests\\BrowserTestBase');
         if ($browserTestBaseAncestor === null) {
+            return [];
+        }
+        $browserTestBaseAncestor = $classType->getAncestorWithClassName('Drupal\\FunctionalTests\\Update\\UpdatePathTestBase');
+        if ($browserTestBaseAncestor !== null) {
             return [];
         }
 

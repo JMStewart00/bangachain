@@ -273,7 +273,7 @@
         ]
     },
     "extra": {
-        "composer-exit-on-patch-failure": true,
+        "composer-exit-on-patch-failure": false,
         "installer-types": [
             "bower-asset",
             "npm-asset"
@@ -311,11 +311,10 @@
                 "Error: Call to a member function getEntityTypeId() on null (Layout Builder)": "https://www.drupal.org/files/issues/2019-06-25/drupal-layout_builder_inline_block_empty_block_error-3049332-8.7.x_0.patch",
                 "Cloned entities don't retain their Inline Block usage": "https://www.drupal.org/files/issues/2020-03-06/3062819-inline-cloned-COMBINED_2.patch",
                 "Conflict with field_group, missing options in sidebar when creating/updating a node": "https://www.drupal.org/files/issues/2019-11-29/claro-fix_node_sidebar_accordion_items-3097407-4--fix-only.patch",
-                "Layout builder incorrectly resolves global contexts values when viewing layouts": "https://www.drupal.org/files/issues/2020-06-19/3099968-35.patch",
                 "Break long text strings in layout edit": "https://www.drupal.org/files/issues/2020-08-10/break-long-text-strings-in-layout-3016507-32.patch",
                 "Views file name suggestions often missing from Twig debugging": "https://www.drupal.org/files/issues/views-template-suggestions-2839945-2.patch",
                 "'Negate' form value for condition plugins should be cast to boolean in validation.": "https://www.drupal.org/files/issues/2021-01-06/3114467-16.patch",
-                "Support third party settings for components within a section": "https://www.drupal.org/files/issues/2021-01-29/3015152-tps-9.2.x-116.patch"
+                "Support third party settings for components within a section": "https://www.drupal.org/files/issues/2021-12-13/3015152-tps-9.3.x-128.patch"
             },
             "drupal/block_class": {
                 "Integration with Drupal core's new Layout Builder": "https://www.drupal.org/files/issues/2019-06-28/block_class-support-layout-builder-2998114-45.patch"
@@ -352,10 +351,8 @@
                 "Don't allow payout on certain items": "./patches/commerce_giftcard_custom_patch_no_payout_allowed.patch"
             },
             "drupal/commerce_reports": {
-                "Anonymous users can see Purchased Items Report": "https://www.drupal.org/files/issues/2019-06-07/3004989-17.patch",
-                "Generating Order Reports throws toArray() error": "https://www.drupal.org/files/issues/2019-10-18/3088183-3.patch",
-                "Argument 4 null": "./patches/argument-4.patch",
-                "Order generation subscriber results in duplicates or missing report items": "https://www.drupal.org/files/issues/2021-10-08/3023518-14.patch"
+                "Order generation subscriber results in duplicates or missing report items": "https://www.drupal.org/files/issues/2021-10-08/3023518-14.patch",
+                "/project/commerce_reports/issues/3254973 - Drupal 9 Commerce Sales Report pages not loading": "https://www.drupal.org/files/issues/2021-12-18/3254973-4.patch"
             },
             "drupal/commerce_pos": {
                 "Auto set register to id of 1": "./patches/load-only-register-1b.patch"
@@ -367,7 +364,7 @@
                 "Undefined Index: allowed_extensions AJAX error when creating feed types.": "https://www.drupal.org/files/issues/2019-02-06/3031019-undefined-index-ajax-2.patch"
             },
             "drupal/rules": {
-                "Integrate Typed Data Widgets": "https://www.drupal.org/files/issues/2021-06-22/2471481-146.integrate-typed-data-widgets.patch"
+                "/project/rules/issues/2471481 - Integrate Typed Data Widgets": "https://www.drupal.org/files/issues/2022-02-15/2471481-170.integrate-typed-data-widgets-no-tests.patch"
             },
             "drupal/easy_responsive_images": {
                 "Fix retina display issues": "./patches/easy_responsive_images_fix_retina_display_issues.patch"

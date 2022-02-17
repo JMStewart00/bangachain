@@ -34,7 +34,7 @@ class ProductAdminTest extends ProductBrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'file',
     'image',
   ];

@@ -70,6 +70,7 @@ class OrderEventSubscriber implements EventSubscriberInterface {
       $coupon_promotion_ids[] = $coupon->getPromotionId();
     }
 
+    $promotion_ids = [];
     $adjustments = $order->collectAdjustments();
     foreach ($adjustments as $adjustment) {
       if ($adjustment->getType() != 'promotion') {
@@ -78,12 +79,16 @@ class OrderEventSubscriber implements EventSubscriberInterface {
 
       $promotion_id = $adjustment->getSourceId();
       if ($promotion_id && !in_array($promotion_id, $coupon_promotion_ids)) {
-        $promotion = $this->promotionStorage->load($promotion_id);
-        // Not every adjustment can be mapped to a promotion (because the
-        // the promotion was deleted, or because the adjustment is custom).
-        if ($promotion) {
-          $this->usage->register($order, $promotion);
-        }
+        $promotion_ids[$promotion_id] = $promotion_id;
+      }
+    }
+
+    if ($promotion_ids) {
+      $promotions = $this->promotionStorage->loadMultiple($promotion_ids);
+
+      /** @var \Drupal\commerce_promotion\Entity\PromotionInterface $promotion */
+      foreach ($promotions as $promotion) {
+        $this->usage->register($order, $promotion);
       }
     }
   }

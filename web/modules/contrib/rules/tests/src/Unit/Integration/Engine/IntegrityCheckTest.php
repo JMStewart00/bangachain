@@ -27,7 +27,7 @@ class IntegrityCheckTest extends RulesEntityIntegrationTestBase {
     $violation_list = RulesComponent::create($rule)
       ->addContextDefinition('entity', ContextDefinition::create('entity'))
       ->checkIntegrity();
-    $this->assertEquals(0, iterator_count($violation_list));
+    $this->assertCount(0, $violation_list);
   }
 
   /**
@@ -42,7 +42,7 @@ class IntegrityCheckTest extends RulesEntityIntegrationTestBase {
 
     $violation_list = RulesComponent::create($rule)
       ->checkIntegrity();
-    $this->assertEquals(1, iterator_count($violation_list));
+    $this->assertCount(1, $violation_list);
     $violation = $violation_list[0];
     // The Exception message part of the output should be HTML-escaped.
     $this->assertEquals(
@@ -69,10 +69,10 @@ class IntegrityCheckTest extends RulesEntityIntegrationTestBase {
       ->addContextDefinition('entity', ContextDefinition::create('entity'))
       ->checkIntegrity();
 
-    $this->assertEquals(2, iterator_count($all_violations));
+    $this->assertCount(2, $all_violations);
 
     $uuid_violations = $all_violations->getFor($second_action->getUuid());
-    $this->assertEquals(1, count($uuid_violations));
+    $this->assertCount(1, $uuid_violations);
     $violation = $uuid_violations[0];
     // The Exception message part of the output should be HTML-escaped.
     $this->assertEquals(
@@ -91,7 +91,7 @@ class IntegrityCheckTest extends RulesEntityIntegrationTestBase {
     $rule->addExpressionObject($condition);
 
     $violations = RulesComponent::create($rule)->checkIntegrity();
-    $this->assertEquals(1, iterator_count($violations));
+    $this->assertCount(1, $violations);
     $this->assertEquals('Condition plugin <em class="placeholder">invalid_condition_id</em> does not exist', (string) $violations[0]->getMessage());
     $this->assertEquals($condition->getUuid(), $violations[0]->getUuid());
   }
@@ -105,7 +105,7 @@ class IntegrityCheckTest extends RulesEntityIntegrationTestBase {
     $rule->addExpressionObject($condition);
 
     $violations = RulesComponent::create($rule)->checkIntegrity();
-    $this->assertEquals(1, iterator_count($violations));
+    $this->assertCount(1, $violations);
     $this->assertEquals('Condition plugin ID is missing', (string) $violations[0]->getMessage());
     $this->assertEquals($condition->getUuid(), $violations[0]->getUuid());
   }
@@ -119,7 +119,7 @@ class IntegrityCheckTest extends RulesEntityIntegrationTestBase {
     $rule->addExpressionObject($action);
 
     $violations = RulesComponent::create($rule)->checkIntegrity();
-    $this->assertEquals(1, iterator_count($violations));
+    $this->assertCount(1, $violations);
     $this->assertEquals('Action plugin <em class="placeholder">invalid_action_id</em> does not exist', (string) $violations[0]->getMessage());
     $this->assertEquals($action->getUuid(), $violations[0]->getUuid());
   }
@@ -133,7 +133,7 @@ class IntegrityCheckTest extends RulesEntityIntegrationTestBase {
     $rule->addExpressionObject($action);
 
     $violations = RulesComponent::create($rule)->checkIntegrity();
-    $this->assertEquals(1, iterator_count($violations));
+    $this->assertCount(1, $violations);
     $this->assertEquals('Action plugin ID is missing', (string) $violations[0]->getMessage());
     $this->assertEquals($action->getUuid(), $violations[0]->getUuid());
   }
@@ -152,7 +152,7 @@ class IntegrityCheckTest extends RulesEntityIntegrationTestBase {
 
     $violation_list = RulesComponent::create($rule)
       ->checkIntegrity();
-    $this->assertEquals(1, iterator_count($violation_list));
+    $this->assertCount(1, $violation_list);
     $this->assertEquals(
       'Provided variable name <em class="placeholder">invalid_näme</em> contains not allowed characters.',
       (string) $violation_list[0]->getMessage()
@@ -177,7 +177,7 @@ class IntegrityCheckTest extends RulesEntityIntegrationTestBase {
     $violation_list = RulesComponent::create($rule)
       ->addContextDefinition('variable_1', ContextDefinition::create('string'))
       ->checkIntegrity();
-    $this->assertEquals(1, iterator_count($violation_list));
+    $this->assertCount(1, $violation_list);
     $this->assertEquals(
       'The context <em class="placeholder">Entity type</em> may not be configured using a selector.',
       (string) $violation_list[0]->getMessage()
@@ -201,7 +201,7 @@ class IntegrityCheckTest extends RulesEntityIntegrationTestBase {
 
     $violation_list = RulesComponent::create($rule)
       ->checkIntegrity();
-    $this->assertEquals(1, iterator_count($violation_list));
+    $this->assertCount(1, $violation_list);
     $this->assertEquals(
       'The context <em class="placeholder">Data</em> may only be configured using a selector.',
       (string) $violation_list[0]->getMessage()
@@ -225,10 +225,10 @@ class IntegrityCheckTest extends RulesEntityIntegrationTestBase {
     $violation_list = RulesComponent::create($rule)
       ->addContextDefinition('list_variable', ContextDefinition::create('list'))
       ->checkIntegrity();
-    $this->assertEquals(1, iterator_count($violation_list));
+    $this->assertCount(1, $violation_list);
     $this->assertEquals(
-      'Expected a string data type for context Text to compare but got a list data type instead.',
-      strip_tags((string) $violation_list[0]->getMessage())
+      'Expected a string data type for context <em class="placeholder">Text to compare</em> but got a list data type instead.',
+      (string) $violation_list[0]->getMessage()
     );
     $this->assertEquals($condition->getUuid(), $violation_list[0]->getUuid());
   }
@@ -250,10 +250,10 @@ class IntegrityCheckTest extends RulesEntityIntegrationTestBase {
     $violation_list = RulesComponent::create($rule)
       ->addContextDefinition('node', ContextDefinition::create('entity:node'))
       ->checkIntegrity();
-    $this->assertEquals(1, iterator_count($violation_list));
+    $this->assertCount(1, $violation_list);
     $this->assertEquals(
-      'Expected a list data type for context Content types but got a entity:node data type instead.',
-      strip_tags((string) $violation_list[0]->getMessage())
+      'Expected a list data type for context <em class="placeholder">Content types</em> but got a entity:node data type instead.',
+      (string) $violation_list[0]->getMessage()
     );
     $this->assertEquals($condition->getUuid(), $violation_list[0]->getUuid());
   }
@@ -275,10 +275,10 @@ class IntegrityCheckTest extends RulesEntityIntegrationTestBase {
     $violation_list = RulesComponent::create($rule)
       ->addContextDefinition('list_variable', ContextDefinition::create('list'))
       ->checkIntegrity();
-    $this->assertEquals(1, iterator_count($violation_list));
+    $this->assertCount(1, $violation_list);
     $this->assertEquals(
-      'Expected a entity:node data type for context Node but got a list data type instead.',
-      strip_tags((string) $violation_list[0]->getMessage())
+      'Expected a entity:node data type for context <em class="placeholder">Node</em> but got a list data type instead.',
+      (string) $violation_list[0]->getMessage()
     );
     $this->assertEquals($condition->getUuid(), $violation_list[0]->getUuid());
   }
@@ -295,7 +295,7 @@ class IntegrityCheckTest extends RulesEntityIntegrationTestBase {
 
     $violation_list = RulesComponent::create($rule)
       ->checkIntegrity();
-    $this->assertEquals(2, iterator_count($violation_list));
+    $this->assertCount(2, $violation_list);
     $this->assertEquals(
       'The required context <em class="placeholder">Node</em> is missing.',
       (string) $violation_list[0]->getMessage()
@@ -323,7 +323,7 @@ class IntegrityCheckTest extends RulesEntityIntegrationTestBase {
 
     $violation_list = RulesComponent::create($rule)
       ->checkIntegrity();
-    $this->assertEquals(1, iterator_count($violation_list));
+    $this->assertCount(1, $violation_list);
     // UUID must be that of the most inner action.
     $this->assertEquals($action->getUuid(), $violation_list[0]->getUuid());
   }
@@ -345,7 +345,7 @@ class IntegrityCheckTest extends RulesEntityIntegrationTestBase {
 
     $violation_list = RulesComponent::create($rule)
       ->checkIntegrity();
-    $this->assertEquals(0, iterator_count($violation_list));
+    $this->assertCount(0, $violation_list);
   }
 
   /**
@@ -361,7 +361,7 @@ class IntegrityCheckTest extends RulesEntityIntegrationTestBase {
     $violation_list = RulesComponent::create($rule)
       ->addContextDefinition('text', ContextDefinition::create('string'))
       ->checkIntegrity();
-    $this->assertEquals(1, iterator_count($violation_list));
+    $this->assertCount(1, $violation_list);
   }
 
   /**
@@ -381,13 +381,13 @@ class IntegrityCheckTest extends RulesEntityIntegrationTestBase {
       ->addContextDefinition('text', ContextDefinition::create('string'))
       ->addContextDefinition('text2', ContextDefinition::create('string'))
       ->checkIntegrity();
-    $this->assertEquals(0, iterator_count($violation_list));
+    $this->assertCount(0, $violation_list);
 
     $violation_list = RulesComponent::create($rule)
       ->addContextDefinition('text', ContextDefinition::create('string'))
       ->addContextDefinition('text2', ContextDefinition::create('integer'))
       ->checkIntegrity();
-    $this->assertEquals(1, iterator_count($violation_list));
+    $this->assertCount(1, $violation_list);
   }
 
   /**
@@ -408,7 +408,7 @@ class IntegrityCheckTest extends RulesEntityIntegrationTestBase {
     // it will end up as "any" and integrity check would fail.
     $violation_list = RulesComponent::create($rule)
       ->checkIntegrity();
-    $this->assertEquals(0, iterator_count($violation_list));
+    $this->assertCount(0, $violation_list);
   }
 
 }

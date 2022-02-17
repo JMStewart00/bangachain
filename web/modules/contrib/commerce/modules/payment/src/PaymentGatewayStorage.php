@@ -86,7 +86,7 @@ class PaymentGatewayStorage extends ConfigEntityStorage implements PaymentGatewa
     $payment_gateways = $this->loadByProperties(['status' => TRUE]);
     // Allow the list of payment gateways to be filtered via code.
     $event = new FilterPaymentGatewaysEvent($payment_gateways, $order);
-    $this->eventDispatcher->dispatch(PaymentEvents::FILTER_PAYMENT_GATEWAYS, $event);
+    $this->eventDispatcher->dispatch($event, PaymentEvents::FILTER_PAYMENT_GATEWAYS);
     $payment_gateways = $event->getPaymentGateways();
     // Evaluate conditions for the remaining ones.
     foreach ($payment_gateways as $payment_gateway_id => $payment_gateway) {

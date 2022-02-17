@@ -33,20 +33,20 @@ class AnnotationProcessingTest extends RulesIntegrationTestBase {
     $context = $plugin->getContext('list');
     $definition = $context->getContextDefinition();
 
-    // These can reasonable be string or TranslatableMarkup, but never
-    // a Translation object.
+    // These can reasonably be either strings or TranslatableMarkup objects,
+    // but never Translation objects.
     $label = $definition->getLabel();
     $description = $definition->getDescription();
-    $this->assertFalse($label instanceof Translation, 'Label is not a Translation object');
-    $this->assertFalse($description instanceof Translation, 'Description is not a Translation object');
+    $this->assertNotInstanceOf(Translation::class, $label, 'Label is not a Translation object');
+    $this->assertNotInstanceOf(Translation::class, $description, 'Description is not a Translation object');
 
     // Check also the toArray() path.
     $definition = $context->getContextDefinition();
     $values = $definition->toArray();
     $label = $values['label'];
     $description = $values['description'];
-    $this->assertFalse($label instanceof Translation, "\$values['label'] is not a Translation object");
-    $this->assertFalse($description instanceof Translation, "\$values['description'] is not a Translation object");
+    $this->assertNotInstanceOf(Translation::class, $label, "\$values['label'] is not a Translation object");
+    $this->assertNotInstanceOf(Translation::class, $description, "\$values['description'] is not a Translation object");
   }
 
   /**

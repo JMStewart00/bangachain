@@ -21,7 +21,7 @@ class WishlistItemTest extends CartKernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_wishlist',
   ];
 

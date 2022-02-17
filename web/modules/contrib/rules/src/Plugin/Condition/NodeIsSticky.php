@@ -8,6 +8,8 @@ use Drupal\rules\Core\RulesConditionBase;
 /**
  * Provides a 'Node is sticky' condition.
  *
+ * @todo Add access callback information from Drupal 7.
+ *
  * @Condition(
  *   id = "rules_node_is_sticky",
  *   label = @Translation("Node is sticky"),
@@ -20,8 +22,6 @@ use Drupal\rules\Core\RulesConditionBase;
  *     ),
  *   }
  * )
- *
- * @todo Add access callback information from Drupal 7.
  */
 class NodeIsSticky extends RulesConditionBase {
 

@@ -9,6 +9,8 @@ use Drupal\user\UserInterface;
 /**
  * Provides a 'User has roles(s)' condition.
  *
+ * @todo Add access callback information from Drupal 7.
+ *
  * @Condition(
  *   id = "rules_user_has_role",
  *   label = @Translation("User has role(s)"),
@@ -21,19 +23,19 @@ use Drupal\user\UserInterface;
  *     "roles" = @ContextDefinition("entity:user_role",
  *       label = @Translation("Roles"),
  *       description = @Translation("Specifies the roles to check for."),
- *       multiple = TRUE
+ *       multiple = TRUE,
+ *       options_provider = "\Drupal\rules\TypedData\Options\RolesOptions"
  *     ),
  *     "operation" = @ContextDefinition("string",
- *       label = @Translation("Match roles"),
- *       description = @Translation("If matching against all selected roles, the user must have <em>all</em> the roles selected."),
+ *       label = @Translation("Matching multiple roles"),
+ *       description = @Translation("Specify if the user must have <em>all</em> the roles selected or <em>any</em> of the roles selected."),
  *       assignment_restriction = "input",
  *       default_value = "AND",
+ *       options_provider = "\Drupal\rules\TypedData\Options\AndOrOptions",
  *       required = FALSE
  *     ),
  *   }
  * )
- *
- * @todo Add access callback information from Drupal 7.
  */
 class UserHasRole extends RulesConditionBase {
 
@@ -58,7 +60,7 @@ class UserHasRole extends RulesConditionBase {
       return $role->id();
     }, $roles);
 
-    switch ($operation) {
+    switch (strtoupper($operation)) {
       case 'OR':
         return (bool) array_intersect($rids, $user->getRoles());
 

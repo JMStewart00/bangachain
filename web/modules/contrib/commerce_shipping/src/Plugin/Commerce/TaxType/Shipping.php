@@ -333,6 +333,10 @@ class Shipping extends TaxTypeBase {
     foreach ($order->getItems() as $order_item) {
       $order_item_total = $order_item->getTotalPrice();
       $order_item_tax_adjustments = $order_item->getAdjustments(['tax']);
+      // This order item is tax exempt, skip it.
+      if (!$order_item_tax_adjustments) {
+        continue;
+      }
       $order_item_tax_adjustment = reset($order_item_tax_adjustments);
       $percentage = $order_item_tax_adjustment->getPercentage();
       if (!isset($groups[$percentage])) {

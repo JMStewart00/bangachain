@@ -12,18 +12,18 @@ dependencies:
     - layout_builder
 third_party_settings:
   layout_builder:
-    allow_custom: false
     enabled: false
+    allow_custom: false
 id: commerce_product_variation.gift_card.summary
 targetEntityType: commerce_product_variation
 bundle: gift_card
 mode: summary
 content:
   add_to_cart_link:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   commerce_giftcard_amount: true
   commerce_giftcard_type: true

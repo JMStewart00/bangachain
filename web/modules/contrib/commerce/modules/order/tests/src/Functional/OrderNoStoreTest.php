@@ -15,7 +15,7 @@ class OrderNoStoreTest extends CommerceBrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_order',
   ];
 

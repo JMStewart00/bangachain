@@ -54,7 +54,13 @@ class BlazyDefault {
    * Returns settings provided by various UI.
    */
   public static function anywhereSettings() {
-    return ['fx' => '', 'style' => ''];
+    return [
+      'fx'      => '',
+      'lazy'    => '',
+      'loading' => 'lazy',
+      'preload' => FALSE,
+      'style'   => '',
+    ];
   }
 
   /**
@@ -196,7 +202,6 @@ class BlazyDefault {
   public static function richSettings() {
     return [
       'background'   => FALSE,
-      'lazy'         => '',
       'lightbox'     => FALSE,
       'media_switch' => '',
       'placeholder'  => '',
@@ -211,7 +216,7 @@ class BlazyDefault {
    */
   public static function uiSettings() {
     return [
-      'decode'              => FALSE,
+      'nojs'                => [],
       'one_pixel'           => TRUE,
       'noscript'            => FALSE,
       'placeholder'         => '',
@@ -225,18 +230,29 @@ class BlazyDefault {
    */
   public static function htmlSettings() {
     return [
-      'blazy_data' => [],
-      'lightbox'   => FALSE,
-      'namespace'  => 'blazy',
-      'id'         => '',
-      'is_preview' => FALSE,
-      '_richbox'   => FALSE,
-      'route_name' => '',
-      'use_field'  => FALSE,
-      'unstyled'   => FALSE,
-      'view_name'  => '',
+      'blazy_data'       => [],
+      'blur'             => FALSE,
+      'bundle'           => '',
+      'check_blazy'      => FALSE,
+      'compat'           => FALSE,
+      'fluid'            => FALSE,
+      'lightbox'         => FALSE,
+      'namespace'        => 'blazy',
+      'id'               => '',
+      'is_amp'           => FALSE,
+      'is_nojs'          => FALSE,
+      'is_preview'       => FALSE,
+      'is_sandboxed'     => FALSE,
+      '_richbox'         => FALSE,
+      'resimage'         => FALSE,
+      'route_name'       => '',
+      'use_ajax'         => FALSE,
+      'use_field'        => FALSE,
+      'unstyled'         => FALSE,
+      'view_name'        => '',
+      'first_image'      => NULL,
       'accessible_title' => '',
-    ] + self::imageSettings() + self::uiSettings();
+    ] + self::imageSettings() + self::uiSettings() + self::gridSettings();
   }
 
   /**
@@ -245,7 +261,6 @@ class BlazyDefault {
   public static function itemSettings() {
     return [
       '_api'           => FALSE,
-      'bundle'         => '',
       'classes'        => [],
       'content_url'    => '',
       'delta'          => 0,
@@ -260,7 +275,6 @@ class BlazyDefault {
       'placeholder_fx' => '',
       'placeholder_ui' => '',
       'player'         => FALSE,
-      'resimage'       => FALSE,
       'scheme'         => '',
       'type'           => 'image',
       'uri'            => '',
@@ -310,17 +324,64 @@ class BlazyDefault {
   /**
    * Returns available components.
    */
-  public static function components() {
+  public static function components(): array {
     return [
+      'animate',
+      'background',
+      'blur',
       'column',
+      'compat',
       'filter',
       'flex',
       'grid',
+      'media',
       'nativegrid',
       'nativegrid.masonry',
-      'media',
       'photobox',
       'ratio',
+    ];
+  }
+
+  /**
+   * Returns available plugins.
+   */
+  public static function plugins(): array {
+    return [
+      'viewport',
+      'xlazy',
+      'css',
+      'animate',
+      'dataset',
+      'background',
+      'observer',
+    ];
+  }
+
+  /**
+   * Returns available nojs components related to core Blazy functionality.
+   */
+  public static function polyfills(): array {
+    return [
+      'polyfill',
+      'classlist',
+      'promise',
+      'raf',
+    ];
+  }
+
+  /**
+   * Returns available nojs components related to core Blazy functionality.
+   */
+  public static function nojs(): array {
+    return array_merge(['lazy'], self::polyfills());
+  }
+
+  /**
+   * Returns optional polyfills, not loaded till enabled and a feature meets.
+   */
+  public static function ondemandPolyfills(): array {
+    return [
+      'fullscreen',
     ];
   }
 

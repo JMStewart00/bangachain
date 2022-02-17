@@ -35,7 +35,7 @@ class AddToCartFieldReplacementTest extends CartWebDriverTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_product',
   ];
 

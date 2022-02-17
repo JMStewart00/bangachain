@@ -4,7 +4,9 @@
   // eslint . -o ../../eslint/blazy.html -f html
   "extends": "../../../core/.eslintrc.legacy.json",
   "globals": {
+    "once": true,
     "Promise": true,
+    "Symbol": true,
     "Blazy": true,
     "dBlazy": true,
     "Bio": true,

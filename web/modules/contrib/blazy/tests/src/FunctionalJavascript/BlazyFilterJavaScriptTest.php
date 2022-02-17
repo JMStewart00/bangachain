@@ -5,6 +5,7 @@ namespace Drupal\Tests\blazy\FunctionalJavascript;
 use Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\blazy\BlazyDefault;
 use Drupal\Tests\blazy\Traits\BlazyUnitTestTrait;
 use Drupal\Tests\blazy\Traits\BlazyCreationTestTrait;
 
@@ -45,12 +46,12 @@ class BlazyFilterJavaScriptTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->setUpVariables();
 
-    $this->root                   = $this->container->get('app.root');
+    $this->root                   = $this->container->getParameter('app.root');
     $this->fileSystem             = $this->container->get('file_system');
     $this->entityFieldManager     = $this->container->get('entity_field.manager');
     $this->formatterPluginManager = $this->container->get('plugin.manager.field.formatter');
@@ -85,6 +86,7 @@ class BlazyFilterJavaScriptTest extends WebDriverTestBase {
     $image_path = $this->getImagePath(TRUE);
 
     // Prevents execessive width with aspect ratio.
+    $settings = BlazyDefault::htmlSettings();
     $settings['extra_text'] = '<div style="width: 640px;">';
     $settings['extra_text'] .= '<img data-unblazy src="' . $this->url . '" width="320" height="320" />';
     $settings['extra_text'] .= '<iframe src="https://www.youtube.com/watch?v=uny9kbh4iOEd" width="640" height="360"></iframe>';

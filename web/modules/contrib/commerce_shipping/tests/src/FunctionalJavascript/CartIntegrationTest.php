@@ -25,7 +25,7 @@ class CartIntegrationTest extends CommerceWebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_cart',
     'commerce_payment',
     'commerce_payment_example',

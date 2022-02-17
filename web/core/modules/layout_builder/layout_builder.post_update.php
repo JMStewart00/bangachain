@@ -7,7 +7,6 @@
 
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
-
 use Drupal\layout_builder\Entity\LayoutEntityDisplayInterface;
 
 /**
@@ -72,5 +71,12 @@ function layout_builder_post_update_section_storage_context_mapping(&$sandbox = 
  * Clear caches due to config schema addition.
  */
 function layout_builder_post_update_component_third_party_settings_schema() {
+  // Empty post-update hook.
+}
+
+/**
+ * Clear caches due to adding a new route enhancer.
+ */
+function layout_builder_post_update_tempstore_route_enhancer() {
   // Empty post-update hook.
 }

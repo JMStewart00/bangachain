@@ -97,7 +97,7 @@ class OrderStorage extends CommerceContentEntityStorage {
       // order was completed before Commerce 8.x-2.10 (flag is NULL).
       if ($order->getData('paid_event_dispatched') === FALSE) {
         $event = new OrderEvent($order);
-        $this->eventDispatcher->dispatch(OrderEvents::ORDER_PAID, $event);
+        $this->eventDispatcher->dispatch($event, OrderEvents::ORDER_PAID);
         $order->setData('paid_event_dispatched', TRUE);
       }
     }

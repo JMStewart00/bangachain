@@ -7,9 +7,9 @@ dependencies:
 third_party_settings:
   commerce_tax:
     taxable_type: physical_goods
-label: 'Food Order Item'
 id: food_order_item
-purchasableEntityType: commerce_product_variation
-orderType: no_giftcards_allowed
+label: 'Food Order Item'
 traits: {  }
 locked: false
+purchasableEntityType: commerce_product_variation
+orderType: no_giftcards_allowed

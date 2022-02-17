@@ -166,10 +166,10 @@ class SectionComponent implements ThirdPartySettingsInterface {
    */
   public function get($property) {
     if (property_exists($this, $property)) {
-      $value = isset($this->{$property}) ? $this->{$property} : NULL;
+      $value = $this->{$property} ?? NULL;
     }
     else {
-      $value = isset($this->additional[$property]) ? $this->additional[$property] : NULL;
+      $value = $this->additional[$property] ?? NULL;
     }
     @trigger_error('Getting additional properties is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Additional component properties should be gotten via ::setThirdPartySetting(). See https://www.drupal.org/node/3100177', E_USER_DEPRECATED);
     return $value;
@@ -362,10 +362,10 @@ class SectionComponent implements ThirdPartySettingsInterface {
       'uuid' => $this->getUuid(),
       'region' => $this->getRegion(),
       'configuration' => $this->getConfiguration(),
+      'weight' => $this->getWeight(),
       // @todo Remove below key/value when the drupal:10.0.x branch is opened.
       // @see https://www.drupal.org/project/drupal/issues/3160644
       'additional' => $this->additional,
-      'weight' => $this->getWeight(),
       'third_party_settings' => $this->thirdPartySettings,
     ];
   }

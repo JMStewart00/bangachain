@@ -9,9 +9,9 @@ third_party_settings:
     show_in_pos: true
 id: pre_order_items
 label: 'Pre Order Items'
+traits: {  }
+locked: false
 description: ''
 variationType: pre_order_items
 multipleVariations: true
 injectVariationFields: true
-traits: {  }
-locked: false

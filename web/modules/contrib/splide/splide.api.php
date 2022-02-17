@@ -395,7 +395,7 @@
  *   // If you copy this file, be sure to add base_path() before any asset path
  *   // (css or js) as otherwise failing to load the assets. Your module can
  *   // register paths pointing to a theme. Almost similar to library.
- *   $theme_path = base_path() . drupal_get_path('theme', 'my_theme');
+ *   $theme_path = Blazy::getPath('theme', 'my_theme', TRUE);
  *
  *   return [
  *     'skin_name' => [

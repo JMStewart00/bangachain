@@ -22,6 +22,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *     plural = "@count payment gateways",
  *   ),
  *   handlers = {
+ *     "access" = "Drupal\commerce_payment\PaymentGatewayAccessControlHandler",
  *     "list_builder" = "Drupal\commerce_payment\PaymentGatewayListBuilder",
  *     "storage" = "Drupal\commerce_payment\PaymentGatewayStorage",
  *     "form" = {

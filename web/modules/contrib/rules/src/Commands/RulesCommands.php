@@ -66,7 +66,7 @@ class RulesCommands extends DrushCommands {
    *
    * @usage drush rules:list
    *   Lists both Reaction Rules and Rules Components.
-   * @usage drush rules:list --type=component
+   * @usage drush rules:list component
    *   Lists only Rules Components.
    * @usage drush rules:list --fields=machine-name
    *   Lists just the machine names.
@@ -103,7 +103,7 @@ class RulesCommands extends DrushCommands {
         break;
     }
 
-    // Loop over type option.
+    // Loop over type parameter.
     $rows = [];
     foreach ($types as $item) {
       $rules = $this->configFactory->listAll('rules.' . $item);
@@ -141,8 +141,11 @@ class RulesCommands extends DrushCommands {
    *   Reaction rule name (machine name) to enable.
    *
    * @command rules:enable
+   * @interact-disabled-rules
    * @aliases renb,rules-enable
    *
+   * @usage drush rules:enable
+   *   Displays all disabled rules and allows you to select one to enable.
    * @usage drush rules:enable test_rule
    *   Enables the rule with machine name 'test_rule'.
    *
@@ -152,6 +155,10 @@ class RulesCommands extends DrushCommands {
     // The $rule argument must be a Reaction Rule.
     if ($this->configStorage->exists('rules.reaction.' . $rule)) {
       $config = $this->configFactory->getEditable('rules.reaction.' . $rule);
+    }
+    // The @interact-disabled-rules hook returns fully-qualified names.
+    elseif ($this->configStorage->exists($rule)) {
+      $config = $this->configFactory->getEditable($rule);
     }
     else {
       throw new \Exception(dt('Could not find a Reaction Rule named @name', ['@name' => $rule]));
@@ -174,8 +181,11 @@ class RulesCommands extends DrushCommands {
    *   Reaction rule name (machine name) to disable.
    *
    * @command rules:disable
+   * @interact-enabled-rules
    * @aliases rdis,rules-disable
    *
+   * @usage drush rules:disable
+   *   Displays all enabled rules and allows you to select one to disable.
    * @usage drush rules:disable test_rule
    *   Disables the rule with machine name 'test_rule'.
    *
@@ -185,6 +195,10 @@ class RulesCommands extends DrushCommands {
     // The $rule argument must be a Reaction Rule.
     if ($this->configStorage->exists('rules.reaction.' . $rule)) {
       $config = $this->configFactory->getEditable('rules.reaction.' . $rule);
+    }
+    // The @interact-enabled-rules hook returns fully-qualified names.
+    elseif ($this->configStorage->exists($rule)) {
+      $config = $this->configFactory->getEditable($rule);
     }
     else {
       throw new \Exception(dt('Could not find a Reaction Rule named @name', ['@name' => $rule]));
@@ -207,8 +221,11 @@ class RulesCommands extends DrushCommands {
    *   Rule name (machine id) to delete.
    *
    * @command rules:delete
+   * @interact-rule-names
    * @aliases rdel,rules-delete
    *
+   * @usage drush rules:delete
+   *   Displays all rules and allows you to select one to delete.
    * @usage drush rules:delete test_rule
    *   Permanently deletes the rule with machine name 'test_rule'.
    *
@@ -221,6 +238,10 @@ class RulesCommands extends DrushCommands {
     }
     elseif ($this->configStorage->exists('rules.component.' . $rule)) {
       $config = $this->configFactory->getEditable('rules.component.' . $rule);
+    }
+    // The @interact-rule-names hook returns fully-qualified names.
+    elseif ($this->configStorage->exists($rule)) {
+      $config = $this->configFactory->getEditable($rule);
     }
     else {
       throw new \Exception(dt('Could not find a Reaction Rule or a Rules Component named @name', ['@name' => $rule]));
@@ -240,13 +261,16 @@ class RulesCommands extends DrushCommands {
    *   Rule name (machine id) to export.
    *
    * @command rules:export
+   * @interact-rule-names
    * @aliases rexp,rules-export
    *
    * @codingStandardsIgnoreStart
+   * @usage drush rules:export
+   *   Displays all rules and allows you to select one to export.
    * @usage drush rules:export test_rule > rules.reaction.test_rule.yml
    *   Exports the Rule with machine name 'test_rule' and saves it in a .yml file.
-   * @usage drush rules:list --pipe --type=component | xargs -I{}  sh -c "drush rules:export '{}' > 'rules.component.{}.yml'"
-   *   Exports all Rules Components into individual YAML files.
+   * @usage drush rules:list rule --fields=machine-name --pipe | xargs -I{}  sh -c "drush rules:export '{}' > 'rules.reaction.{}.yml'"
+   *   Exports all Reaction Rules into individual YAML files.
    * @codingStandardsIgnoreEnd
    *
    * @throws \Exception
@@ -257,7 +281,11 @@ class RulesCommands extends DrushCommands {
     if (empty($config)) {
       $config = $this->configStorage->read('rules.component.' . $rule);
       if (empty($config)) {
-        throw new \Exception(dt('Could not find a Reaction Rule or a Rules Component named @name', ['@name' => $rule]));
+        // The @interact-rule-names hook returns fully-qualified names.
+        $config = $this->configStorage->read($rule);
+        if (empty($config)) {
+          throw new \Exception(dt('Could not find a Reaction Rule or a Rules Component named @name', ['@name' => $rule]));
+        }
       }
     }
 
@@ -272,6 +300,7 @@ class RulesCommands extends DrushCommands {
    *   Rule name (machine id) to revert.
    *
    * @command rules:revert
+   * @interact-rule-names
    * @aliases rrev,rules-revert
    *
    * @usage drush rules:revert test_rule
@@ -289,7 +318,11 @@ class RulesCommands extends DrushCommands {
     if (empty($config)) {
       $config = $this->configStorage->read('rules.component.' . $rule);
       if (empty($config)) {
-        throw new \Exception(dt('Could not find a Reaction Rule or a Rules Component named @name', ['@name' => $rule]));
+        // The @interact-rule-names hook returns fully-qualified names.
+        $config = $this->configStorage->read($rule);
+        if (empty($config)) {
+          throw new \Exception(dt('Could not find a Reaction Rule or a Rules Component named @name', ['@name' => $rule]));
+        }
       }
     }
 
@@ -348,6 +381,9 @@ class RulesCommands extends DrushCommands {
    * Helper function to format command output.
    */
   protected function formatOutput($plugin_manager_service, $title, $categories = TRUE, $short = FALSE) {
+    // Dependency injection deliberately not used because we don't know
+    // a priori what service will be needed. So ignore the phpcs message.
+    // @phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal
     $definitions = \Drupal::service($plugin_manager_service)->getDefinitions();
     $plugins = [];
     foreach ($definitions as $plugin) {
@@ -383,6 +419,55 @@ class RulesCommands extends DrushCommands {
       $unique = array_unique($plugins);
       sort($unique);
       $this->output()->writeln('  ' . implode(PHP_EOL . '  ', $unique) . PHP_EOL);
+    }
+  }
+
+  /**
+   * @hook interact @interact-enabled-rules
+   */
+  public function interactEnabledRules($input, $output) {
+    if (empty($input->getArgument('rule'))) {
+      $rules = $this->configFactory->listAll('rules.reaction');
+      // Loop over configuration entities for this $item.
+      foreach ($rules as $index => $config) {
+        $rule = $this->configFactory->get($config);
+        if ($rule->get('status') === FALSE) {
+          unset($rules[$index]);
+        }
+      }
+      $choice = $this->io()->choice('Choose a Reaction Rule', drush_map_assoc($rules));
+      $input->setArgument('rule', $choice);
+    }
+  }
+
+  /**
+   * @hook interact @interact-disabled-rules
+   */
+  public function interactDisabledRules($input, $output) {
+    if (empty($input->getArgument('rule'))) {
+      $rules = $this->configFactory->listAll('rules.reaction');
+      // Loop over configuration entities for this $item.
+      foreach ($rules as $index => $config) {
+        $rule = $this->configFactory->get($config);
+        if ($rule->get('status') === TRUE) {
+          unset($rules[$index]);
+        }
+      }
+      $choice = $this->io()->choice('Choose a Reaction Rule', drush_map_assoc($rules));
+      $input->setArgument('rule', $choice);
+    }
+  }
+
+  /**
+   * @hook interact @interact-rule-names
+   */
+  public function interactRuleNames($input, $output) {
+    if (empty($input->getArgument('rule'))) {
+      $rule_names = $this->configFactory->listAll('rules.reaction');
+      $component_names = $this->configFactory->listAll('rules.component');
+      $config_names = array_merge($rule_names, $component_names);
+      $choice = $this->io()->choice('Choose a Rule', drush_map_assoc($config_names));
+      $input->setArgument('rule', $choice);
     }
   }
 

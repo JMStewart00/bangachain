@@ -4,6 +4,11 @@ import { Splide } from '../core/Splide/Splide';
 import { Options } from './options';
 
 
+/**
+ * The interface for all internal events.
+ *
+ * @since 3.0.0
+ */
 export interface EventMap {
   'mounted': () => void;
   'ready': () => void;
@@ -36,5 +41,3 @@ export interface EventMap {
   'autoplay:pause': () => void;
   'lazyload:loaded': ( img: HTMLImageElement, Slide: SlideComponent ) => void;
 }
-
-

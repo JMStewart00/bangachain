@@ -16,36 +16,36 @@ dependencies:
     - text
 third_party_settings:
   layout_builder:
-    allow_custom: false
     enabled: false
+    allow_custom: false
 id: commerce_product.apparel.teaser
 targetEntityType: commerce_product
 bundle: apparel
 mode: teaser
 content:
   body:
-    label: hidden
     type: text_default
-    weight: 2
+    label: hidden
     settings: {  }
     third_party_settings: {  }
+    weight: 2
     region: content
   title:
-    label: hidden
     type: string
-    weight: 0
-    region: content
+    label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
+    weight: 0
+    region: content
   variations:
     type: commerce_add_to_cart
-    weight: 1
-    region: content
     label: hidden
     settings:
       combine: true
     third_party_settings: {  }
+    weight: 1
+    region: content
 hidden:
   add_to_cart_link: true
   created: true

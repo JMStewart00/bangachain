@@ -59,9 +59,7 @@ abstract class RulesKernelTestBase extends KernelTestBase {
   protected $time;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'rules',

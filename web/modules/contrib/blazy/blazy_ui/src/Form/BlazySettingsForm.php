@@ -66,11 +66,23 @@ class BlazySettingsForm extends ConfigFormBase {
       '#description'   => $this->t('Uncheck to disable blazy related admin compact form styling, only if not compatible with your admin theme.'),
     ];
 
-    $form['decode'] = [
-      '#type'          => 'checkbox',
-      '#title'         => $this->t('Use decoding'),
-      '#default_value' => $config->get('decode'),
-      '#description'   => $this->t("Check to enable image decoding for improved performance. Uncheck if any issue. Known troubled browsers are Safari, IE as usual. <a href=':url'>Read more</a>", [':url' => 'https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/decode']),
+    $nojs = $config->get('nojs');
+    $form['nojs'] = [
+      '#type'          => 'checkboxes',
+      '#title'         => $this->t('No JavaScript'),
+      '#empty_option'  => '- None -',
+      '#options' => [
+        'lazy' => $this->t('Lazyload'),
+        'polyfill' => $this->t('Basic polyfills (ie9-ie11)'),
+        'classlist' => $this->t('classList polyfill (ie9-ie11)'),
+        'promise' => $this->t('Promise polyfill (ie11)'),
+        'raf' => $this->t('requestAnimationFrame polyfill (ie9)'),
+      ],
+      '#default_value' => !empty($nojs) ? array_values((array) $nojs) : [],
+      '#description'   => $this->t("Enable to not load them if you don't support IEs and other oldies, or have polyfills at your theme globally. File sizes approximately in minified gzip. The plus (+) sign refers to dependencies like <code>dblazy.js (~4KB)</code>, etc. A few can be removed via this form. For illustration, Colorbox which is called very lightweight is 4.8KB + jQuery (31KB) = 35.8KB. Blazy never loads all its JavaScript at once, instead conditionally and carefully loads ones as required. Mostly based on your options including these ones. <ul><li><b>Lazyload</b>: remove libraries and loader/ initializer scripts (<code>blazy.js (original: 2.2KB, fork: 1.6KB+), blazy.load.js (1KB+), bio.js (1.7KB+)</code>.) for non-js Native lazy. <br><b>Note!</b> While the above is always valid, a <code>blazy/compat (<1KB + bio.js)</code> and or <code>blazy/dblazy</code> in the least is conditionally loaded as required if any js-dependent options are enabled: <ul><li>Image effect animation or Blur.</li><li>Dynamic multi-breakpoint aka Fluid aspect ratio (excluding fixed ones).</li><li>Dynamic multi-breakpoint (Responsive|Picture based), or static CSS background.</li><li>Local video.</li><li>Sub-module requirements. Slick, Splide, Ultimenu, Jumper, etc. might require <code>blazy/dblazy</code>, not a lazyload script, just common jQuery replacement methods for vanilla ones.</li></ul></li><li><b>Polyfills</b>: Only loaded (total 3.6KB) if the above conditions are met, and left unchecked. Basic polyfills: <code>Object.assign, closest, forEach, matches, startsWith, CustomEvent</code>. For other polyfills, due to questionabe licenses, include them into your theme as needed such as <a href=':io'>IntersectionObserver</a>, etc. </li></ul>As of 2022/1, Native only supports IMG and IFRAME, the exceptions above cover DIV, VIDEO, etc. Other JavaScript (Media Player, Lightbox, Non-css Masonry (Flexbox or Nativegrid), etc.) can already be disabled via Formatters since 1.x. jQuery (31KB) is only loaded for Colorbox (4.8KB) + blazy.colorbox.js (1.2KB+) and admin UIs. Details in blazy/js directory. <a href=':url'>Read more</a>.", [
+        ':url' => 'https://drupal.org/node/3257512',
+        ':io' => 'https://github.com/w3c/IntersectionObserver',
+      ]),
     ];
 
     $form['noscript'] = [
@@ -118,7 +130,7 @@ class BlazySettingsForm extends ConfigFormBase {
       '#empty_option'  => '- None -',
       '#options'       => $this->manager->getImageEffects(),
       '#default_value' => $config->get('fx'),
-      '#description'   => $this->t('Choose the image effect. Will use Thumbnail style option at Blazy formatters for the placeholder with fallback to core Thumbnail style. For best results: use similar aspect ratio for both Thumbnail and Image styles; adjust Offset and or threshold; the smaller the better. Use <code>hook_blazy_image_effects_alter()</code> to add more effects -- curtain, fractal, slice, whatever. <b>Limitations</b>: Best with a proper Aspect ratio option as otherwise collapsed image. Be sure to add one. If not, add regular CSS <code>min-height</code> for each mediaquery. The Placeholder option is still respected.'),
+      '#description'   => $this->t('Choose the image effect. Will use Thumbnail style option at Blazy formatters for the placeholder with fallback to core Thumbnail style. For best results: use similar aspect ratio for both Thumbnail and Image styles; adjust Offset and or threshold; the smaller the better. Use <code>hook_blazy_image_effects_alter()</code> to add more effects -- curtain, fractal, slice, whatever. <b>Limitations</b>: Best with a proper Aspect ratio option as otherwise collapsed image. Be sure to add one. If not, add regular CSS <code>min-height</code> for each mediaquery. The Placeholder option is still respected. Is it still relevant for Native lazyload? You decide. The name is `Native lazyload`, not `Native load`.'),
     ];
 
     $form['blazy'] = [
@@ -177,22 +189,15 @@ class BlazySettingsForm extends ConfigFormBase {
       '#type'        => 'details',
       '#tree'        => TRUE,
       '#open'        => TRUE,
-      '#title'       => $this->t('Intersection Observer API (IO) settings (<b>Experimental!</b>)'),
-      '#description' => $this->t('The following settings are related to <a href=":url">IntersectionObserver API</a>.', [':url' => 'https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API']),
-    ];
-
-    $form['io']['enabled'] = [
-      '#type'          => 'checkbox',
-      '#title'         => $this->t('Enable IO API'),
-      '#default_value' => $config->get('io.enabled'),
-      '#description'   => $this->t('Check if you want to use IO API for modern browsers, and Blazy for oldies.'),
+      '#title'       => $this->t('Intersection Observer API (IO) settings'),
+      '#description' => $this->t('Will fallback gracefully with Native support for old browsers using old bLazy fork, unless unloaded. Works absurdly fine at IE9. None essential features like Blur, etc. which require additional polyfills (dataset, etc.) not included above may not. <br>The following settings are related to <a href=":url">IntersectionObserver API</a>.', [':url' => 'https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API']),
     ];
 
     $form['io']['unblazy'] = [
       '#type'          => 'checkbox',
       '#title'         => $this->t('Unload bLazy'),
       '#default_value' => $config->get('io.unblazy'),
-      '#description'   => $this->t("Check if you are happy with IO. This will not load the original bLazy library, no fallback. Watch out for JS errors at browser consoles, and uncheck if any, or unsure. Blazy is just ~1KB gzip. Clear caches!"),
+      '#description'   => $this->t("Check if you are happy with IO, and don't support IEs. This will not load the forked bLazy library. Forked bLazy is just ~1KB gzip. Clear caches!"),
     ];
 
     $form['io']['rootMargin'] = [
@@ -239,7 +244,7 @@ class BlazySettingsForm extends ConfigFormBase {
     $config = $this->configFactory->getEditable('blazy.settings');
     $config
       ->set('admin_css', $form_state->getValue('admin_css'))
-      ->set('decode', $form_state->getValue('decode'))
+      ->set('nojs', $form_state->getValue('nojs'))
       ->set('fx', $form_state->getValue('fx'))
       ->set('noscript', $form_state->getValue('noscript'))
       ->set('responsive_image', $form_state->getValue('responsive_image'))
@@ -260,7 +265,6 @@ class BlazySettingsForm extends ConfigFormBase {
         'validateDelay',
       ]))
       ->set('blazy.container', $form_state->getValue(['blazy', 'container']))
-      ->set('io.enabled', $form_state->getValue(['io', 'enabled']))
       ->set('io.unblazy', $form_state->getValue(['io', 'unblazy']))
       ->set('io.rootMargin', $form_state->getValue(['io', 'rootMargin']))
       ->set('io.threshold', $form_state->getValue(['io', 'threshold']))

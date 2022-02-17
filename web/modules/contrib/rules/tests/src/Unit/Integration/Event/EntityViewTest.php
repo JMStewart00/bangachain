@@ -16,7 +16,7 @@ class EntityViewTest extends EventTestBase {
    */
   public function testEventMetadata() {
     $plugin_definition = $this->eventManager->getDefinition('rules_entity_view:test');
-    $this->assertSame('Test is viewed', (string) $plugin_definition['label']);
+    $this->assertSame('Entity of type test is viewed', (string) $plugin_definition['label']);
     $context_definition = $plugin_definition['context_definitions']['test'];
     $this->assertSame('entity:test', $context_definition->getDataType());
     $this->assertSame('Test', $context_definition->getLabel());

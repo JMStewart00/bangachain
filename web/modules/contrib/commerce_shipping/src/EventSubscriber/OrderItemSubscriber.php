@@ -48,7 +48,7 @@ class OrderItemSubscriber implements EventSubscriberInterface {
     if (!$order || !$this->shouldRefresh($order)) {
       return;
     }
-    if ($order_item->getQuantity() !== $order_item->original->getQuantity()) {
+    if (!$order_item->get('quantity')->equals($order_item->original->get('quantity'))) {
       $order->setData(ShippingOrderManagerInterface::FORCE_REFRESH, TRUE);
     }
   }

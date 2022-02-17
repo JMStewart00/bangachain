@@ -57,7 +57,9 @@ class EntityPresaveDeriver extends DeriverBase implements ContainerDeriverInterf
       }
 
       $this->derivatives[$entity_type_id] = [
-        'label' => $this->t('Before saving a @entity_type', ['@entity_type' => $entity_type->getSingularLabel()]),
+        'label' => $this->t('Before saving a @entity_type entity', [
+          '@entity_type' => $entity_type->getSingularLabel(),
+        ]),
         'category' => $entity_type->getLabel(),
         'entity_type_id' => $entity_type_id,
         'context_definitions' => [
@@ -67,7 +69,9 @@ class EntityPresaveDeriver extends DeriverBase implements ContainerDeriverInterf
           ],
           $entity_type_id . '_unchanged' => [
             'type' => "entity:$entity_type_id",
-            'label' => $this->t('Unchanged @entity_type', ['@entity_type' => $entity_type->getLabel()]),
+            'label' => $this->t('Unchanged @entity_type entity', [
+              '@entity_type' => $entity_type->getSingularLabel(),
+            ]),
           ],
         ],
       ] + $base_plugin_definition;

@@ -2,6 +2,9 @@
 
 namespace Drupal\Tests\feeds\Functional;
 
+use Drupal\Core\Entity\EntityStorageException;
+use Drupal\feeds\FeedTypeInterface;
+
 /**
  * Tests behavior involving periodic import.
  *
@@ -133,6 +136,38 @@ class CronTest extends FeedsBrowserTestBase {
     // Run cron again. Another four nodes should be imported.
     $this->cronRun();
     $this->assertNodeCount(9);
+  }
+
+  /**
+   * Tests that a cron run does not fail after deleting a feed type.
+   *
+   * When a feed is using periodic import, an import for that feed gets
+   * eventually triggered on a cron run. But when the feed's feed type no longer
+   * exists by then, an import for it should not run and an error should be
+   * logged about that feed.
+   */
+  public function testDeleteFeedTypeForWhichImportIsScheduled() {
+    // Create a feed type and a feed.
+    $feed_type = $this->createFeedType([
+      'id' => 'foo',
+    ]);
+    $feed_type->setImportPeriod(FeedTypeInterface::SCHEDULE_CONTINUOUSLY);
+    $feed_type->save();
+
+    $feed = $this->createFeed($feed_type->id(), [
+      'source' => $this->resourcesUrl() . '/rss/googlenewstz.rss2',
+    ]);
+
+    // Now delete the feed type.
+    $feed_type->delete();
+
+    // And run cron.
+    $this->cronRun();
+
+    // Assert that an exception gets thrown upon trying to start an import.
+    $this->expectException(EntityStorageException::class);
+    $this->expectExceptionMessage('The feed type "foo" for feed 1 no longer exists.');
+    $feed->startCronImport();
   }
 
 }

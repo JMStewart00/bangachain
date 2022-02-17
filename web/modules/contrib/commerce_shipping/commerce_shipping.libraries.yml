@@ -5,5 +5,4 @@ shipping_checkout:
   dependencies:
     - core/drupalSettings
     - core/drupal
-    - core/jquery
-    - core/jquery.once
+    - core/once

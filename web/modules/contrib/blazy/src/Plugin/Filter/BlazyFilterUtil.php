@@ -169,14 +169,14 @@ class BlazyFilterUtil {
    */
   public static function toGrid(\DOMElement $node, array &$settings) {
     if ($check = $node->getAttribute('grid')) {
-      list($settings['style'], $grid, $settings['visible_items']) = array_pad(array_map('trim', explode(":", $check, 3)), 3, NULL);
+      [$settings['style'], $grid, $settings['visible_items']] = array_pad(array_map('trim', explode(":", $check, 3)), 3, NULL);
 
       if ($grid) {
-        list(
+        [
           $settings['grid_small'],
           $settings['grid_medium'],
-          $settings['grid']
-        ) = array_pad(array_map('trim', explode("-", $grid, 3)), 3, NULL);
+          $settings['grid'],
+        ] = array_pad(array_map('trim', explode("-", $grid, 3)), 3, NULL);
 
         $settings['_grid'] = !empty($settings['style']) && !empty($settings['grid']);
 

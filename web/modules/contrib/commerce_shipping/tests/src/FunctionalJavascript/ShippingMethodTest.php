@@ -15,7 +15,7 @@ class ShippingMethodTest extends CommerceWebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_shipping',
     'commerce_shipping_test',
   ];

@@ -3,20 +3,22 @@
  * Provides Splide loader.
  */
 
-(function (Drupal, drupalSettings, _db, _ds) {
+(function ($, Drupal, drupalSettings, _ds, _win) {
 
   'use strict';
 
-  var _splide = 'splide--default';
+  var _id = 'splide';
   var _mounted = 'is-mounted';
-  var _lazyImg = 'img[data-splide-lazy]';
+  var _element = '.' + _id + '--default:not(.' + _mounted + '):not(.' + _id + '--vanilla)';
+  var _lazyImg = 'img[data-' + _id + '-lazy]';
+  var _defaults = drupalSettings.splide || {};
 
   /**
    * Splide public methods.
    *
    * @namespace
    */
-  _ds = _db.extend(_ds || {}, {
+  _ds = $.extend(_ds || {}, {
 
     /**
      * Initializes the Splide.
@@ -48,70 +50,60 @@
    *   The Splide instance.
    */
   function doSplide(elm) {
-    var d = elm.getAttribute('data-splide');
-    var s = d ? _db.parse(d) : false;
-    var o = _db.extend({}, drupalSettings.splide || {}, s || {});
+    var d = elm.getAttribute('data-' + _id);
+    var s = d ? $.parse(d) : false;
+    var o = $.extend({}, _defaults, s || {});
+    var r = o.breakpoints;
+    var e = _defaults.extras ? _defaults.extras : _defaults;
     var isSplide = o.lazyLoad !== 'blazy';
-    var unSplide = _db.hasClass(elm, 'unsplide');
+    var unSplide = $.hasClass(elm, 'unsplide');
     var instance;
+    var b;
+
+    if (r) {
+      for (b in r) {
+        if (Object.prototype.hasOwnProperty.call(r, b)) {
+          var breakpoint = r[b];
+          if (!breakpoint.destroy) {
+            r[b] = $.extend({}, e, breakpoint);
+          }
+        }
+      }
+    }
 
     if (isSplide) {
       // @todo remove, built-in lazyLoad doesn't work when SRC available.
       var imgs = elm.querySelector(_lazyImg) === null ? [] : elm.querySelectorAll(_lazyImg);
       if (imgs.length) {
-        _db.forEach(imgs, function (img) {
+        $.forEach(imgs, function (img) {
           img.removeAttribute('src');
           // Splide has its own splide__spinner, remove Blazy one.
-          _ds.clearLoading(img);
+          _ds.unloading(img);
         });
       }
     }
 
     /**
-     * The event must be bound prior to splide being called.
+     * The event must be bound prior to splide being mounted/ initialized.
      */
-    function beforeSplide() {
+    function beforeInit() {
+      _ds.initExtensions();
+      _ds.initListeners(instance);
+
       randomize();
-
-      var append = function (prev, sel) {
-        var el = instance.root.querySelector(sel);
-        if (el !== null) {
-          prev.insertAdjacentElement('afterend', el);
-        }
-      };
-
-      instance.on('arrows:mounted', function (prev, next) {
-        if (prev === null) {
-          return;
-        }
-
-        window.setTimeout(function () {
-          // Puts dots inbetween arrows for easy theming like this: < ooooo >.
-          if (o.pagination === '.splide__arrows') {
-            append(prev, '.splide__pagination');
-          }
-
-          // Puts arrow down inbetween arrows for easy theming like this: < v >.
-          if (o.down) {
-            append(prev, '.splide__arrow--down');
-          }
-        }, 100);
-      });
-
-      instance.on('lazyload:loaded', _ds.clearLoading);
     }
 
     /**
-     * The event must be bound after splide being called.
+     * The event must be bound after splide being mounted/ initialized.
      */
-    function afterSplide() {
+    function afterInit() {
       // Arrow down jumper.
-      _db.on(elm, 'click', '.splide__arrow--down', function (e) {
+      $.on(elm, 'click', '.' + _id + '__arrow--down', function (e) {
         e.preventDefault();
         var tg = e.target.getAttribute('data-target');
         var el = tg ? document.querySelector(tg) : null;
         if (el !== null) {
-          window.scroll({
+          _win.scroll({
             top: el.offsetTop,
             behavior: 'smooth'
           });
@@ -124,7 +116,7 @@
      */
     function randomize() {
       if (o.randomize) {
-        var list = elm.querySelector('.splide__list');
+        var list = elm.querySelector('.' + _id + '__list');
         if (list !== null && list.children !== null) {
           var len = list.children.length;
 
@@ -142,15 +134,15 @@
     // Build the Splide.
     instance = new Splide(elm, o);
 
-    beforeSplide();
+    beforeInit();
 
     // Main display with navigation is deferred at splide.nav.min.js.
-    if (!elm.classList.contains('splide--main')) {
+    if (!elm.classList.contains(_id + '--main')) {
       var fx = o.type ? _ds.getTransition(o.type) : null;
       instance.mount(_ds.extensions || {}, fx);
     }
 
-    afterSplide();
+    afterInit();
 
     // Destroy Splide if it is an enforced unsplide.
     // This allows Splide lazyload to run, but prevents further complication.
@@ -172,15 +164,14 @@
   Drupal.behaviors.splide = {
     attach: function (context) {
 
-      // Context is unreliable with AJAX contents like product variations, etc.
-      context = context instanceof HTMLDocument ? context : document;
+      // @todo replace by dBlazy.context post Blazy:2.6+.
+      context = _ds.context(context);
 
-      var items = context.querySelectorAll('.' + _splide + ':not(.' + _mounted + ')');
-      if (items.length) {
-        _db.once(_db.forEach(items, _ds.init, context));
+      var elms = context.querySelectorAll(_element);
+      if (elms.length) {
+        $.once($.forEach(elms, _ds.init));
       }
-
     }
   };
 
-})(Drupal, drupalSettings, dBlazy, dSplide);
+})(dBlazy, Drupal, drupalSettings, dSplide, this);

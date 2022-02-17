@@ -98,7 +98,7 @@ class ConditionManager extends DefaultPluginManager implements ConditionManagerI
     }
     // Allow modules to filter the condition list.
     $event = new FilterConditionsEvent($definitions, $parent_entity_type_id);
-    $this->eventDispatcher->dispatch(CommerceEvents::FILTER_CONDITIONS, $event);
+    $this->eventDispatcher->dispatch($event, CommerceEvents::FILTER_CONDITIONS);
     $definitions = $event->getDefinitions();
     // Sort by weigh and display label.
     uasort($definitions, function ($a, $b) {

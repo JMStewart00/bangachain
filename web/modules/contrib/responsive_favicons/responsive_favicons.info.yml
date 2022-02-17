@@ -6,7 +6,7 @@ core_version_requirement: ^8 || ^9
 package: User interface
 configure: responsive_favicons.admin
 
-# Information added by Drupal.org packaging script on 2021-02-08
-version: '8.x-1.6'
+# Information added by Drupal.org packaging script on 2021-12-09
+version: '8.x-1.7'
 project: 'responsive_favicons'
-datestamp: 1612820020
+datestamp: 1639087727

@@ -20,15 +20,20 @@ class IframeUrlWidget extends IframeWidgetBase {
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
-    $this->allowedAttributes['width'] = 0;
-    $this->allowedAttributes['height'] = 0;
+    $on_admin_page = isset($element['#field_parents'][0]) && ('default_value_input' == $element['#field_parents'][0]);
+    if (!$on_admin_page) {
+      $this->allowedAttributes['width'] = 0;
+      $this->allowedAttributes['height'] = 0;
+    }
     $elements = parent::formElement($items, $delta, $element, $form, $form_state);
-    // Dont show, only save default value.
-    $elements['width']['#type'] = 'value';
-    // Dont show, only save default value.
-    $elements['height']['#type'] = 'value';
-    unset($element['width']['#required']);
-    unset($element['height']['#required']);
+    if (!$on_admin_page) {
+      // Dont show, only save default value.
+      $elements['width']['#type'] = 'value';
+      unset($element['width']['#required']);
+      // Dont show, only save default value.
+      $elements['height']['#type'] = 'value';
+      unset($element['height']['#required']);
+    }
 
     return $elements;
   }

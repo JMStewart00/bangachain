@@ -118,7 +118,7 @@ abstract class ConditionExpressionContainer extends ExpressionContainerBase impl
   /**
    * {@inheritdoc}
    */
-  public function getIterator() {
+  public function getIterator(): \Traversable {
     $iterator = new \ArrayIterator($this->conditions);
     $iterator->uasort([ExpressionContainerBase::class, 'sortByWeightProperty']);
     return $iterator;

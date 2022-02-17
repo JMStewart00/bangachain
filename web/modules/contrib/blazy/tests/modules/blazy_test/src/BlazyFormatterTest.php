@@ -25,7 +25,7 @@ class BlazyFormatterTest extends BlazyFormatter implements BlazyFormatterTestInt
     if (!empty($settings['uri'])) {
       $thumbnail = [
         '#theme'      => 'image_style',
-        '#style_name' => isset($settings['thumbnail_style']) ? $settings['thumbnail_style'] : 'thumbnail',
+        '#style_name' => $settings['thumbnail_style'] ?? 'thumbnail',
         '#uri'        => $settings['uri'],
         '#item'       => $item,
       ];

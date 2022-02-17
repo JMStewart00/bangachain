@@ -102,8 +102,8 @@ class UserRole extends ConfigEntityReference {
   /**
    * {@inheritdoc}
    */
-  protected function findEntity($value, $field) {
-    $entity_id = parent::findEntity($value, $field);
+  protected function findEntity(string $field, $search) {
+    $entity_id = parent::findEntity($field, $search);
     if ($entity_id !== FALSE) {
       // Check if the role may be assigned.
       if (isset($this->configuration['allowed_roles'][$entity_id]) && !$this->configuration['allowed_roles'][$entity_id]) {
@@ -118,7 +118,7 @@ class UserRole extends ConfigEntityReference {
 
     // Automatically create a new role.
     if ($this->configuration['autocreate'] && in_array($this->configuration['reference_by'], ['id', 'label'])) {
-      return $this->createRole($value);
+      return $this->createRole($search);
     }
   }
 

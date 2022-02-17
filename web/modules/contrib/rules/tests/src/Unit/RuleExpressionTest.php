@@ -241,26 +241,26 @@ class RuleExpressionTest extends RulesUnitTestBase {
     // Delete the first action.
     $uuid = $this->testActionExpression->reveal()->getUuid();
     $this->rule->deleteExpression($uuid);
-    $this->assertEquals(2, count($this->rule->getConditions()->getIterator()));
-    $this->assertEquals(1, count($this->rule->getActions()->getIterator()));
+    $this->assertCount(2, $this->rule->getConditions()->getIterator());
+    $this->assertCount(1, $this->rule->getActions()->getIterator());
 
     // Delete the second condition.
     $uuid = $this->falseConditionExpression->reveal()->getUuid();
     $this->rule->deleteExpression($uuid);
-    $this->assertEquals(1, count($this->rule->getConditions()->getIterator()));
-    $this->assertEquals(1, count($this->rule->getActions()->getIterator()));
+    $this->assertCount(1, $this->rule->getConditions()->getIterator());
+    $this->assertCount(1, $this->rule->getActions()->getIterator());
 
     // Delete the remaining action.
     $uuid = $second_action->reveal()->getUuid();
     $this->rule->deleteExpression($uuid);
-    $this->assertEquals(1, count($this->rule->getConditions()->getIterator()));
-    $this->assertEquals(0, count($this->rule->getActions()->getIterator()));
+    $this->assertCount(1, $this->rule->getConditions()->getIterator());
+    $this->assertCount(0, $this->rule->getActions()->getIterator());
 
     // Delete the remaining condition, rule should be empty now.
     $uuid = $this->trueConditionExpression->reveal()->getUuid();
     $this->rule->deleteExpression($uuid);
-    $this->assertEquals(0, count($this->rule->getConditions()->getIterator()));
-    $this->assertEquals(0, count($this->rule->getActions()->getIterator()));
+    $this->assertCount(0, $this->rule->getConditions()->getIterator());
+    $this->assertCount(0, $this->rule->getActions()->getIterator());
   }
 
 }

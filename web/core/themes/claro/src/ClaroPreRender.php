@@ -85,7 +85,7 @@ class ClaroPreRender implements TrustedCallbackInterface {
 
         foreach ($children_keys as $child_key) {
           $last_group_with_child_key = $group_key;
-          $type = isset($element['group']['#groups'][$group_key][$child_key]['#type']) ? $element['group']['#groups'][$group_key][$child_key]['#type'] : NULL;
+          $type = $element['group']['#groups'][$group_key][$child_key]['#type'] ?? NULL;
           if ($type === 'details') {
             // Mark the details element as vertical tabs item.
             $element['group']['#groups'][$group_key][$child_key]['#vertical_tab_item'] = TRUE;

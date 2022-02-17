@@ -16,11 +16,11 @@ mode: default
 content:
   field_content:
     type: text_default
-    weight: 0
-    region: content
     label: hidden
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   field_accordion_open: true
   field_header: true

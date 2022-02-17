@@ -173,7 +173,7 @@ class RulesConditionContainerTest extends RulesUnitTestBase {
 
     $uuid = $this->falseConditionExpression->reveal()->getUuid();
     $this->assertTrue($container->deleteExpression($uuid));
-    $this->assertEquals(0, count($nested_container->getIterator()));
+    $this->assertCount(0, $nested_container->getIterator());
   }
 
 }

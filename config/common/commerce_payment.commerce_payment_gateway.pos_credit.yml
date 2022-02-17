@@ -12,14 +12,14 @@ label: Credit
 weight: null
 plugin: manual
 configuration:
-  instructions:
-    value: ''
-    format: plain_text
   display_label: Credit
   mode: n/a
   payment_method_types:
     - credit_card
   collect_billing_information: true
+  instructions:
+    value: ''
+    format: plain_text
 conditions:
   -
     plugin: order_type

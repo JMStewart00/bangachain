@@ -33,7 +33,7 @@ class MailHandlerThemeTest extends CommerceKernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'mailsystem',
     'mailsystem_test',
   ];

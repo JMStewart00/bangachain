@@ -22,7 +22,7 @@ Source: https://www.drupal.org/files/issues/2019-11-29/claro-fix_node_sidebar_ac
 
 
 Layout builder incorrectly resolves global contexts values when viewing layouts
-Source: https://www.drupal.org/files/issues/2020-06-19/3099968-35.patch
+Source: https://www.drupal.org/files/issues/2021-06-28/3099968-79.patch
 
 
 Break long text strings in layout edit
@@ -38,6 +38,6 @@ Source: https://www.drupal.org/files/issues/2021-01-06/3114467-16.patch
 
 
 Support third party settings for components within a section
-Source: https://www.drupal.org/files/issues/2021-01-29/3015152-tps-9.2.x-116.patch
+Source: https://www.drupal.org/files/issues/2021-12-13/3015152-tps-9.3.x-128.patch
 
 

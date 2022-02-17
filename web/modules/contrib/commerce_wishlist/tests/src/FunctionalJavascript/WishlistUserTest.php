@@ -38,7 +38,7 @@ class WishlistUserTest extends CommerceWebDriverTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_cart',
     'commerce_wishlist',
   ];
@@ -165,7 +165,7 @@ class WishlistUserTest extends CommerceWebDriverTestBase {
     $this->getSession()->getPage()->findButton('Add the entire list to cart')->click();
     $this->assertSession()->assertWaitOnAjaxRequest();
     $cart_provider->clearCaches();
-    $cart = $cart_provider->getCart('default');
+    $cart = $cart_provider->getCart('default', $this->store);
     $this->assertCount(2, $cart->getItems());
 
     // Confirm that the "Add to cart" button works.
@@ -212,13 +212,14 @@ class WishlistUserTest extends CommerceWebDriverTestBase {
     $this->assertSession()->elementExists('css', 'input[name="remove-2"]');
 
     // Confirm that the "Add all to cart" button works.
+    /** @var \Drupal\commerce_cart\CartProviderInterface $cart_provider */
     $cart_provider = $this->container->get('commerce_cart.cart_provider');
     $cart = $cart_provider->getCart('default');
     $this->assertEmpty($cart);
     $this->getSession()->getPage()->findButton('Add the entire list to cart')->click();
     $this->assertSession()->assertWaitOnAjaxRequest();
     $cart_provider->clearCaches();
-    $cart = $cart_provider->getCart('default');
+    $cart = $cart_provider->getCart('default', $this->store);
     $this->assertCount(2, $cart->getItems());
 
     // Confirm that the "Add to cart" button works.

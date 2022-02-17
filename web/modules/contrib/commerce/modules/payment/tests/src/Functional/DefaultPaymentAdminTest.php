@@ -46,7 +46,7 @@ class DefaultPaymentAdminTest extends CommerceBrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_order',
     'commerce_product',
     'commerce_payment',

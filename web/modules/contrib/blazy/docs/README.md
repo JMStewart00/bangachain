@@ -15,6 +15,7 @@
  * [Aspect ratio template](#aspect-ratio-template)
  * [Contribution](#contribution)
  * [Maintainers](#maintainers)
+ * [Notable changes](#changes)
 
 
 ***
@@ -24,23 +25,33 @@ native lazy loading to lazy load and multi-serve images to save bandwidth and
 server requests. The user will have faster load times and save data usage if
 they don't browse the whole page.
 
+Check out [project home](https://www.drupal.org/project/blazy) for most updated
+info.
+
 
 ***
 # <a name="requirements"> </a>REQUIREMENTS
-1. bLazy library:
-   * [Download bLazy](https://github.com/dinbror/blazy)
-   * Extract it as is, rename **blazy-master** to **blazy**, so the assets are:
+Core modules:  
+1. Media  
+2. Filter
 
-      + **/libraries/blazy/blazy.js**
+## Applicable for Blazy module <= 2.5:
+The bLazy library is forked at Blazy 2.6, and no longer required from now on,
+see [#3257511](https://drupal.org/node/3257511).
+Any references to bLazy library is no longer relevant for forked version at 2.6.  
+* [Download bLazy](https://github.com/dinbror/blazy)  
+* Extract it as is, rename **blazy-master** to **blazy**, so the assets are:
 
-2. Media and Filter module in core.
-
+  + **/libraries/blazy/blazy.js**
+  + **/libraries/blazy/blazy.min.js**
 
 ***
 # <a name="recommended-modules"> </a>RECOMMENDED MODULES
-* [Markdown](https://www.drupal.org/project/markdown)
+For better admin help page, either way will do:  
+* [Markdown](https://www.drupal.org/project/markdown)  
+* `composer require league/commonmark`  
 
-  To make reading this README a breeze at [Blazy help](/admin/help/blazy_ui)
+To make reading this README a breeze at [Blazy help](/admin/help/blazy_ui)
 
 
 ## MODULES THAT INTEGRATE WITH OR REQUIRE BLAZY
@@ -131,7 +142,7 @@ Visit the following to configure and make use of Blazy:
 
 3. `/admin/structure/views`
 
-   Use Blazy Grid as standalone blocks, or pages.
+   Use `Blazy Grid` as standalone blocks, or pages.
 
 
 ### USAGES: BLAZY FOR MULTIMEDIA GALLERY VIA VIEWS UI
@@ -168,7 +179,7 @@ etc., try the following:
 
 **Important!**
 
-Be sure to leave **Use field template** under **Style settings** unchecked.
+Be sure to leave `Use field template` under `Style settings` unchecked.
 If checked, the gallery is locked to a single entity, that is no Views gallery,
 but gallery per field. The same applies when using Blazy formatter with VIS
 pager, alike, or inside Slick Carousel, GridStack, etc. If confusing, just
@@ -180,17 +191,19 @@ Check out the relevant sub-module docs for details.
 
 ***
 # <a name="features"> </a>FEATURES
-* Supports core Image.
-* Supports core Responsive image.
-* Supports Colorbox/ Photobox/ PhotoSwipe, also multimedia lightboxes.
+* Works absurdly fine at IE9 for Blazy 2.6.
+* Works without JavaScript within/without JavaScript browsers.
+* Works with AMP, or static/ archived sites, e.g.: Tome, HTTrack, etc.
+* Supports Image, Responsive image, (local|remote|iframe) videos, DIV either
+  inline, fields, views, or within lightboxes.
+* Lightboxes: Colorbox, Splidebox, PhotoSwipe, etc. with multimedia lightboxes.
 * Multi-serving lazyloaded images, including multi-breakpoint CSS backgrounds.
-* Lazyload video iframe urls via custom coded, or core Media.
-* Supports inline images and iframes with lightboxes, and grid or CSS3 Masonry
-  via Blazy Filter. Enable Blazy Filter at **/admin/config/content/formats**,
-  and check out instructions at **/filter/tips**.
 * Field formatters: Blazy with Media integration.
 * Blazy Grid formatter for Image, Media and Text with multi-value:
   CSS3 Columns, Grid Foundation, Flexbox, Native Grid.
+* Supports inline galleries, and grid or CSS3 Masonry via Blazy Filter.
+  Enable Blazy Filter at **/admin/config/content/formats**.
+* Simple shortcodes for inline galleries, check out **/filter/tips**.
 * Delay loading for below-fold images until 100px (configurable) before they are
   visible at viewport.
 * A simple effortless CSS loading indicator.
@@ -204,11 +217,12 @@ Check out the relevant sub-module docs for details.
 * Views style plugin `Blazy Grid` for CSS3 Columns, Grid Foundation, Flexbox,
   and Native Grid.
 
-
 ***
 # <a name="maintainers"> </a>MAINTAINERS/CREDITS
 * [Gaus Surahman](https://www.drupal.org/user/159062)
 * [geek-merlin](https://www.drupal.org/u/geek-merlin)
+* [sun](https://www.drupal.org/u/sun)
+* [gambry](https://www.drupal.org/u/gambry)
 * [Contributors](https://www.drupal.org/node/2663268/committers)
 * CHANGELOG.txt for helpful souls with their patches, suggestions and reports.
 

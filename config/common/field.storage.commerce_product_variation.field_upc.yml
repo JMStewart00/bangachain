@@ -2,12 +2,12 @@ uuid: 44b97a96-adfb-4212-865c-2efe42b9e423
 langcode: en
 status: true
 dependencies:
-  enforced:
-    module:
-      - commerce_pos
   module:
     - commerce_product
     - text
+  enforced:
+    module:
+      - commerce_pos
 _core:
   default_config_hash: MbmZu04PF11uMiZX6TeNE3dx1UdLRTAhLV0JR6F3iKI
 id: commerce_product_variation.field_upc

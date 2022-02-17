@@ -97,9 +97,23 @@ class EuropeanUnionVat extends LocalTaxTypeBase {
       // when the total yearly transactions breach the defined threshold.
       // See http://www.vatlive.com/eu-vat-rules/vat-registration-threshold/
       $resolved_zones = $store_zones;
-      $customer_zone = reset($customer_zones);
-      if ($this->checkRegistrations($store, $customer_zone)) {
-        $resolved_zones = $customer_zones;
+
+      // Check if the store is registered to pay taxes in the destination zone.
+      $store_registration_countries = array_column($store->get('tax_registrations')->getValue(), 'value');
+      $store_registration_countries = array_combine($store_registration_countries, $store_registration_countries);
+      foreach ($customer_zones as $zone) {
+        [$zone_country_code] = explode('_', $zone->getId());
+        $zone_country_code = strtoupper($zone_country_code);
+        // Skip territories that are not in a country where the store is
+        // registered.
+        if (!isset($store_registration_countries[$zone_country_code])) {
+          continue;
+        }
+        foreach ($zone->getTerritories() as $territory) {
+          if ($territory->match($customer_address)) {
+            return $customer_zones;
+          }
+        }
       }
     }
 

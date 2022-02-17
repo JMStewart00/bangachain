@@ -3,6 +3,7 @@
 namespace Drupal\Tests\commerce_shipping\Kernel;
 
 use Drupal\commerce_order\Entity\Order;
+use Drupal\commerce_order\Entity\OrderInterface;
 use Drupal\commerce_price\Price;
 use Drupal\commerce_shipping\Entity\Shipment;
 use Drupal\commerce_shipping\Entity\ShippingMethod;
@@ -56,7 +57,7 @@ class ShippingMethodStorageTest extends ShippingKernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'address',
     'entity_reference_revisions',
     'profile',
@@ -242,6 +243,7 @@ class ShippingMethodStorageTest extends ShippingKernelTestBase {
 
     // Change the order email to disqualify the first shipping method.
     $this->order->setEmail('test@admin.com');
+    $this->order->setRefreshState(OrderInterface::REFRESH_SKIP);
     $this->order->save();
     $this->shipment = $this->reloadEntity($this->shipment);
     $shipping_methods = $this->storage->loadMultipleForShipment($this->shipment);

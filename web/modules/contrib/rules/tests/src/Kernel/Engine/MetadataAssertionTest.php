@@ -78,7 +78,7 @@ class MetadataAssertionTest extends RulesKernelTestBase {
     $violation_list = RulesComponent::create($rule)
       ->addContextDefinition('node', ContextDefinition::create('entity:node'))
       ->checkIntegrity();
-    $this->assertEquals(1, iterator_count($violation_list));
+    $this->assertCount(1, $violation_list);
     $this->assertEquals(
       'Data selector %selector for context %context_name is invalid. @message',
       $violation_list->get(0)->getMessage()->getUntranslatedString()
@@ -93,7 +93,7 @@ class MetadataAssertionTest extends RulesKernelTestBase {
     $violation_list = RulesComponent::create($rule)
       ->addContextDefinition('node', ContextDefinition::create('entity:node'))
       ->checkIntegrity();
-    $this->assertEquals(0, iterator_count($violation_list));
+    $this->assertCount(0, $violation_list);
   }
 
   /**
@@ -116,7 +116,7 @@ class MetadataAssertionTest extends RulesKernelTestBase {
     $violation_list = RulesComponent::create($rule)
       ->addContextDefinition('node', ContextDefinition::create('entity:node'))
       ->checkIntegrity();
-    $this->assertEquals(0, iterator_count($violation_list));
+    $this->assertCount(0, $violation_list);
 
     // Add an nested OR and make sure it is ignored.
     $rule = $this->expressionManager->createRule();
@@ -134,7 +134,7 @@ class MetadataAssertionTest extends RulesKernelTestBase {
     $violation_list = RulesComponent::create($rule)
       ->addContextDefinition('node', ContextDefinition::create('entity:node'))
       ->checkIntegrity();
-    $this->assertEquals(1, iterator_count($violation_list));
+    $this->assertCount(1, $violation_list);
   }
 
   /**
@@ -155,7 +155,7 @@ class MetadataAssertionTest extends RulesKernelTestBase {
     $violation_list = RulesComponent::create($rule)
       ->addContextDefinition('node', ContextDefinition::create('entity:node'))
       ->checkIntegrity();
-    $this->assertEquals(1, iterator_count($violation_list));
+    $this->assertCount(1, $violation_list);
 
     // Add an negated AND and make sure it is ignored.
     $rule = $this->expressionManager->createRule();
@@ -174,7 +174,7 @@ class MetadataAssertionTest extends RulesKernelTestBase {
     $violation_list = RulesComponent::create($rule)
       ->addContextDefinition('node', ContextDefinition::create('entity:node'))
       ->checkIntegrity();
-    $this->assertEquals(1, iterator_count($violation_list));
+    $this->assertCount(1, $violation_list);
   }
 
 }

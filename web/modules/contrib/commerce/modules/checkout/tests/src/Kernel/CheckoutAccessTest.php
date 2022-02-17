@@ -55,7 +55,7 @@ class CheckoutAccessTest extends CartKernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_checkout',
   ];
 

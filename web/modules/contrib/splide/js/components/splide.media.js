@@ -8,7 +8,7 @@
  * However the options respect Splide conventions to easily override/ switch.
  */
 
-(function (_db, _ds, _win) {
+(function ($, _ds, _win) {
 
   'use strict';
 
@@ -26,8 +26,8 @@
 
         Splide.on('active.spm', me.play.bind(me));
         Splide.on('moved.spm', me.close.bind(me));
-        _db.on(root, 'click', '.media__icon--close', me.stop.bind(me));
-        _db.on(root, 'click', '.media__icon--play', me.pause.bind(me));
+        $.on(root, 'click', '.media__icon--close', me.stop.bind(me));
+        $.on(root, 'click', '.media__icon--play', me.pause.bind(me));
       },
 
       /**
@@ -67,7 +67,7 @@
         _win.clearTimeout(_videoTimer);
         _videoTimer = _win.setTimeout(function () {
 
-          el[_db.equal(el, 'video') ? 'play' : 'click']();
+          el[$.equal(el, 'video') ? 'play' : 'click']();
         }, 501);
       },
 
@@ -77,7 +77,7 @@
       stopLocalVideo: function () {
         var vids = root.querySelector('video') === null ? [] : root.querySelectorAll('video');
         if (vids.length) {
-          _db.forEach(vids, function (vid) {
+          $.forEach(vids, function (vid) {
             vid.pause();
           });
         }

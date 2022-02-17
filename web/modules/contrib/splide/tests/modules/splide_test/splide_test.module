@@ -19,7 +19,7 @@ function template_preprocess_splide_test(&$variables) {
   $element = $variables['element'];
 
   $variables['content'] = $element['#children'];
-  $variables['settings'] = isset($element['#settings']) ? $element['#settings'] : [];
+  $variables['settings'] = $element['#settings'] ?? [];
 }
 
 /**

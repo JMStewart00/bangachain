@@ -99,7 +99,7 @@ function rules_user_login($account) {
   // list of arguments.
   $event = new UserLoginEvent($account);
   $event_dispatcher = \Drupal::service('event_dispatcher');
-  $event_dispatcher->dispatch(UserLoginEvent::EVENT_NAME, $event);
+  $event_dispatcher->dispatch($event, UserLoginEvent::EVENT_NAME);
 }
 
 /**
@@ -110,7 +110,7 @@ function rules_user_logout($account) {
   // list of arguments.
   $event = new UserLogoutEvent($account, ['account' => $account]);
   $event_dispatcher = \Drupal::service('event_dispatcher');
-  $event_dispatcher->dispatch(UserLogoutEvent::EVENT_NAME, $event);
+  $event_dispatcher->dispatch($event, UserLogoutEvent::EVENT_NAME);
 }
 
 /**
@@ -122,7 +122,7 @@ function rules_entity_view(array &$build, EntityInterface $entity, EntityViewDis
     $entity_type_id = $entity->getEntityTypeId();
     $event = new EntityEvent($entity, [$entity_type_id => $entity]);
     $event_dispatcher = \Drupal::service('event_dispatcher');
-    $event_dispatcher->dispatch("rules_entity_view:$entity_type_id", $event);
+    $event_dispatcher->dispatch($event, "rules_entity_view:$entity_type_id");
   }
 }
 
@@ -138,7 +138,7 @@ function rules_entity_presave(EntityInterface $entity) {
       $entity_type_id . '_unchanged' => $entity->original,
     ]);
     $event_dispatcher = \Drupal::service('event_dispatcher');
-    $event_dispatcher->dispatch("rules_entity_presave:$entity_type_id", $event);
+    $event_dispatcher->dispatch($event, "rules_entity_presave:$entity_type_id");
   }
 }
 
@@ -151,7 +151,7 @@ function rules_entity_delete(EntityInterface $entity) {
     $entity_type_id = $entity->getEntityTypeId();
     $event = new EntityEvent($entity, [$entity_type_id => $entity]);
     $event_dispatcher = \Drupal::service('event_dispatcher');
-    $event_dispatcher->dispatch("rules_entity_delete:$entity_type_id", $event);
+    $event_dispatcher->dispatch($event, "rules_entity_delete:$entity_type_id");
   }
 }
 
@@ -164,7 +164,7 @@ function rules_entity_insert(EntityInterface $entity) {
     $entity_type_id = $entity->getEntityTypeId();
     $event = new EntityEvent($entity, [$entity_type_id => $entity]);
     $event_dispatcher = \Drupal::service('event_dispatcher');
-    $event_dispatcher->dispatch("rules_entity_insert:$entity_type_id", $event);
+    $event_dispatcher->dispatch($event, "rules_entity_insert:$entity_type_id");
   }
 }
 
@@ -180,7 +180,7 @@ function rules_entity_update(EntityInterface $entity) {
       $entity_type_id . '_unchanged' => $entity->original,
     ]);
     $event_dispatcher = \Drupal::service('event_dispatcher');
-    $event_dispatcher->dispatch("rules_entity_update:$entity_type_id", $event);
+    $event_dispatcher->dispatch($event, "rules_entity_update:$entity_type_id");
   }
 }
 
@@ -190,7 +190,7 @@ function rules_entity_update(EntityInterface $entity) {
 function rules_cron() {
   $event = new SystemCronEvent();
   $event_dispatcher = \Drupal::service('event_dispatcher');
-  $event_dispatcher->dispatch(SystemCronEvent::EVENT_NAME, $event);
+  $event_dispatcher->dispatch($event, SystemCronEvent::EVENT_NAME);
 }
 
 /**

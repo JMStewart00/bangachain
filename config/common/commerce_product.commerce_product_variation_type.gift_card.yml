@@ -4,8 +4,8 @@ status: true
 dependencies: {  }
 id: gift_card
 label: 'Gift Card'
-orderItemType: default
-generateTitle: false
 traits:
   - commerce_giftcard_purchaseable
 locked: false
+orderItemType: default
+generateTitle: false

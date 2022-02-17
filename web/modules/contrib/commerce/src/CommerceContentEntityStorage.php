@@ -45,7 +45,7 @@ class CommerceContentEntityStorage extends SqlContentEntityStorage {
     // @todo Evaluate performance implications.
     $event_name = $this->getEventName('load');
     foreach ($entities as $entity) {
-      $this->eventDispatcher->dispatch($event_name, new $event_class($entity));
+      $this->eventDispatcher->dispatch(new $event_class($entity), $event_name);
     }
   }
 
@@ -57,7 +57,7 @@ class CommerceContentEntityStorage extends SqlContentEntityStorage {
 
     $event_class = $this->entityType->getHandlerClass('event');
     if ($event_class) {
-      $this->eventDispatcher->dispatch($this->getEventName($hook), new $event_class($entity));
+      $this->eventDispatcher->dispatch(new $event_class($entity), $this->getEventName($hook));
     }
   }
 

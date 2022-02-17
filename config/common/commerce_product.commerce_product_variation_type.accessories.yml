@@ -4,9 +4,9 @@ status: true
 dependencies: {  }
 id: accessories
 label: Accessories
-orderItemType: default
-generateTitle: false
 traits:
   - maximum_order_quantity
   - purchasable_entity_shippable
 locked: false
+orderItemType: default
+generateTitle: false

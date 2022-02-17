@@ -40,7 +40,7 @@ class WishlistAnonymousTest extends CommerceWebDriverTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_product',
     'commerce_cart',
     'commerce_wishlist',

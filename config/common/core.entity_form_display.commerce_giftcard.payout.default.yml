@@ -29,10 +29,10 @@ content:
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    settings:
-      display_label: false
     weight: 30
     region: content
+    settings:
+      display_label: false
     third_party_settings: {  }
   stores:
     type: commerce_entity_select
@@ -47,12 +47,12 @@ content:
   uid:
     type: entity_reference_autocomplete
     weight: 5
+    region: content
     settings:
       match_operator: CONTAINS
       match_limit: 10
       size: 60
       placeholder: ''
-    region: content
     third_party_settings: {  }
 hidden:
   feeds_item: true

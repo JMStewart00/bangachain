@@ -9,9 +9,9 @@ third_party_settings:
     show_in_pos: true
 id: bags
 label: Bags
+traits: {  }
+locked: false
 description: ''
 variationType: bags
 multipleVariations: true
 injectVariationFields: true
-traits: {  }
-locked: false

@@ -11,12 +11,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a generic 'Create entity path alias' action.
  *
+ * @todo Add access callback information from Drupal 7.
+ *
  * @RulesAction(
  *   id = "rules_entity_path_alias_create",
  *   deriver = "Drupal\rules\Plugin\RulesAction\EntityPathAliasCreateDeriver"
  * )
- *
- * @todo Add access callback information from Drupal 7.
  */
 class EntityPathAliasCreate extends RulesActionBase implements ContainerFactoryPluginInterface {
 

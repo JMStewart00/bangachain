@@ -56,8 +56,12 @@ class ShipmentCollectionAccessCheck implements AccessInterface {
     $access_control_handler = $this->entityTypeManager->getAccessControlHandler('commerce_shipment');
 
     // Only allow access if order type has a corresponding shipment type.
-    return AccessResult::allowedIf($shipment_type_id !== NULL)
-      ->andIf(AccessResult::allowedIf($access_control_handler->createAccess($shipment_type_id, $account)))
+    if (empty($shipment_type_id)) {
+      return AccessResult::forbidden()
+        ->addCacheableDependency($order_type);
+    }
+
+    return AccessResult::allowedIf($access_control_handler->createAccess($shipment_type_id, $account))
       ->andIf(AccessResult::allowedIf(!$order_is_cart))
       ->addCacheableDependency($order_type)
       ->addCacheableDependency($order);

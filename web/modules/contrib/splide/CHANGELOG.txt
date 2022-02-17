@@ -1,4 +1,32 @@
 
+Splide 1.0.0-dev, 2022-02-05
+----------------------------
+- Issue #3262034 by Grimreaper, gausarts: Support Auto Scroll plugin.
+
+Splide 1.0.0-dev, 2022-02-04
+----------------------------
+- Issue #3253814 by gausarts, MLZR: Broken breakpoints, identified by pagination
+  staying visible when set to `false`.
+- Issue #3262447 by gausarts, Grimreaper: Configuration parsing for object is
+  broken.
+
+Splide 1.0.0-dev, 2022-02-03
+----------------------------
+- Issue #3256953 by wrd-oaitsd, gausarts: Pagination options.
+
+Splide 1.0.0-dev, 2022-02-02
+----------------------------
+- Issue #3257673 by KarlShea: Forced unsplide with one item?
+- Reverted minimum requirements till D10 rules the entire world. Back to basic
+  dBlazy.once for now, etc.
+
+Splide 1.0.0-dev, 2021-12-17
+----------------------------
+- Issue #3254824 by gausarts: [Splide] Replace builtin once with core once.
+- Issue #3254808 by gausarts: [Splide] Drupal 10.
+- Issue #3246443 by JFKiwad, gausarts: Cover option isn't working.
+- Issue #3246447 by murilohp, JFKiwad: Height ratio should accept float values.
+
 Splide 1.0.0-dev, 2021-10-08
 ----------------------------
 - Issue #3241510 by gausarts: Upgrade to v3

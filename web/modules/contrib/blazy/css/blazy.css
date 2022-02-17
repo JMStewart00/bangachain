@@ -15,24 +15,22 @@
   display: block;
   height: auto;
   min-height: 1px;
-  opacity: 0;
-  transition: opacity 500ms ease-in;
+}
+
+.b-bg,
+/* Tricking IE and other oldies to fix aspect ratio. */
+.media--ratio .is-b-ie {
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  display: block;
 }
 
 /* Needed to display preloader with CSS BG image, otherwise hidden. */
 .b-loaded,
 .b-error,
-/* @todo deprecated and removed media--loading for is-b-loading to make sense outside media. */
-.b-bg.media--loading,
 .b-bg.is-b-loading {
   opacity: 1;
-}
-
-.b-bg {
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-  display: block;
 }
 
 /* The .blazy container is not always preset such at lightboxes. */
@@ -69,13 +67,15 @@
   /* Prevents unwanted alt text from showing. */
   color: transparent;
   display: block;
-  /* Prevents blinking. */
-  opacity: 1;
+  /* Prevents blinking.
+  opacity: 1; */
   /* Prevents collapsing thumbnail image if Aspect ratio is disabled. */
   width: 100%;
 }
 
-/* Aspect ratio element: IMG, IFRAME, DIV. */
+/* Aspect ratio element: IMG, IFRAME, DIV.
+The best things we can do to minimize layout/ reflows with dynamic DOM:
+absolute position and fixed dimensions. */
 .media--ratio .media__element,
 .media--fx .b-blur {
   bottom: 0;
@@ -91,30 +91,8 @@
   object-fit: cover;
 }
 
-/**
- * The blur image, to support various usages: native, BG and regular IMG.
- * The native lazy load swaps placeholders for real images, makes it impossible
- * to have blur effect, that is why we put it into another IMG.
- */
-.media--fx .b-blur {
-  color: transparent;
-  /* < 980: The less the more artifacts. The more the slower. */
-  filter: blur(3px);
-  opacity: .9;
-  /* Longer than animation timing to let the actual image surface better. */
-  transition: opacity 1.2s;
-  /* Avoid overlaying, this causes unwanted dark shadow and more artifacts. */
-  /* z-index: 1; */
-}
-
-.media--fx-lg .b-blur {
-  /* > 980: The less the more artifacts. The more the slower. */
-  filter: blur(6px);
-  /* Reduces artifacts due to being large. */
-  opacity: .8;
-}
-
-.animated img {
+.animated img,
+.b-bg.is-b-animated {
   opacity: 1;
 }
 

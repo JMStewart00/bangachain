@@ -49,6 +49,9 @@ interface FeedInterface extends ContentEntityInterface, EntityChangedInterface, 
    *
    * @return \Drupal\feeds\FeedTypeInterface
    *   The feed type object.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   *   In case the feed type could not be loaded.
    */
   public function getType();
 

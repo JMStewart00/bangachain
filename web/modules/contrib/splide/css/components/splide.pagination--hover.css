@@ -103,8 +103,10 @@
   padding: 0;
 }
 
+/*
 @media (min-width: 720px) {
   .splide.is-paginated--fx-hover {
     position: absolute;
   }
 }
+*/

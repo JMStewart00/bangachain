@@ -93,13 +93,6 @@ class ActionsFormTest extends RulesBrowserTestBase {
     $assert->statusCodeEquals(200);
     $assert->pageTextContains('Edit ' . $action->getLabel());
 
-    // Assert that the fields use the correct widgets, identified by class.
-    if (!empty($widgets)) {
-      foreach ($widgets as $name => $widget_id) {
-        $assert->elementExists('xpath', "//fieldset[@id='edit-context-definitions-$name' and contains(@class, 'widget-$widget_id')]");
-      }
-    }
-
     // If any field values have been specified then fill in the form and save.
     if (!empty($required) || !empty($defaulted)) {
 
@@ -120,7 +113,7 @@ class ActionsFormTest extends RulesBrowserTestBase {
         $assert->pageTextContains('field is required');
         // Fill each required field with the value provided.
         foreach ($required as $name => $value) {
-          $this->fillField('edit-context-definitions-' . $name . '-value', $value);
+          $this->fillField('edit-context-definitions-' . $name . '-setting', $value);
         }
       }
 
@@ -138,7 +131,7 @@ class ActionsFormTest extends RulesBrowserTestBase {
       if (!empty($defaulted) || !empty($provides)) {
         // Fill each previously defaulted field with the value provided.
         foreach ($defaulted as $name => $value) {
-          $this->fillField('edit-context-definitions-' . $name . '-value', $value);
+          $this->fillField('edit-context-definitions-' . $name . '-setting', $value);
         }
         foreach ($provides as $name => $value) {
           $this->fillField('edit-provides-' . $name . '-name', $value);
@@ -184,7 +177,7 @@ class ActionsFormTest extends RulesBrowserTestBase {
     // $data to hold it. This allows for manipulation before the final return.
     $data = [
       // Data.
-      'Data calculate value' => [
+      '1. Data calculate value' => [
         // Machine name.
         'rules_data_calculate_value',
         // Required values.
@@ -206,12 +199,12 @@ class ActionsFormTest extends RulesBrowserTestBase {
         // Provides.
         ['result' => 'new_named_variable'],
       ],
-      'Data convert' => [
+      '2. Data convert' => [
         'rules_data_convert',
         ['value' => 'node.uid', 'target-type' => 'string'],
-        ['rounding-behavior' => '?'],
+        ['rounding-behavior' => 'up'],
       ],
-      'List item add' => [
+      '3. List item add' => [
         'rules_list_item_add',
         [
           'list' => 'node.uid.entity.roles',
@@ -219,19 +212,19 @@ class ActionsFormTest extends RulesBrowserTestBase {
         ],
         [
           'unique' => TRUE,
-          'position' => 'validated? start',
+          'position' => 'start',
         ],
       ],
-      'List item remove' => [
+      '4. List item remove' => [
         'rules_list_item_remove',
         ['list' => 'node.uid.entity.roles', 'item' => '1'],
       ],
-      'Data set - direct' => [
+      '5. Data set - direct' => [
         'rules_data_set',
         ['data' => 'node.title'],
         ['value' => 'abc'],
       ],
-      'Data set - selector' => [
+      '6. Data set - selector' => [
         'rules_data_set',
         [
           'data' => 'node.title',
@@ -241,144 +234,155 @@ class ActionsFormTest extends RulesBrowserTestBase {
         [],
         ['value'],
       ],
-      'Variable add' => [
+      '7. Variable add' => [
         'rules_variable_add',
         ['type' => 'integer', 'value' => 'node.nid'],
       ],
 
       // Entity.
-      'Entity delete' => [
+      '8. Entity delete' => [
         'rules_entity_delete',
         ['entity' => 'node'],
       ],
-      'Entity fetch by field - selector' => [
+      '9. Entity fetch by field - selector' => [
+        // Machine name.
         'rules_entity_fetch_by_field',
-        ['type' => 'node', 'field-name' => 'abc', 'field-value' => 'node.uid'],
+        // Required values.
+        ['type' => 'node', 'field-name' => 'nid', 'field-value' => 'node.uid'],
+        // Defaulted values.
         ['limit' => 5],
+        // Widgets.
         [],
+        // Selectors.
         ['field-value'],
+        // Provides.
+        ['entity-fetched' => 'new_named_variable'],
       ],
-      'Entity fetch by field - direct' => [
+      '10. Entity fetch by field - direct' => [
+        'rules_entity_fetch_by_field',
+        ['type' => 'node', 'field-name' => 'sticky', 'field-value' => 1],
+      ],
+      '11. Entity fetch by id' => [
         'rules_entity_fetch_by_id',
         ['type' => 'node', 'entity-id' => 123],
       ],
-      'Entity save' => [
+      '12. Entity save' => [
         'rules_entity_save',
         ['entity' => 'node'],
         ['immediate' => TRUE],
       ],
 
       // Content.
-      'Entity create node' => [
+      '13. Entity create node' => [
         'rules_entity_create:node',
         ['type' => 'article', 'title' => 'abc'],
       ],
-      'Node make sticky' => [
+      '14. Node make sticky' => [
         'rules_node_make_sticky',
         ['node' => 'node'],
       ],
-      'Node make unsticky' => [
+      '15. Node make unsticky' => [
         'rules_node_make_unsticky',
         ['node' => 'node'],
       ],
-      'Node publish' => [
+      '16. Node publish' => [
         'rules_node_publish',
         ['node' => 'node'],
       ],
-      'Node unpublish' => [
+      '17.Node unpublish' => [
         'rules_node_unpublish',
         ['node' => 'node'],
       ],
-      'Node promote' => [
+      '18. Node promote' => [
         'rules_node_promote',
         ['node' => 'node'],
       ],
-      'Node unpromote' => [
+      '19. Node unpromote' => [
         'rules_node_unpromote',
         ['node' => 'node'],
       ],
 
       // Path.
-      'Path alias create' => [
+      '20. Path alias create' => [
         'rules_path_alias_create',
         ['source' => '/node/1', 'alias' => 'abc'],
-        ['language' => '?'],
+        ['language' => 'en'],
       ],
-      'Entity path alias create' => [
+      '21. Entity path alias create' => [
         'rules_entity_path_alias_create:entity:node',
         ['entity' => 'node', 'alias' => 'abc'],
       ],
-      'Path alias delete by alias' => [
+      '22. Path alias delete by alias' => [
         'rules_path_alias_delete_by_alias',
         ['alias' => 'abc'],
       ],
-      'Path alias delete by path' => [
+      '23. Path alias delete by path' => [
         'rules_path_alias_delete_by_path',
         ['path' => '/node/1'],
       ],
 
       // System.
-      'Page redirect' => [
+      '24. Page redirect' => [
         'rules_page_redirect',
         ['url' => '/node/1'],
       ],
-      'Email to users of role' => [
+      '25. Email to users of role' => [
         'rules_email_to_users_of_role',
         [
           'roles' => 'test-editor',
           'subject' => 'Hello',
           'message' => "Some text\nLine two",
         ],
-        ['reply' => 'test@example.com', 'language' => '?'],
+        ['reply' => 'test@example.com', 'language' => 'und'],
         ['message' => 'textarea'],
       ],
-      'System message' => [
+      '26. System message' => [
         'rules_system_message',
         ['message' => 'Some text'],
         ['type' => 'warning', 'repeat' => 0],
       ],
-      'Send email - direct input' => [
+      '27. Send email - direct input' => [
         'rules_send_email',
         [
           'to' => 'test@example.com',
           'subject' => 'Some testing subject',
           'message' => 'Test with direct input of recipients',
         ],
-        ['reply' => 'test@example.com', 'language' => '?'],
+        ['reply' => 'test@example.com', 'language' => 'en'],
         ['message' => 'textarea'],
       ],
-      'Send email - data selector for address' => [
+      '28. Send email - data selector for address' => [
         'rules_send_email',
         [
           'to' => 'node.uid.entity.mail.value',
           'subject' => 'Some testing subject',
           'message' => 'Test with selector input of node author',
         ],
-        ['reply' => 'test@example.com', 'language' => '?'],
+        ['reply' => 'test@example.com'],
         ['message' => 'textarea'],
         ['to'],
       ],
 
       // User.
-      'Entity create user' => [
+      '29. Entity create user' => [
         'rules_entity_create:user',
         // The name should be required, but can save with blank name.
         // @todo fix this. Then move 'name' into the required array.
         [],
         ['name' => 'fred'],
       ],
-      'Send account email' => [
+      '30. Send account email' => [
         'rules_send_account_email',
-        ['user' => 'node.uid', 'email-type' => 'abc'],
+        ['user' => 'node.uid', 'email-type' => 'password_reset'],
       ],
-      'User block' => [
+      '31. User block' => [
         'rules_user_block',
         ['user' => '@user.current_user_context:current_user'],
         [],
         [],
         ['user'],
       ],
-      'User role add' => [
+      '32. User role add' => [
         'rules_user_role_add',
         [
           'user' => '@user.current_user_context:current_user',
@@ -388,17 +392,14 @@ class ActionsFormTest extends RulesBrowserTestBase {
         [],
         ['user'],
       ],
-      'User role remove' => [
+      '33. User role remove' => [
         'rules_user_role_remove',
         [
           'user' => '@user.current_user_context:current_user',
           'roles' => 'test-editor',
         ],
-        [],
-        [],
-        ['user'],
       ],
-      'Unblock user' => [
+      '34. Unblock user' => [
         'rules_user_unblock',
         ['user' => '@user.current_user_context:current_user'],
         [],
@@ -407,17 +408,12 @@ class ActionsFormTest extends RulesBrowserTestBase {
       ],
 
       // Ban.
-      'Ban IP - empty' => [
-        'rules_ban_ip',
-        [],
-        ['ip' => ''],
-      ],
-      'Ban IP - value' => [
+      '35. Ban IP' => [
         'rules_ban_ip',
         [],
         ['ip' => '192.0.2.1'],
       ],
-      'Unban IP' => [
+      '36. Unban IP' => [
         'rules_unban_ip',
         [],
         ['ip' => '192.0.2.1'],
@@ -429,13 +425,7 @@ class ActionsFormTest extends RulesBrowserTestBase {
     // Error "Expected a list data type ... but got a email data type instead".
     // @see https://www.drupal.org/project/rules/issues/2723259
     // @todo Delete this unset() when the above issue is fixed.
-    unset($data['Send email - data selector for address']);
-
-    // Two list actions fail with "Cannot set a list with a non-array value".
-    // These run OK without the widget integration.
-    // @todo Needs investigation.
-    unset($data['List item add']);
-    unset($data['List item remove']);
+    unset($data['28. Send email - data selector for address']);
 
     // Use unset $data['The key to remove']; to remove a temporarily unwanted
     // item, use return [$data['Key to test'], $data['Another']]; to selectively

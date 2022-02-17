@@ -3,6 +3,8 @@
 namespace Drupal\Tests\state_machine\Unit\Plugin\Workflow;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\state_machine\Guard\GuardFactoryInterface;
 use Drupal\state_machine\Guard\GuardInterface;
 use Drupal\state_machine\Plugin\Workflow\Workflow;
@@ -52,6 +54,9 @@ class WorkflowTest extends UnitTestCase {
    */
   public function testGetStates() {
     $guard_factory = $this->prophesize(GuardFactoryInterface::class);
+    $translation = $this->prophesize(TranslationInterface::class);
+    $translation->translateString(Argument::type(TranslatableMarkup::class))
+      ->willReturn('Draft');
     $plugin_definition = [
       'states' => [
         'draft' => [
@@ -61,9 +66,11 @@ class WorkflowTest extends UnitTestCase {
       'transitions' => [],
     ];
     $workflow = new Workflow([], 'test', $plugin_definition, $guard_factory->reveal());
+    $workflow->setStringTranslation($translation->reveal());
 
     $state = $workflow->getState('draft');
     $this->assertEquals('draft', $state->getId());
+    $state->setStringTranslation($translation->reveal());
     $this->assertEquals('Draft', $state->getLabel());
     $this->assertEquals(['draft' => $state], $workflow->getStates());
   }
@@ -73,6 +80,9 @@ class WorkflowTest extends UnitTestCase {
    * @covers ::getTransition
    */
   public function testGetTransitions() {
+    $translation = $this->prophesize(TranslationInterface::class);
+    $translation->translateString(Argument::type(TranslatableMarkup::class))
+      ->willReturn('Publish');
     $guard_factory = $this->prophesize(GuardFactoryInterface::class);
     $plugin_definition = [
       'states' => [
@@ -94,6 +104,7 @@ class WorkflowTest extends UnitTestCase {
     $workflow = new Workflow([], 'test', $plugin_definition, $guard_factory->reveal());
 
     $transition = $workflow->getTransition('publish');
+    $transition->setStringTranslation($translation->reveal());
     $this->assertEquals('publish', $transition->getId());
     $this->assertEquals('Publish', $transition->getLabel());
     $this->assertEquals(['draft' => $workflow->getState('draft')], $transition->getFromStates());
@@ -230,27 +241,6 @@ class WorkflowTest extends UnitTestCase {
     $transition = $workflow->getTransition('send_to_review');
     $this->assertEquals($transition, $workflow->findTransition('draft', 'review'));
     $this->assertNull($workflow->findTransition('foo', 'bar'));
-  }
-
-}
-
-namespace Drupal\state_machine\Plugin\Workflow;
-
-if (!function_exists('t')) {
-
-  /**
-   * Mocks the t() function.
-   *
-   * @param string $string
-   *   A string containing the English text to translate.
-   * @param array $args
-   *   (optional) An associative array of replacements to make after translation.
-   *
-   * @return string
-   *   The translated string.
-   */
-  function t($string, array $args = []) {
-    return strtr($string, $args);
   }
 
 }

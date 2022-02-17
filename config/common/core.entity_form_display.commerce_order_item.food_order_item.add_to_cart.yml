@@ -23,19 +23,19 @@ content:
   purchased_entity:
     type: commerce_product_variation_title
     weight: 0
+    region: content
     settings:
       label_display: true
       label_text: 'Please select'
       hide_single: true
-    region: content
     third_party_settings: {  }
   quantity:
     type: commerce_quantity
     weight: 2
     region: content
     settings:
-      step: '1'
       placeholder: ''
+      step: '1'
     third_party_settings: {  }
 hidden:
   created: true

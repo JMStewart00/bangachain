@@ -26,7 +26,7 @@ class ProductVariationStorageTest extends CommerceKernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'path',
     'commerce_product',
   ];

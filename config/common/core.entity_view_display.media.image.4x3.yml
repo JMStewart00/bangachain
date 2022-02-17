@@ -12,8 +12,8 @@ dependencies:
     - layout_builder
 third_party_settings:
   layout_builder:
-    allow_custom: false
     enabled: false
+    allow_custom: false
 _core:
   default_config_hash: B1a2aBHmUulUZN6HrxITEH1tSResuVjXMBEv1lUBtOo
 id: media.image.4x3
@@ -22,12 +22,12 @@ bundle: image
 mode: 4x3
 content:
   field_media_image:
+    type: image
     label: hidden
     settings:
-      image_style: responsive_4_3_950w
       image_link: ''
+      image_style: responsive_4_3_950w
     third_party_settings: {  }
-    type: image
     weight: 1
     region: content
 hidden:

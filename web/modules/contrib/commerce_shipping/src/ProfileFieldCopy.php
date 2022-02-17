@@ -83,7 +83,7 @@ class ProfileFieldCopy implements ProfileFieldCopyInterface {
     $enabled = $billing_profile->getData('copy_fields', $billing_profile->isNew());
     if ($user_input) {
       if (isset($user_input['copy_fields'])) {
-        $enabled = (bool) $user_input['copy_fields']['enable'];
+        $enabled = (bool) ($user_input['copy_fields']['enable'] ?? FALSE);
       }
       elseif (isset($user_input['select_address'])) {
         $enabled = FALSE;

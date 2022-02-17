@@ -79,7 +79,7 @@ trait BlazyUnitTestTrait {
    */
   protected function getDefaultFieldDefinition() {
     return [
-      'bundle'            => isset($this->bundle) ? $this->bundle : 'bundle_test',
+      'bundle'            => $this->bundle ?? 'bundle_test',
       'current_view_mode' => 'default',
       'entity_type'       => $this->entityType,
       'field_name'        => $this->testFieldName,
@@ -318,40 +318,6 @@ if (!function_exists('blazy_alterable_settings')) {
   }
 
 }
-
-if (!function_exists('file_create_url')) {
-
-  /**
-   * Dummy function.
-   */
-  function file_create_url() {
-    // Empty block to satisfy coder.
-  }
-
-}
-
-if (!function_exists('file_url_transform_relative')) {
-
-  /**
-   * Dummy function.
-   */
-  function file_url_transform_relative() {
-    // Empty block to satisfy coder.
-  }
-
-}
-
-if (!function_exists('file_valid_uri')) {
-
-  /**
-   * Dummy function.
-   */
-  function file_valid_uri() {
-    // Empty block to satisfy coder.
-  }
-
-}
-
 
 if (!function_exists('blazy')) {
 

@@ -79,7 +79,7 @@ class ProfileFieldCopyTest extends CommerceWebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_payment',
     'commerce_payment_example',
     'commerce_promotion',
@@ -726,7 +726,7 @@ class ProfileFieldCopyTest extends CommerceWebDriverTestBase {
       if ($property == 'country_code') {
         $value = $this->countryList[$value];
       }
-      $this->assertContains($value, $address_text);
+      $this->assertStringContainsString($value, $address_text);
     }
   }
 

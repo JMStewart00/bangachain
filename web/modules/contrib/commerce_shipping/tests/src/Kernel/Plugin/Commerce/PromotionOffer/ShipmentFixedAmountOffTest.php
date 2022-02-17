@@ -37,7 +37,7 @@ class ShipmentFixedAmountOffTest extends ShippingKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_promotion',
   ];
 

@@ -128,7 +128,7 @@ abstract class ProductVariationWidgetBase extends WidgetBase implements Containe
     // Allow modules to add arbitrary ajax commands to the response.
     $event = new ProductVariationAjaxChangeEvent($variation, $response, $view_mode);
     $event_dispatcher = \Drupal::service('event_dispatcher');
-    $event_dispatcher->dispatch(ProductEvents::PRODUCT_VARIATION_AJAX_CHANGE, $event);
+    $event_dispatcher->dispatch($event, ProductEvents::PRODUCT_VARIATION_AJAX_CHANGE);
 
     return $response;
   }
@@ -149,7 +149,7 @@ abstract class ProductVariationWidgetBase extends WidgetBase implements Containe
     $selected_variation = $this->variationStorage->loadFromContext($product);
     $selected_variation = $this->entityRepository->getTranslationFromContext($selected_variation, $langcode);
     // The returned variation must also be enabled.
-    if (!in_array($selected_variation, $variations)) {
+    if (!isset($variations[$selected_variation->id()])) {
       $selected_variation = reset($variations);
     }
     return $selected_variation;

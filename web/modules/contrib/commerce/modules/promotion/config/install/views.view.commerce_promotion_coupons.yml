@@ -3,7 +3,6 @@ status: true
 dependencies:
   module:
     - commerce_promotion
-    - user
 id: commerce_promotion_coupons
 label: Coupons
 module: views
@@ -19,9 +18,8 @@ display:
     position: 0
     display_options:
       access:
-        type: perm
-        options:
-          perm: 'administer commerce_promotion'
+        type: none
+        options: {  }
       cache:
         type: none
         options: {  }
@@ -481,7 +479,6 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
-        - user.permissions
       tags: {  }
   page_1:
     display_plugin: page
@@ -498,5 +495,4 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
-        - user.permissions
       tags: {  }

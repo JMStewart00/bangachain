@@ -1,7 +1,7 @@
 # All libraries supported by Splide module.
 splide:
   remote: https://github.com/Splidejs/splide
-  version: 2.x
+  version: 3.x
   license:
     name: MIT
     url: https://github.com/Splidejs/splide/blob/master/LICENSE
@@ -11,6 +11,31 @@ splide:
   css:
     base:
       /libraries/splide/dist/css/splide-core.min.css: {}
+
+# Prioritize github, then SplideSkinManager:libraryInfoAlter() for packagist.
+autoscroll:
+  remote: https://github.com/Splidejs/splide-extension-auto-scroll
+  version: 0.x
+  license:
+    name: MIT
+    url: https://github.com/Splidejs/splide-extension-auto-scroll/blob/master/LICENSE
+    gpl-compatible: true
+  js:
+    /libraries/splide-extension-auto-scroll/dist/js/splide-extension-auto-scroll.min.js: { weight: -2.9, minified: true }
+  dependencies:
+    - splide/splide
+
+intersection:
+  remote: https://github.com/Splidejs/splide-extension-intersection
+  version: 0.x
+  license:
+    name: MIT
+    url: https://github.com/Splidejs/splide-extension-intersection/blob/master/LICENSE
+    gpl-compatible: true
+  js:
+    /libraries/splide-extension-intersection/dist/js/splide-extension-intersection.min.js: { weight: -2.9, minified: true }
+  dependencies:
+    - splide/splide
 
 base:
   version: VERSION
@@ -22,6 +47,7 @@ base:
   dependencies:
     - core/drupal
     - core/drupalSettings
+    # @todo min D9.2 - core/once
     - blazy/dblazy
     - splide/splide
 
@@ -78,6 +104,16 @@ pagination.grid:
       css/components/splide.pagination--grid.css: {}
   dependencies:
     - splide/pagination
+
+pagination.tab:
+  version: VERSION
+  css:
+    component:
+      css/components/splide.pagination--tab.css: {}
+  js:
+    js/components/splide.pagination.tab.min.js: { weight: -0.03, minified: true }
+  dependencies:
+    - splide/base
 
 arrow.down:
   version: VERSION

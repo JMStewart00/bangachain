@@ -21,7 +21,7 @@ class MultipleCartMultipleVariationTypesTest extends CartWebDriverTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'dynamic_page_cache',
     'page_cache',
     'commerce_cart_test',

@@ -56,7 +56,7 @@
  *   return $build;
  * }
  * @endcode
- * @see \Drupal\blazy\Blazy::preprocessBlazy()
+ * @see \Drupal\blazy\BlazyTheme::blazy()
  * @see \Drupal\blazy\BlazyDefault::imageSettings()
  *
  * A multiple image sample.
@@ -106,7 +106,7 @@
  * Pre-render callback sample to modify/ extend Blazy output.
  * @code
  * function my_module_pre_render(array $image) {
- *   $settings = isset($image['#settings']) ? $image['#settings'] : [];
+ *   $settings = $image['#settings'] ?? [];
  *
  *   // Video's HREF points to external site, adds URL to local image.
  *   if (!empty($settings['box_url']) && !empty($settings['embed_url'])) {
@@ -292,7 +292,7 @@ function hook_blazy_settings_alter(array &$build, $items) {
  */
 function hook_blazy_form_element_alter(array &$form, array $definition = []) {
   // Limit the scope to Slick formatters, blazy, gridstack, etc. Or swap em all.
-  if (isset($definition['namespace']) && $definition['namespace'] == 'slick') {
+  if (($definition['namespace'] ?? FALSE) == 'slick') {
     // Extend the formatter form elements as needed.
   }
 }

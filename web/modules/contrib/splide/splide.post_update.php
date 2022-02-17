@@ -48,3 +48,19 @@ function splide_post_update_remove_v2_deprecated_options() {
     $optionset->save(TRUE);
   }
 }
+
+/**
+ * Change height ratio to string.
+ */
+function splide_post_update_change_height_ratio_type() {
+  $config = \Drupal::configFactory()->getEditable('splide.optionset.default');
+  $config->set('options.settings.heightRatio', '0');
+  $config->save(TRUE);
+}
+
+/**
+ * Added a service and pagination tab options #3256953.
+ */
+function splide_post_add_pagination_tab_options() {
+  // Empty block to clear cache.
+}

@@ -11,6 +11,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\file\Entity\File;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\image\Plugin\Field\FieldType\ImageItem;
+use Drupal\blazy\BlazyFile;
 
 /**
  * A Trait common for Blazy tests.
@@ -45,6 +46,8 @@ trait BlazyCreationTestTrait {
     $display_id = $this->entityType . '.' . $bundle . '.' . $view_mode;
     $storage    = $this->blazyManager->getEntityTypeManager()->getStorage('entity_view_display');
     $display    = $storage->load($display_id);
+
+    $this->blazyManager->getCommonSettings($settings);
 
     if (!$display) {
       $values = [
@@ -98,7 +101,7 @@ trait BlazyCreationTestTrait {
   protected function getBlazyFieldStorageDefinition($field_name = '') {
     $field_name = empty($field_name) ? $this->testFieldName : $field_name;
     $field_storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($this->entityType);
-    return isset($field_storage_definitions[$field_name]) ? $field_storage_definitions[$field_name] : FALSE;
+    return $field_storage_definitions[$field_name] ?? FALSE;
   }
 
   /**
@@ -303,7 +306,7 @@ trait BlazyCreationTestTrait {
 
     $storage_settings = [];
     if ($field_type == 'entity_reference') {
-      $storage_settings['target_type'] = isset($this->targetType) ? $this->targetType : $this->entityType;
+      $storage_settings['target_type'] = $this->targetType ?? $this->entityType;
       $bundle = $this->bundle;
       $multiple = FALSE;
     }
@@ -481,7 +484,7 @@ trait BlazyCreationTestTrait {
 
       if ($item instanceof ImageItem) {
         $this->uri = ($entity = $item->entity) && empty($item->uri) ? $entity->getFileUri() : $item->uri;
-        $this->url = file_url_transform_relative(file_create_url($this->uri));
+        $this->url = BlazyFile::transformRelative($this->uri);
       }
     }
 
@@ -489,7 +492,7 @@ trait BlazyCreationTestTrait {
       $source = $this->root . '/core/misc/druplicon.png';
       $uri = 'public://test.png';
       $this->fileSystem->copy($source, $uri, FileSystemInterface::EXISTS_REPLACE);
-      $this->url = file_create_url($uri);
+      $this->url = BlazyFile::createUrl($uri);
     }
 
     $this->testItem = $this->image = $item;
@@ -508,7 +511,7 @@ trait BlazyCreationTestTrait {
   protected function getImagePath($is_dir = FALSE) {
     $path            = $this->root . '/sites/default/files/simpletest/' . $this->testPluginId;
     $item            = $this->createDummyImage();
-    $this->dummyUrl  = file_url_transform_relative(file_create_url($this->dummyUri));
+    $this->dummyUrl  = BlazyFile::transformRelative($this->dummyUri);
     $this->dummyItem = $item;
     $this->dummyData = [
       'settings' => $this->getFormatterSettings(),

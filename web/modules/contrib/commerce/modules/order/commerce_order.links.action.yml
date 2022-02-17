@@ -4,6 +4,12 @@ entity.commerce_order.add_page:
   appears_on:
     - entity.commerce_order.collection
 
+entity.commerce_order.resend_receipt_form:
+  route_name: entity.commerce_order.resend_receipt_form
+  title: 'Resend receipt'
+  appears_on:
+    - entity.commerce_order.canonical
+
 entity.commerce_order_type.add_form:
   route_name: entity.commerce_order_type.add_form
   title: 'Add order type'

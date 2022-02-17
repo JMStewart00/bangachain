@@ -132,6 +132,7 @@ abstract class EntityProcessorBase extends ProcessorBase implements EntityProces
       $this->initCleanList($feed, $clean_state);
     }
 
+    $skip_new = $this->configuration['insert_new'] == static::SKIP_NEW;
     $existing_entity_id = $this->existingEntityId($feed, $item);
     $skip_existing = $this->configuration['update_existing'] == static::SKIP_EXISTING;
 
@@ -142,7 +143,7 @@ abstract class EntityProcessorBase extends ProcessorBase implements EntityProces
     }
 
     // Bulk load existing entities to save on db queries.
-    if ($skip_existing && $existing_entity_id) {
+    if (($skip_existing && $existing_entity_id) || (!$existing_entity_id && $skip_new)) {
       $state->skipped++;
       return;
     }
@@ -163,7 +164,7 @@ abstract class EntityProcessorBase extends ProcessorBase implements EntityProces
     }
 
     // Build a new entity.
-    if (!$existing_entity_id) {
+    if (!$existing_entity_id && !$skip_new) {
       $entity = $this->newEntity($feed);
     }
 
@@ -681,6 +682,7 @@ abstract class EntityProcessorBase extends ProcessorBase implements EntityProces
    */
   public function defaultConfiguration() {
     $defaults = [
+      'insert_new' => static::INSERT_NEW,
       'update_existing' => static::SKIP_EXISTING,
       'update_non_existent' => static::KEEP_NON_EXISTENT,
       'skip_hash_check' => FALSE,

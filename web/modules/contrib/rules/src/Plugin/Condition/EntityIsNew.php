@@ -8,6 +8,8 @@ use Drupal\rules\Core\RulesConditionBase;
 /**
  * Provides an 'Entity is new' condition.
  *
+ * @todo Add access callback information from Drupal 7?
+ *
  * @Condition(
  *   id = "rules_entity_is_new",
  *   label = @Translation("Entity is new"),
@@ -20,8 +22,6 @@ use Drupal\rules\Core\RulesConditionBase;
  *     ),
  *   }
  * )
- *
- * @todo Add access callback information from Drupal 7?
  */
 class EntityIsNew extends RulesConditionBase {
 

@@ -20,7 +20,7 @@ class ProductTranslationTest extends ProductBrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'config_translation',
     'content_translation',
   ];
@@ -72,6 +72,7 @@ class ProductTranslationTest extends ProductBrowserTestBase {
    * Test translating a product and its variations.
    */
   public function testProductTranslation() {
+    /** @var \Drupal\commerce_product\Entity\ProductInterface $product */
     $product = $this->createEntity('commerce_product', [
       'type' => 'default',
       'title' => 'Translation test product',
@@ -94,8 +95,10 @@ class ProductTranslationTest extends ProductBrowserTestBase {
     $this->drupalGet(Url::fromRoute('entity.commerce_product_variation.collection', [
       'commerce_product' => $product->id(),
     ]));
-    $this->assertSession()->linkByHrefExists('/product/1/variations/1/translations');
-    $this->getSession()->getPage()->clickLink('Translate');
+    $variation = $product->getVariations()[0];
+    $translation_overview_url = $variation->toUrl('drupal:content-translation-overview');
+    $this->assertSession()->linkByHrefExists($translation_overview_url->toString());
+    $this->drupalGet($translation_overview_url);
     $this->assertSession()->linkByHrefExists('/fr/product/1/variations/1/translations/add/en/fr');
     $this->getSession()->getPage()->clickLink('Add');
     $this->getSession()->getPage()->pressButton('Save');

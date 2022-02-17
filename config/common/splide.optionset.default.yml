@@ -9,8 +9,8 @@ _core:
   default_config_hash: LhZdVsd9NFiWg5XINEE2ewHAnj5hsjcvjnM6T9ffzjM
 id: default
 name: default
-label: Default
 weight: -10
+label: Default
 group: ''
 skin: default
 breakpoint: 0
@@ -19,6 +19,7 @@ options:
   options__active_tab: ''
   settings:
     type: slide
+    mediaQuery: min
     rewind: false
     speed: 400
     rewindSpeed: 0
@@ -27,7 +28,7 @@ options:
     height: '0'
     fixedWidth: '0'
     fixedHeight: '0'
-    heightRatio: 0
+    heightRatio: '0'
     autoWidth: false
     autoHeight: false
     perPage: 1
@@ -57,7 +58,6 @@ options:
     flickMaxPages: 1
     direction: ltr
     cover: false
-    mediaQuery: min
     slideFocus: true
     isNavigation: false
     trimSpace: 'true'
@@ -69,7 +69,7 @@ options:
     downTarget: ''
     downOffset: 0
     easingOverride: ''
-    fullscreen: false
     randomize: false
+    fullscreen: false
     wheel: false
     zoom: ''

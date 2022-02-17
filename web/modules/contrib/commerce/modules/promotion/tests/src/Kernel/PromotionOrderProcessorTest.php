@@ -29,7 +29,7 @@ class PromotionOrderProcessorTest extends OrderKernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_promotion',
     'language',
     'content_translation',

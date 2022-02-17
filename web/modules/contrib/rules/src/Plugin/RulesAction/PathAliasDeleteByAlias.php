@@ -10,6 +10,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a 'Delete any path alias' action.
  *
+ * @todo Add access callback information from Drupal 7.
+ *
  * @RulesAction(
  *   id = "rules_path_alias_delete_by_alias",
  *   label = @Translation("Delete path alias"),
@@ -22,8 +24,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *     ),
  *   }
  * )
- *
- * @todo Add access callback information from Drupal 7.
  */
 class PathAliasDeleteByAlias extends RulesActionBase implements ContainerFactoryPluginInterface {
 

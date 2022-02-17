@@ -33,16 +33,16 @@ third_party_settings:
         - field_glide
         - field_turn
         - field_fade
+      label: 'Flight Numbers'
+      region: content
       parent_name: ''
       weight: 12
       format_type: fieldset
-      region: content
       format_settings:
-        id: ''
         classes: ''
+        id: ''
         description: ''
         required_fields: true
-      label: 'Flight Numbers'
 id: commerce_product.discs.default
 targetEntityType: commerce_product
 bundle: discs
@@ -55,92 +55,92 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_brand:
+    type: entity_reference_autocomplete
     weight: 4
+    region: content
     settings:
       match_operator: CONTAINS
       match_limit: 10
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
   field_default_image:
     type: media_library_widget
     weight: 1
+    region: content
     settings:
       media_types: {  }
     third_party_settings: {  }
-    region: content
   field_description:
+    type: text_textarea_with_summary
     weight: 7
+    region: content
     settings:
       rows: 9
       summary_rows: 3
       placeholder: ''
       show_summary: false
     third_party_settings: {  }
-    type: text_textarea_with_summary
-    region: content
   field_disc_category:
+    type: options_select
     weight: 5
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: options_select
-    region: content
   field_fade:
+    type: number
     weight: 23
+    region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
-    type: number
-    region: content
   field_glide:
+    type: number
     weight: 20
+    region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
-    type: number
-    region: content
   field_meta_tags:
+    type: metatag_firehose
     weight: 13
+    region: content
     settings:
       sidebar: true
     third_party_settings: {  }
-    type: metatag_firehose
-    region: content
   field_no_payout_allowed:
+    type: boolean_checkbox
     weight: 24
+    region: content
     settings:
       display_label: true
     third_party_settings: {  }
-    type: boolean_checkbox
-    region: content
   field_restock_date:
-    weight: 3
-    settings: {  }
-    third_party_settings: {  }
     type: datetime_default
+    weight: 3
     region: content
-  field_speed:
-    weight: 19
-    settings:
-      placeholder: ''
-    third_party_settings: {  }
-    type: number
-    region: content
-  field_stability_category:
-    weight: 6
     settings: {  }
     third_party_settings: {  }
-    type: options_select
+  field_speed:
+    type: number
+    weight: 19
     region: content
-  field_turn:
-    weight: 22
     settings:
       placeholder: ''
     third_party_settings: {  }
-    type: number
+  field_stability_category:
+    type: options_select
+    weight: 6
     region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_turn:
+    type: number
+    weight: 22
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
   path:
     type: path
     weight: 10
@@ -149,10 +149,10 @@ content:
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    settings:
-      display_label: true
     weight: 11
     region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   stores:
     type: commerce_entity_select

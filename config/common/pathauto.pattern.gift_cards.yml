@@ -12,12 +12,12 @@ pattern: 'buy/[commerce_product:title]'
 selection_criteria:
   cc1c9e0c-f984-4568-9aab-b89b76aadfef:
     id: 'entity_bundle:commerce_product'
-    bundles:
-      gift_card: gift_card
     negate: false
+    uuid: cc1c9e0c-f984-4568-9aab-b89b76aadfef
     context_mapping:
       commerce_product: commerce_product
-    uuid: cc1c9e0c-f984-4568-9aab-b89b76aadfef
+    bundles:
+      gift_card: gift_card
 selection_logic: and
 weight: -5
 relationships: {  }

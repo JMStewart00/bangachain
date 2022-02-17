@@ -17,9 +17,10 @@ class SplideAdminUnitTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
+    $this->entityFieldManager = $this->createMock('\Drupal\Core\Entity\EntityFieldManagerInterface');
     $this->blazyAdminExtended = $this->getMockBuilder('\Drupal\blazy\Dejavu\BlazyAdminExtended')
       ->disableOriginalConstructor()
       ->getMock();
@@ -37,6 +38,7 @@ class SplideAdminUnitTest extends UnitTestCase {
     $exception = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE;
 
     $map = [
+      ['entity_field.manager', $exception, $this->entityFieldManager],
       ['blazy.admin.extended', $exception, $this->blazyAdminExtended],
       ['splide.manager', $exception, $this->splideManager],
     ];

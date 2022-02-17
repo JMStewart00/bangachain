@@ -32,31 +32,31 @@ content:
   'Loyalty points offered per unit of currency':
     type: number_decimal
     weight: 14
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   attribute_disc_color:
     type: options_select
     weight: 7
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   attribute_disc_plastic:
     type: entity_reference_autocomplete
     weight: 4
+    region: content
     settings:
       match_operator: CONTAINS
       match_limit: 10
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    region: content
   attribute_disc_weight:
     type: options_select
     weight: 8
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   commerce_stock_always_in_stock:
     type: boolean_checkbox
     weight: 12
@@ -65,12 +65,12 @@ content:
       display_label: true
     third_party_settings: {  }
   field_bin:
+    type: number
     weight: 10
+    region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
-    type: number
-    region: content
   field_loyalty_points:
     type: number
     weight: 14
@@ -79,49 +79,49 @@ content:
       placeholder: ''
     third_party_settings: {  }
   field_needs_artwork:
+    type: boolean_checkbox
     weight: 1
+    region: content
     settings:
       display_label: true
     third_party_settings: {  }
-    type: boolean_checkbox
-    region: content
   field_product_image:
     type: media_library_widget
     weight: 2
+    region: content
     settings:
       media_types: {  }
     third_party_settings: {  }
-    region: content
   field_stock:
+    type: commerce_stock_level_simple_transaction
     weight: 11
+    region: content
     settings:
-      default_transaction_note: 'Transaction issued by stock level field.'
       step: '1'
       custom_transaction_note: false
+      default_transaction_note: 'Transaction issued by stock level field.'
     third_party_settings: {  }
-    type: commerce_stock_level_simple_transaction
-    region: content
   field_used:
+    type: boolean_checkbox
     weight: 3
+    region: content
     settings:
       display_label: true
     third_party_settings: {  }
-    type: boolean_checkbox
-    region: content
   field_vendor_cost:
+    type: number
     weight: 5
+    region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
-    type: number
-    region: content
   maximum_order_quantity:
     type: number
     weight: 1
+    region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
-    region: content
   price:
     type: commerce_price_default
     weight: 6
@@ -135,29 +135,29 @@ content:
     settings:
       custom_label: ''
       uniqid_enabled: true
+      more_entropy: false
+      hide: false
       prefix: ''
       suffix: ''
       size: 60
       placeholder: ''
       maximum: 500
-      more_entropy: false
-      hide: false
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    settings:
-      display_label: true
     weight: 13
     region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   weight:
     type: physical_measurement_default
     weight: 9
+    region: content
     settings:
       default_unit: g
       allow_unit_change: false
     third_party_settings: {  }
-    region: content
 hidden:
   created: true
   feeds_item: true

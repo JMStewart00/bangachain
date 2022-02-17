@@ -5,6 +5,7 @@
  * Contains install and update functions for Shipping.
  */
 
+use Drupal\commerce_shipping\Event\ShipmentEvent;
 use Drupal\Core\Field\BaseFieldDefinition;
 
 /**
@@ -110,4 +111,14 @@ function commerce_shipping_update_8204() {
   foreach ($storage_definitions as $name => $definition) {
     $definition_update_manager->installFieldStorageDefinition($name, 'commerce_shipping_method', 'commerce_shipping', $definition);
   }
+}
+
+/**
+ * Add the event handler to the shipment entity type.
+ */
+function commerce_shipping_update_8205() {
+  $entity_definition_update = \Drupal::entityDefinitionUpdateManager();
+  $entity_type = $entity_definition_update->getEntityType('commerce_shipment');
+  $entity_type->setHandlerClass('event', ShipmentEvent::class);
+  $entity_definition_update->updateEntityType($entity_type);
 }

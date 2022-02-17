@@ -7,6 +7,9 @@ use Drupal\rules\Core\RulesConditionBase;
 /**
  * Provides a 'Data comparison' condition.
  *
+ * @todo Add access callback information from Drupal 7.
+ * @todo Find a way to port rules_condition_data_is_operator_options() from Drupal 7.
+ *
  * @Condition(
  *   id = "rules_data_comparison",
  *   label = @Translation("Data comparison"),
@@ -22,6 +25,7 @@ use Drupal\rules\Core\RulesConditionBase;
  *       description = @Translation("The comparison operator. Valid values are == (default), <, >, CONTAINS (for strings or arrays) and IN (for arrays or lists)."),
  *       assignment_restriction = "input",
  *       default_value = "==",
+ *       options_provider = "\Drupal\rules\TypedData\Options\ComparisonOperatorOptions",
  *       required = FALSE
  *     ),
  *     "value" = @ContextDefinition("any",
@@ -30,9 +34,6 @@ use Drupal\rules\Core\RulesConditionBase;
  *     ),
  *   }
  * )
- *
- * @todo Add access callback information from Drupal 7.
- * @todo Find a way to port rules_condition_data_is_operator_options() from Drupal 7.
  */
 class DataComparison extends RulesConditionBase {
 

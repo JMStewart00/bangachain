@@ -21,6 +21,7 @@ use Drupal\rules\Core\RulesConditionBase;
  *     "types" = @ContextDefinition("string",
  *       label = @Translation("Content types"),
  *       description = @Translation("The content type(s) to check for."),
+ *       options_provider = "\Drupal\rules\TypedData\Options\NodeTypeOptions",
  *       multiple = TRUE
  *     ),
  *   }

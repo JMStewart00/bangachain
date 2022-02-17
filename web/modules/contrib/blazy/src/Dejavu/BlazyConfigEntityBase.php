@@ -54,9 +54,9 @@ abstract class BlazyConfigEntityBase extends ConfigEntityBase implements BlazyCo
         return NestedArray::getValue($this->options, (array) $group);
       }
       elseif (isset($property) && isset($this->options[$group])) {
-        return isset($this->options[$group][$property]) ? $this->options[$group][$property] : NULL;
+        return $this->options[$group][$property] ?? NULL;
       }
-      return isset($this->options[$group]) ? $this->options[$group] : NULL;
+      return $this->options[$group] ?? NULL;
     }
 
     return $this->options;
@@ -86,7 +86,7 @@ abstract class BlazyConfigEntityBase extends ConfigEntityBase implements BlazyCo
    * {@inheritdoc}
    */
   public function getSetting($name) {
-    return isset($this->getSettings()[$name]) ? $this->getSettings()[$name] : NULL;
+    return $this->getSettings()[$name] ?? NULL;
   }
 
   /**

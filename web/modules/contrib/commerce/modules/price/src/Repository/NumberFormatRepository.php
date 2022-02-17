@@ -42,7 +42,7 @@ class NumberFormatRepository extends ExternalNumberFormatRepository implements N
     $definition = parent::processDefinition($locale, $definition);
     // Let the definition be altered.
     $event = new NumberFormatDefinitionEvent($definition);
-    $this->eventDispatcher->dispatch(PriceEvents::NUMBER_FORMAT, $event);
+    $this->eventDispatcher->dispatch($event, PriceEvents::NUMBER_FORMAT);
     $definition = $event->getDefinition();
 
     return $definition;

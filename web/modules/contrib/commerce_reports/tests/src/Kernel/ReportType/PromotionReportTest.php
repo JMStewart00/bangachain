@@ -34,6 +34,7 @@ class PromotionReportTest extends CommerceKernelTestBase {
     'entity_reference_revisions',
     'profile',
     'state_machine',
+    'commerce_number_pattern',
     'commerce_order',
     'commerce_promotion',
     'commerce_reports',
@@ -56,7 +57,7 @@ class PromotionReportTest extends CommerceKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('profile');
     $this->installEntitySchema('commerce_order');
@@ -65,6 +66,7 @@ class PromotionReportTest extends CommerceKernelTestBase {
     $this->installEntitySchema('commerce_promotion');
     $this->installEntitySchema('commerce_promotion_coupon');
     $this->installConfig('commerce_order', 'commerce_promotion');
+    $this->installSchema('commerce_number_pattern', ['commerce_number_pattern_sequence']);
 
     $this->reportTypeManager = $this->container->get('plugin.manager.commerce_report_type');
     $user = $this->createUser(['mail' => $this->randomString() . '@example.com']);
@@ -222,6 +224,8 @@ class PromotionReportTest extends CommerceKernelTestBase {
           ],
         ],
       ],
+      'start_date' => '2017-01-01',
+      'status' => TRUE,
     ]);
     $promotion->save();
 

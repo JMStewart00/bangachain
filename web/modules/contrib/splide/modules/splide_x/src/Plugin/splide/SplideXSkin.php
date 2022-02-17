@@ -4,6 +4,7 @@ namespace Drupal\splide_x\Plugin\splide;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\splide\SplideSkinPluginBase;
+use Drupal\splide\SplideDefault;
 
 /**
  * Provides splide extras skins.
@@ -26,8 +27,8 @@ class SplideXSkin extends SplideSkinPluginBase {
     // If you copy this file, be sure to add base_path() before any asset path
     // (css or js) as otherwise failing to load the assets. Your module can
     // register paths pointing to a theme. Check out splide.api.php for details.
-    $splide = \base_path() . drupal_get_path('module', 'splide');
-    $path = \base_path() . drupal_get_path('module', 'splide_x');
+    $splide = SplideDefault::getPath('module', 'splide', TRUE);
+    $path = SplideDefault::getPath('module', 'splide_x', TRUE);
     $skins = [
       'd3-back' => [
         'name' => 'X 3d back',

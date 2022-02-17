@@ -17,15 +17,15 @@ content:
   'Loyalty points offered per unit of currency':
     type: number_decimal
     weight: 5
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   attribute_main_item:
     type: options_select
     weight: 1
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   commerce_stock_always_in_stock:
     type: boolean_checkbox
     weight: 3
@@ -46,20 +46,20 @@ content:
     settings:
       custom_label: ''
       uniqid_enabled: true
+      more_entropy: false
       hide: true
       prefix: ''
       suffix: ''
       size: 60
       placeholder: ''
       maximum: 500
-      more_entropy: false
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    settings:
-      display_label: true
     weight: 4
     region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   title:
     type: string_textfield

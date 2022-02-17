@@ -17,9 +17,7 @@ class ConfigEntityDefaultsTest extends RulesKernelTestBase {
   protected $storage;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'rules',

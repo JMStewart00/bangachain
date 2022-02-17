@@ -18,9 +18,7 @@ use Drupal\user\Entity\User;
 class CoreIntegrationTest extends RulesKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'field', 'text', 'user'];
 

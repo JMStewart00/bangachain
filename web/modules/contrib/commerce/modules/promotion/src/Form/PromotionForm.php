@@ -63,7 +63,7 @@ class PromotionForm extends ContentEntityForm {
     }
     if (isset($form['require_coupon'])) {
       if (!$promotion->hasCoupons()) {
-        $description = 'There are no coupons defined for this promotion yet.';
+        $description = $this->t('There are no coupons defined for this promotion yet.');
       }
       else {
         $coupons_count = $promotion->get('coupons')->count();

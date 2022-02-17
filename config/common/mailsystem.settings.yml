@@ -1,19 +1,19 @@
+_core:
+  default_config_hash: IhwTepsVwtbtbcT5GzQKhCXDCRvbk3MNkWqPiuiZ10s
 theme: bangachain
 defaults:
   sender: SMTPMailSystem
   formatter: mime_mail
-_core:
-  default_config_hash: IhwTepsVwtbtbcT5GzQKhCXDCRvbk3MNkWqPiuiZ10s
 modules:
   swiftmailer:
     none:
-      formatter: swiftmailer
       sender: swiftmailer
+      formatter: swiftmailer
   smtp:
     none:
-      formatter: mime_mail
       sender: SMTPMailSystem
+      formatter: mime_mail
   contact:
     'Contact Forms':
-      formatter: mime_mail
       sender: SMTPMailSystem
+      formatter: mime_mail

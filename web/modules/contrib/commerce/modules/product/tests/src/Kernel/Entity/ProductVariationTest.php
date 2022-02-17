@@ -24,7 +24,7 @@ class ProductVariationTest extends CommerceKernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'path',
     'commerce_product',
     // Needed to confirm that url generation doesn't cause a crash when

@@ -1,6 +1,10 @@
 /**
  * @file
  * The CSS and class names below are based on Slick media for easy migration.
+ *
+ * @see https://caniuse.com/?search=aspect-ratio
+ * @todo https://developer.mozilla.org/en-US/docs/Web/CSS/aspect-ratio
+ * @todo https://developer.mozilla.org/en-US/docs/Web/CSS/@media/aspect-ratio
  */
 
 /**

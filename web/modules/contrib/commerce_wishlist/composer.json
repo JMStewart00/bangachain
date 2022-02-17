@@ -7,6 +7,6 @@
   "require": {
     "drupal/commerce": "^2.15 || ^3",
     "drupal/inline_entity_form": "~1.0",
-    "drupal/profile": "~1.0",
+    "drupal/profile": "~1.0"
   }
 }

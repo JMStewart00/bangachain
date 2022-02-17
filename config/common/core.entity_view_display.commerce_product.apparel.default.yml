@@ -20,63 +20,63 @@ bundle: apparel
 mode: default
 content:
   body:
-    label: hidden
     type: text_default
-    weight: 11
+    label: hidden
     settings: {  }
     third_party_settings: {  }
+    weight: 11
     region: content
   field_default_image:
-    weight: 14
+    type: entity_reference_entity_view
     label: above
     settings:
-      link: true
       view_mode: default
+      link: true
     third_party_settings: {  }
-    type: entity_reference_entity_view
+    weight: 14
     region: content
   field_meta_tags:
-    weight: 12
+    type: metatag_empty_formatter
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: metatag_empty_formatter
+    weight: 12
     region: content
   field_no_payout_allowed:
-    weight: 15
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 15
     region: content
   field_restock_date:
-    weight: 13
+    type: datetime_default
     label: above
     settings:
-      format_type: medium
       timezone_override: ''
+      format_type: medium
     third_party_settings: {  }
-    type: datetime_default
+    weight: 13
     region: content
   title:
-    label: hidden
     type: string
-    weight: -5
-    region: content
+    label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
+    weight: -5
+    region: content
   variations:
     type: commerce_add_to_cart
-    weight: 10
-    region: content
     label: hidden
     settings:
       combine: true
     third_party_settings: {  }
+    weight: 10
+    region: content
 hidden:
   add_to_cart_link: true
   created: true

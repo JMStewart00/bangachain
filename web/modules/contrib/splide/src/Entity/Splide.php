@@ -21,9 +21,8 @@ use Drupal\Component\Serialization\Json;
  *   config_export = {
  *     "id",
  *     "name",
- *     "label",
- *     "status",
  *     "weight",
+ *     "label",
  *     "group",
  *     "skin",
  *     "breakpoint",
@@ -135,8 +134,8 @@ class Splide extends SplideBase implements SplideInterface {
     $config   = [];
     $defaults = self::typecast(self::defaultSettings(), FALSE);
 
-    foreach (['video', 'zoom'] as $key) {
-       unset($defaults[$key]);
+    foreach (self::getObjects() as $key) {
+      unset($defaults[$key]);
     }
 
     // Remove wasted dependent options if disabled, empty or not.
@@ -165,11 +164,19 @@ class Splide extends SplideBase implements SplideInterface {
         else {
           // Remove wasted dependent options if disabled, empty or not.
           $settings = &$breakpoints[$key]['settings'];
+
           self::typecast($settings);
+
+          // @fixme figure out where it fails and remove this.
+          if (isset($settings['pagination'])) {
+            $settings['pagination'] = self::toBoolOrString($settings['pagination']);
+          }
+
           if (!$this->optimized) {
             $this->removeWastedDependentOptions($settings);
           }
-          $cleaned[$point] = array_diff_assoc($settings, $defaults);
+
+          $cleaned[$point] = (object) array_diff_assoc($settings, $defaults);
         }
       }
       $config['breakpoints'] = (object) $cleaned;
@@ -296,20 +303,16 @@ class Splide extends SplideBase implements SplideInterface {
     }
 
     foreach (self::getBooleans() as $key => $default) {
-      $value = isset($config[$key]) ? $config[$key] : $default;
+      $value = $config[$key] ?? $default;
       if (is_string($value)) {
+        $value = trim($value);
         if ($key == 'focus') {
           if (is_numeric($value)) {
             $config[$key] = (int) $value;
           }
         }
         else {
-          if ($value == 'true' || $value == 'false' || is_numeric($value)) {
-            $config[$key] = ($value == "true" || $value == "1") ? TRUE : FALSE;
-          }
-          else {
-            $config[$key] = $value;
-          }
+          $config[$key] = self::toBoolOrString($value);
         }
       }
     }
@@ -338,7 +341,7 @@ class Splide extends SplideBase implements SplideInterface {
         $value = &$config[$item];
         try {
           if (is_string($value) && strpos($value, "{") !== FALSE) {
-            $results[$item] = (object) Json::decode($value);
+            $results[$item] = (object) Json::decode(str_replace("'", '"', trim($value)));
           }
           else {
             $results[$item] = is_numeric($value) ? (int) $value : $value;
@@ -380,6 +383,7 @@ class Splide extends SplideBase implements SplideInterface {
     return [
       'width' => '0',
       'height' => '0',
+      'heightRatio' => '0',
       'fixedWidth' => '0',
       'fixedHeight' => '0',
       'flickVelocityThreshold' => 0.6,
@@ -392,14 +396,35 @@ class Splide extends SplideBase implements SplideInterface {
   /**
    * Returns hybrid/ mixed casts with object|number|string.
    */
-  private static function getObjects(): array {
-    return [
+  public static function getObjects(): array {
+    return array_merge(self::getObjectsAsBool(), [
       'breakpoints',
       'padding',
       'classes',
       'i18n',
+    ]);
+  }
+
+  /**
+   * Returns hybrid/ mixed casts with object|number|string with known FALSE.
+   */
+  public static function getObjectsAsBool(): array {
+    return [
+      'autoScroll',
+      'intersection',
       'video',
+      'zoom',
     ];
+  }
+
+  /**
+   * Returns bool|string.
+   */
+  public static function toBoolOrString($value) {
+    if ($value == 'true' || $value == 'false' || is_numeric($value)) {
+      return ($value == "true" || $value == "1") ? TRUE : FALSE;
+    }
+    return $value;
   }
 
 }

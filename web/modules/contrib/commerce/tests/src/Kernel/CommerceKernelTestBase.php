@@ -25,7 +25,7 @@ abstract class CommerceKernelTestBase extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'address',
     'datetime',
     'entity',

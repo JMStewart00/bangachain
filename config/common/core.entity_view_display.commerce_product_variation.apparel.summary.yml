@@ -17,18 +17,18 @@ dependencies:
     - layout_builder
 third_party_settings:
   layout_builder:
-    allow_custom: false
     enabled: false
+    allow_custom: false
 id: commerce_product_variation.apparel.summary
 targetEntityType: commerce_product_variation
 bundle: apparel
 mode: summary
 content:
   add_to_cart_link:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   attribute_disc_color: true
   attribute_size: true

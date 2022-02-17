@@ -13,6 +13,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a 'Email to users of a role' action.
  *
+ * @todo Add access callback information from Drupal 7.
+ *
  * @RulesAction(
  *   id = "rules_email_to_users_of_role",
  *   label = @Translation("Send email to all users of a role"),
@@ -21,6 +23,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *     "roles" = @ContextDefinition("entity:user_role",
  *       label = @Translation("Roles"),
  *       description = @Translation("The roles to which to send the email."),
+ *       options_provider = "\Drupal\rules\TypedData\Options\RolesOptions",
  *       multiple = TRUE
  *     ),
  *     "subject" = @ContextDefinition("string",
@@ -37,16 +40,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *       default_value = NULL,
  *       required = FALSE
  *     ),
- *     "language" = @ContextDefinition("language",
+ *     "language" = @ContextDefinition("entity:configurable_language",
  *       label = @Translation("Language"),
  *       description = @Translation("If specified, the language object (not language code) used for getting the email message and subject."),
+ *       options_provider = "\Drupal\rules\TypedData\Options\LanguageOptions",
  *       default_value = NULL,
  *       required = FALSE
  *     ),
  *   }
  * )
- *
- * @todo Add access callback information from Drupal 7.
  */
 class SystemEmailToUsersOfRole extends RulesActionBase implements ContainerFactoryPluginInterface {
 
@@ -145,7 +147,10 @@ class SystemEmailToUsersOfRole extends RulesActionBase implements ContainerFacto
     $number = 0;
     foreach ($accounts as $account) {
       // Language to use. Value passed in the context takes precedence.
+      // ORIG.
       $langcode = isset($language) ? $language->getId() : $account->getPreferredLangcode();
+      // @todo Is this better?
+      $langcode = (isset($language) && $language->getId() != LanguageInterface::LANGCODE_NOT_SPECIFIED) ? $language->getId() : $account->getPreferredLangcode();
 
       $message = $this->mailManager->mail('rules', $key, $account->getEmail(), $langcode, $params, NULL);
       $number += $message['result'] ? 1 : 0;

@@ -2,6 +2,13 @@ uuid: de1b10dd-eb2a-4708-ad45-f049e5864c51
 langcode: en
 status: true
 dependencies:
+  module:
+    - commerce
+    - commerce_checkout
+    - commerce_order
+    - commerce_pos
+    - system
+    - toolbar
   enforced:
     module:
       - commerce_pos

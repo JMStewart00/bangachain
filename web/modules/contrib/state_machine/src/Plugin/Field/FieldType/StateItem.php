@@ -396,7 +396,7 @@ class StateItem extends FieldItemBase implements StateItemInterface, OptionsProv
         'state_machine.' . $phase,
       ];
       foreach ($events as $event_id) {
-        $event_dispatcher->dispatch($event_id, $event);
+        $event_dispatcher->dispatch($event, $event_id);
       }
     }
   }

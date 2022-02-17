@@ -12,7 +12,7 @@ class BlazyAdminFormatter extends BlazyAdminFormatterBase {
    */
   public function buildSettingsForm(array &$form, $definition = []) {
     $definition['namespace'] = 'blazy';
-    $definition['responsive_image'] = isset($definition['responsive_image']) ? $definition['responsive_image'] : TRUE;
+    $definition['responsive_image'] = $definition['responsive_image'] ?? TRUE;
 
     $this->openingForm($form, $definition);
     $this->basicImageForm($form, $definition);

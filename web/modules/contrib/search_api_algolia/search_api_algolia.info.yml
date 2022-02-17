@@ -7,7 +7,7 @@ package: Search
 dependencies:
  - search_api:search_api
 
-# Information added by Drupal.org packaging script on 2021-10-22
-version: '3.0.0-beta3'
+# Information added by Drupal.org packaging script on 2022-02-08
+version: '3.0.0-beta4'
 project: 'search_api_algolia'
-datestamp: 1634877223
+datestamp: 1644316384

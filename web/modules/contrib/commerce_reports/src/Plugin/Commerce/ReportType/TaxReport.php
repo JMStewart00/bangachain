@@ -8,7 +8,6 @@ use Drupal\commerce_price\Price;
 use Drupal\commerce_tax\Plugin\Commerce\TaxType\LocalTaxTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Query\QueryAggregateInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\entity\BundleFieldDefinition;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -22,7 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   provider = "commerce_tax",
  * )
  */
-class TaxReport extends ReportTypeBase implements ContainerFactoryPluginInterface {
+class TaxReport extends ReportTypeBase {
 
   /**
    * The tax type storage.

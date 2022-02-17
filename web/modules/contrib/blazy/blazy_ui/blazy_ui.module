@@ -20,6 +20,7 @@ function blazy_ui_help($route_name) {
       'CONTRIBUTION',
       'ASPECT_RATIO',
       'ISSUE_TEMPLATE',
+      'CHANGES',
     ];
 
     $output = '';

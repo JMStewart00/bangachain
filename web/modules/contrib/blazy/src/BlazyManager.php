@@ -34,7 +34,7 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
    */
   public function getBlazy(array $build = []) {
     foreach (BlazyDefault::themeProperties() as $key) {
-      $build[$key] = isset($build[$key]) ? $build[$key] : [];
+      $build[$key] = $build[$key] ?? [];
     }
 
     $settings = &$build['settings'];
@@ -75,11 +75,11 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
     // Fetch the newly modified settings.
     $settings = $element['#settings'];
 
-    if (!empty($settings['media_switch'])) {
+    if ($settings['media_switch']) {
       if ($settings['media_switch'] == 'content' && !empty($settings['content_url'])) {
         $element['#url'] = $settings['content_url'];
       }
-      elseif (!empty($settings['lightbox'])) {
+      elseif ($settings['lightbox']) {
         BlazyLightbox::build($element);
       }
     }
@@ -101,7 +101,7 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
     $settings = &$build['settings'];
     $settings['_api'] = TRUE;
     $pathinfo = pathinfo($settings['uri']);
-    $settings['extension'] = isset($pathinfo['extension']) ? $pathinfo['extension'] : '';
+    $settings['extension'] = $pathinfo['extension'] ?? '';
     $settings['unstyled'] = BlazyUtil::unstyled($settings);
     $settings['_richbox'] = !empty($settings['colorbox']) || !empty($settings['_richbox']);
     $settings['is_external'] = UrlHelper::isExternal($settings['uri']);
@@ -116,7 +116,7 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
 
     foreach (BlazyDefault::themeAttributes() as $key) {
       $key = $key . '_attributes';
-      $build[$key] = isset($build[$key]) ? $build[$key] : [];
+      $build[$key] = $build[$key] ?? [];
     }
 
     // Blazy has these 3 attributes, yet provides optional ones far below.
@@ -126,7 +126,7 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
 
     // Build thumbnail and optional placeholder based on thumbnail.
     // This must be set before Blazy::urlAndDimensions to provide placeholder.
-    $this->thumbnailAndPlaceholder($attributes, $settings);
+    BlazyFile::thumbnailAndPlaceholder($attributes, $settings);
 
     // Prepare image URL and its dimensions, including for rich-media content,
     // such as for local video poster image if a poster URI is provided.
@@ -188,7 +188,7 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
     // Supports HTML content for lightboxes as long as having image trigger.
     // Type rich to not conflict with Image rendered by its formatter option.
     $rich = $settings['type'] == 'rich' && !empty($settings['_richbox']);
-    if ($rich && isset($build['content'][0]['#settings']) && $blazy = $build['content'][0]['#settings']) {
+    if ($rich && $blazy = ($build['content'][0]['#settings'] ?? NULL)) {
       if (!empty($settings['_hires']) && $blazy->get('lightbox')) {
         // Overrides the overriden settings with original formatter settings.
         $settings = array_merge($settings, $blazy->storage());
@@ -220,7 +220,7 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
     // Responsive image integration, with/o CSS background so to work with.
     // Prevents _responsive_image_build_source_attributes from WSOD if missing.
     // Avoided is_file() check due to ramifications, see #3225859.
-    if (!empty($settings['resimage']) && empty($settings['unstyled'])) {
+    if ($settings['resimage'] && !$settings['unstyled']) {
       try {
         $this->buildResponsiveImage($element, $attributes, $settings);
       }
@@ -241,14 +241,21 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
     if (!empty($settings['urls'])) {
       // @todo remove .media--background for .b-bg as more relevant for BG.
       $attributes['class'][] = 'b-bg media--background';
-      $attributes['data-backgrounds'] = Json::encode($settings['urls']);
+      $attributes['data-b-bg'] = Json::encode($settings['urls']);
 
-      if (!empty($settings['is_preview'])) {
+      if ($settings['is_sandboxed'] || $settings['is_amp']) {
         Blazy::inlineStyle($attributes, 'background-image: url(' . $settings['image_url'] . ');');
       }
     }
 
-    if (!empty($settings['fx']) && empty($settings['unstyled'])) {
+    $this->blur($element, $attributes, $settings);
+  }
+
+  /**
+   * Build out the blur image.
+   */
+  private function blur(array &$element, array &$attributes, array &$settings) {
+    if ($settings['fx'] && !$settings['unstyled']) {
       $blur = [
         '#theme' => 'image',
         '#uri' => $settings['placeholder_ui'] ?: $settings['placeholder'],
@@ -256,18 +263,15 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
           'class' => ['b-lazy', 'b-blur', 'b-blur--tmp'],
           'data-src' => $settings['placeholder_fx'],
           'loading' => 'lazy',
+          'decoding' => 'async',
         ],
       ];
-
-      if (!empty($settings['decode'])) {
-        $blur['#attributes']['decoding'] = 'async';
-      }
 
       // Reset as already stored.
       unset($settings['placeholder_fx']);
       $element['#preface']['blur'] = $blur;
 
-      if (isset($settings['width']) && $settings['width'] > 980) {
+      if (($settings['width'] ?? 0) > 980) {
         $attributes['class'][] = 'media--fx-lg';
       }
     }
@@ -278,17 +282,17 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
    */
   private function buildResponsiveImage(array &$element, array &$attributes, array &$settings) {
     $settings['responsive_image_style_id'] = $settings['resimage']->id();
-    $responsive_image = $this->getResponsiveImageStyles($settings['resimage']);
+    $responsive_image = BlazyResponsiveImage::getStyles($settings['resimage']);
     $element['#cache']['tags'] = $responsive_image['caches'];
 
     // Makes Responsive image usable as CSS background image sources.
-    if (!empty($settings['background'])) {
+    if ($settings['background']) {
       $srcset = $dimensions = [];
       foreach ($responsive_image['styles'] as $style) {
-        $styled = array_merge($settings, BlazyUtil::transformDimensions($style, $settings, FALSE));
+        $styled = array_merge($settings, BlazyFile::transformDimensions($style, $settings, FALSE));
 
         // Sort image URLs based on width.
-        $data = $this->backgroundImage($styled, $style);
+        $data = BlazyFile::backgroundImage($styled, $style);
         $srcset[$styled['width']] = $data;
         $dimensions[$styled['width']] = $data['ratio'];
       }
@@ -297,10 +301,15 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
       ksort($srcset);
       ksort($dimensions);
       $settings['urls'] = $srcset;
+
+      // Dynamic aspect ratio is useless without JS.
       $settings['blazy_data']['dimensions'] = $dimensions;
       $settings['padding_bottom'] = end($dimensions);
 
-      $settings['image_url'] = empty($settings['is_preview']) ? $settings['placeholder'] : $settings['image_url'];
+      // To make compatible with old bLazy which expects no placeholder, provide
+      // a real smallest image. Bio will map it to the current breakpoint later.
+      $bg = reset($settings['urls']);
+      $settings['image_url'] = $settings['is_nojs'] ? $settings['image_url'] : $bg['src'];
       Blazy::lazyAttributes($attributes, $settings);
     }
   }
@@ -309,15 +318,15 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
    * Build out image, or anything related, including cache, CSS background, etc.
    */
   private function buildImage(array &$element, array &$attributes, array &$item_attributes, array &$settings) {
-    if (!empty($settings['lazy']) && !empty($settings['background'])) {
+    if ($settings['background']) {
       // Attach data attributes to either IMG tag, or DIV container.
-      $settings['urls'][$settings['width']] = $this->backgroundImage($settings);
-      $settings['image_url'] = empty($settings['is_preview']) ? $settings['placeholder'] : $settings['image_url'];
+      $settings['urls'][$settings['width']] = BlazyFile::backgroundImage($settings);
+      $settings['image_url'] = $settings['is_nojs'] ? $settings['image_url'] : $settings['placeholder'];
       Blazy::lazyAttributes($attributes, $settings);
     }
 
     if (empty($settings['_no_cache'])) {
-      $file_tags = isset($settings['file_tags']) ? $settings['file_tags'] : [];
+      $file_tags = $settings['file_tags'] ?? [];
       $settings['cache_tags'] = empty($settings['cache_tags']) ? $file_tags : Cache::mergeTags($settings['cache_tags'], $file_tags);
 
       $element['#cache']['max-age'] = -1;
@@ -327,16 +336,6 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
         }
       }
     }
-  }
-
-  /**
-   * Prepares CSS background image.
-   */
-  private function backgroundImage(array $settings, $style = NULL) {
-    return [
-      'src' => $style ? BlazyUtil::transformRelative($settings['uri'], $style) : $settings['image_url'],
-      'ratio' => round((($settings['height'] / $settings['width']) * 100), 2),
-    ];
   }
 
   /**
@@ -358,83 +357,6 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
   }
 
   /**
-   * Build thumbnails, also to provide placeholder for blur effect.
-   */
-  protected function thumbnailAndPlaceholder(array &$attributes, array &$settings) {
-    $settings['placeholder_ui'] = $settings['placeholder'];
-    $path = $style = '';
-    // With CSS background, IMG may be empty, add thumbnail to the container.
-    if (empty($settings['is_external']) && !empty($settings['thumbnail_style'])) {
-      $style = $this->entityLoad($settings['thumbnail_style'], 'image_style');
-      if ($style) {
-        $path = $style->buildUri($settings['uri']);
-        $attributes['data-thumb'] = $settings['thumbnail_url'] = BlazyUtil::transformRelative($settings['uri'], $style);
-
-        if (!is_file($path) && BlazyUtil::isValidUri($path)) {
-          $style->createDerivative($settings['uri'], $path);
-        }
-      }
-    }
-
-    // Supports unique thumbnail different from main image, such as logo for
-    // thumbnail and main image for company profile.
-    if (!empty($settings['thumbnail_uri'])) {
-      $path = $settings['thumbnail_uri'];
-      $attributes['data-thumb'] = $settings['thumbnail_url'] = BlazyUtil::transformRelative($path);
-    }
-
-    // Provides image effect if so configured.
-    if (!empty($settings['fx'])) {
-      $attributes['class'][] = 'media--fx';
-
-      // Ensures at least a hook_alter is always respected. This still allows
-      // Blur and hook_alter for Views rewrite issues, unless global UI is set
-      // which was already warned about anyway.
-      if (empty($settings['placeholder_fx']) && empty($settings['unstyled'])) {
-        $this->createPlaceholder($settings, $style, $path);
-      }
-
-      // Being a separated .b-blur with .b-lazy, this should work for any lazy.
-      $attributes['data-animation'] = $settings['fx'];
-    }
-
-    // Mimicks private _responsive_image_image_style_url, #3119527.
-    if (empty($settings['image_style']) && !empty($settings['resimage'])) {
-      $fallback = $settings['resimage']->getFallbackImageStyle();
-      if ($fallback == '_empty image_') {
-        $placeholder = empty($settings['width']) ? BlazyInterface::PLACEHOLDER : BlazyUtil::generatePlaceholder($settings['width'], $settings['height']);
-        $settings['image_url'] = empty($settings['placeholder']) ? $placeholder : $settings['placeholder'];
-      }
-      else {
-        $settings['image_style'] = $fallback;
-      }
-    }
-  }
-
-  /**
-   * Build thumbnails, also to provide placeholder for blur effect.
-   */
-  protected function createPlaceholder(array &$settings, $style = NULL, $path = '') {
-    if (empty($path) && ($style = $this->entityLoad('thumbnail', 'image_style')) && BlazyUtil::isValidUri($settings['uri'])) {
-      $path = $style->buildUri($settings['uri']);
-    }
-
-    if ($path && BlazyUtil::isValidUri($path)) {
-      // Ensures the thumbnail exists before creating a dataURI.
-      if (!is_file($path) && $style) {
-        $style->createDerivative($settings['uri'], $path);
-      }
-
-      // Overrides placeholder with data URI based on configured thumbnail.
-      if (is_file($path)) {
-        $settings['placeholder_fx'] = 'data:image/' . pathinfo($path, PATHINFO_EXTENSION) . ';base64,' . base64_encode(file_get_contents($path));
-        // Prevents double animations.
-        $settings['use_loading'] = FALSE;
-      }
-    }
-  }
-
-  /**
    * Returns the contents using theme_field(), or theme_item_list().
    *
    * Blazy outputs can be formatted using either flat list via theme_field(), or
@@ -448,7 +370,8 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
    */
   public function build(array $build = []) {
     $settings = &$build['settings'];
-    $settings['_grid'] = isset($settings['_grid']) ? $settings['_grid'] : (!empty($settings['style']) && !empty($settings['grid']));
+    $settings += BlazyDefault::htmlSettings();
+    $settings['_grid'] = $settings['_grid'] ?? ($settings['style'] && $settings['grid']);
 
     // If not a grid, pass the items as regular index children to theme_field().
     // This #pre_render doesn't work if called from Views results, hence the
@@ -470,7 +393,7 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
       ];
 
       // Yet allows theme_field(), if so required, such as for linked_field.
-      $build = empty($settings['use_field']) ? $content : [$content];
+      $build = $settings['use_field'] ? [$content] : $content;
     }
 
     $this->moduleHandler->alter('blazy_build', $build, $settings);
@@ -485,8 +408,7 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
     unset($element['#build']);
 
     // Checks if we got some signaled attributes.
-    $attributes = isset($element['#attributes']) ? $element['#attributes'] : [];
-    $attributes = isset($element['#theme_wrappers'], $element['#theme_wrappers']['container']['#attributes']) ? $element['#theme_wrappers']['container']['#attributes'] : $attributes;
+    $attributes = $element['#theme_wrappers']['container']['#attributes'] ?? $element['#attributes'] ?? [];
     $settings   = $this->getSettings($build);
 
     // Runs after ::getSettings.
@@ -519,12 +441,11 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
    * Prepares Blazy settings.
    */
   protected function getSettings(array &$build) {
-    $settings = isset($build['settings']) ? $build['settings'] : [];
-    $settings += BlazyDefault::htmlSettings();
+    $settings = $build['settings'] ?? [];
 
     // Supports Blazy multi-breakpoint images if provided, updates $settings.
     // Cases: Blazy within Views gallery, or references without direct image.
-    if (!empty($settings['first_image']) && !empty($settings['check_blazy'])) {
+    if ($settings['first_image'] && $settings['check_blazy']) {
       // Views may flatten out the array, bail out.
       // What we do here is extract the formatter settings from the first found
       // image and pass its settings to this container so that Blazy Grid which
@@ -547,14 +468,14 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
     // where items may be stored as direct indices, or put into items property.
     // Actually the same issue happens at core where contents may be indexed or
     // grouped. Meaning not a problem at all, only a problem for consistency.
-    $build = isset($build['items']) ? $build['items'] : $build;
+    $build = $build['items'] ?? $build;
     unset($build['items'], $build['settings']);
   }
 
   /**
    * Deprecated method.
    *
-   * @deprecated in blazy:8.x-2.0 and is removed from blazy:8.x-3.0. Use
+   * @deprecated in blazy:8.x-2.0 and is removed from blazy:3.0.0. Use
    *   self::getBlazy() instead.
    * @see https://www.drupal.org/node/3103018
    */

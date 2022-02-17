@@ -13,8 +13,8 @@ dependencies:
     - layout_builder
 third_party_settings:
   layout_builder:
-    allow_custom: false
     enabled: false
+    allow_custom: false
 id: commerce_product_variation.gift_card.commerce_pos_product_select
 targetEntityType: commerce_product_variation
 bundle: gift_card
@@ -22,30 +22,30 @@ mode: commerce_pos_product_select
 content:
   commerce_giftcard_amount:
     type: commerce_price_default
+    label: above
+    settings:
+      strip_trailing_zeroes: false
+      currency_display: symbol
+    third_party_settings: {  }
     weight: 1
     region: content
-    label: above
-    settings:
-      strip_trailing_zeroes: false
-      currency_display: symbol
-    third_party_settings: {  }
   price:
     type: commerce_price_default
-    weight: 2
-    region: content
     label: above
     settings:
       strip_trailing_zeroes: false
       currency_display: symbol
     third_party_settings: {  }
+    weight: 2
+    region: content
   title:
     type: string
-    weight: 0
-    region: content
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   add_to_cart_link: true
   commerce_giftcard_type: true

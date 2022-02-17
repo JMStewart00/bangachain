@@ -24,7 +24,7 @@ options:
     height: '0' # number|string
     fixedWidth: '0' # number|string
     fixedHeight: '0' # number|string
-    heightRatio: 0
+    heightRatio: '0' # number|string
     autoWidth: false
     autoHeight: false
     perPage: 1 # Actual 0, but broken as default
@@ -63,6 +63,8 @@ options:
     # breakpoints: {}
     classes: '' # object
     i18n: '' # object
+    autoScroll: '' # object
+    intersection: '' # object
     video: '' # object
 
     # Module features

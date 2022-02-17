@@ -78,7 +78,7 @@ class StockServiceManager implements StockServiceManagerInterface, StockTransact
   public function getService(PurchasableEntityInterface $entity) {
     $config = $this->configFactory->get('commerce_stock.service_manager');
 
-    $default_service_id = $config->get('default_service_id');
+    $default_service_id = $config->get('default_service_id') ?? 'always_in_stock';
 
     $entity_type = $entity->getEntityTypeId();
     $entity_bundle = $entity->bundle();
@@ -111,10 +111,8 @@ class StockServiceManager implements StockServiceManagerInterface, StockTransact
 
   /**
    * {@inheritdoc}
-   *
-   * @todo code sniffer error here, can't have optional params first.
    */
-  public function getTransactionLocation(Context $context = NULL, PurchasableEntityInterface $entity, $quantity) {
+  public function getTransactionLocation(Context $context, PurchasableEntityInterface $entity, $quantity) {
     $stock_config = $this->getService($entity)->getConfiguration();
     return $stock_config->getTransactionLocation($context, $entity, $quantity);
   }
@@ -160,7 +158,7 @@ class StockServiceManager implements StockServiceManagerInterface, StockTransact
     if (!is_null($message)) {
       $metadata['data']['message'] = $message;
     }
-    // Make sure quantity is positive.
+    // Make sure quantity is negative.
     $quantity = -1 * abs($quantity);
     $stock_updater = $this->getService($entity)->getStockUpdater();
     $stock_updater->createTransaction($entity, $location_id, $zone, $quantity, $unit_cost, $currency_code, $transaction_type_id, $metadata);

@@ -237,8 +237,8 @@ class Table extends ViewsTable {
       '#title' => $this->t('Column aggregation row applies to'),
       '#type' => 'radios',
       '#options' => [
-        1 => $this->t('the page shown, if a pager is enabled'),
-        0 => $this->t('the entire result set (CAUTION: To enable this, create a copy of this view display, disable the pager there, set the <i>machine name</i> to <i>DISPLAY_NAME_no_pager</i> (e.g. page_1_no_pager) and give it a different path.)'),
+        0 => $this->t('the entire result set'),
+        1 => $this->t('the page shown, if a pager is enabled or the result subset, if offset is defined'),
       ],
       '#description' => $this->t('If your view does not have a pager, then the two options are equivalent.'),
       '#default_value' => $this->options['column_aggregation']['totals_per_page'],
@@ -325,30 +325,8 @@ class Table extends ViewsTable {
       return;
     }
     $functions = $this->collectAggregationFunctions();
-    $show_global_totals_with_pager = empty($this->options['column_aggregation']['totals_per_page']) && !empty($this->view->total_rows);
+    $display_id = $this->view->current_display;
 
-    if ($show_global_totals_with_pager) {
-      $this->view->is_temp_views_aggregator = TRUE;
-      $args = $this->view->args;
-      $display_id = $this->view->current_display;
-
-      $view_displays = $this->view->displayHandlers->getInstanceIds();
-      if (in_array($display_id . '_no_pager', $view_displays)) {
-        $clone = $this->view->createDuplicate();
-        $clone->is_temp_views_aggregator = TRUE;
-        $clone->executeDisplay($display_id . '_no_pager', $args);
-
-        // First apply the row filters (if any), then aggregate the columns.
-        // Only interested in column aggregation, so only 'column' group needed.
-        $column_group = ['column' => []];
-        foreach ($clone->result as $num => $row) {
-          $column_group['column'][$num] = $row;
-        }
-        $totals = $clone->style_plugin->executeAggregationFunctions($column_group, $functions);
-        $clone->postExecute();
-        $clone->destroy();
-      }
-    }
     // Because we are going to need the View results AFTER token replacement,
     // we render the result set here. This is NOT duplication of CPU time,
     // because self::renderFields(), if called for a second time, will do
@@ -360,7 +338,6 @@ class Table extends ViewsTable {
     // Apply the row filters first, then aggregate the groups.
     $this->applyRowFilters();
     $groups = $this->aggregateGroups();
-    $with_pager = FALSE;
     $values = $this->executeAggregationFunctions($groups, $functions);
     unset($groups['column']);
 
@@ -375,17 +352,17 @@ class Table extends ViewsTable {
     if ($group_aggregation_results == 0) {
       // Write group aggregation results into the View results.
       $this->setAggregatedGroupValues($groups, $values, $group_aggregation_results);
-      // With the aggregation functions now complete, destroy rows not part
-      // of the aggregation.
+      // Aggregation now complete, destroy rows not part of the aggregation.
       $this->compressGroupedResults($groups);
+    }
+
+    // To aid in sorting, add the row's index to each row object.
+    foreach ($this->view->result as $num => $row) {
+      $this->view->result[$num]->num = $num;
     }
 
     // Sort the table based on the selected sort column, i.e. $this->active.
     if (isset($this->active)) {
-      // To aid in sorting, add the row's index to each row object.
-      foreach ($this->view->result as $num => $row) {
-        $this->view->result[$num]->num = $num;
-      }
       // First sort by default order.
       if ($this->options['default']) {
         // Store current sorting options.
@@ -407,28 +384,98 @@ class Table extends ViewsTable {
       uasort($this->view->result, [$this, 'compareResultRows']);
     }
     else {
+      // If we show subtotals - sort the group column.
+      if ($group_aggregation_results == 1) {
+        // Check our group aggregation field.
+        foreach ($this->options['info'] as $field_name => $options) {
+          if (!empty($options['has_aggr']) && in_array('views_aggregator_group_and_compress', $options['aggr'], FALSE)) {
+            $this->active = $field_name;
+            $this->order = !empty($this->options['order']) ? $this->options['order'] : 'asc';
+          }
+        }
+        uasort($this->view->result, [$this, 'compareResultRows']);
+      }
       // Fix counter fields anyways.
       $this->fixCounterFields();
     }
 
-    // Set the totals after eventual sorting has finished.
-    if (empty($this->view->totals)) {
-      // If not already set above, write the column aggregation result row on
-      // the View object. This row will be rendered via
-      // template_preprocess_views_aggregator_results_table().
-      $this->view->totals = $this->setTotalsRow($values);
+    // If we neeed totals on entire result set - calculate with all view rows.
+    if ($this->options['column_aggregation']['totals_per_page'] == 0) {
+      $column_group = ['column' => []];
+      foreach ($this->view->result as $num => $row) {
+        $column_group['column'][$num] = $row;
+      }
+      $totals = $this->executeAggregationFunctions($column_group, $functions);
     }
 
-    // If we have a pager enabled with option set to show total
-    // for whole resultset insteead of page - overwrite the
-    // page totals as last step.
-    if (isset($totals)) {
-      $this->view->totals = $this->setTotalsRow($totals);
+    // If we have pager or offset defined - adjust the view results.
+    $pager = $this->view->display_handler->getOption('pager');
+    $result_count = count($this->view->result);
+
+    // Update the view pager if we removed it in hook_view_pre_build.
+    if ($pager['type'] != 'none') {
+      if (isset($this->view->original_pager[$display_id])) {
+        $original_pager = $this->view->original_pager[$display_id]['pager'];
+        $original_pager_options = $original_pager['options'];
+        $items_per_page = $original_pager_options['items_per_page'];
+        $offset = $original_pager_options['offset'];
+        $current_page = $this->view->pager->getCurrentPage();
+        $this->view->total_rows = $result_count;
+        $this->view->pager->setItemsPerPage($items_per_page);
+        $this->view->pager->setOffset($offset);
+        $this->view->pager->total_items = $result_count - $offset;
+        $this->view->setItemsPerPage($items_per_page);
+        $this->view->setOffset($offset);
+        $this->view->pager->updatePageInfo();
+        $start_row = $offset + ($current_page * $items_per_page);
+        $total_items = count($this->view->result);
+        $items = $items_per_page;
+
+        // Show only the rows relevant for the page shown.
+        if ($start_row + $items_per_page > $total_items) {
+          $items = $total_items - $start_row;
+        }
+        $this->view->result = array_slice($this->view->result, $start_row, $items, TRUE);
+      }
     }
-    // Aggregate the results per group and show them in a separate row,
-    // without compression.
+    else {
+      // No pager, but offset is defined.
+      if ($pager['options']['offset'] > 0) {
+        // Remove the offset rows from the results.
+        $offset = $pager['options']['offset'];
+        $this->view->result = array_slice($this->view->result, $offset, $result_count, TRUE);
+      }
+    }
+
+    // If we need the totals only for the page shown - racalculate again.
+    if ($this->options['column_aggregation']['totals_per_page'] == 1) {
+      $column_group = ['column' => []];
+      foreach ($this->view->result as $num => $row) {
+        $column_group['column'][$num] = $row;
+      }
+      $totals = $this->executeAggregationFunctions($column_group, $functions);
+    }
+
+    // For subtotals - update the group array and recalculate aggregated values.
+    if ($this->view->usePager() || $pager['options']['offset'] > 0) {
+      $functions = $this->collectAggregationFunctions();
+      $groups = $this->aggregateGroups();
+      $values = $this->executeAggregationFunctions($groups, $functions);
+    }
+
+    // Aggregate group results and show them in a separate row, no compression.
     if ($group_aggregation_results == 1) {
       $this->setAggregatedGroupValues($groups, $values, $group_aggregation_results);
+    }
+
+    // Set the totals via template_preprocess_views_aggregator_results_table().
+    if (empty($this->view->totals)) {
+      if (isset($totals)) {
+        $this->view->totals = $this->setTotalsRow($totals);
+      }
+      else {
+        $this->view->totals = $this->setTotalsRow($values);
+      }
     }
   }
 
@@ -604,7 +651,7 @@ class Table extends ViewsTable {
       // Special handling of rendered fields, "Global: Custom text",
       // "Global: View" and custom plugin fields.
       if ($render === TRUE || $this->isCustomTextField($field_handler) || $this->isViewsFieldView($field_handler) || !in_array($field_handler->getProvider(), ['views', 'webform_views'])) {
-        return trim(strip_tags((string) $this->rendered_fields[$row_num][$field_name]));
+        return trim((string) $this->rendered_fields[$row_num][$field_name]);
       }
       // Special handling of "Webform submission data".
       if ($this->isWebformNumeric($field_handler) || $this->isWebformField($field_handler)) {
@@ -659,21 +706,19 @@ class Table extends ViewsTable {
     }
 
     // "Commerce" fields - prepare totals of multiple currencies.
-    if ($this->isCommerceField($field_handler)) {
+    if (isset($field->currency_code)) {
       $field_id = $field_handler->options['id'];
-      if (isset($field->currency_code)) {
-        $field_value = $field->number;
-        // Write the values into an array (field, currency, value)
-        if (!isset($this->commerce_field_values[$field_id])) {
-          $this->commerce_field_values[$field_id] = [$field->currency_code => [$field->number]];
+      $field_value = $field->number;
+      // Write the values into an array (field, currency, value)
+      if (!isset($this->commerce_field_values[$field_id])) {
+        $this->commerce_field_values[$field_id] = [$field->currency_code => [$field->number]];
+      }
+      else {
+        if (isset($this->commerce_field_values[$field_id][$field->currency_code])) {
+          $this->commerce_field_values[$field_id][$field->currency_code][] = $field->number;
         }
         else {
-          if (isset($this->commerce_field_values[$field_id][$field->currency_code])) {
-            $this->commerce_field_values[$field_id][$field->currency_code][] = $field->number;
-          }
-          else {
-            $this->commerce_field_values[$field_id][$field->currency_code] = [$field->number];
-          }
+          $this->commerce_field_values[$field_id][$field->currency_code] = [$field->number];
         }
       }
     }
@@ -1084,6 +1129,7 @@ class Table extends ViewsTable {
 
     // Check, if the field is in _entity (base table).
     if (isset($row->_entity->{$field_name})) {
+      $row->_entity = clone $row->_entity;
       $field = $row->_entity->{$field_name};
     }
 
@@ -1092,6 +1138,7 @@ class Table extends ViewsTable {
       $relationship_entity = array_keys($row->_relationship_entities);
       foreach ($relationship_entity as $key => $rel) {
         if (isset($row->_relationship_entities[$rel]->{$field_name})) {
+          $row->_relationship_entities[$rel] = clone $row->_relationship_entities[$rel];
           $field = $row->_relationship_entities[$rel]->{$field_name};
         }
       }
@@ -1101,8 +1148,7 @@ class Table extends ViewsTable {
       return 'Not found: ' . $field_name . ' > ' . $raw_value;
     }
 
-    // Commerce fields with currency format (e.g. price)
-    // store value in "number".
+    // Commerce field with currency format (price) stores value in "number".
     if (isset($field->currency_code)) {
       $field->number = $raw_value;
     }
@@ -1131,23 +1177,36 @@ class Table extends ViewsTable {
     $label_prefix = ($this->options['group_aggregation']['result_label_prefix']) ? $this->options['group_aggregation']['result_label_prefix'] : '';
     $label_suffix = ($this->options['group_aggregation']['result_label_suffix']) ? $this->options['group_aggregation']['result_label_suffix'] : '';
     $field_handlers = $this->view->field;
+    $pager = $this->view->display_handler->getOption('pager');
+
+    // Need to sort the groups according to the view sort.
+    if (isset($this->order) && $this->order == 'desc') {
+      krsort($groups);
+    }
+    else {
+      ksort($groups);
+    }
+
     foreach ($this->options['info'] as $field_name => $options) {
       if (!empty($options['has_aggr']) && in_array('views_aggregator_group_and_compress', $options['aggr'], FALSE)) {
         $field_label = $field_name;
       }
+      $insert_row = -1;
       foreach ($groups as $group => $rows) {
         if ($group != 'column' && isset($values[$field_name][$group])) {
           $current_row = 1;
           foreach ($rows as $num => $row) {
             $separator = $this->options['info'][$field_name]['aggr_par'];
             $group_rows = count(array_keys($rows));
+
             if ($group_aggregation_results == 1) {
               if ($current_row == $group_rows) {
+                $insert_row = $insert_row + $current_row;
                 if (isset($field_label)) {
                   $field_value = $this->getCell($field_handlers[$field_label], $num, TRUE);
-                  $subtotals[$num][$field_label] = $this->t($label_prefix) . trim($field_value) . $this->t($label_suffix);
+                  $subtotals[$insert_row][$field_label] = $this->t($label_prefix) . trim($field_value) . $this->t($label_suffix);
                 }
-                $subtotals[$num][$field_name] = $this->setCell($field_handlers[$field_name], $num, $values[$field_name][$group], $separator);
+                $subtotals[$insert_row][$field_name] = $this->setCell($field_handlers[$field_name], NULL, $values[$field_name][$group], $separator);
               }
             }
             else {

@@ -61,7 +61,10 @@
             current = current.replace('{current}', (curr + 1)).replace('{total}', total);
           }
           else {
-            current = Drupal.t('@curr of @total', {'@curr': (curr + 1), '@total': total});
+            current = Drupal.t('@curr of @total', {
+              '@curr': (curr + 1),
+              '@total': total
+            });
           }
           $counter.text(current);
         }

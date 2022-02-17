@@ -2,6 +2,25 @@
 
 All Notable changes to `Csv` will be documented in this file
 
+## 9.7.4 - 2021-11-30
+
+### Added
+
+- None
+
+### Deprecated
+
+- None
+
+### Fixed
+
+- Bug fix `EscapeFormula` to follow OWASP latest recommendation [PR #452](https://github.com/thephpleague/csv/pull/452)  
+thanks to [@robertfausk](https://github.com/robertfausk) and [@Lehmub](https://github.com/Lehmhub)
+
+### Removed
+
+- None
+
 ## 9.7.3 - 2021-11-21
 
 ### Added

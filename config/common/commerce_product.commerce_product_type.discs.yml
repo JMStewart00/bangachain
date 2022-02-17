@@ -9,9 +9,9 @@ third_party_settings:
     show_in_pos: true
 id: discs
 label: Discs
+traits: {  }
+locked: false
 description: ''
 variationType: discs
 multipleVariations: true
 injectVariationFields: true
-traits: {  }
-locked: false

@@ -9,9 +9,9 @@ third_party_settings:
     show_in_pos: true
 id: apparel
 label: Apparel
+traits: {  }
+locked: false
 description: ''
 variationType: apparel
 multipleVariations: true
 injectVariationFields: true
-traits: {  }
-locked: false

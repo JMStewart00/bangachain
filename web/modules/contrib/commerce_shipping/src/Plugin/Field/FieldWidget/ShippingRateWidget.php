@@ -101,6 +101,9 @@ class ShippingRateWidget extends WidgetBase implements ContainerFactoryPluginInt
     }
     $rates = $form_state->get($rates_key);
     if (!$rates) {
+      // When there are no rates available for this address, clear the selected
+      // rate.
+      $shipment->clearRate();
       $element = [
         '#markup' => $this->t('There are no shipping rates available for this address.'),
       ];

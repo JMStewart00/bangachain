@@ -10,12 +10,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a generic 'Execute Rules component' action.
  *
+ * @todo Add access callback information from Drupal 7.
+ *
  * @RulesAction(
  *   id = "rules_component",
  *   deriver = "Drupal\rules\Plugin\RulesAction\RulesComponentActionDeriver"
  * )
- *
- * @todo Add access callback information from Drupal 7.
  */
 class RulesComponentAction extends RulesActionBase implements ContainerFactoryPluginInterface {
 

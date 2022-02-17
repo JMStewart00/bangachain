@@ -17,9 +17,16 @@ use Drupal\editor\Entity\Editor;
 class BlazyAlter {
 
   /**
+   * The blazy library info.
+   *
+   * @var array
+   */
+  private static $libraryInfoBuild;
+
+  /**
    * Implements hook_config_schema_info_alter().
    */
-  public static function configSchemaInfoAlter(array &$definitions, $formatter = 'blazy_base', array $settings = []) {
+  public static function configSchemaInfoAlter(array &$definitions, $formatter = 'blazy_base', array $settings = []): void {
     if (isset($definitions[$formatter])) {
       $mappings = &$definitions[$formatter]['mapping'];
       $settings = $settings ?: BlazyDefault::extendedSettings() + BlazyDefault::gridSettings();
@@ -50,21 +57,14 @@ class BlazyAlter {
   /**
    * Implements hook_library_info_alter().
    */
-  public static function libraryInfoAlter(&$libraries, $extension) {
-    if ($extension === 'blazy') {
-      if ($path = blazy_libraries_get_path('blazy')) {
-        $libraries['blazy']['js'] = ['/' . $path . '/blazy.js' => ['weight' => -4]];
-      }
-
-      if (blazy()->configLoad('io.enabled')) {
-        if (blazy()->configLoad('io.unblazy')) {
-          $dependencies = ['core/drupal', 'blazy/bio.media', 'blazy/loading'];
-          $libraries['load']['dependencies'] = $dependencies;
-        }
-        else {
-          $libraries['load']['dependencies'][] = 'blazy/bio.media';
-        }
-      }
+  public static function libraryInfoAlter(&$libraries, $extension): void {
+    // @todo remove if core changed, right below core/drupal for being generic,
+    // and dependency-free and a dependency for many other generic ones.
+    // @todo watch out for core @todo to remove drupal namespace for debounce.
+    $debounce = 'drupal.debounce';
+    $is_debounce = $extension === 'core' && isset($libraries[$debounce]);
+    if ($is_debounce) {
+      $libraries[$debounce]['js']['misc/debounce.js'] = ['weight' => -16];
     }
 
     if ($extension === 'media' && isset($libraries['oembed.frame'])) {
@@ -73,9 +73,49 @@ class BlazyAlter {
   }
 
   /**
+   * Implements hook_library_info_build().
+   */
+  public static function libraryInfoBuild() {
+    if (!isset(static::$libraryInfoBuild)) {
+      // Optional polyfills for IEs, and oldies.
+      $polyfills = array_merge(BlazyDefault::polyfills(), BlazyDefault::ondemandPolyfills());
+      foreach ($polyfills as $id) {
+        // Matches common core polyfills' weight.
+        $weight = $id == 'polyfill' ? -21 : -20;
+        $common = ['minified' => TRUE, 'weight' => $weight];
+        $libraries[$id] = [
+          'js' => [
+            'js/polyfill/blazy.' . $id . '.min.js' => $common,
+          ],
+        ];
+      }
+
+      // Plugins extending dBlazy.
+      foreach (BlazyDefault::plugins() as $id) {
+        $base = $id == 'viewport' || $id == 'css';
+        $deps = $base ? ['blazy/dblazy', 'blazy/base'] : ['blazy/xlazy'];
+        if ($id == 'xlazy') {
+          $deps = ['blazy/viewport'];
+        }
+        $weight = $base ? -5.6 : -5.5;
+        $common = ['minified' => TRUE, 'weight' => $weight];
+        $libraries[$id] = [
+          'js' => [
+            'js/plugin/blazy.' . $id . '.min.js' => $common,
+          ],
+          'dependencies' => $deps,
+        ];
+      }
+
+      static::$libraryInfoBuild = $libraries;
+    }
+    return static::$libraryInfoBuild;
+  }
+
+  /**
    * Implements hook_blazy_settings_alter().
    */
-  public static function blazySettingsAlter(array &$build, $items) {
+  public static function blazySettingsAlter(array &$build, $items): void {
     $settings = &$build['settings'];
 
     // Sniffs for Views to allow block__no_wrapper, views_no_wrapper, etc.
@@ -90,7 +130,7 @@ class BlazyAlter {
   /**
    * Checks if Entity/Media Embed is enabled.
    */
-  public static function isCkeditorApplicable(Editor $editor) {
+  public static function isCkeditorApplicable(Editor $editor): bool {
     foreach (['entity_embed', 'media_embed'] as $filter) {
       if (!$editor->isNew()
         && $editor->getFilterFormat()->filters()->has($filter)
@@ -106,9 +146,9 @@ class BlazyAlter {
   /**
    * Implements hook_ckeditor_css_alter().
    */
-  public static function ckeditorCssAlter(array &$css, Editor $editor) {
+  public static function ckeditorCssAlter(array &$css, Editor $editor): void {
     if (self::isCkeditorApplicable($editor)) {
-      $path = base_path() . drupal_get_path('module', 'blazy');
+      $path = Blazy::getPath('module', 'blazy', TRUE);
       $css[] = $path . '/css/components/blazy.media.css';
       $css[] = $path . '/css/components/blazy.preview.css';
       $css[] = $path . '/css/components/blazy.ratio.css';
@@ -127,47 +167,21 @@ class BlazyAlter {
    * via Entity/Media Embed which normally means Blazy should be disabled
    * due to CKEditor not supporting JS assets.
    *
-   * @see \Drupal\blazy\Blazy::preprocessBlazy()
-   * @see \Drupal\blazy\Blazy::preprocessField()
-   * @see \Drupal\blazy\Blazy::preprocessFileVideo()
+   * @see \Drupal\blazy\BlazyTheme::blazy()
+   * @see \Drupal\blazy\BlazyTheme::field()
+   * @see \Drupal\blazy\BlazyTheme::fileVideo()
    * @see blazy_preprocess_file_video()
    */
-  public static function thirdPartyFormatters() {
+  public static function thirdPartyFormatters(): array {
     $formatters = ['file_video'];
-    blazy()->getModuleHandler()->alter('blazy_third_party_formatters', $formatters);
+    \blazy()->getModuleHandler()->alter('blazy_third_party_formatters', $formatters);
     return array_unique($formatters);
-  }
-
-  /**
-   * Overrides variables for field.html.twig templates.
-   */
-  public static function thirdPartyPreprocessField(array &$variables) {
-    $element = $variables['element'];
-    $settings = empty($element['#blazy']) ? [] : $element['#blazy'];
-    $settings['third_party'] = $element['#third_party_settings'];
-    $is_preview = Blazy::isPreview();
-
-    foreach ($variables['items'] as &$item) {
-      if (empty($item['content'])) {
-        continue;
-      }
-
-      $item_attributes = &$item['content'][isset($item['content']['#attributes']) ? '#attributes' : '#item_attributes'];
-      $item_attributes['data-b-lazy'] = TRUE;
-      if ($is_preview) {
-        $item_attributes['data-b-preview'] = TRUE;
-      }
-    }
-
-    // Attaches Blazy libraries here since Blazy is not the formatter.
-    $attachments = blazy()->attach($settings);
-    $variables['#attached'] = empty($variables['#attached']) ? $attachments : NestedArray::mergeDeep($variables['#attached'], $attachments);
   }
 
   /**
    * Implements hook_field_formatter_third_party_settings_form().
    */
-  public static function fieldFormatterThirdPartySettingsForm(FormatterInterface $plugin) {
+  public static function fieldFormatterThirdPartySettingsForm(FormatterInterface $plugin): array {
     if (in_array($plugin->getPluginId(), self::thirdPartyFormatters())) {
       return [
         'blazy' => [
@@ -183,7 +197,7 @@ class BlazyAlter {
   /**
    * Implements hook_field_formatter_settings_summary_alter().
    */
-  public static function fieldFormatterSettingsSummaryAlter(&$summary, $context) {
+  public static function fieldFormatterSettingsSummaryAlter(&$summary, $context): void {
     $on = $context['formatter']->getThirdPartySetting('blazy', 'blazy', FALSE);
     if ($on && in_array($context['formatter']->getPluginId(), self::thirdPartyFormatters())) {
       $summary[] = 'Blazy';
@@ -193,7 +207,7 @@ class BlazyAlter {
   /**
    * Attaches Colorbox if so configured.
    */
-  public static function attachColorbox(array &$load, $attach = []) {
+  public static function attachColorbox(array &$load, $attach = []): void {
     if (\Drupal::hasService('colorbox.attachment')) {
       $dummy = [];
       \Drupal::service('colorbox.attachment')->attach($dummy);

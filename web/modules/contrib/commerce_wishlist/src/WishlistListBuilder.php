@@ -94,7 +94,7 @@ class WishlistListBuilder extends EntityListBuilder {
     $wishlist_type_storage = $this->entityTypeManager->getStorage('commerce_wishlist_type');
     $wishlist_type = $wishlist_type_storage->load($entity->bundle());
 
-    /* @var \Drupal\commerce_wishlist\Entity\WishlistInterface $entity */
+    /** @var \Drupal\commerce_wishlist\Entity\WishlistInterface $entity */
     $row = [
       'name' => $entity->label(),
       'type' => $wishlist_type->label(),

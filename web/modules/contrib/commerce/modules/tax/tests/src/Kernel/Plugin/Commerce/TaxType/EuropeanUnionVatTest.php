@@ -37,7 +37,7 @@ class EuropeanUnionVatTest extends OrderKernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_tax',
     'commerce_tax_test',
   ];
@@ -215,6 +215,44 @@ class EuropeanUnionVatTest extends OrderKernelTestBase {
     $adjustment = reset($adjustments);
     $this->assertCount(1, $adjustments);
     $this->assertEquals('european_union_vat|fr_h|standard', $adjustment->getSourceId());
+
+    // German customer, AT store registered in AT, physical product.
+    $order = $this->buildOrder('DE', 'AT', '', ['AT']);
+    $this->assertTrue($plugin->applies($order));
+    $plugin->apply($order);
+    $adjustments = $order->collectAdjustments();
+    $adjustment = reset($adjustments);
+    $this->assertCount(1, $adjustments);
+    $this->assertEquals('european_union_vat|at|standard', $adjustment->getSourceId());
+
+    // Austrian customer in Mittelberg, AT store registered in AT,
+    // physical product.
+    $order = $this->buildOrder('DE', 'AT', '', ['AT']);
+    $billing_profile = $order->getBillingProfile();
+    $billing_profile->set('address', [
+      'country_code' => 'AT',
+      'postal_code' => '6991',
+    ]);
+    $billing_profile->save();
+    $plugin->apply($order);
+    $adjustments = $order->collectAdjustments();
+    $adjustment = reset($adjustments);
+    $this->assertCount(1, $adjustments);
+    $this->assertEquals('european_union_vat|at|standard', $adjustment->getSourceId());
+
+    // German customer in Büsingen, DE store registered in DE,
+    // physical product.
+    // EU VAT does not apply as customer is in Switzerland for VAT.
+    $order = $this->buildOrder('DE', 'DE', '', ['DE']);
+    $billing_profile = $order->getBillingProfile();
+    $billing_profile->set('address', [
+      'country_code' => 'DE',
+      'postal_code' => '78266',
+    ]);
+    $billing_profile->save();
+    $plugin->apply($order);
+    $adjustments = $order->collectAdjustments();
+    $this->assertCount(0, $adjustments);
   }
 
   /**

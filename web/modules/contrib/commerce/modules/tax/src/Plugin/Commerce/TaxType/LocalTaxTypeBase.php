@@ -340,7 +340,7 @@ abstract class LocalTaxTypeBase extends TaxTypeBase implements LocalTaxTypeInter
       $zones = $this->buildZones();
       // Dispatch an event to allow altering the tax zones.
       $event = new BuildZonesEvent($zones, $this);
-      $this->eventDispatcher->dispatch(TaxEvents::BUILD_ZONES, $event);
+      $this->eventDispatcher->dispatch($event, TaxEvents::BUILD_ZONES);
       $this->zones = $event->getZones();
     }
 

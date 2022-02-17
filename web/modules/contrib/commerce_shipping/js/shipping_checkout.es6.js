@@ -2,7 +2,7 @@
  * @file
  * Handles the shipping rates recalculation in checkout.
  */
-(($, Drupal, drupalSettings) => {
+((Drupal, drupalSettings, once) => {
 
   Drupal.shippingRecalculate = {
     recalculateButtonSelector: '',
@@ -13,7 +13,7 @@
         setTimeout(() => {
           // Ensure no ajax request is in progress for the element
           // being updated before triggering the recalculation.
-          if (element.is(':disabled')) {
+          if (element.disabled) {
             waitForAjaxComplete(element)
             return
           }
@@ -28,15 +28,21 @@
     init(context) {
       // Everytime a required field value is updated, attempt to trigger the
       // shipping rates recalculation if possible.
-      $(this.wrapper).find(':input.required', context).once('shipping-recalculate').on('change', ({currentTarget}) => {
-        this.onChange($(currentTarget));
-      });
+      const requiredInputs = document.getElementById(this.wrapper).querySelectorAll('input[required], select[required]');
+      if (requiredInputs.length) {
+        once('shipping-recalculate', requiredInputs, context).forEach((element) => {
+          element.addEventListener('change', (el) => {
+            this.onChange(el.target);
+          });
+        });
+      }
     },
     // Determines whether the shipping rates can be recalculated.
     canRecalculateRates() {
       let canRecalculate = true;
-      $(this.wrapper).find(':input.required').each((index, element) => {
-        if (!$(element).val()) {
+      const requiredInputs = document.getElementById(this.wrapper).querySelectorAll('input[required], select[required]');
+      Array.prototype.forEach.call(requiredInputs, function(el) {
+        if (!el.value) {
           canRecalculate = false;
           return false;
         }
@@ -45,11 +51,12 @@
       return canRecalculate;
     },
     recalculateRates() {
+      const buttons = document.querySelectorAll(this.submitButtonSelector);
       // Disable the 'Continue to Review' button while recalculating.
-      if ($(this.submitButtonSelector).length) {
-        $(this.submitButtonSelector).prop('disabled', true)
+      if (buttons.length) {
+        buttons[0].disabled = true;
       }
-      $(this.wrapper).find(this.recalculateButtonSelector).trigger('mousedown');
+      document.getElementById(this.wrapper).querySelector(this.recalculateButtonSelector).dispatchEvent(new Event('mousedown'));
     }
   };
 
@@ -68,4 +75,4 @@
     }
   }
 
-})(jQuery, Drupal, drupalSettings);
+})(Drupal, drupalSettings, once);

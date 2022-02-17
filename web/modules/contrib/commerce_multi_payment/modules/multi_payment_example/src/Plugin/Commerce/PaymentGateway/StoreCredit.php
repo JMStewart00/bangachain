@@ -166,8 +166,7 @@ class StoreCredit extends MultiplePaymentGatewayBase implements StoreCreditPayme
     if (strstr( $account->getAccountName(), 'credit')) {
       return new Price(300, 'USD');
     }
-
-    throw new HardDeclineException(t('No store credit for this user'));
+    return new Price(0, 'USD');
   }
 
 

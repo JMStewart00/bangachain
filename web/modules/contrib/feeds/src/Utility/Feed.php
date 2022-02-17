@@ -3,8 +3,8 @@
 namespace Drupal\feeds\Utility;
 
 use GuzzleHttp\Psr7\Uri;
-use Zend\Feed\Reader\FeedSet;
-use Zend\Feed\Reader\Reader;
+use Laminas\Feed\Reader\FeedSet;
+use Laminas\Feed\Reader\Reader;
 
 /**
  * Helper functions for dealing with feeds.

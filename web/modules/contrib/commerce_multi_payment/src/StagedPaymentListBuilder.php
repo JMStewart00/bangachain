@@ -56,7 +56,7 @@ class StagedPaymentListBuilder extends EntityListBuilder {
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
       $entity_type,
-      $container->get('entity.manager')->getStorage($entity_type->id()),
+      $container->get('entity_type.manager')->getStorage($entity_type->id()),
       $container->get('current_route_match'),
       $container->get('commerce_price.number_formatter_factory')
     );
@@ -72,7 +72,7 @@ class StagedPaymentListBuilder extends EntityListBuilder {
 
     return $staged_payments;
   }
-  
+
   /**
    * {@inheritdoc}
    */

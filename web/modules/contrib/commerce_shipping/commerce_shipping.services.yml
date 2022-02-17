@@ -91,6 +91,11 @@ services:
       - { name: event_subscriber }
       - { name: needs_destruction }
 
+  commerce_shipping.filter_conditions_subscriber:
+    class: Drupal\commerce_shipping\EventSubscriber\FilterConditionsEventSubscriber
+    tags:
+      - { name: event_subscriber }
+
   commerce_shipping.shipment_confirmation_mail:
     class: Drupal\commerce_shipping\Mail\ShipmentConfirmationMail
     arguments: ['@entity_type.manager', '@commerce.mail_handler']

@@ -49,7 +49,7 @@ class PromotionEnableForm extends ContentEntityConfirmFormBase {
     $promotion = $this->getEntity();
     $promotion->setEnabled(TRUE);
     $promotion->save();
-    $this->messenger()->addStatus($this->t('Successfully enabled the promotion %label', ['%label' => $promotion->label()]));
+    $this->messenger()->addStatus($this->t('Successfully enabled the promotion %label.', ['%label' => $promotion->label()]));
     $form_state->setRedirectUrl($this->getCancelUrl());
   }
 

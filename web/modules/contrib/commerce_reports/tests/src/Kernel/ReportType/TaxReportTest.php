@@ -25,6 +25,7 @@ class TaxReportTest extends CommerceKernelTestBase {
     'path',
     'profile',
     'state_machine',
+    'commerce_number_pattern',
     'commerce_order',
     'commerce_reports',
     'commerce_tax',
@@ -47,7 +48,7 @@ class TaxReportTest extends CommerceKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('profile');
     $this->installEntitySchema('commerce_order');
@@ -55,8 +56,11 @@ class TaxReportTest extends CommerceKernelTestBase {
     $this->installEntitySchema('commerce_order_report');
     $this->installEntitySchema('commerce_tax_type');
     $this->installConfig('commerce_order', 'commerce_tax');
+    $this->installSchema('commerce_number_pattern', ['commerce_number_pattern_sequence']);
+
     $user = $this->createUser(['mail' => $this->randomString() . '@example.com']);
     $this->store->set('prices_include_tax', TRUE);
+    $this->store->set('tax_registrations', ['US']);
     $this->store->save();
 
     $this->reportTypeManager = $this->container->get('plugin.manager.commerce_report_type');

@@ -9,7 +9,7 @@
  * @todo Fix move to blazy for re-use with videos, and other elements.
  */
 
-(function (_db, _ds, _doc) {
+(function ($, _ds, _doc) {
 
   'use strict';
 
@@ -55,7 +55,7 @@
       init: function (opts) {
         var me = this;
 
-        me.options = _db.extend({}, me.options, opts || {});
+        me.options = $.extend({}, me.options, opts || {});
         _element = me.options.element;
         _trigger = me.options.trigger;
         _className = me.options.className;
@@ -66,8 +66,8 @@
         }
 
         if (elms !== null && elms.length) {
-          _db.forEach(elms, function (el) {
-            _db.bindEvent(el, 'click', me.toggle.bind(me), {
+          $.forEach(elms, function (el) {
+            $.bindEvent(el, 'click', me.toggle.bind(me), {
               passive: false
             });
           });
@@ -147,11 +147,11 @@
       },
 
       on: function (e, callback) {
-        return typeof callback === 'undefined' ? false : _db.bindEvent(_doc, events[e], callback.bind(this));
+        return typeof callback === 'undefined' ? false : $.bindEvent(_doc, events[e], callback.bind(this));
       },
 
       off: function (e, callback) {
-        return typeof callback === 'undefined' ? false : _db.unbindEvent(_doc, events[e], callback.bind(this));
+        return typeof callback === 'undefined' ? false : $.unbindEvent(_doc, events[e], callback.bind(this));
       },
 
       _close: function () {

@@ -18,7 +18,7 @@ class SplideForm extends SplideFormBase {
    */
   public function form(array $form, FormStateInterface $form_state) {
     $form      = parent::form($form, $form_state);
-    $path      = drupal_get_path('module', 'splide');
+    $path      = SplideDefault::getPath('module', 'splide');
     $splide    = $this->entity;
     $options   = $splide->getOptions() ?: [];
     $tooltip   = ['class' => ['is-tooltip']];
@@ -136,15 +136,25 @@ class SplideForm extends SplideFormBase {
       '#parents'    => ['options', 'settings'],
     ];
 
+    // Common options to be attached into each form element.
+    $elementsFormOptions = [
+      'type',
+      'options',
+      'empty_option',
+      'field_suffix',
+      'states',
+      'step',
+    ];
+
     foreach ($this->getFormElements() as $name => $element) {
-      $element['default'] = isset($element['default']) ? $element['default'] : '';
+      $element['default'] = $element['default'] ?? '';
       $default_value = (NULL !== $splide->getSetting($name)) ? $splide->getSetting($name) : $element['default'];
       $form['settings'][$name] = [
-        '#title'         => isset($element['title']) ? $element['title'] : '',
+        '#title'         => $element['title'] ?? '',
         '#default_value' => $default_value,
       ];
 
-      foreach (['type', 'options', 'empty_option', 'field_suffix', 'states'] as $option) {
+      foreach ($elementsFormOptions as $option) {
         if (isset($element[$option])) {
           $form['settings'][$name]["#$option"] = $element[$option];
         }
@@ -216,7 +226,7 @@ class SplideForm extends SplideFormBase {
     }
 
     $user_input = $form_state->getUserInput();
-    $breakpoint_input = isset($user_input['breakpoint']) ? (int) $user_input['breakpoint'] : $breakpoint_count;
+    $breakpoint_input = (int) ($user_input['breakpoint'] ?? $breakpoint_count);
 
     if ($breakpoint_input && ($breakpoint_input != $breakpoint_count)) {
       $form_state->setValue('breakpoint_count', $breakpoint_input);
@@ -249,7 +259,7 @@ class SplideForm extends SplideFormBase {
               $form['breakpoints']['responsive'][$i][$key] = [
                 '#type'          => $responsive['type'],
                 '#title'         => $responsive['title'],
-                '#default_value' => isset($options['breakpoints'][$i][$key]) ? $options['breakpoints'][$i][$key] : $responsive['default'],
+                '#default_value' => $options['breakpoints'][$i][$key] ?? $responsive['default'],
                 '#description'   => $responsive['description'],
                 '#attributes'    => $tooltip,
               ];
@@ -293,15 +303,15 @@ class SplideForm extends SplideFormBase {
 
               // @fixme, boolean default is ignored at index 0 only.
               foreach ($responsive as $k => $item) {
-                $default = isset($defaults[$k]) ? $defaults[$k] : '';
-                $item['default'] = isset($item['default']) ? $item['default'] : $default;
+                $default = $defaults[$k] ?? '';
+                $item['default'] = $item['default'] ?? $default;
 
                 $description = $this->getDefaultValue($defaults, $k);
-                $description = isset($item['description']) ? $item['description'] . $description : '';
+                $description = ($item['description'] ?? '') . $description;
 
                 $form['breakpoints']['responsive'][$i][$key][$k] = [
-                  '#title'         => isset($item['title']) ? $item['title'] : '',
-                  '#default_value' => isset($options['breakpoints'][$i][$key][$k]) ? $options['breakpoints'][$i][$key][$k] : $item['default'],
+                  '#title'         => $item['title'] ?? '',
+                  '#default_value' => $options['breakpoints'][$i][$key][$k] ?? $item['default'],
                   '#description'   => $description,
                   '#attributes'    => $tooltip,
                 ];
@@ -408,6 +418,7 @@ class SplideForm extends SplideFormBase {
 
       $elements['heightRatio'] = [
         'type'         => 'number',
+        'step'         => '0.01',
         'title'        => $this->t('Height ratio'),
         'description'  => $this->t('Determines height of slides by the ratio to the slider width. For example, when the slider width is 1000 and the ratio is 0.3, the height will be 300.'),
       ];
@@ -463,7 +474,7 @@ class SplideForm extends SplideFormBase {
       $elements['padding'] = [
         'type'         => 'textfield',
         'title'        => $this->t('Padding'),
-        'description'  => $this->t("Set padding-left/right in horizontal mode or padding-top/bottom in vertical one. E.g.: <code>{ left : 0, right: '2rem' }</code>, including braces _only for multiple values. Must be a valid JSON object. Or just <code>10</code> for single value without braces, meaning padding left/right(top/bottom) will be 10px."),
+        'description'  => $this->t("Set padding-left/right in horizontal mode or padding-top/bottom in vertical one. E.g.: <code>{ 'left' : 0, 'right': '2rem' }</code>, including braces _only for multiple values. Must be a valid JSON object. Or just <code>10</code> for single value without braces, meaning padding left/right(top/bottom) will be 10px."),
       ];
 
       $elements['easing'] = [
@@ -668,21 +679,32 @@ class SplideForm extends SplideFormBase {
       $elements['classes'] = [
         'type'        => 'textarea',
         'title'       => $this->t('Classes'),
-        'description' => $this->t("Collection of class names. To add your own classes to arrows or pagination buttons, provide them with original classes like this: <b><br><br>{ <br>arrows: 'splide__arrows your-class-arrows', <br>arrow: 'splide__arrow your-class-arrow', <br>prev: 'splide__arrow--prev your-class-prev', <br>next: 'splide__arrow--next your-class-next', <br>pagination: 'splide__pagination your-class-pagination', <br>page: 'splide__pagination__page your-class-page' <br>}</b><br><br>Including braces. Must be a valid JSON object like the sample. Be sure the original class (the first one) is always included to avoid broken displays."),
+        'description' => $this->t("Collection of class names. To add your own classes to arrows or pagination buttons, provide them with original classes like this: <b><br><br>{ <br>'arrows': 'splide__arrows your-class-arrows', <br>'arrow': 'splide__arrow your-class-arrow', <br>'prev': 'splide__arrow--prev your-class-prev', <br>'next': 'splide__arrow--next your-class-next', <br>'pagination': 'splide__pagination your-class-pagination', <br>'page': 'splide__pagination__page your-class-page' <br>}</b><br><br>Including braces. Must be a valid JSON object like the sample. Be sure the original class (the first one) is always included to avoid broken displays."),
       ];
 
       $elements['i18n'] = [
         'type'        => 'textarea',
         'title'       => $this->t('i18n'),
-        'description' => $this->t("Here is a list of default texts. `%s` will be replaced by a slide or page number: <b><br><br>{ <br>prev: 'Previous slide', <br>next: 'Next slide', <br>first: 'Go to first slide', <br>last:	'Go to last slide', <br>slideX:	'Go to slide %s', <br>pageX: 'Go to page %s', <br>play: 'Start autoplay',
-        <br>pause: 'Pause autoplay' <br>}</b><br><br>Including braces. Must be a valid JSON object like the sample."),
+        'description' => $this->t("Here is a list of default texts. `%s` will be replaced by a slide or page number: <b><br><br>{ <br>'prev': 'Previous slide', <br>'next': 'Next slide', <br>'first': 'Go to first slide', <br>'last': 'Go to last slide', <br>'slideX': 'Go to slide %s', <br>'pageX': 'Go to page %s', <br>'play': 'Start autoplay', <br>'pause': 'Pause autoplay' <br>}</b><br><br>Including braces. Must be a valid JSON object like the sample."),
+      ];
+
+      $elements['autoScroll'] = [
+        'type'        => 'textarea',
+        'title'       => $this->t('Auto Scroll'),
+        'description' => $this->t("Enable AutoScroll plugin and set options. Example: <b><br><br>{ <br>'speed': 1, <br>'autoStart': true, <br>'rewind': false, <br>'pauseOnHover': true,<br>'pauseOnFocus': true<br>}</b><br><br>Including braces. Must be a valid JSON object like the sample. Best with: <code>type: 'loop', drag: 'free', focus: 'center', perPage: 3</code>. Requires <br><code>/libraries/splidejs--splide-extension-auto-scroll/dist/js/splide-extension-auto-scroll.min.js</code> or <br><code>/libraries/splide-extension-auto-scroll/dist/js/splide-extension-auto-scroll.min.js</code> <a href=':url'>here</a>.", [':url' => 'https://github.com/Splidejs/splide-extension-auto-scroll']),
+      ];
+
+      $elements['intersection'] = [
+        'type'        => 'textarea',
+        'title'       => $this->t('Intersection'),
+        'description' => $this->t("Enable Intersection plugin and set options. Example: <b><br><br>{ <br>'inView': { 'autoplay': true, 'autoScroll': true }, <br>'outView': { 'autoplay': false, 'autoScroll': false }<br>}</b><br><br>Including braces. Must be a valid JSON object like the sample. Best to trigger: <code>autoplay autoScroll keyboard</code> when being intersected in viewport. Requires <br><code>/libraries/splidejs--splide-extension-intersection/dist/js/splide-extension-intersection.min.js</code> or <br><code>/libraries/splide-extension-intersection/dist/js/splide-extension-intersection.min.js</code> <a href=':url'>here</a>.", [':url' => 'https://github.com/Splidejs/splide-extension-intersection/']),
       ];
 
       // Defines the default values if available.
       $defaults = Splide::defaultSettings();
       foreach ($elements as $name => $element) {
         $default = $element['type'] == 'checkbox' ? FALSE : '';
-        $elements[$name]['default'] = isset($defaults[$name]) ? $defaults[$name] : $default;
+        $elements[$name]['default'] = $defaults[$name] ?? $default;
       }
 
       foreach (Splide::getDependentOptions() as $parent => $items) {

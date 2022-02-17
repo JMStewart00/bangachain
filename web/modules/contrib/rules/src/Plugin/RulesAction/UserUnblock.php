@@ -8,6 +8,8 @@ use Drupal\user\UserInterface;
 /**
  * Provides "Unblock User" action.
  *
+ * @todo Add access callback information from Drupal 7.
+ *
  * @RulesAction(
  *   id = "rules_user_unblock",
  *   label = @Translation("Unblock a user"),
@@ -19,8 +21,6 @@ use Drupal\user\UserInterface;
  *     ),
  *   }
  * )
- *
- * @todo Add access callback information from Drupal 7.
  */
 class UserUnblock extends RulesActionBase {
   /**

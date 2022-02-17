@@ -3,11 +3,11 @@
 namespace Drupal\Tests\feeds\Unit\Feeds\Target;
 
 use Drupal\Core\Entity\EntityFieldManagerInterface;
-use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Utility\Token;
+use Drupal\feeds\EntityFinderInterface;
 use Drupal\feeds\Exception\EmptyFeedException;
 use Drupal\feeds\Feeds\Target\File;
 use GuzzleHttp\ClientInterface;
@@ -47,6 +47,13 @@ class FileTest extends FieldTargetTestBase {
   protected $fileSystem;
 
   /**
+   * The Feeds entity finder service.
+   *
+   * @var \Drupal\feeds\EntityFinderInterface
+   */
+  protected $entityFinder;
+
+  /**
    * The FeedsTarget plugin being tested.
    *
    * @var \Drupal\feeds\Feeds\Target\File
@@ -64,7 +71,7 @@ class FileTest extends FieldTargetTestBase {
     $this->token = $this->prophesize(Token::class);
     $this->entityFieldManager = $this->prophesize(EntityFieldManagerInterface::class);
     $this->entityFieldManager->getFieldStorageDefinitions('file')->willReturn([]);
-    $this->entityRepository = $this->prophesize(EntityRepositoryInterface::class);
+    $this->entityFinder = $this->prophesize(EntityFinderInterface::class);
     $this->fileSystem = $this->prophesize(FileSystemInterface::class);
 
     // Made-up entity type that we are referencing to.
@@ -90,7 +97,7 @@ class FileTest extends FieldTargetTestBase {
       'feed_type' => $this->createMock('Drupal\feeds\FeedTypeInterface'),
       'target_definition' => $method($field_definition_mock),
     ];
-    $this->targetPlugin = new File($configuration, 'file', [], $this->entityTypeManager->reveal(), $this->client->reveal(), $this->token->reveal(), $this->entityFieldManager->reveal(), $this->entityRepository->reveal(), $this->fileSystem->reveal());
+    $this->targetPlugin = new File($configuration, 'file', [], $this->entityTypeManager->reveal(), $this->client->reveal(), $this->token->reveal(), $this->entityFieldManager->reveal(), $this->entityFinder->reveal(), $this->fileSystem->reveal());
   }
 
   /**

@@ -22,7 +22,7 @@ class EntityPrintOrderRendererTest extends OrderKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_payment',
     'entity_print',
     'commerce_order_entity_print_test',

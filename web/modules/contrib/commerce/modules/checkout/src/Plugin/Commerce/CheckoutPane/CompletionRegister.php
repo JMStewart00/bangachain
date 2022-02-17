@@ -256,7 +256,7 @@ class CompletionRegister extends CheckoutPaneBase implements CheckoutPaneInterfa
     $this->orderAssignment->assign($this->order, $account);
     // Notify other modules.
     $event = new CheckoutCompletionRegisterEvent($account, $this->order);
-    $this->eventDispatcher->dispatch(CheckoutEvents::COMPLETION_REGISTER, $event);
+    $this->eventDispatcher->dispatch($event, CheckoutEvents::COMPLETION_REGISTER);
     // Event subscribers are allowed to set a redirect url, to send the
     // customer to their orders page, for example.
     if ($url = $event->getRedirectUrl()) {

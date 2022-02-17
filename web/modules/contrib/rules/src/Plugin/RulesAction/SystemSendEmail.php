@@ -12,6 +12,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides "Send email" rules action.
  *
+ * @todo Add access callback information from Drupal 7.
+ *
  * @RulesAction(
  *   id = "rules_send_email",
  *   label = @Translation("Send email"),
@@ -36,16 +38,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *       default_value = NULL,
  *       required = FALSE
  *     ),
- *     "language" = @ContextDefinition("language",
+ *     "language" = @ContextDefinition("entity:configurable_language",
  *       label = @Translation("Language"),
  *       description = @Translation("If specified, the language used for getting the email message and subject."),
+ *       options_provider = "\Drupal\rules\TypedData\Options\LanguageOptions",
  *       default_value = NULL,
  *       required = FALSE
  *     ),
  *   }
  * )
- *
- * @todo Add access callback information from Drupal 7.
  */
 class SystemSendEmail extends RulesActionBase implements ContainerFactoryPluginInterface {
 
@@ -109,7 +110,10 @@ class SystemSendEmail extends RulesActionBase implements ContainerFactoryPluginI
    *   (optional) Language code.
    */
   protected function doExecute(array $to, $subject, $message, $reply = NULL, LanguageInterface $language = NULL) {
+    // ORIG.
     $langcode = isset($language) ? $language->getId() : LanguageInterface::LANGCODE_SITE_DEFAULT;
+    // @todo Is this better?
+    $langcode = (isset($language) && $language->getId() != LanguageInterface::LANGCODE_NOT_SPECIFIED) ? $language->getId() : LanguageInterface::LANGCODE_SITE_DEFAULT;
     $params = [
       'subject' => $subject,
       'message' => $message,

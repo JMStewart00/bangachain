@@ -25,7 +25,7 @@ class CouponTest extends CommerceBrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'block',
     'path',
     'commerce_product',

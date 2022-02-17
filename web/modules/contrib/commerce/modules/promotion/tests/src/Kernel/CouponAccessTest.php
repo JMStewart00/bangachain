@@ -19,7 +19,7 @@ class CouponAccessTest extends OrderKernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_promotion',
   ];
 
@@ -33,8 +33,8 @@ class CouponAccessTest extends OrderKernelTestBase {
     $this->installEntitySchema('commerce_promotion_coupon');
     $this->installSchema('commerce_promotion', ['commerce_promotion_usage']);
 
-    // Create uid: 1 here so that it's skipped in test cases.
-    $admin_user = $this->createUser();
+    // Create uid: 0 and 1 here so that it's skipped in test cases.
+    $this->setUpCurrentUser();
   }
 
   /**
@@ -55,25 +55,40 @@ class CouponAccessTest extends OrderKernelTestBase {
     ]);
     $coupon->save();
 
+    $collection_url = $coupon->toUrl('collection');
+    $access_manager = \Drupal::accessManager();
+
     $account = $this->createUser([], ['access administration pages']);
     $this->assertFalse($coupon->access('view', $account));
     $this->assertFalse($coupon->access('update', $account));
     $this->assertFalse($coupon->access('delete', $account));
+    $access = $access_manager->checkNamedRoute($collection_url->getRouteName(), $collection_url->getRouteParameters(), $account, TRUE);
+    $this->assertFalse($promotion->access('update', $account));
+    $this->assertFalse($access->isAllowed());
 
     $account = $this->createUser([], ['view commerce_promotion']);
     $this->assertTrue($coupon->access('view', $account));
     $this->assertFalse($coupon->access('update', $account));
     $this->assertFalse($coupon->access('delete', $account));
+    $access = $access_manager->checkNamedRoute($collection_url->getRouteName(), $collection_url->getRouteParameters(), $account, TRUE);
+    $this->assertFalse($promotion->access('update', $account));
+    $this->assertFalse($access->isAllowed());
 
     $account = $this->createUser([], ['update any commerce_promotion']);
     $this->assertFalse($coupon->access('view', $account));
     $this->assertTrue($coupon->access('update', $account));
     $this->assertTrue($coupon->access('delete', $account));
+    $access = $access_manager->checkNamedRoute($collection_url->getRouteName(), $collection_url->getRouteParameters(), $account, TRUE);
+    $this->assertTrue($promotion->access('update', $account));
+    $this->assertTrue($access->isAllowed());
 
     $account = $this->createUser([], ['administer commerce_promotion']);
     $this->assertTrue($coupon->access('view', $account));
     $this->assertTrue($coupon->access('update', $account));
     $this->assertTrue($coupon->access('delete', $account));
+    $access = $access_manager->checkNamedRoute($collection_url->getRouteName(), $collection_url->getRouteParameters(), $account, TRUE);
+    $this->assertTrue($promotion->access('update', $account));
+    $this->assertTrue($access->isAllowed());
   }
 
   /**

@@ -33,7 +33,7 @@ abstract class CartWebDriverTestBase extends OrderWebDriverTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_cart',
     'commerce_cart_test',
     'node',

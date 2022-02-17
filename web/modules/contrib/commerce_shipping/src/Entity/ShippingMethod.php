@@ -349,9 +349,7 @@ class ShippingMethod extends ContentEntityBase implements ShippingMethodInterfac
         'type' => 'integer',
         'weight' => 0,
       ])
-      ->setDisplayOptions('form', [
-        'type' => 'hidden',
-      ]);
+      ->setDisplayConfigurable('form', TRUE);
 
     $fields['status'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Enabled'))

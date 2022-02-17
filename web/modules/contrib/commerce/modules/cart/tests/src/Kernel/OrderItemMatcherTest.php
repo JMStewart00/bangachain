@@ -40,7 +40,7 @@ class OrderItemMatcherTest extends CartKernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'extra_order_item_field',
   ];
 

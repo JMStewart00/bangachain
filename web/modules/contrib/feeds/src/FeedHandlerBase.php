@@ -40,4 +40,14 @@ abstract class FeedHandlerBase implements EntityHandlerInterface {
     );
   }
 
+  /**
+   * Adds a new batch.
+   *
+   * @param array $batch_definition
+   *   An associative array defining the batch.
+   */
+  protected function batchSet(array $batch_definition) {
+    return batch_set($batch_definition);
+  }
+
 }

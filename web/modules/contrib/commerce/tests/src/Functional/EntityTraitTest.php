@@ -14,7 +14,7 @@ class EntityTraitTest extends CommerceBrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'field_ui',
     'telephone',
     'commerce_test',

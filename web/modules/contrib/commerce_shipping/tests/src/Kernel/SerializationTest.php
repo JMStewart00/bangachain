@@ -21,7 +21,7 @@ class SerializationTest extends ShippingKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'serialization',
     'jsonapi',
   ];

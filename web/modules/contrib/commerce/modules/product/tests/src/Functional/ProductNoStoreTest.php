@@ -15,7 +15,7 @@ class ProductNoStoreTest extends CommerceBrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_product',
   ];
 

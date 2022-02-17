@@ -126,7 +126,7 @@ class ConfigurableEventHandlerTest extends RulesKernelTestBase {
       $entity_type_id . '_unchanged' => $this->node,
     ]);
     $event_dispatcher = $this->container->get('event_dispatcher');
-    $event_dispatcher->dispatch("rules_entity_presave:$entity_type_id", $event);
+    $event_dispatcher->dispatch($event, "rules_entity_presave:$entity_type_id");
 
     // Test that the action in the rule1 logged node value.
     $this->assertRulesDebugLogEntryExists(11, 1);

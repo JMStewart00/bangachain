@@ -10,11 +10,12 @@ use Drupal\editor\Entity\Editor;
 use Drupal\blazy\Blazy;
 use Drupal\blazy\BlazyAlter;
 use Drupal\blazy\BlazyDefault;
+use Drupal\blazy\BlazyTheme;
 use Drupal\blazy\BlazyViews;
 use Drupal\blazy\Utility\BlazyMarkdown;
 
 /**
- * Provides a convenient shortcut for procedural hooks.
+ * Provides a convenient shortcut for procedural hooks, or static methods.
  *
  * @return class
  *   The Blazy manager class instance.
@@ -40,7 +41,7 @@ function blazy_theme() {
  * Prepares variables for blazy.html.twig templates.
  */
 function template_preprocess_blazy(&$variables) {
-  Blazy::preprocessBlazy($variables);
+  BlazyTheme::blazy($variables);
 }
 
 /**
@@ -48,7 +49,7 @@ function template_preprocess_blazy(&$variables) {
  */
 function blazy_preprocess_responsive_image(&$variables) {
   if (isset($variables['attributes']['data-b-lazy'])) {
-    Blazy::preprocessResponsiveImage($variables);
+    BlazyTheme::responsiveImage($variables);
   }
 }
 
@@ -57,7 +58,7 @@ function blazy_preprocess_responsive_image(&$variables) {
  */
 function blazy_preprocess_file_video(&$variables) {
   if (isset($variables['attributes']['data-b-lazy'])) {
-    Blazy::preprocessFileVideo($variables);
+    BlazyTheme::fileVideo($variables);
   }
 }
 
@@ -65,7 +66,7 @@ function blazy_preprocess_file_video(&$variables) {
  * Overrides template_preprocess_media_oembed_iframe().
  */
 function blazy_preprocess_media_oembed_iframe(array &$variables) {
-  \Drupal::service('blazy.oembed')->preprocessMediaOembedIframe($variables);
+  BlazyTheme::mediaOembedIframe($variables);
 }
 
 /**
@@ -73,7 +74,7 @@ function blazy_preprocess_media_oembed_iframe(array &$variables) {
  */
 function blazy_preprocess_field(array &$variables) {
   if (isset($variables['element']['#blazy']) || !empty($variables['element']['#third_party_settings']['blazy']['blazy'])) {
-    Blazy::preprocessField($variables);
+    BlazyTheme::field($variables);
   }
 }
 
@@ -108,9 +109,17 @@ function blazy_config_schema_info_alter(array &$definitions) {
  * Implements hook_library_info_alter().
  */
 function blazy_library_info_alter(&$libraries, $extension) {
-  if ($extension === 'blazy' || $extension === 'media') {
+  $debounce = $extension === 'core' && isset($libraries['drupal.debounce']);
+  if ($extension === 'blazy' || $extension === 'media'  || $debounce) {
     BlazyAlter::libraryInfoAlter($libraries, $extension);
   }
+}
+
+/**
+ * Implements hook_library_info_build().
+ */
+function blazy_library_info_build() {
+  return BlazyAlter::libraryInfoBuild();
 }
 
 /**

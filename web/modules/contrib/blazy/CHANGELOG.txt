@@ -1,4 +1,95 @@
 
+Blazy 8.x-2.0-dev, 2022-02-06
+-----------------------------
+- Issue #3262804 by gausarts: Add preload option to help boost actual and
+  perceived performance.
+- Issue #3262724 by gausarts: Add option for (un-)loading attribute, a buffer
+  for anti-pattern.
+
+Blazy 8.x-2.0-dev, 2022-01-26
+-----------------------------
+- Issue #3260089 by akalam: EntityMalformedException when using blazy in layout
+  builder in a entity view display.
+
+Blazy 8.x-2.0-dev, 2022-01-24
+-----------------------------
+- Issue #3258851 by gausarts: Forked old bLazy to minimize workarounds and
+  complexity due to lacking of Native lazy supports. Native lazy was born 2019,
+  3 years after bLazy ceased 2016. But gotta move forward.
+- Fixed for IE9 and other oldies multi-breakpoint BG and aspect ratio.
+- Merged dBlazy.[un]bindEvent() into dBlazy[on|off]() to save bytes.
+
+Blazy 8.x-2.0-dev, 2022-01-21
+-----------------------------
+- Fixed for basic IE9 functionality.
+- Fixed for without JavaScript within/without JavaScript browsers.
+- Decoupled animate from dblazy.js for being optional like background, etc.
+
+Blazy 8.x-2.0-dev, 2022-01-18
+-----------------------------
+- No more fights under a single source of truth.
+- Issue #3258851 by gausarts: Make old bLazy as fallback for IO, not competing.
+
+Blazy 8.x-2.0-dev, 2022-01-16
+-----------------------------
+- Added more massive optimization.
+- Decoupled more components: Polyfills, Background, Blur, Loading, Dataset, etc.
+- Added more No JavaScript polyfill options: raf, promise, and few basic ones.
+- Added IO fallback for old browsers to avoid all or nothing.
+- Renamed and merged library blazy/colorbox.skin for blazy/colorbox.
+- Renamed and merged library blazy/fx.blur for blazy/blur.
+
+Blazy 8.x-2.0-dev, 2022-01-14
+-----------------------------
+- Issue #3257916 by gausarts: Consider native API like ResizeObserver,
+  IntersectionObserver, MutationObserver.
+
+Blazy 8.x-2.0-dev, 2022-01-08
+-----------------------------
+- Issue #3257512 by gausarts: Decouple lazyload JavaScript. Leaving Blazy as DRY
+  buster for sub-modules.
+
+Blazy 8.x-2.0-dev, 2022-01-07
+-----------------------------
+- Issue #3256703 by ronchica: Blazy formatted images not rendering correctly in
+  revisions.
+- Issue #3255370 by gausarts: Fixed for DRY with ResizeObserver, folder
+  organization, doc comments, etc.
+
+Blazy 8.x-2.0-dev, 2022-01-04
+-----------------------------
+- Issue #3255370 by gausarts: Organized assets for sanity.
+- Minified back all JS files to avoid expensive server/ on-the-fly minification.
+- Made dBlazy DOM methods chainable.
+- Made dBlazy pluginized/ extensible to reduce complexity.
+
+Blazy 8.x-2.0-dev, 2022-01-02
+-----------------------------
+- Micro optimization: Refactored selfish methods, too much me, saving 0.6KB.
+- Moved polyfills out of dBlazy for easy removal.
+
+Blazy 8.x-2.0-dev, 2022-01-01
+-----------------------------
+- When jQuery is not at home, dBlazy is the honorable host for $ sign.
+- Deprecated Photobox due to being unmaintained.
+
+Blazy 8.x-2.0-dev, 2021-12-21
+-----------------------------
+- Issue #3255370 by gausarts: Move Blazy theme-related alias methods to a
+  dedicated BlazyTheme.
+
+Blazy 8.x-2.0-dev, 2021-12-15
+-----------------------------
+- Issue #3254692 by gausarts: Drupal 10, identify deprecation, etc.
+- Issue #3253012 by gausarts: Added Drupal ^10 to track potential disruption.
+- Issue #3254668 by gausarts: Replace builtin once with core once.
+- Issue #3101810 by gausarts, mittoD: Play nice with AMP.
+- Issue #3243817 by lolgm: Added CSS Admin disable option in Layout Builder.
+- Issue #3254222 by Jingting, wells: ARIA dialog and alertdialog nodes should
+  have an accessible name.
+- Issue #3241415 by nanobyt3, codesmith: Respect the image title from a Media
+  Image for captions.
+
 Blazy 8.x-2.0-dev, 2021-10-06
 -----------------------------
 - Issue #3210635 by grathbone, jastraat, Bwolf: Lazyloaded image-to-iframes /

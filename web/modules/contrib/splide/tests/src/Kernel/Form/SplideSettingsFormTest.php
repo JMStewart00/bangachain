@@ -43,7 +43,7 @@ class SplideSettingsFormTest extends KernelTestBase {
    *
    * @covers ::__construct
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installConfig(static::$modules);

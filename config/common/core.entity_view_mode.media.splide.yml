@@ -2,11 +2,11 @@ uuid: 6dc1a6e5-a582-40d5-969e-42a1f0014523
 langcode: en
 status: true
 dependencies:
+  module:
+    - media
   enforced:
     module:
       - splide
-  module:
-    - media
 _core:
   default_config_hash: txO_q_xyPhX00U-soGpC5XsZU6K2y3_5h6ORx6ru6ns
 id: media.splide

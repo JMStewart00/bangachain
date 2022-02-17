@@ -13,8 +13,8 @@ dependencies:
   module:
     - commerce_feeds
     - commerce_product
-id: disc_spreadsheet
 label: 'Disc Variation Importer'
+id: disc_spreadsheet
 description: ''
 help: ''
 import_period: -1
@@ -29,112 +29,112 @@ parser_configuration:
   line_limit: 100
 processor: 'entity:commerce_product_variation'
 processor_configuration:
+  values:
+    type: discs
   langcode: en
   update_existing: 2
   update_non_existent: _keep
+  skip_hash_check: false
+  authorize: true
   expire: -1
   owner_feed_author: false
   owner_id: 1
-  authorize: true
-  skip_hash_check: false
-  values:
-    type: discs
 custom_sources:
   brand:
-    label: Brand
     value: Brand
+    label: Brand
     machine_name: brand
   turn:
-    label: Turn
     value: Turn
+    label: Turn
     machine_name: turn
   title:
-    label: Title
     value: Title
+    label: Title
     machine_name: title
   disc_type:
-    label: 'Disc Type'
     value: 'Disc Type'
+    label: 'Disc Type'
     machine_name: disc_type
   speed:
-    label: Speed
     value: Speed
+    label: Speed
     machine_name: speed
   glide:
-    label: Glide
     value: Glide
+    label: Glide
     machine_name: glide
   fade:
-    label: Fade
     value: Fade
+    label: Fade
     machine_name: fade
   stability_category:
-    label: 'Stability Category'
     value: 'Stability Category'
+    label: 'Stability Category'
     machine_name: stability_category
   stores:
-    label: Stores
     value: Stores
+    label: Stores
     machine_name: stores
   variations:
-    label: Variations
     value: Variations
+    label: Variations
     machine_name: variations
   weight:
-    label: Weight
     value: Weight
+    label: Weight
     machine_name: weight
   sku:
-    label: SKU
     value: SKU
+    label: SKU
     machine_name: sku
   bin:
-    label: Bin
     value: Bin
+    label: Bin
     machine_name: bin
   disc_color:
-    label: 'Disc Color'
     value: 'Disc Color'
+    label: 'Disc Color'
     machine_name: disc_color
   disc_plastic:
-    label: 'Disc Plastic'
     value: 'Disc Plastic'
+    label: 'Disc Plastic'
     machine_name: disc_plastic
   disc_weight:
-    label: 'Disc Weight'
     value: 'Disc Weight'
+    label: 'Disc Weight'
     machine_name: disc_weight
   used:
-    label: Used
     value: Used
+    label: Used
     machine_name: used
   price:
-    label: Price
     value: Price
+    label: Price
     machine_name: price
   stock:
-    label: Stock
     value: Stock
+    label: Stock
     machine_name: stock
   vendor_cost:
-    label: 'Vendor Cost'
     value: 'Vendor Cost'
+    label: 'Vendor Cost'
     machine_name: vendor_cost
 mappings:
   -
     target: sku
     map:
       value: sku
+    settings: {  }
     unique:
       value: '1'
-    settings: {  }
   -
     target: field_bin
     map:
       value: bin
-    unique: {  }
     settings:
       language: null
+    unique: {  }
   -
     target: attribute_disc_color
     map:
@@ -172,6 +172,6 @@ mappings:
     target: field_vendor_cost
     map:
       value: vendor_cost
-    unique: {  }
     settings:
       language: null
+    unique: {  }

@@ -5,20 +5,19 @@
     "homepage": "http://drupal.org/project/commerce",
     "license": "GPL-2.0+",
     "require": {
-        "php": "^7.1 || ^8.0",
+        "php": "^7.3 || ^8.0",
         "ext-bcmath": "*",
-        "drupal/core": "^8.9 || ^9",
+        "drupal/core": "^9.2 || ^10",
         "drupal/address": "^1.7",
         "drupal/entity": "^1.0",
         "drupal/entity_reference_revisions": "~1.0",
-        "drupal/inline_entity_form": "^1.0-rc6",
+        "drupal/inline_entity_form": "^1.0@RC",
         "drupal/profile": "^1.2",
         "drupal/state_machine": "^1.5",
         "drupal/token": "^1.7",
         "commerceguys/intl": "^1.0.0"
     },
     "require-dev": {
-        "behat/mink-goutte-driver": "^1.2",
         "drupal/entity_print": "^2.2",
         "drupal/mailsystem": "^4.3"
     },

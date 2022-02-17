@@ -42,7 +42,7 @@ class PriceCalculatedFormatterTest extends OrderKernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_promotion',
     'commerce_order_test',
     'commerce_tax',

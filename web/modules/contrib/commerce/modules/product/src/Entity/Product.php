@@ -247,7 +247,7 @@ class Product extends CommerceContentEntityBase implements ProductInterface {
       // Allow other modules to set the default variation.
       $event = new ProductDefaultVariationEvent($default_variation, $this);
       $event_dispatcher = \Drupal::service('event_dispatcher');
-      $event_dispatcher->dispatch(ProductEvents::PRODUCT_DEFAULT_VARIATION, $event);
+      $event_dispatcher->dispatch($event, ProductEvents::PRODUCT_DEFAULT_VARIATION);
       $this->defaultVariation = $event->getDefaultVariation();
     }
     return $this->defaultVariation;

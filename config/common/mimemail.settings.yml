@@ -1,3 +1,5 @@
+_core:
+  default_config_hash: rpfRQVoEn2ZWd_lw-iULKPiuina5CqcmzXWlz1OjTwM
 name: Bang-A-Chain
 mail: no-reply@bangachain.com
 simple_address: false
@@ -10,5 +12,3 @@ preserve_class: false
 advanced:
   incoming: false
   key: AwahbHqleh-TBTgpStvGzXlgEtSyMD_gOyK39XadMwY
-_core:
-  default_config_hash: rpfRQVoEn2ZWd_lw-iULKPiuina5CqcmzXWlz1OjTwM

@@ -18,13 +18,13 @@ translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
+  title: null
   class: 'u-vr__px--2 u-vr__py--2'
   frameborder: '0'
   scrolling: 'no'
   transparency: '0'
   allowfullscreen: '1'
   tokensupport: '0'
-  title: null
-  height: null
   width: null
+  height: null
 field_type: iframe

@@ -49,7 +49,7 @@ class PromotionSubscriberTest extends ShippingKernelTestBase implements ServiceM
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_promotion',
   ];
 

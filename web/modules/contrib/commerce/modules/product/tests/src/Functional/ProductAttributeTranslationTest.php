@@ -17,7 +17,7 @@ class ProductAttributeTranslationTest extends ProductBrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_product_test',
     'config_translation',
     'content_translation',

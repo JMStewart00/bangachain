@@ -2,8 +2,8 @@
 
 namespace Drupal\rules\Event;
 
+use Drupal\Component\EventDispatcher\Event;
 use Drupal\user\UserInterface;
-use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Event that is fired when a user logs in.
@@ -19,7 +19,7 @@ class UserLoginEvent extends Event {
    *
    * @var \Drupal\user\UserInterface
    */
-  public $account;
+  protected $account;
 
   /**
    * Constructs the object.

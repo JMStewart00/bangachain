@@ -53,8 +53,8 @@ trait SplideVanillaWithNavTrait {
     // Thumbnail usages: asNavFor pagers, dot, arrows, photobox thumbnails.
     $element[$item_id] = empty($settings['thumbnail_style']) ? [] : $this->formatter->getThumbnail($settings, $element['item']);
 
-    $name = isset($settings['nav_caption']) ? $settings['nav_caption'] : '';
-    $item = isset($element['item']) ? $element['item'] : NULL;
+    $name = $settings['nav_caption'] ?? '';
+    $item = $element['item'] ?? NULL;
     if ($name) {
       /** @var Drupal\image\Plugin\Field\FieldType\ImageItem $item */
       if ($item) {
@@ -74,6 +74,29 @@ trait SplideVanillaWithNavTrait {
     }
 
     $build['nav']['items'][$delta] = $element;
+  }
+
+  /**
+   * If text pagination is configured, pass strings to the JavaScript.
+   */
+  protected function checkTextPagination(array $entities) {
+    if ($pagination_text = $this->getSetting('pagination_text')) {
+      $pagination_texts = [];
+      foreach ($entities as $entity) {
+        if (!isset($entity->{$pagination_text})) {
+          continue;
+        }
+        if ($field = $entity->get($pagination_text)) {
+          $value = $field->getString();
+          $value = $value ? Xss::filter($value, BlazyDefault::TAGS) : NULL;
+          $pagination_texts[] = $value ?: $this->t('Missing navigation label!');
+        }
+      }
+
+      if ($pagination_texts) {
+        $this->setSetting('pagination_texts', $pagination_texts);
+      }
+    }
   }
 
 }

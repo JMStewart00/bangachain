@@ -23,7 +23,7 @@ function template_preprocess_blazy_test(&$variables) {
   $element = $variables['element'];
 
   $variables['content'] = $element['#children'];
-  $variables['settings'] = isset($element['#settings']) ? $element['#settings'] : [];
+  $variables['settings'] = $element['#settings'] ?? [];
 }
 
 /**
@@ -59,43 +59,9 @@ function blazy_test_blazy_alter(array &$image, array $settings = []) {
 }
 
 /**
- * Implements hook_library_info_alter().
- */
-function blazy_test_library_info_alter(array &$libraries, $extension) {
-  if ($extension !== 'blazy') {
-    return;
-  }
-
-  $path = \Drupal::root() . '/libraries/blazy/blazy.js';
-  if (!is_file($path)) {
-    $libraries['blazy']['js'] = [
-      'https://cdn.jsdelivr.net/npm/blazy/blazy.js' => [
-        'type' => 'external',
-        'weight' => -4,
-      ],
-    ];
-    unset($libraries['blazy']['js']['/libraries/blazy/blazy.js']);
-  }
-}
-
-/**
  * Implements hook_config_schema_info_alter().
  */
 function blazy_test_config_schema_info_alter(array &$definitions) {
   $extra = ['thumbnail' => ''] + BlazyDefault::gridSettings();
   BlazyAlter::configSchemaInfoAlter($definitions, 'blazy_base', BlazyDefault::extendedSettings() + $extra);
-}
-
-/**
- * Attempts to satisfy the tests for <= D8.7.
- */
-if (!function_exists('file_valid_uri')) {
-
-  /**
-   * Dummy function.
-   */
-  function file_valid_uri() {
-    // Empty block to satisfy coder.
-  }
-
 }

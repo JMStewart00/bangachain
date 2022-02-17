@@ -7,6 +7,8 @@ use Drupal\rules\Core\RulesActionBase;
 /**
  * Provides a 'Remove item from list' action.
  *
+ * @todo Add access callback information from Drupal 7.
+ *
  * @RulesAction(
  *   id = "rules_list_item_remove",
  *   label = @Translation("Remove item from list"),
@@ -23,8 +25,6 @@ use Drupal\rules\Core\RulesActionBase;
  *     ),
  *   }
  * )
- *
- * @todo Add access callback information from Drupal 7.
  */
 class DataListItemRemove extends RulesActionBase {
 

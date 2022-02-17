@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\feeds\Kernel\Feeds\Target;
 
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\feeds\Plugin\Type\Processor\ProcessorInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
@@ -430,6 +431,84 @@ class EntityReferenceTest extends FeedsKernelTestBase {
     for ($i = 1; $i <= 3; $i++) {
       $term = $this->reloadEntity($terms[$i]);
       $this->assertEquals('Description of term ' . $i, $term->description->value);
+    }
+  }
+
+  /**
+   * Tests if only a single entity is referenced per value.
+   *
+   * In case multiple entities exist for a source value mapped to an entity
+   * reference field, ensure that by default only one entity is returned.
+   */
+  public function testWithSingleReference() {
+    // Create a content type for which entities will be referenced.
+    $type = NodeType::create([
+      'type' => 'event',
+      'name' => 'Event',
+    ]);
+    $type->save();
+    // Add a text field on this type that will be used as the field to reference
+    // by.
+    $this->createFieldWithStorage('field_alpha', [
+      'bundle' => 'event',
+    ]);
+
+    // Create two event nodes, both with the same value for the field "alpha".
+    Node::create([
+      'title' => 'Event 1',
+      'type' => 'event',
+      'field_alpha' => 'Lorem',
+    ])->save();
+    Node::create([
+      'title' => 'Event 2',
+      'type' => 'event',
+      'field_alpha' => 'Lorem',
+    ])->save();
+
+    // Add an entity reference field to the content type "article", referencing
+    // nodes of type "event" and accepting multiple values.
+    $this->createEntityReferenceField('node', 'article', 'field_event', 'Event', 'node', 'default', [
+      'target_bundles' => ['event'],
+    ], FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
+
+    // Create a feed type for importing articles, with a mapper to the
+    // entityreference field 'field_event'.
+    $feed_type = $this->createFeedTypeForCsv([
+      'title' => 'title',
+      'guid' => 'guid',
+      'alpha' => 'alpha',
+    ], [
+      'mappings' => array_merge($this->getDefaultMappings(), [
+        [
+          'target' => 'field_event',
+          'map' => ['target_id' => 'alpha'],
+          'settings' => [
+            'reference_by' => 'field_alpha',
+          ],
+        ],
+      ]),
+    ]);
+
+    // Import articles.
+    $feed = $this->createFeed($feed_type->id(), [
+      'source' => $this->resourcesPath() . '/csv/content.csv',
+    ]);
+    $feed->import();
+
+    // Assert that now four nodes in total exist.
+    $this->assertNodeCount(4);
+
+    // Assert that the first article references only one entity and the second
+    // none.
+    $expected_values_per_node = [
+      3 => [
+        ['target_id' => 1],
+      ],
+      4 => [],
+    ];
+    foreach ($expected_values_per_node as $nid => $expected_value) {
+      $node = Node::load($nid);
+      $this->assertEquals($expected_value, $node->field_event->getValue());
     }
   }
 

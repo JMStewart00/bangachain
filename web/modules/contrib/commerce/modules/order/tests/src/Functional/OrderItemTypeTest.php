@@ -16,7 +16,7 @@ class OrderItemTypeTest extends OrderBrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     // The cart module is installed to confirm that it doesn't cause problems
     // when creating an add_to_cart form display for new order item types.
     'commerce_cart',

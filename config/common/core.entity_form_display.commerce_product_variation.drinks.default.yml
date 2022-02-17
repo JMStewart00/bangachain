@@ -20,9 +20,9 @@ content:
   'Loyalty points offered':
     type: number_decimal
     weight: 91
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   commerce_stock_always_in_stock:
     type: boolean_checkbox
     weight: 4
@@ -38,21 +38,21 @@ content:
       placeholder: ''
     third_party_settings: {  }
   field_product_image:
+    type: media_library_widget
     weight: 3
+    region: content
     settings:
       media_types: {  }
     third_party_settings: {  }
-    type: media_library_widget
-    region: content
   field_stock:
+    type: commerce_stock_level_simple_transaction
     weight: 5
+    region: content
     settings:
+      step: '1'
       custom_transaction_note: false
       default_transaction_note: 'Transaction issued by stock level field.'
-      step: '1'
     third_party_settings: {  }
-    type: commerce_stock_level_simple_transaction
-    region: content
   list_price:
     type: commerce_list_price
     weight: 6
@@ -82,10 +82,10 @@ content:
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    settings:
-      display_label: true
     weight: 7
     region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   title:
     type: string_textfield

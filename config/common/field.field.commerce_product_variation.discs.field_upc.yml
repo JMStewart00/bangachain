@@ -5,11 +5,11 @@ dependencies:
   config:
     - commerce_product.commerce_product_variation_type.discs
     - field.storage.commerce_product_variation.field_upc
+  module:
+    - text
   enforced:
     module:
       - commerce_pos
-  module:
-    - text
 _core:
   default_config_hash: DJYLM7brHYdsXqruKEyAeIJyJ4GQKYpoZxch71yzlu0
 id: commerce_product_variation.discs.field_upc

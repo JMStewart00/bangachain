@@ -14,6 +14,10 @@ use Drupal\layout_builder_restrictions\Form\FormAlter;
  * Curate the blocks available in the Layout Builder "Add Block" UI.
  */
 function layout_builder_restrictions_plugin_filter_block__layout_builder_alter(array &$definitions, array $extra) {
+  if (isset($extra['list']) && !isset($extra['browse'])) {
+    // Do not alter the block definitions when 'Add block' is clicked.
+    return;
+  }
   $layout_builder_restrictions_manager = \Drupal::service('plugin.manager.layout_builder_restriction');
   $restriction_plugins = $layout_builder_restrictions_manager->getSortedPlugins();
   foreach (array_keys($restriction_plugins) as $id) {

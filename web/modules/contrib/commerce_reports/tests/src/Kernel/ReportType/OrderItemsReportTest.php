@@ -25,6 +25,7 @@ class OrderItemsReportTest extends CommerceKernelTestBase {
     'entity_reference_revisions',
     'profile',
     'state_machine',
+    'commerce_number_pattern',
     'commerce_order',
     'commerce_reports',
   ];
@@ -46,13 +47,14 @@ class OrderItemsReportTest extends CommerceKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('profile');
     $this->installEntitySchema('commerce_order');
     $this->installEntitySchema('commerce_order_item');
     $this->installEntitySchema('commerce_order_report');
     $this->installConfig('commerce_order');
+    $this->installSchema('commerce_number_pattern', ['commerce_number_pattern_sequence']);
 
     $this->reportTypeManager = $this->container->get('plugin.manager.commerce_report_type');
     $user = $this->createUser(['mail' => $this->randomString() . '@example.com']);

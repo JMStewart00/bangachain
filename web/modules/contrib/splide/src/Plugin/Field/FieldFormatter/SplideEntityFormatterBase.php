@@ -62,6 +62,10 @@ abstract class SplideEntityFormatterBase extends BlazyEntityBase implements Cont
       return [];
     }
 
+    // If text pagination is enabled and configured, we need to build an array
+    // of strings to pass to the JavaScript.
+    $this->checkTextPagination($entities);
+
     return $this->commonViewElements($items, $langcode, $entities);
   }
 
@@ -82,22 +86,24 @@ abstract class SplideEntityFormatterBase extends BlazyEntityBase implements Cont
     $target_type = $this->getFieldSetting('target_type');
     $views_ui    = $this->getFieldSetting('handler') == 'default';
     $bundles     = $views_ui ? [] : $this->getFieldSetting('handler_settings')['target_bundles'];
-    $texts       = ['text', 'text_long', 'string', 'string_long', 'link'];
-    $texts       = $admin->getFieldOptions($bundles, $texts, $target_type);
+    $text_fields = ['text', 'text_long', 'string', 'string_long', 'link'];
+    $texts       = $admin->getFieldOptions($bundles, $text_fields, $target_type);
+    $texts2      = $admin->getValidFieldOptions($bundles, $target_type);
 
     return [
-      'fieldable_form'   => TRUE,
-      'image_style_form' => TRUE,
-      'images'           => $admin->getFieldOptions($bundles, ['image'], $target_type),
-      'no_layouts'       => TRUE,
-      'no_image_style'   => TRUE,
-      'responsive_image' => FALSE,
-      'thumb_captions'   => $texts,
-      'thumb_positions'  => TRUE,
-      'thumbnail_style'  => TRUE,
-      'nav'              => TRUE,
-      'nav_state'        => TRUE,
-      'vanilla'          => TRUE,
+      'fieldable_form'         => TRUE,
+      'image_style_form'       => TRUE,
+      'images'                 => $admin->getFieldOptions($bundles, ['image'], $target_type),
+      'no_layouts'             => TRUE,
+      'no_image_style'         => TRUE,
+      'responsive_image'       => FALSE,
+      'thumb_captions'         => $texts,
+      'thumb_positions'        => TRUE,
+      'thumbnail_style'        => TRUE,
+      'nav'                    => TRUE,
+      'nav_state'              => TRUE,
+      'vanilla'                => TRUE,
+      'pagination_texts' => $texts2,
     ] + $this->getCommonScopedFormElements() + parent::getScopedFormElements();
   }
 

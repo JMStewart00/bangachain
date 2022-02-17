@@ -90,6 +90,9 @@ class FeedsExecutable implements FeedsExecutableInterface, ContainerInjectionInt
    * {@inheritdoc}
    */
   public function processItem(FeedInterface $feed, $stage, array $params = []) {
+    // Make sure that the feed type exists.
+    $feed->getType();
+
     $switcher = $this->switchAccount($feed);
 
     try {

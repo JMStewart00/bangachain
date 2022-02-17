@@ -8,7 +8,7 @@
  * here for re-use and other advanced usages, like zoom, etc.
  */
 
-(function (_win, _doc, _db, _ds) {
+(function ($, _ds, _win, _doc) {
 
   'use strict';
 
@@ -79,7 +79,7 @@
       var elms = me.options.elms || me.root.querySelectorAll(target);
 
       if (elms && elms.length) {
-        _db.forEach(elms, detect.bind(me));
+        $.forEach(elms, detect.bind(me));
       }
     });
   }
@@ -108,6 +108,7 @@
     var _downStarter = null;
     var _downDelay = 500;
     var _downActive = false;
+    var _moveRaf = null;
 
     _downDelay = options.downDelay || _downDelay;
 
@@ -123,7 +124,6 @@
 
       data = me.toData(el, dir, 'start', _none, viewport, startX, startY);
 
-      toggleRootClass(true);
       toggleItemClass(el, true);
       touch(e, data);
 
@@ -155,27 +155,42 @@
         return false;
       }
 
-      var touchObj = isMobile ? e.changedTouches[0] : e;
-
-      // Get horizontal dist traveled by finger while in contact with surface.
-      x = touchObj.pageX - startX;
-      // Get vertical dist traveled by finger while in contact with surface.
-      y = touchObj.pageY - startY;
-
-      // If distance traveled horizontally is greater than vertically,
-      // consider this a horizontal movement.
-      if (abs(x) > abs(y)) {
-        dir = (x < 0) ? _left : _right;
-      }
-      // Else consider this a vertical movement.
-      else {
-        dir = (y < 0) ? _up : _down;
+      // Cancel if an animation frame was already requested.
+      if (_moveRaf) {
+        _win.cancelAnimationFrame(_moveRaf);
       }
 
-      data = me.toData(el, dir, 'move', swipeType, viewport, x, y);
+      var update = function () {
+        toggleRootClass(true);
+        touch(e, data);
+      };
 
-      touch(e, data);
-      dir = data.dir;
+      _moveRaf = _win.requestAnimationFrame(function () {
+        var touchObj = isMobile ? e.changedTouches[0] : e;
+
+        // Get horizontal dist traveled by finger while in contact with surface.
+        x = touchObj.pageX - startX;
+        // Get vertical dist traveled by finger while in contact with surface.
+        y = touchObj.pageY - startY;
+
+        // If distance traveled horizontally is greater than vertically,
+        // consider this a horizontal movement.
+        if (abs(x) > abs(y)) {
+          dir = x < 0 ? _left : _right;
+        }
+        // Else consider this a vertical movement.
+        else {
+          dir = y < 0 ? _up : _down;
+        }
+
+        data = me.toData(el, dir, 'move', swipeType, viewport, x, y);
+
+        update();
+
+        dir = data.dir;
+        _moveRaf = null;
+      });
+
       // Prevent scrolling when inside DIV.
       e.preventDefault();
     }
@@ -227,10 +242,14 @@
         unbind(_win, _mousemove, move);
         unbind(_win, _mouseup, release);
       }
+
+      if (_moveRaf) {
+        _win.cancelAnimationFrame(_moveRaf);
+      }
     }
 
     function _onClick(e) {
-      if (_db.equal(e.target, 'img')) {
+      if ($.equal(e.target, 'img')) {
         onClick(e);
 
         e.stopPropagation();
@@ -267,13 +286,13 @@
 
   function bind(el, e, fn, params) {
     if (el) {
-      _db.bindEvent(el, e, fn, params);
+      $.bindEvent(el, e, fn, params);
     }
   }
 
   function unbind(el, e, fn, params) {
     if (el) {
-      _db.unbindEvent(el, e, fn, params);
+      $.unbindEvent(el, e, fn, params);
     }
   }
 
@@ -282,5 +301,4 @@
       el.classList[add ? 'add' : 'remove'](className);
     }
   }
-
-})(this, this.document, dBlazy, dSplide);
+})(dBlazy, dSplide, this, this.document);

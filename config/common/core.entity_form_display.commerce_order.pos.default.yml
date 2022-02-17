@@ -19,45 +19,45 @@ content:
   adjustments:
     type: commerce_adjustment_default
     weight: 1
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   cart:
     type: boolean_checkbox
-    settings:
-      display_label: true
     weight: 20
     region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   mail:
     type: email_default
     weight: 2
     region: content
     settings:
-      size: 60
       placeholder: ''
+      size: 60
     third_party_settings: {  }
   order_items:
     type: pos_order_item_widget
     weight: 0
-    settings:
-      size: 60
-      placeholder: 'Scan or enter product name or SKU'
-      num_results: 10
-      purchasable_entity_view_mode: commerce_pos_product_select
-      decimal_step: '0.1'
-      allow_decimal: false
-    third_party_settings: {  }
     region: content
+    settings:
+      num_results: 10
+      placeholder: 'Scan or enter product name or SKU'
+      purchasable_entity_view_mode: commerce_pos_product_select
+      size: 60
+      allow_decimal: false
+      decimal_step: '0.1'
+    third_party_settings: {  }
   uid:
     type: pos_customer_widget
     weight: 0
-    settings:
-      size: 60
-      placeholder: 'Enter a name, email, or phone number'
-      num_results: 10
-    third_party_settings: {  }
     region: content
+    settings:
+      num_results: 10
+      placeholder: 'Enter a name, email, or phone number'
+      size: 60
+    third_party_settings: {  }
 hidden:
   billing_profile: true
   created: true

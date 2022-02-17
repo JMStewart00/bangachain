@@ -150,7 +150,7 @@ class LoopTest extends RulesEntityIntegrationTestBase {
       ->setContextValue('node', $node->reveal());
 
     $violations = $component->checkIntegrity();
-    $this->assertEquals(0, iterator_count($violations));
+    $this->assertCount(0, $violations);
 
     $result = $component->execute();
 
@@ -175,7 +175,7 @@ class LoopTest extends RulesEntityIntegrationTestBase {
       ->addContextDefinition('existing_name', ContextDefinition::create('string'))
       ->checkIntegrity();
 
-    $this->assertEquals(1, iterator_count($violations));
+    $this->assertCount(1, $violations);
     $this->assertEquals(
       'List item name <em class="placeholder">existing_name</em> conflicts with an existing variable.',
       (string) $violations[0]->getMessage()
@@ -197,7 +197,7 @@ class LoopTest extends RulesEntityIntegrationTestBase {
     $violations = RulesComponent::create($rule)
       ->checkIntegrity();
 
-    $this->assertEquals(1, iterator_count($violations));
+    $this->assertCount(1, $violations);
     // The Exception message part of the output should be HTML-escaped.
     $this->assertEquals(
       "List variable <em class=\"placeholder\">unknown_list</em> does not exist. Unable to get variable &#039;unknown_list&#039;; it is not defined.",
@@ -218,7 +218,7 @@ class LoopTest extends RulesEntityIntegrationTestBase {
     $violations = RulesComponent::create($rule)
       ->checkIntegrity();
 
-    $this->assertEquals(1, iterator_count($violations));
+    $this->assertCount(1, $violations);
     $this->assertEquals(
       'List variable is missing.',
       (string) $violations[0]->getMessage()
@@ -242,7 +242,7 @@ class LoopTest extends RulesEntityIntegrationTestBase {
       ->addContextDefinition('string_list', ContextDefinition::create('string')->setMultiple())
       ->checkIntegrity();
 
-    $this->assertEquals(1, iterator_count($violations));
+    $this->assertCount(1, $violations);
     // The Exception message part of the output should be HTML-escaped.
     $this->assertEquals(
       "Data selector <em class=\"placeholder\">unknown_variable</em> for context <em class=\"placeholder\">Text to concatenate</em> is invalid. Unable to get variable &#039;unknown_variable&#039;; it is not defined.",
@@ -266,7 +266,7 @@ class LoopTest extends RulesEntityIntegrationTestBase {
       ->addContextDefinition('string_variable', ContextDefinition::create('string'))
       ->checkIntegrity();
 
-    $this->assertEquals(1, iterator_count($violations));
+    $this->assertCount(1, $violations);
     $this->assertEquals(
       'The data type of list variable <em class="placeholder">string_variable</em> is not a list.',
       (string) $violations[0]->getMessage()
@@ -289,7 +289,7 @@ class LoopTest extends RulesEntityIntegrationTestBase {
       ->addContextDefinition('string_list', ContextDefinition::create('string')->setMultiple())
       ->checkIntegrity();
 
-    $this->assertEquals(1, iterator_count($violations));
+    $this->assertCount(1, $violations);
     // The Exception message part of the output should be HTML-escaped.
     $this->assertEquals(
       "Data selector <em class=\"placeholder\">list_item</em> for context <em class=\"placeholder\">Text to concatenate</em> is invalid. Unable to get variable &#039;list_item&#039;; it is not defined.",

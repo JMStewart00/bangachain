@@ -140,6 +140,13 @@ trait ContextHandlerIntegrityTrait {
       return;
     }
 
+    // The language context variables can accept a language object via data
+    // selection (usually a field ending with .language) and these are
+    // identified by having a type of 'language_reference'.
+    if ($expected_type === 'entity:configurable_language' && $provided_type == 'language_reference') {
+      return;
+    }
+
     $provided_class = $provided->getClass();
     $expected_class = $context_definition->getDataDefinition()->getClass();
     if (is_subclass_of($expected_class, $provided_class)) {

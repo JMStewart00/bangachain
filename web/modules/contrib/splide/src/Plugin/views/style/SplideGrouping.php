@@ -179,7 +179,7 @@ class SplideGrouping extends SplideViewsBase {
     $grouping = empty($this->options['grouping']) ? [] : array_filter($this->options['grouping']);
 
     foreach ($sets as $set) {
-      $level = isset($set['level']) ? $set['level'] : 0;
+      $level = $set['level'] ?? 0;
       $row   = reset($set['rows']);
 
       // Render as a grouping set.

@@ -113,7 +113,7 @@ trait BlazyEasingTrait {
     ];
 
     foreach ($available_easings as $key => $easing) {
-      list($readable_easing, $css_easing) = array_pad(array_map('trim', explode("|", $easing, 2)), 2, NULL);
+      [$readable_easing, $css_easing] = array_pad(array_map('trim', explode("|", $easing, 2)), 2, NULL);
       $css_easings[$key] = $map ? $easing : $readable_easing;
       unset($css_easing);
     }
@@ -133,7 +133,7 @@ trait BlazyEasingTrait {
     $css_easing = '';
     if ($easing) {
       $easings = $this->getCssEasingOptions(TRUE);
-      list($readable_easing, $bezier) = array_pad(array_map('trim', explode("|", $easings[$easing], 2)), 2, NULL);
+      [$readable_easing, $bezier] = array_pad(array_map('trim', explode("|", $easings[$easing], 2)), 2, NULL);
       $css_easing = $bezier;
       unset($readable_easing);
     }

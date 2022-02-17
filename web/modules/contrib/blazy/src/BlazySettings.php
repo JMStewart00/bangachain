@@ -5,7 +5,7 @@ namespace Drupal\blazy;
 /**
  * Provides settings object.
  *
- * @todo convert settings into BlazySettings instance at blazy:8.3 if you can.
+ * @todo convert settings into BlazySettings instance at blazy:3.+ if you can.
  */
 class BlazySettings implements \Countable {
 
@@ -29,21 +29,27 @@ class BlazySettings implements \Countable {
   /**
    * Counts total items.
    */
-  public function count() {
+  public function count(): int {
     return count($this->storage);
   }
 
   /**
-   * Gets values from a key.
+   * Returns values from a key.
+   *
+   * @param string $id
+   *   The storage key.
+   *
+   * @return mixed
+   *   A mixed value (array, string, bool, null, etc.).
    */
   public function get($id) {
-    return isset($this->storage[$id]) ? $this->storage[$id] : NULL;
+    return $this->storage[$id] ?? NULL;
   }
 
   /**
    * Sets values for a key.
    */
-  public function set($key, $value = NULL) {
+  public function set($key, $value = NULL): self {
     if (is_array($key) && empty($value)) {
       foreach ($key as $k => $v) {
         $this->storage[$k] = $v;
@@ -59,7 +65,7 @@ class BlazySettings implements \Countable {
   /**
    * Returns the whole array.
    */
-  public function storage() {
+  public function storage(): array {
     return $this->storage;
   }
 

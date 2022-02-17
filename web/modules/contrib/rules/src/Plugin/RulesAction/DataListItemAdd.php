@@ -7,6 +7,8 @@ use Drupal\rules\Core\RulesActionBase;
 /**
  * Provides an 'Add list item' action.
  *
+ * @todo Add access callback information from Drupal 7?
+ *
  * @RulesAction(
  *   id = "rules_list_item_add",
  *   label = @Translation("Add list item"),
@@ -24,19 +26,19 @@ use Drupal\rules\Core\RulesActionBase;
  *     "unique" = @ContextDefinition("boolean",
  *       label = @Translation("Enforce uniqueness"),
  *       description = @Translation("Only add the item to the list if it is not yet contained."),
+ *       options_provider = "\Drupal\rules\TypedData\Options\YesNoOptions",
  *       default_value = FALSE,
  *       required = FALSE
  *     ),
  *     "position" = @ContextDefinition("string",
  *       label = @Translation("Insert position"),
  *       description = @Translation("Position to insert the item."),
+ *       options_provider = "\Drupal\rules\TypedData\Options\ListPositionOptions",
  *       default_value = "end",
  *       required = FALSE
  *     ),
  *   }
  * )
- *
- * @todo Add access callback information from Drupal 7?
  */
 class DataListItemAdd extends RulesActionBase {
 

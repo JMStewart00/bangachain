@@ -21,10 +21,21 @@ class IframeOnlyFormatter extends IframeDefaultFormatter {
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = [];
+    // settings from type
+    $settings = $this->getSettings();
+    // field_settings on concrete field
+    $field_settings = $this->getFieldSettings();
 
+    $allow_attributes = [ 'url', 'width', 'height', 'title' ];
     foreach ($items as $delta => $item) {
       if (empty($item->url)) {
         continue;
+      }
+      foreach($field_settings as $field_key => $field_val) {
+        if (in_array($field_key, $allow_attributes)) {
+          continue;
+        }
+        $item->{$field_key} = $field_val;
       }
       if (!(property_exists($item, 'title') && $item->title !== null)) {
         $item->title = '';

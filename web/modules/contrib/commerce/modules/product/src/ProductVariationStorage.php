@@ -82,7 +82,7 @@ class ProductVariationStorage extends CommerceContentEntityStorage implements Pr
     $enabled_variations = $this->loadMultiple($result);
     // Allow modules to apply own filtering (based on date, stock, etc).
     $event = new FilterVariationsEvent($product, $enabled_variations);
-    $this->eventDispatcher->dispatch(ProductEvents::FILTER_VARIATIONS, $event);
+    $this->eventDispatcher->dispatch($event, ProductEvents::FILTER_VARIATIONS);
     $enabled_variations = $event->getVariations();
     // Filter out variations that can't be accessed.
     foreach ($enabled_variations as $variation_id => $enabled_variation) {

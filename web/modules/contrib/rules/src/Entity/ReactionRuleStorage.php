@@ -122,21 +122,19 @@ class ReactionRuleStorage extends ConfigEntityStorage {
     $this->stateService->set('rules.registered_events', $events_after);
 
     // After the reaction rule is saved, we may need to rebuild the container,
-    // otherwise the reaction rule will not fire. However, we can do an
-    // optimization: Only rebuild the container if there is a new event which
-    // was not already registered before. Similarly if the rule is being
-    // disabled and there are no other active rules with this event, then also
-    // rebuild the container.
-    foreach ($entity->getEventNames() as $event_name) {
-      if (empty($events_before[$event_name]) || empty($events_after[$event_name])) {
-        $this->drupalKernel->rebuildContainer();
-        break;
-      }
+    // otherwise the reaction rule will not fire. We do that only if the
+    // registered events are different.
+    ksort($events_before);
+    ksort($events_after);
+    if ($events_before !== $events_after) {
+      $this->drupalKernel->rebuildContainer();
     }
 
     // When a reaction rule is saved (either added, updated or enabled/disabled)
     // the cache for its event(s) needs to be invalidated. These tags are set in
-    // RulesComponentRepository::getMultiple()
+    // the RulesComponentRepository class.
+    //
+    // @see \Drupal\rules\Engine\RulesComponentRepository::getMultiple()
     Cache::invalidateTags($entity->getEventNames());
 
     return $return;

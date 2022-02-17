@@ -4,6 +4,7 @@ namespace Drupal\Tests\blazy\Unit;
 
 use Drupal\Tests\UnitTestCase;
 use Drupal\blazy\BlazyMedia;
+use Drupal\blazy\BlazyDefault;
 use Drupal\Tests\blazy\Traits\BlazyUnitTestTrait;
 
 /**
@@ -18,7 +19,7 @@ class BlazyMediaUnitTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->setUpVariables();
@@ -41,7 +42,7 @@ class BlazyMediaUnitTest extends UnitTestCase {
       'media_source' => 'remote_video',
       'media_switch' => 'media',
       // @todo 'bundle' => 'entity_test',
-    ];
+    ] + BlazyDefault::htmlSettings();
 
     $markup['#settings'] = $settings;
     $markup['#attached'] = [];

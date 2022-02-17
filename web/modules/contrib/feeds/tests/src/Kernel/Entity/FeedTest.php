@@ -15,6 +15,7 @@ use Drupal\feeds\Plugin\Type\Parser\ParserInterface;
 use Drupal\feeds\Plugin\Type\Processor\ProcessorInterface;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\feeds\Kernel\FeedsKernelTestBase;
+use Drupal\Tests\feeds\Kernel\TestLogger;
 use Exception;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -494,6 +495,32 @@ class FeedTest extends FeedsKernelTestBase {
         'foo' => 'bar',
       ]);
     }
+  }
+
+  /**
+   * @covers ::postDelete
+   */
+  public function testPostDeleteWithFeedTypeMissing() {
+    $feed = $this->createFeed($this->feedType->id());
+
+    // Create variables that are expected later in the log message.
+    $feed_label = $feed->label();
+    $feed_type_id = $this->feedType->id();
+
+    // Add a logger.
+    $test_logger = new TestLogger();
+    $this->container->get('logger.factory')->addLogger($test_logger);
+
+    // Delete feed type and reload feed.
+    $this->feedType->delete();
+    $feed = $this->reloadEntity($feed);
+
+    $feed->postDelete($this->container->get('entity_type.manager')->getStorage('feeds_feed'), [$feed]);
+    $logs = $test_logger->getMessages();
+    $expected_logs = [
+      'Could not perform some post cleanups for feed ' . $feed_label . ' because of the following error: The feed type "' . $feed_type_id . '" for feed 1 no longer exists.',
+    ];
+    $this->assertEquals($expected_logs, $logs);
   }
 
   /**

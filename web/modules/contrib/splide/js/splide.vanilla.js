@@ -3,12 +3,14 @@
  * Provides Splide vanilla where options are directly injected via data-splide.
  */
 
-(function (Drupal, _db, _ds) {
+(function ($, Drupal, _ds) {
 
   'use strict';
 
-  var _splide = 'splide--vanilla';
-  var _mounted = 'is-mounted';
+  var _id = 'splide';
+  var _vid = _id + '--vanilla';
+  var _mounted = 'is-sv-mounted';
+  var _element = '.' + _vid + ':not(.' + _mounted + '):not(.' + _id + '--default)';
 
   /**
    * Splide utility functions.
@@ -25,6 +27,8 @@
     }
 
     var instance = new Splide(elm);
+    _ds.initExtensions();
+    _ds.initListeners(instance);
 
     // Main display with navigation is deferred at splide.nav.min.js.
     if (!elm.classList.contains('splide--main')) {
@@ -47,15 +51,14 @@
   Drupal.behaviors.splideVanilla = {
     attach: function (context) {
 
-      // Context is unreliable with AJAX contents like product variations, etc.
-      context = context instanceof HTMLDocument ? context : document;
+      // @todo replace by dBlazy.context post Blazy:2.6+.
+      context = _ds.context(context);
 
-      var items = context.querySelectorAll('.' + _splide + ':not(.splide--default)');
-      if (items.length) {
-        _db.once(_db.forEach(items, doVanilla, context));
+      var elms = context.querySelectorAll(_element);
+      if (elms.length) {
+        $.once($.forEach(elms, doVanilla));
       }
-
     }
   };
 
-})(Drupal, dBlazy, dSplide);
+})(dBlazy, Drupal, dSplide);

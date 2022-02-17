@@ -4,7 +4,7 @@ status: true
 dependencies: {  }
 id: drinks
 label: Drinks
-orderItemType: default
-generateTitle: false
 traits: {  }
 locked: false
+orderItemType: default
+generateTitle: false

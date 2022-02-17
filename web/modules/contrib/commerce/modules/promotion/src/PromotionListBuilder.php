@@ -269,6 +269,21 @@ class PromotionListBuilder extends EntityListBuilder implements FormInterface {
           'commerce_promotion' => $entity->id(),
         ]),
       ];
+
+      if (!$entity->isEnabled() && $entity->hasLinkTemplate('enable-form')) {
+        $operations['enable'] = [
+          'title' => $this->t('Enable'),
+          'weight' => -10,
+          'url' => $this->ensureDestination($entity->toUrl('enable-form')),
+        ];
+      }
+      elseif ($entity->hasLinkTemplate('disable-form')) {
+        $operations['disable'] = [
+          'title' => $this->t('Disable'),
+          'weight' => 40,
+          'url' => $this->ensureDestination($entity->toUrl('disable-form')),
+        ];
+      }
     }
 
     return $operations;

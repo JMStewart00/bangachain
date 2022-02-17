@@ -30,7 +30,7 @@ class EmptyCartButtonTest extends OrderBrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_cart_test',
   ];
 

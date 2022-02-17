@@ -25,12 +25,10 @@
     'over' in settings.navpos ? 'is-wrapper-nav--' ~ settings.navpos|replace({ 'over-' : '' })
   ]
 %}
-{% spaceless %}
-  {% if settings.nav %}
-    <div{{ attributes.addClass(classes)|without('id') }}>
-      {{ items }}
-    </div>
-  {% else %}
+{% if settings.nav %}
+  <div{{ attributes.addClass(classes)|without('id') }}>
     {{ items }}
-  {% endif %}
-{% endspaceless %}
+  </div>
+{% else %}
+  {{ items }}
+{% endif %}

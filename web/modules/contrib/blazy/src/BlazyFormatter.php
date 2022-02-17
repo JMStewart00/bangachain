@@ -47,18 +47,21 @@ class BlazyFormatter extends BlazyManager implements BlazyFormatterInterface {
     $bundle         = $settings['bundle'];
     $view_mode      = $settings['current_view_mode'];
     $namespace      = $settings['namespace'];
-    $id             = isset($settings['id']) ? $settings['id'] : '';
+    $id             = $settings['id'] ?? '';
     $gallery_id     = "{$namespace}-{$entity_type_id}-{$bundle}-{$field_clean}-{$view_mode}";
     $id             = Blazy::getHtmlId("{$gallery_id}-{$entity_id}", $id);
 
     // Provides formatter settings.
-    $settings['cache_metadata'] = ['keys' => [$id, $count]];
-    $settings['cache_tags'][]   = $entity_type_id . ':' . $entity_id;
-    $settings['caption']        = empty($settings['caption']) ? [] : array_filter($settings['caption']);
-    $settings['count']          = $count;
-    $settings['gallery_id']     = str_replace('_', '-', $gallery_id . '-' . $settings['media_switch']);
-    $settings['id']             = $id;
-    $settings['use_field']      = !$settings['lightbox'] && isset($settings['third_party'], $settings['third_party']['linked_field']) && !empty($settings['third_party']['linked_field']['linked']);
+    $settings['cache_metadata']['keys'][] = $id;
+    $settings['cache_metadata']['keys'][] = $count;
+
+    // When alignment is mismatched, split them to satisfy linter.
+    $settings['cache_tags'][] = $entity_type_id . ':' . $entity_id;
+    $settings['caption']      = empty($settings['caption']) ? [] : array_filter($settings['caption']);
+    $settings['count']        = $count;
+    $settings['gallery_id']   = str_replace('_', '-', $gallery_id . '-' . $settings['media_switch']);
+    $settings['id']           = $id;
+    $settings['use_field']    = !$settings['lightbox'] && ($settings['third_party']['linked_field']['linked'] ?? FALSE);
 
     // Bail out if Vanilla mode is requested.
     if (!empty($settings['vanilla'])) {
@@ -68,8 +71,8 @@ class BlazyFormatter extends BlazyManager implements BlazyFormatterInterface {
 
     // Lazy load types: blazy, and slick: ondemand, anticipated, progressive.
     $settings['blazy'] = !empty($settings['blazy']) || !empty($settings['background']) || $settings['resimage'];
-    $settings['lazy']  = $settings['blazy'] ? 'blazy' : (isset($settings['lazy']) ? $settings['lazy'] : '');
-    $settings['lazy']  = empty($settings['is_preview']) ? $settings['lazy'] : '';
+    $settings['lazy']  = $settings['blazy'] ? 'blazy' : ($settings['lazy'] ?? '');
+    $settings['lazy']  = empty($settings['is_nojs']) ? $settings['lazy'] : '';
   }
 
   /**
@@ -80,7 +83,7 @@ class BlazyFormatter extends BlazyManager implements BlazyFormatterInterface {
     $settings = &$build['settings'];
 
     // Pass first item to optimize sizes this time.
-    if (isset($items[0]) && $item = $items[0]) {
+    if ($item = ($items[0] ?? NULL)) {
       $this->extractFirstItem($settings, $item, reset($entities));
     }
 
@@ -90,8 +93,13 @@ class BlazyFormatter extends BlazyManager implements BlazyFormatterInterface {
       if (empty($settings['resimage'])) {
         $this->setImageDimensions($settings);
       }
-      elseif (!empty($settings['resimage']) && !empty($settings['ratio']) && $settings['ratio'] == 'fluid') {
-        $this->setResponsiveImageDimensions($settings);
+      elseif (!empty($settings['resimage'])) {
+        if (!empty($settings['preload'])) {
+          BlazyResponsiveImage::sources($settings);
+        }
+        if ($settings['ratio'] == 'fluid') {
+          BlazyResponsiveImage::dimensions($settings, TRUE);
+        }
       }
     }
 
@@ -115,7 +123,7 @@ class BlazyFormatter extends BlazyManager implements BlazyFormatterInterface {
       $settings['_uri'] = ($file = $item->entity) && empty($item->uri) ? $file->getFileUri() : $item->uri;
     }
     elseif ($entity && $entity->hasField('thumbnail') && $image = $entity->get('thumbnail')->first()) {
-      if (isset($image->entity) && $file = $image->entity) {
+      if ($file = ($image->entity ?? NULL)) {
         $settings['_item'] = $image;
         $settings['_uri'] = $file->getFileUri();
       }
@@ -123,7 +131,7 @@ class BlazyFormatter extends BlazyManager implements BlazyFormatterInterface {
 
     // The first image dimensions to differ from individual item dimensions.
     if (!empty($settings['_item'])) {
-      BlazyUtil::imageDimensions($settings, $settings['_item'], TRUE);
+      BlazyFile::imageDimensions($settings, $settings['_item'], TRUE);
     }
   }
 
@@ -137,7 +145,7 @@ class BlazyFormatter extends BlazyManager implements BlazyFormatterInterface {
     if (!isset($this->isImageDimensionSet[md5($settings['id'])])) {
       // If image style contains crop, sets dimension once, and let all inherit.
       if (!empty($settings['image_style']) && ($style = $this->isCrop($settings['image_style']))) {
-        $settings = array_merge($settings, BlazyUtil::transformDimensions($style, $settings, TRUE));
+        $settings = array_merge($settings, BlazyFile::transformDimensions($style, $settings, TRUE));
 
         // Informs individual images that dimensions are already set once.
         $settings['_dimensions'] = TRUE;
@@ -170,7 +178,7 @@ class BlazyFormatter extends BlazyManager implements BlazyFormatterInterface {
    */
   public function isCrop($style) {
     if (!isset($this->isCrop[$style])) {
-      $this->isCrop[$style] = $this->cropStyles() && isset($this->cropStyles()[$style]) ? $this->cropStyles()[$style] : FALSE;
+      $this->isCrop[$style] = $this->cropStyles()[$style] ?? FALSE;
     }
     return $this->isCrop[$style];
   }

@@ -25,6 +25,7 @@ class SplideDefault extends BlazyDefault {
       'skin_arrows'     => '',
       'skin_dots'       => '',
       'use_theme_field' => FALSE,
+      'pagination_pos'  => '',
     ] + parent::baseSettings();
   }
 
@@ -57,6 +58,7 @@ class SplideDefault extends BlazyDefault {
   public static function extendedSettings() {
     return [
       'thumbnail' => '',
+      'pagination_text' => '',
     ] + self::imageSettings() + parent::extendedSettings();
   }
 
@@ -126,22 +128,24 @@ class SplideDefault extends BlazyDefault {
    */
   public static function htmlSettings() {
     return [
-      'display'       => 'main',
-      'grid'          => 0,
-      'id'            => '',
-      'lazy'          => '',
-      'namespace'     => 'splide',
-      'nav'           => FALSE,
-      'navpos'        => FALSE,
-      'pagination_fx' => '',
-      'thumbnail_uri' => '',
-      'route_name'    => '',
-      '_unload'       => FALSE,
-      'unsplide'      => FALSE,
-      'vanilla'       => FALSE,
-      'vertical'      => FALSE,
-      'vertical_nav'  => FALSE,
-      'view_name'     => '',
+      'autoscroll'      => FALSE,
+      'display'         => 'main',
+      'grid'            => 0,
+      'id'              => '',
+      'lazy'            => '',
+      'namespace'       => 'splide',
+      'nav'             => FALSE,
+      'navpos'          => FALSE,
+      'pagination_fx'   => '',
+      'pagination_tab'  => FALSE,
+      'thumbnail_uri'   => '',
+      'route_name'      => '',
+      '_unload'         => FALSE,
+      'unsplide'        => FALSE,
+      'vanilla'         => FALSE,
+      'vertical'        => FALSE,
+      'vertical_nav'    => FALSE,
+      'view_name'       => '',
     ] + self::imageSettings();
   }
 
@@ -172,6 +176,31 @@ class SplideDefault extends BlazyDefault {
       'optionset',
       'settings',
     ];
+  }
+
+  /**
+   * Returns a wrapper to pass tests, or DI where adding params is troublesome.
+   *
+   * @todo remove for Blazy::pathResolver() post Blazy:2.6+.
+   */
+  public static function pathResolver() {
+    return \Drupal::hasService('extension.path.resolver') ? \Drupal::service('extension.path.resolver') : NULL;
+  }
+
+  /**
+   * Returns the commonly used path, or just the base path.
+   *
+   * @todo remove for Blazy::getPath post Blazy:2.6+ when min D9.3.
+   */
+  public static function getPath($type, $name, $absolute = FALSE): string {
+    $function = 'drupal_get_path';
+    if ($resolver = self::pathResolver()) {
+      $path = $resolver->getPath($type, $name);
+    }
+    else {
+      $path = is_callable($function) ? $function($type, $name) : '';
+    }
+    return $absolute ? \base_path() . $path : $path;
   }
 
 }

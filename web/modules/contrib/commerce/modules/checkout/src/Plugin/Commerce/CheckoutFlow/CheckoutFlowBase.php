@@ -426,7 +426,7 @@ abstract class CheckoutFlowBase extends PluginBase implements CheckoutFlowInterf
     if ($step_id == 'complete' && $this->order->getState()->getId() == 'draft') {
       // Notify other modules.
       $event = new OrderEvent($this->order);
-      $this->eventDispatcher->dispatch(CheckoutEvents::COMPLETION, $event);
+      $this->eventDispatcher->dispatch($event, CheckoutEvents::COMPLETION);
       $this->order->getState()->applyTransitionById('place');
     }
   }

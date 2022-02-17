@@ -131,7 +131,7 @@ trait BlazyStyleOptionsTrait {
 
     // Provides the requested fields based on available $options.
     foreach ($defined_options as $key) {
-      $definition[$key] = isset($options[$key]) ? $options[$key] : [];
+      $definition[$key] = $options[$key] ?? [];
     }
 
     $contexts = [
@@ -199,7 +199,7 @@ trait BlazyStyleOptionsTrait {
         }
       }
       else {
-        $value = isset($value[0]['value']) && !empty($value[0]['value']) ? $value[0]['value'] : '';
+        $value = $value[0]['value'] ?? '';
         if ($value) {
           $values[$index] = $clean ? Html::cleanCssIdentifier(mb_strtolower($value)) : $value;
         }

@@ -141,6 +141,12 @@ class HttpFetcher extends PluginBase implements ClearableInterface, FetcherInter
 
     $options = [RequestOptions::SINK => $sink];
 
+    // Adding User-Agent header from the default guzzle client config for feeds
+    // that require that.
+    if (isset($this->client->getConfig('headers')['User-Agent'])) {
+      $options[RequestOptions::HEADERS]['User-Agent'] = $this->client->getConfig('headers')['User-Agent'];
+    }
+
     // Add cached headers if requested.
     if ($cache_key && ($cache = $this->cache->get($cache_key))) {
       if (isset($cache->data['etag'])) {
@@ -152,7 +158,7 @@ class HttpFetcher extends PluginBase implements ClearableInterface, FetcherInter
     }
 
     try {
-      $response = $this->client->get($url, $options);
+      $response = $this->client->getAsync($url, $options)->wait();
     }
     catch (RequestException $e) {
       $args = ['%site' => $url, '%error' => $e->getMessage()];

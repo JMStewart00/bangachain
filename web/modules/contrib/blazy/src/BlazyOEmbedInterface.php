@@ -27,17 +27,6 @@ interface BlazyOEmbedInterface {
   public function build(array &$settings = []);
 
   /**
-   * Provides the autoplay url suitable for lightboxes, or custom video trigger.
-   *
-   * @param string $url
-   *   The embed URL, not input URL.
-   *
-   * @return array
-   *   The settings array containing autoplay URL.
-   */
-  public function getAutoPlayUrl($url = '');
-
-  /**
    * Gets the Media item thumbnail.
    *
    * @param array $data

@@ -15,17 +15,15 @@ mode: default
 content:
   purchased_entity:
     type: entity_reference_entity_view
-    weight: 0
-    region: content
     label: above
     settings:
-      link: true
       view_mode: default
+      link: true
     third_party_settings: {  }
+    weight: 0
+    region: content
   quantity:
     type: number_decimal
-    weight: 1
-    region: content
     label: above
     settings:
       thousand_separator: ''
@@ -33,24 +31,26 @@ content:
       scale: 2
       prefix_suffix: true
     third_party_settings: {  }
+    weight: 1
+    region: content
   total_price:
     type: commerce_price_default
+    label: above
+    settings:
+      strip_trailing_zeroes: false
+      currency_display: symbol
+    third_party_settings: {  }
     weight: 3
     region: content
-    label: above
-    settings:
-      strip_trailing_zeroes: false
-      currency_display: symbol
-    third_party_settings: {  }
   unit_price:
     type: commerce_price_default
-    weight: 2
-    region: content
     label: above
     settings:
       strip_trailing_zeroes: false
       currency_display: symbol
     third_party_settings: {  }
+    weight: 2
+    region: content
 hidden:
   adjustments: true
   created: true

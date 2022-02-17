@@ -4,11 +4,11 @@ status: true
 dependencies:
   config:
     - field.storage.user.field_cashier_id
+  module:
+    - user
   enforced:
     module:
       - commerce_pos
-  module:
-    - user
 _core:
   default_config_hash: XOzUxzgnY60VZ6UU5OCQOmpQpGzgvQ7PdZn191gYfdc
 id: user.user.field_cashier_id

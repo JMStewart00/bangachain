@@ -12,7 +12,7 @@ class BlazyViews {
   /**
    * Implements hook_views_pre_render().
    */
-  public static function viewsPreRender($view) {
+  public static function viewsPreRender($view): void {
     // Load Blazy library once, not per field, if any Blazy Views field found.
     if ($blazy = self::viewsField($view)) {
       $plugin_id = $view->getStyle()->getPluginId();
@@ -48,7 +48,7 @@ class BlazyViews {
   /**
    * Implements hook_preprocess_views_view().
    */
-  public static function preprocessViewsView(array &$variables, $lightboxes) {
+  public static function preprocessViewsView(array &$variables, $lightboxes): void {
     preg_match('~blazy--(.*?)-gallery~', $variables['css_class'], $matches);
     $lightbox = $matches[1] ? str_replace('-', '_', $matches[1]) : FALSE;
 

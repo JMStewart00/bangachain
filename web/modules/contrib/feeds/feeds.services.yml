@@ -29,13 +29,19 @@ services:
     tags:
       - { name: event_subscriber }
   feed.reader.georssentry:
-    class: Drupal\feeds\Zend\Extension\Georss\Entry
+    class: Drupal\feeds\Laminas\Extension\Georss\Entry
+  feed.reader.mediarssentry:
+    class: Drupal\feeds\Laminas\Extension\Mediarss\Entry
   cache.feeds_download:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
       - { name: cache.bin }
-    factory: cache_factory:get
+    factory: ['@cache_factory', 'get']
     arguments: [feeds_download]
+
+  feeds.entity_finder:
+    class: Drupal\feeds\EntityFinder
+    arguments: ['@entity_type.manager', '@entity.repository']
 
   feeds_plugin_form_factory:
     class: Drupal\feeds\Plugin\PluginFormFactory

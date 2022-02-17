@@ -67,4 +67,12 @@ interface ExpressionContainerInterface extends ExpressionInterface, \IteratorAgg
    */
   public function deleteExpression($uuid);
 
+  /**
+   * Returns an iterator for expressions in this container.
+   *
+   * @return \Traversable
+   *   An object that may be iterated with "foreach".
+   */
+  public function getIterator(): \Traversable;
+
 }

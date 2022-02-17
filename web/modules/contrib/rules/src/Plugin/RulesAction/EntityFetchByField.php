@@ -10,6 +10,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a 'Fetch entities by field' action.
  *
+ * @todo Add access callback information from Drupal 7.
+ *
  * @RulesAction(
  *   id = "rules_entity_fetch_by_field",
  *   label = @Translation("Fetch entities by field"),
@@ -17,11 +19,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   context_definitions = {
  *     "type" = @ContextDefinition("string",
  *       label = @Translation("Entity type"),
- *       description = @Translation("Specifies the type of the entity that should be fetched.")
+ *       description = @Translation("Specify the type of the entity that should be fetched."),
+ *       options_provider = "\Drupal\rules\TypedData\Options\EntityTypeOptions",
  *     ),
  *     "field_name" = @ContextDefinition("string",
  *       label = @Translation("Field name"),
- *       description = @Translation("Name of the field by which the entity is to be selected.")
+ *       description = @Translation("Name of the field by which the entity is to be selected."),
+ *       options_provider = "\Drupal\rules\TypedData\Options\FieldListOptions",
  *     ),
  *     "field_value" = @ContextDefinition("any",
  *       label = @Translation("Field value"),
@@ -41,8 +45,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *     ),
  *   }
  * )
- *
- * @todo Add access callback information from Drupal 7.
  */
 class EntityFetchByField extends RulesActionBase implements ContainerFactoryPluginInterface {
 

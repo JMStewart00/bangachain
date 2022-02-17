@@ -20,7 +20,7 @@ class CustomerProfileTypeTest extends OrderBrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'field_ui',
   ];
 

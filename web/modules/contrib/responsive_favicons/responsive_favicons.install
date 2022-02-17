@@ -61,3 +61,14 @@ function responsive_favicons_uninstall() {
 /**
  * Implementations of hook_update_N().
  */
+
+/**
+ * Default the new config path_type if not already set.
+ */
+function responsive_favicons_update_8001() {
+  $config = \Drupal::service('config.factory')->getEditable('responsive_favicons.settings');
+  if (empty($config->get('path_type'))) {
+    $config->set('path_type', 'upload');
+    $config->save();
+  }
+}

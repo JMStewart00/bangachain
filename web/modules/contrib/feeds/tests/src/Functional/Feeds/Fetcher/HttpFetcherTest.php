@@ -8,7 +8,6 @@ use Drupal\feeds\Plugin\Type\Processor\ProcessorInterface;
 use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\feeds\Functional\FeedsBrowserTestBase;
-use SimpleXMLElement;
 
 /**
  * @coversDefaultClass \Drupal\feeds\Feeds\Fetcher\HttpFetcher
@@ -40,6 +39,9 @@ class HttpFetcherTest extends FeedsBrowserTestBase {
    */
   protected function setUp() {
     parent::setUp();
+
+    // Flush all caches to make table "cache_feeds_download" available.
+    drupal_flush_all_caches();
 
     // Add body field.
     node_add_body_field($this->nodeType);
@@ -117,7 +119,7 @@ class HttpFetcherTest extends FeedsBrowserTestBase {
     $this->assertText('Created 6');
     $this->assertNodeCount(6);
 
-    $xml = new SimpleXMLElement($filepath, 0, TRUE);
+    $xml = new \SimpleXMLElement($filepath, 0, TRUE);
 
     $expected_terms = [
       1 => [],

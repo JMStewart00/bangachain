@@ -247,7 +247,7 @@ class Order extends CommerceContentEntityBase implements OrderInterface {
     }
     // Allow other modules to register their own profiles (e.g. shipping).
     $event = new OrderProfilesEvent($this, $profiles);
-    \Drupal::service('event_dispatcher')->dispatch(OrderEvents::ORDER_PROFILES, $event);
+    \Drupal::service('event_dispatcher')->dispatch($event, OrderEvents::ORDER_PROFILES);
     $profiles = $event->getProfiles();
 
     return $profiles;

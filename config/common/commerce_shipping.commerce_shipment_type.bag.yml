@@ -4,7 +4,7 @@ status: true
 dependencies: {  }
 id: bag
 label: Bag
-profileType: customer
 traits: {  }
+profileType: customer
 sendConfirmation: true
 confirmationBcc: ''

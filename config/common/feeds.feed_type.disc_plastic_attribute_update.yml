@@ -8,8 +8,8 @@ dependencies:
     - field.field.commerce_product_attribute_value.disc_plastic.field_vendor_cost
   module:
     - commerce_product
-id: disc_plastic_attribute_update
 label: 'Disc Plastic Attribute Update'
+id: disc_plastic_attribute_update
 description: ''
 help: ''
 import_period: -1
@@ -24,49 +24,49 @@ parser_configuration:
   line_limit: 100
 processor: 'entity:commerce_product_attribute_value'
 processor_configuration:
+  values:
+    attribute: disc_plastic
   langcode: en
   update_existing: 2
   update_non_existent: _keep
-  expire: -1
   skip_hash_check: false
-  values:
-    attribute: disc_plastic
-  owner_id: 0
   authorize: false
+  expire: -1
   owner_feed_author: false
+  owner_id: 0
 custom_sources:
   plastic:
-    label: Plastic
     value: Plastic
+    label: Plastic
     machine_name: plastic
   cost:
-    label: Cost
     value: Cost
+    label: Cost
     machine_name: cost
   price:
-    label: Price
     value: Price
+    label: Price
     machine_name: price
 mappings:
   -
     target: name
     map:
       value: plastic
-    unique:
-      value: '1'
     settings:
       language: null
+    unique:
+      value: '1'
   -
     target: field_vendor_cost
     map:
       value: cost
-    unique: {  }
     settings:
       language: null
+    unique: {  }
   -
     target: field_price
     map:
       value: price
-    unique: {  }
     settings:
       language: null
+    unique: {  }

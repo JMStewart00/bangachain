@@ -37,9 +37,9 @@ is for the sake of completed documentation for those who may need it.
 ## BROKEN MODULES
 Alpha, Beta, DEV releases are for developers only. Beware of possible breakage.
 
-However if it is broken, unless an update is provided, running `drush cr` during
-DEV releases should fix most issues as we add new services, or change things.
-If you don't drush, before any module update:
+However if it is broken, running `drush updb` and `drush cr` during DEV releases
+should fix most issues as we add new services, or change things. If you don't
+drush, before any module update:
 
 1. Always open a separate tab:
 

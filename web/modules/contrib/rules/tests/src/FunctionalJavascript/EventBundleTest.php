@@ -12,9 +12,7 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 class EventBundleTest extends WebDriverTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['rules', 'taxonomy'];
 
@@ -113,7 +111,7 @@ class EventBundleTest extends WebDriverTestBase {
       // should be no bundles and the bundle select should be hidden.
       $bundles = \Drupal::service('entity_type.bundle.info')->getBundleInfo('node');
       $assert->pageTextNotContains('Restrict by type');
-      $assert->assert(empty($bundles), 'Restrict by type field is not shown and there are no bundles.');
+      $assert->assertEmpty($bundles, 'Restrict by type field is not shown and there are no bundles.');
     }
 
     // Save the Reaction Rule with event "rules_entity_insert:node--article".
@@ -122,12 +120,12 @@ class EventBundleTest extends WebDriverTestBase {
     // Now ensure the bundle we selected with Ajax got saved.
     $this->drupalGet('admin/config/workflow/rules');
     $assert->pageTextContains('Test bundle selection Ajax rule');
-    $assert->pageTextContains('After saving a new content item of type Article');
+    $assert->pageTextContains('After saving a new content item entity of type Article');
     $assert->pageTextContains('Machine name: test_bundle_selection_ajax_rule');
 
     // And ensure the qualified event name is displayed properly in the UI.
     $this->drupalGet('admin/config/workflow/rules/reactions/edit/test_bundle_selection_ajax_rule');
-    $assert->pageTextContains('After saving a new content item of type Article');
+    $assert->pageTextContains('After saving a new content item entity of type Article');
     $assert->pageTextContains('Machine name: rules_entity_insert:node--article');
   }
 

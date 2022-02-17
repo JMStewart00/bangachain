@@ -1,81 +1,81 @@
+_core:
+  default_config_hash: o4bYR9ZupWb3AsOIizTUG4g-nu1mdJqA59UB7QT-ifQ
 definitions:
   contact__site_page:
-    enabled: true
     menu_name: footer
     parent: ''
     weight: 0
     expanded: false
+    enabled: true
   standard__front_page:
-    enabled: false
     menu_name: main
     parent: ''
-    expanded: false
     weight: -50
+    expanded: false
+    enabled: false
   commerce_dashboard__dashboard:
-    weight: 2
-    parent: 'menu_link_content:942bded5-1853-4272-afb5-9162f90ab30f'
     menu_name: admin
+    parent: 'menu_link_content:942bded5-1853-4272-afb5-9162f90ab30f'
+    weight: 2
     expanded: false
     enabled: true
   entity__commerce_giftcard__collection:
-    weight: 3
     menu_name: admin
     parent: commerce.admin_commerce
+    weight: 3
     expanded: false
     enabled: true
   entity__commerce_order__collection:
-    weight: 4
     menu_name: admin
     parent: commerce.admin_commerce
+    weight: 4
     expanded: false
     enabled: true
   commerce_pos__base:
-    weight: 6
     menu_name: admin
     parent: commerce.admin_commerce
+    weight: 6
     expanded: false
     enabled: true
   entity__commerce_product_attribute__collection:
-    weight: 7
     menu_name: admin
     parent: commerce.admin_commerce
+    weight: 7
     expanded: false
     enabled: true
   entity__commerce_product__collection:
-    weight: 8
     menu_name: admin
     parent: commerce.admin_commerce
+    weight: 8
     expanded: false
     enabled: true
   entity__commerce_promotion__collection:
-    weight: 9
     menu_name: admin
     parent: commerce.admin_commerce
+    weight: 9
     expanded: false
     enabled: true
   entity__commerce_shipping_method__collection:
-    weight: 10
     menu_name: admin
     parent: commerce.admin_commerce
+    weight: 10
     expanded: false
     enabled: true
   commerce__configuration:
-    weight: 11
     menu_name: admin
     parent: commerce.admin_commerce
+    weight: 11
     expanded: false
     enabled: true
   commerce_reports__overview:
-    weight: 12
     menu_name: admin
     parent: commerce.admin_commerce
+    weight: 12
     expanded: false
     enabled: true
   commerce_smart_importer__csv:
-    weight: 13
     menu_name: admin
     parent: commerce.admin_commerce
+    weight: 13
     expanded: false
     enabled: true
-_core:
-  default_config_hash: o4bYR9ZupWb3AsOIizTUG4g-nu1mdJqA59UB7QT-ifQ

@@ -1,6 +1,11 @@
 
 ***
 # <a name="troubleshooting"></a>TROUBLESHOOTING
+* Any javascript-related issues might no longer be valid when
+  `No JavaScript lazy` enabled. Unless the exceptions, things that Native
+  doesn't support (Blur, BG, Video, etc.) are met, or for those who still
+  support old IEs, and cannot ditch lazyloader script, yet.
+* Switch to core Bartik for a mo, in case your custom theme is the culprit.
 * Blazy and its sub-modules -- Slick, GridStack, etc. are tightly coupled.
   Be sure to have the latest release date or matching versions in the least.
   DEV for DEV, Beta for Beta, etc. Mismatched versions may lead to errors
@@ -21,22 +26,18 @@
 
 
 ## 1. JavaScript Errors
+Any references to bLazy library is no longer required for forked version at 2.6.  
 **Symptons**:  
 Blazy is not defined. Images are gone, only eternal blue loader is
 flipping like a drunk butterfly.
 
 **Solution**:  
-Ensure that blazy library is loaded, and no extras errors. Steps:  
+Ensure that no extras errors. Steps:  
 
-* Verify [requirements](https://www.drupal.org/project/blazy#blazy-requirements).
-* Visit `/admin/reports/status` ensure Blazy library is installed.
 * Switch to core Bartik for a moment in case your theme is the culprit. Any
   theme JS errors might break Blazy. Press F12 at browsers to fix them one by
   one.
-* Be sure you can see the library file contents at browsers:  
-  `https://mysite.com/libraries/blazy/blazy.js`  
-  or any path supported by core library finder when using distros, etc.
-  Normally 404 (wrong placement), or 403 (folder permission) is the culprit.
+* Try disabling `Disconnect` option under IO.  
 
 
 ## 2. BLAZY GRID WITH SINGLE VALUE FIELD (D7 ONLY)
@@ -79,11 +80,16 @@ Entity/Media Embed are likely more for privileged users, editors, admins, alike.
 Or when Entity/Media Embed is disabled.
 
 ## 6. INTERSECTION OBSERVER API
+This API will not be used if `No JavaScript lazy` option enabled unless the
+exceptions, things that Native doesn't support (Blur, BG, Video, etc.) are met.
 * **IntersectionObserver API** is not loading all images, try disabling
   **Disconnect** option at Blazy UI.
 * **IntersectionObserver API** is not working with Slick `slidesToShow > 1`, try
   disabling Slick `centerMode`. If still failing, choose one of the 4 lazy
   load options, except Blazy.
+
+**FYI:**
+IO is also used for infinite pager and lazyloaded blocks like seen at IO.module.
 
 ## 7. BLUR IMAGE EFFECT
 `/admin/config/media/blazy`
@@ -187,7 +193,35 @@ This is a Views common gotcha with field formatter, so be aware of it.
 If confusing, just toggle **Use field template**, and see the output. You'll
 know which works.
 
-## 12. BROKEN MODULES
+## 12. NATIVE GRID MASONRY
+Q: The native grid masonry (_Display style_: native Grid, _Grid large_: any
+   single number) doesn't have correct bottom gaps?  
+A: It does. Your eyes are likely being tricked. **Solutions**:  
+   * Try adding background color to `.grid__content`. Notice even gaps. The
+     problem is inner divities do not have 100%. Read more below.
+   * If image and applicable, enable `CSS background` using Blazy formatter.
+     If using Views, remove extra useless DIVs under `Style settings` by setting
+     them all to `None` and keep them with caution. And uncheck
+     `Provide default field wrapper elements` under ` Show: Fields Settings`.
+     So that Blazy `CSS background` fills in the gaps. Try `Aspect ratio: Fluid`
+     to minimize reflow in case useful here.
+   * If not or still an issue, manually adjust the image and the inner DIVs of
+     `.grid__content` heights to 100%.
+   * For text contents, having light background color is enough.
+   * Add enough min-height per breakpoint to the grid root container. See
+     and override `blazy.nativegrid.css` to better suit your site needs.
+   * If you don't want all these headaches, consider a more robust GridStack. It
+     may take care these type of issues for you.
+
+## 13. BLAZY IMAGES DO NOT LOAD
+Images does not load within hidden tabs, or other hidden containers:  
+* `/admin/config/media/blazy`  
+* Enable `Load invisible` option.  
+
+Only an issue with old bLazy, not IO, AFAIK. Other than that, be sure to read
+back the topmost troubleshooting section.
+
+## 14. BROKEN MODULES
 Alpha, Beta, DEV releases are for developers only. Beware of possible breakage.
 
 However if it is broken, unless an update is provided, running `drush cr` during

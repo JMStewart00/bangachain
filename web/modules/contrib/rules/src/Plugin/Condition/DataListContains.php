@@ -8,6 +8,10 @@ use Drupal\Core\Entity\EntityInterface;
 /**
  * Provides a 'List contains' condition.
  *
+ * @todo Add access callback information from Drupal 7?
+ * @todo Add group information from Drupal 7?
+ * @todo Add info alter
+ *
  * @Condition(
  *   id = "rules_list_contains",
  *   label = @Translation("List contains item"),
@@ -24,10 +28,6 @@ use Drupal\Core\Entity\EntityInterface;
  *     ),
  *   }
  * )
- *
- * @todo Add access callback information from Drupal 7?
- * @todo Add group information from Drupal 7?
- * @todo Add info alter
  */
 class DataListContains extends RulesConditionBase {
 

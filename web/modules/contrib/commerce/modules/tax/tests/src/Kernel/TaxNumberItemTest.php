@@ -28,7 +28,7 @@ class TaxNumberItemTest extends CommerceKernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'entity_reference_revisions',
     'path',
     'profile',

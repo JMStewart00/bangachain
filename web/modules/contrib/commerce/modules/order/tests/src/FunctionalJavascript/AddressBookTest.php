@@ -318,8 +318,13 @@ class AddressBookTest extends OrderWebDriverTestBase {
     $this->assertNotEmpty($rendered_address);
     $this->assertStringContainsString('38 Rue du Sentier', $rendered_address->getText());
 
+    $addressbook_edit_form = Url::fromRoute('commerce_order.address_book.edit_form', [
+      'user' => $customer->id(),
+      'profile' => 1,
+    ]);
     // Confirm that a profile can be edited.
-    $this->getSession()->getPage()->clickLink('Edit');
+    $this->assertSession()->linkByHrefExists($addressbook_edit_form->toString());
+    $this->drupalGet($addressbook_edit_form);
     foreach ($this->fourthAddress as $property => $value) {
       $this->assertSession()->fieldValueEquals("address[0][address][$property]", $value);
     }

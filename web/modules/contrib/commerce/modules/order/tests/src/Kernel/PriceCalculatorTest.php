@@ -58,7 +58,7 @@ class PriceCalculatorTest extends OrderKernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_promotion',
     'commerce_tax',
     'commerce_order_test',

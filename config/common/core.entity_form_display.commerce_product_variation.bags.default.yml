@@ -25,15 +25,15 @@ content:
   'Loyalty points offered per unit of currency':
     type: number_decimal
     weight: 10
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   attribute_disc_color:
     type: options_select
     weight: 5
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   commerce_stock_always_in_stock:
     type: boolean_checkbox
     weight: 7
@@ -49,21 +49,21 @@ content:
       placeholder: ''
     third_party_settings: {  }
   field_product_image:
+    type: media_library_widget
     weight: 1
+    region: content
     settings:
       media_types: {  }
     third_party_settings: {  }
-    type: media_library_widget
-    region: content
   field_stock:
+    type: commerce_stock_level_simple_transaction
     weight: 9
+    region: content
     settings:
+      step: '1'
       custom_transaction_note: false
       default_transaction_note: 'Transaction issued by stock level field.'
-      step: '1'
     third_party_settings: {  }
-    type: commerce_stock_level_simple_transaction
-    region: content
   list_price:
     type: commerce_list_price
     weight: 3
@@ -73,10 +73,10 @@ content:
   maximum_order_quantity:
     type: number
     weight: 1
+    region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
-    region: content
   price:
     type: commerce_price_default
     weight: 4
@@ -90,20 +90,20 @@ content:
     settings:
       custom_label: ''
       uniqid_enabled: true
+      more_entropy: false
+      hide: false
       prefix: ''
       suffix: ''
       size: 60
       placeholder: ''
       maximum: 500
-      more_entropy: false
-      hide: false
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    settings:
-      display_label: true
     weight: 8
     region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   title:
     type: string_textfield
@@ -116,11 +116,11 @@ content:
   weight:
     type: physical_measurement_default
     weight: 6
+    region: content
     settings:
       default_unit: lb
       allow_unit_change: false
     third_party_settings: {  }
-    region: content
 hidden:
   created: true
   field_upc: true

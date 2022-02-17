@@ -169,7 +169,7 @@ class SplideSkinManager extends DefaultPluginManager implements SplideSkinManage
   /**
    * Returns available splide skins by group.
    */
-  public function getSkinsByGroup($group = '', $option = FALSE) {
+  public function getSkinsByGroup($group = '', $option = FALSE): array {
     if (!isset($this->skinsByGroup[$group])) {
       $skins         = $groups = $ungroups = [];
       $nav_skins     = in_array($group, ['arrows', 'dots']);
@@ -208,7 +208,7 @@ class SplideSkinManager extends DefaultPluginManager implements SplideSkinManage
       ];
 
       $fullscreen = ['css/components/splide.fullscreen.css' => []];
-      foreach ($this->getComponents() as $key) {
+      foreach ($this->getModuleComponents() as $key) {
         $libraries[$key] = [
           'dependencies' => ['splide/base'],
           'js' => [
@@ -230,7 +230,7 @@ class SplideSkinManager extends DefaultPluginManager implements SplideSkinManage
       foreach ($this->getConstantSkins() as $group) {
         if ($skins = $this->getSkinsByGroup($group)) {
           foreach ($skins as $key => $skin) {
-            $provider = isset($skin['provider']) ? $skin['provider'] : 'splide';
+            $provider = $skin['provider'] ?? 'splide';
             $id = $provider . '.' . $group . '.' . $key;
 
             foreach (['css', 'js', 'dependencies'] as $property) {
@@ -253,6 +253,13 @@ class SplideSkinManager extends DefaultPluginManager implements SplideSkinManage
   public function attach(array &$load, array $attach = []) {
     $this->attachCore($load, $attach);
     $load['drupalSettings']['splide'] = $this->getSafeSettings(Splide::defaultSettings());
+
+    if (!empty($attach['pagination_tab'])) {
+      $load['library'][] = 'splide/pagination.tab';
+
+      // @todo move it into [data-splide] to support multiple instances on page.
+      $load['drupalSettings']['splide']['paginationTexts'] = $attach['pagination_texts'];
+    }
   }
 
   /**
@@ -264,7 +271,27 @@ class SplideSkinManager extends DefaultPluginManager implements SplideSkinManage
     $excludes = explode(' ', 'breakpoints classes i18n padding easingOverride downTarget downOffset');
     $excludes = array_combine($excludes, $excludes);
     $settings = Splide::typecast($settings, FALSE);
-    return array_diff_key($settings, $excludes);
+
+    // The library assumes some object FALSE explicitly by default.
+    // @todo recheck others like breakpoints classes i18n padding, etc.
+    foreach (Splide::getObjectsAsBool() as $key) {
+      $settings[$key] = FALSE;
+    }
+
+    $breakpoints = SplideDefault::validBreakpointOptions();
+    $breakpoints = array_combine($breakpoints, $breakpoints);
+    $extras = [];
+
+    foreach ($settings as $key => $value) {
+      if (isset($breakpoints[$key])) {
+        $extras[$key] = $value;
+      }
+    }
+
+    $settings = array_diff_key($settings, $excludes);
+    $settings['extras'] = Splide::typecast($extras, FALSE);
+
+    return $settings;
   }
 
   /**
@@ -314,10 +341,10 @@ class SplideSkinManager extends DefaultPluginManager implements SplideSkinManage
     }
 
     foreach ($this->getConstantSkins() as $group) {
-      $skin = $group == 'main' ? $attach['skin'] : (isset($attach['skin_' . $group]) ? $attach['skin_' . $group] : '');
+      $skin = $group == 'main' ? $attach['skin'] : ($attach['skin_' . $group] ?? '');
       if (!empty($skin)) {
         $skins = $this->getSkinsByGroup($group);
-        $provider = isset($skins[$skin]['provider']) ? $skins[$skin]['provider'] : 'splide';
+        $provider = $skins[$skin]['provider'] ?? 'splide';
         $load['library'][] = 'splide/' . $provider . '.' . $group . '.' . $skin;
       }
     }
@@ -326,11 +353,11 @@ class SplideSkinManager extends DefaultPluginManager implements SplideSkinManage
   /**
    * Returns splide library path if available, else FALSE.
    */
-  public function getSplidePath() {
-    if (!isset($this->splidePath)) {
-      $this->splidePath = \blazy_libraries_get_path('splidejs--splide') ?: \blazy_libraries_get_path('splide');
+  public function getSplidePath($base = 'splide', $packagist = 'splidejs--splide') {
+    if (!isset($this->splidePath[$base])) {
+      $this->splidePath[$base] = \blazy_libraries_get_path($packagist) ?: \blazy_libraries_get_path($base);
     }
-    return $this->splidePath;
+    return $this->splidePath[$base];
   }
 
   /**
@@ -338,7 +365,12 @@ class SplideSkinManager extends DefaultPluginManager implements SplideSkinManage
    */
   public function libraryInfoAlter(&$libraries, $extension) {
     if ($path = $this->getSplidePath()) {
-      $js = ['/' . $path . '/dist/js/splide.min.js' => ['weight' => -3]];
+      $js = [
+        '/' . $path . '/dist/js/splide.min.js' => [
+          'weight' => -3,
+          'minified' => TRUE,
+        ],
+      ];
       $base = ['/' . $path . '/dist/css/splide-core.min.css' => []];
       $theme = ['/' . $path . '/dist/css/splide.min.css' => []];
 
@@ -346,12 +378,40 @@ class SplideSkinManager extends DefaultPluginManager implements SplideSkinManage
       $libraries['splide']['css']['base'] = $base;
       $libraries['splide.css']['css']['theme'] = $theme;
     }
+
+    $plugins = [
+      'autoscroll' => 'auto-scroll',
+      'intersection' => 'intersection',
+    ];
+
+    foreach ($plugins as $key => $value) {
+      $base = 'splide-extension-' . $value;
+      if ($path = $this->getSplidePath($base, 'splidejs--' . $base)) {
+        $js = [
+          '/' . $path . '/dist/js/' . $base . '.min.js' => [
+            'weight' => -2.9,
+            'minified' => TRUE,
+          ],
+        ];
+        $libraries[$key]['js'] = $js;
+      }
+    }
   }
 
   /**
-   * Splide library components.
+   * Splide module-managed/ builtin library components including library ones.
    */
   private function getComponents() {
+    return array_merge($this->getModuleComponents(), [
+      'autoscroll',
+      'intersection',
+    ]);
+  }
+
+  /**
+   * Splide module-managed/ builtin library components.
+   */
+  private function getModuleComponents() {
     return [
       'blazy',
       'colorbox',

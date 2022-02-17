@@ -13,10 +13,10 @@ bundle: gift_card
 mode: default
 content:
   add_to_cart_link:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   commerce_giftcard_amount: true
   commerce_giftcard_type: true

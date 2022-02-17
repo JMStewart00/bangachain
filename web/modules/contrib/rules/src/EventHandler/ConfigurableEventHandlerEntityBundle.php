@@ -2,9 +2,8 @@
 
 namespace Drupal\rules\EventHandler;
 
-use Drupal\rules\Event\EntityEvent;
 use Drupal\Core\Form\FormStateInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Drupal\rules\Event\EntityEvent;
 
 /**
  * Exposes the bundle of an entity as event setting.
@@ -14,7 +13,9 @@ class ConfigurableEventHandlerEntityBundle extends ConfigurableEventHandlerBase 
   /**
    * {@inheritdoc}
    */
-  public static function determineQualifiedEvents(Event $event, $event_name, array &$event_definition) {
+  public static function determineQualifiedEvents(object $event, $event_name, array &$event_definition) {
+    // @todo The 'object' type hint should be replaced with the appropriate
+    // class once Symfony 4 is no longer supported.
     $events_suffixes = [];
     if ($event instanceof EntityEvent) {
       $events_suffixes[] = $event->getSubject()->bundle();

@@ -93,13 +93,6 @@ class ConditionsFormTest extends RulesBrowserTestBase {
     $assert->statusCodeEquals(200);
     $assert->pageTextContains('Edit ' . $condition->getLabel());
 
-    // Assert that the fields use the correct widgets, identified by class.
-    if (!empty($widgets)) {
-      foreach ($widgets as $name => $widget_id) {
-        $assert->elementExists('xpath', "//fieldset[@id='edit-context-definitions-$name' and contains(@class, 'widget-$widget_id')]");
-      }
-    }
-
     // If any field values have been specified then fill in the form and save.
     if (!empty($required) || !empty($defaulted)) {
 
@@ -120,7 +113,7 @@ class ConditionsFormTest extends RulesBrowserTestBase {
         $assert->pageTextContains('field is required');
         // Fill each required field with the value provided.
         foreach ($required as $name => $value) {
-          $this->fillField('edit-context-definitions-' . $name . '-value', $value);
+          $this->fillField('edit-context-definitions-' . $name . '-setting', $value);
         }
       }
 
@@ -138,7 +131,7 @@ class ConditionsFormTest extends RulesBrowserTestBase {
       if (!empty($defaulted)) {
         // Fill each previously defaulted field with the value provided.
         foreach ($defaulted as $name => $value) {
-          $this->fillField('edit-context-definitions-' . $name . '-value', $value);
+          $this->fillField('edit-context-definitions-' . $name . '-setting', $value);
         }
       }
 
@@ -179,7 +172,7 @@ class ConditionsFormTest extends RulesBrowserTestBase {
     $data = [
 
       // Data.
-      'Data comparison' => [
+      '1. Data comparison' => [
         // Machine name.
         'rules_data_comparison',
         // Required values.
@@ -188,107 +181,108 @@ class ConditionsFormTest extends RulesBrowserTestBase {
           'value' => 'node_unchanged.title.value',
         ],
         // Defaulted values.
-        ['operation' => '=this=is-not-validated=yet='],
+        ['operation' => 'contains'],
         // Widgets.
         [
+          'data' => 'text-input',
           'operation' => 'text-input',
           'value' => 'text-input',
         ],
-        // Press the 'Switch to data selection' button for these items.
+        // Selectors.
         ['value'],
       ],
-      'Data is empty' => [
+      '2. Data is empty' => [
         'rules_data_is_empty',
         ['data' => 'node.title.value'],
       ],
-      'List contains' => [
+      '3. List contains' => [
         'rules_list_contains',
         ['list' => 'node.uid.entity.roles', 'item' => 'abc'],
+        [],
+        ['list' => 'textarea'],
       ],
-      'List count is' => [
+      '4. List count is' => [
         'rules_list_count_is',
         [
           'list' => 'node.uid.entity.roles',
           'value' => 2,
         ],
-        ['operator' => 'not * validated * yet'],
+        ['operator' => '<='],
       ],
-      'Text comparison - direct' => [
+      '5. Text comparison - direct' => [
         'rules_text_comparison',
         ['text' => 'node.title.value', 'match' => 'abc'],
       ],
-      'Text comparison - selector' => [
+      '6. Text comparison - selector' => [
         'rules_text_comparison',
         [
           'text' => 'node.title.value',
           'match' => 'node.uid.entity.name.value',
         ],
-        ['operator' => 'not * validated * yet'],
+        ['operator' => 'ends'],
         [],
         ['match'],
       ],
 
       // Entity.
-      'Entity has field' => [
+      '7. Entity has field' => [
         'rules_entity_has_field',
         ['entity' => 'node', 'field' => 'login'],
       ],
-      'Entity is new' => [
+      '8. Entity is new' => [
         'rules_entity_is_new',
         ['entity' => 'node'],
       ],
-      'Entity is of bundle' => [
+      '9. Entity is of bundle' => [
         'rules_entity_is_of_bundle',
         ['entity' => 'node', 'type' => 'node', 'bundle' => 'article'],
       ],
-      'Entity is of type' => [
+      '10. Entity is of type' => [
         'rules_entity_is_of_type',
         ['entity' => 'node', 'type' => 'path_alias'],
       ],
 
       // Content.
-      'Node is of type' => [
+      '11. Node is of type' => [
         'rules_node_is_of_type',
         ['node' => 'node', 'types' => 'article'],
       ],
-      'Node is promoted' => [
+      '12. Node is promoted' => [
         'rules_node_is_promoted',
         ['node' => 'node'],
       ],
-      'Node is published' => [
+      '13. Node is published' => [
         'rules_node_is_published',
         ['node' => 'node'],
       ],
-      'Node is sticky' => [
+      '14. Node is sticky' => [
         'rules_node_is_sticky',
         ['node' => 'node'],
       ],
 
       // Path.
-      'Path alias exists' => [
+      '15. Path alias exists' => [
         'rules_path_alias_exists',
         ['alias' => '/abc'],
-        ['language' => '?'],
+        ['language' => 'und'],
       ],
-      'Path has alias' => [
+      '16. Path has alias' => [
         'rules_path_has_alias',
         ['path' => '/node/1'],
-        ['language' => '?'],
+        ['language' => 'en'],
       ],
 
       // User.
-      'Entity field access' => [
+      '17. Entity field access' => [
         'rules_entity_field_access',
         [
           'entity' => 'node',
           'field' => 'timezone',
-        ],
-        [
           'user' => '@user.current_user_context:current_user',
-          'operation' => 'not * validated * yet',
         ],
+        ['operation' => 'edit'],
       ],
-      'User has role' => [
+      '18. User has role' => [
         'rules_user_has_role',
         [
           'user' => '@user.current_user_context:current_user',
@@ -298,7 +292,7 @@ class ConditionsFormTest extends RulesBrowserTestBase {
         [],
         ['user'],
       ],
-      'User is blocked' => [
+      '19. User is blocked' => [
         'rules_user_is_blocked',
         ['user' => '@user.current_user_context:current_user'],
         [],
@@ -307,23 +301,16 @@ class ConditionsFormTest extends RulesBrowserTestBase {
       ],
 
       // Ban.
-      'Ip is banned' => [
+      '20. Ip is banned' => [
         'rules_ip_is_banned',
         [],
         ['ip' => '192.0.2.1'],
       ],
     ];
 
-    // Two list conditions fail with "Cannot set a list with a non-array value"
-    // and "Warning: explode() expects parameter 2 to be string, array given"
-    // These run OK without the widget integration.
-    // @todo Needs investigation.
-    unset($data['List contains']);
-    unset($data['List count is']);
-
     // Use unset $data['The key to remove']; to remove a temporarily unwanted
-    // item, use return [$data['Key to test'], $data['Another']]; to selectively
-    // test some items, or use return $data; to test everything.
+    // item, use return [$data['The key to test']]; to selectively test just one
+    // item, or use return $data; to test everything.
     return $data;
   }
 

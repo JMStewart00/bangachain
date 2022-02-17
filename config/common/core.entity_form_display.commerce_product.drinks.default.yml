@@ -18,13 +18,13 @@ content:
   body:
     type: text_textarea_with_summary
     weight: 1
+    region: content
     settings:
       rows: 9
       summary_rows: 3
       placeholder: ''
       show_summary: false
     third_party_settings: {  }
-    region: content
   created:
     type: datetime_timestamp
     weight: 10
@@ -32,15 +32,15 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_default_image:
+    type: entity_reference_autocomplete
     weight: 91
+    region: content
     settings:
       match_operator: CONTAINS
       match_limit: 10
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
   path:
     type: path
     weight: 30
@@ -49,10 +49,10 @@ content:
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    settings:
-      display_label: true
     weight: 90
     region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   stores:
     type: commerce_entity_select

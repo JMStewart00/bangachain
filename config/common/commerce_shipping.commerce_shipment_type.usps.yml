@@ -4,7 +4,7 @@ status: true
 dependencies: {  }
 id: usps
 label: USPS
-profileType: customer
 traits: {  }
+profileType: customer
 sendConfirmation: true
 confirmationBcc: ''

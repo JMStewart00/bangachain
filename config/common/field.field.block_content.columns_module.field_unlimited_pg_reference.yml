@@ -21,13 +21,13 @@ default_value_callback: ''
 settings:
   handler: 'default:paragraph'
   handler_settings:
-    negate: 0
     target_bundles:
       column_item: column_item
+    negate: 0
     target_bundles_drag_drop:
       column_item:
-        enabled: true
         weight: 4
+        enabled: true
       columns_module:
         weight: 3
         enabled: false

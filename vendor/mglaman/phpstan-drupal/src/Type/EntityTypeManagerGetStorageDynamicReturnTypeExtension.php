@@ -2,6 +2,12 @@
 
 namespace mglaman\PHPStanDrupal\Type;
 
+use Drupal\Core\Config\Entity\ConfigEntityStorageInterface;
+use Drupal\Core\Entity\ContentEntityStorageInterface;
+use mglaman\PHPStanDrupal\Drupal\EntityDataRepository;
+use mglaman\PHPStanDrupal\Type\EntityStorage\ConfigEntityStorageType;
+use mglaman\PHPStanDrupal\Type\EntityStorage\ContentEntityStorageType;
+use mglaman\PHPStanDrupal\Type\EntityStorage\EntityStorageType;
 use PhpParser\Node\Expr\BinaryOp\Concat;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Scalar\String_;
@@ -9,25 +15,27 @@ use PhpParser\Node\VariadicPlaceholder;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\Reflection\ParametersAcceptorSelector;
+use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\ShouldNotHappenException;
 use PHPStan\Type\DynamicMethodReturnTypeExtension;
 use PHPStan\Type\ObjectType;
 
 class EntityTypeManagerGetStorageDynamicReturnTypeExtension implements DynamicMethodReturnTypeExtension
 {
+
     /**
-     * @var string[]
+     * @var EntityDataRepository
      */
-    private $entityTypeStorageMapping;
+    private $entityDataRepository;
 
     /**
      * EntityTypeManagerGetStorageDynamicReturnTypeExtension constructor.
      *
-     * @param string[] $entityTypeStorageMapping
+     * @param EntityDataRepository $entityDataRepository
      */
-    public function __construct(array $entityTypeStorageMapping = [])
+    public function __construct(EntityDataRepository $entityDataRepository)
     {
-        $this->entityTypeStorageMapping = $entityTypeStorageMapping;
+        $this->entityDataRepository = $entityDataRepository;
     }
 
     public function getClass(): string
@@ -73,11 +81,14 @@ class EntityTypeManagerGetStorageDynamicReturnTypeExtension implements DynamicMe
 
         $entityTypeId = $arg1->value;
 
-        if (isset($this->entityTypeStorageMapping[$entityTypeId])) {
-            return new ObjectType($this->entityTypeStorageMapping[$entityTypeId]);
+        $storageType = $this->entityDataRepository->get($entityTypeId)->getStorageType();
+        if ($storageType !== null) {
+            return $storageType;
         }
-        // @todo get entity type class reflection and return proper storage for entity type
-        // example: config storage, sqlcontententitystorage, etc.
+
+        if ($returnType instanceof ObjectType) {
+            return new EntityStorageType($entityTypeId, $returnType->getClassName());
+        }
         return $returnType;
     }
 }

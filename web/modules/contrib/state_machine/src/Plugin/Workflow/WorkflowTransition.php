@@ -2,10 +2,14 @@
 
 namespace Drupal\state_machine\Plugin\Workflow;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+
 /**
  * Defines the class for workflow transitions.
  */
 class WorkflowTransition {
+
+  use StringTranslationTrait;
 
   /**
    * The transition ID.
@@ -71,7 +75,7 @@ class WorkflowTransition {
    *   The translated label.
    */
   public function getLabel() {
-    return (string) t($this->label, [], ['context' => 'workflow transition']);
+    return (string) $this->t($this->label, [], ['context' => 'workflow transition']);
   }
 
   /**

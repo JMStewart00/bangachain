@@ -51,8 +51,8 @@ splide_optionset:
       type: string
       label: 'Fixed height' # number|string
     heightRatio:
-      type: integer
-      label: 'Height ratio'
+      type: string
+      label: 'Height ratio' # number|string
     autoWidth:
       type: boolean
       label: 'Auto width'
@@ -158,6 +158,12 @@ splide_optionset:
     i18n:
       type: string
       label: i18n # object
+    autoScroll:
+      type: string
+      label: 'Auto Scroll' # object
+    intersection:
+      type: string
+      label: Intersection # object
     video:
       type: string
       label: 'Video options'

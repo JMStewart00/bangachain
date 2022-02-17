@@ -13,7 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
  * @CommerceCondition(
  *   id = "shipment_quantity",
  *   label = @Translation("Shipment quantity"),
- *   category = @Translation("Shipping"),
+ *   category = @Translation("Shipment"),
  *   entity_type = "commerce_shipment",
  * )
  */

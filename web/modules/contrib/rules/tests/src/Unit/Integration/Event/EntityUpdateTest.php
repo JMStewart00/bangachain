@@ -16,7 +16,7 @@ class EntityUpdateTest extends EventTestBase {
    */
   public function testEventMetadata() {
     $plugin_definition = $this->eventManager->getDefinition('rules_entity_update:test');
-    $this->assertSame('After updating a test', (string) $plugin_definition['label']);
+    $this->assertSame('After updating a test entity', (string) $plugin_definition['label']);
     $context_definition = $plugin_definition['context_definitions']['test'];
     $this->assertSame('entity:test', $context_definition->getDataType());
     $this->assertSame('Test', $context_definition->getLabel());
@@ -24,7 +24,7 @@ class EntityUpdateTest extends EventTestBase {
     // Also check that there is a context for the original entity.
     $context_definition = $plugin_definition['context_definitions']['test_unchanged'];
     $this->assertSame('entity:test', $context_definition->getDataType());
-    $this->assertSame('Unchanged Test', (string) $context_definition->getLabel());
+    $this->assertSame('Unchanged test entity', (string) $context_definition->getLabel());
   }
 
 }

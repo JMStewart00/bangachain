@@ -97,7 +97,7 @@ class ShipmentManager implements ShipmentManagerInterface {
       }
       // Allow the rates to be altered via code.
       $event = new ShippingRatesEvent($rates, $shipping_method, $shipment);
-      $this->eventDispatcher->dispatch(ShippingEvents::SHIPPING_RATES, $event);
+      $this->eventDispatcher->dispatch($event, ShippingEvents::SHIPPING_RATES);
       $rates = $event->getRates();
 
       $rates = $this->sortRates($rates);

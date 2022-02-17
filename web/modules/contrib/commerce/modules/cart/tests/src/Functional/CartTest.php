@@ -38,7 +38,7 @@ class CartTest extends OrderBrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_cart',
     'commerce_checkout',
   ];

@@ -72,7 +72,7 @@ class WishlistForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
-    /* @var \Drupal\commerce_wishlist\Entity\Wishlist $wishlist */
+    /** @var \Drupal\commerce_wishlist\Entity\Wishlist $wishlist */
     $wishlist = $this->entity;
     $form = parent::form($form, $form_state);
 
@@ -135,7 +135,9 @@ class WishlistForm extends ContentEntityForm {
     return [
       '#type' => 'item',
       '#wrapper_attributes' => [
-        'class' => [Html::cleanCssIdentifier(strtolower($label)), 'container-inline'],
+        'class' => [
+          Html::cleanCssIdentifier(strtolower($label)), 'container-inline',
+        ],
       ],
       '#markup' => '<h4 class="label inline">' . $label . '</h4> ' . $value,
     ];

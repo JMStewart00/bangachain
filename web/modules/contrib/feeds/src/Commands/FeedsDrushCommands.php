@@ -214,6 +214,70 @@ class FeedsDrushCommands extends DrushCommands {
   }
 
   /**
+   * Import all feeds.
+   *
+   * @param array $feed_types
+   *   (optional) The names of the feed types whose instances will be imported.
+   * @param array $options
+   *   A list of options for this command. See below.
+   *
+   * @command feeds:import-all
+   * @aliases feeds-ima
+   * @option import-disabled
+   *   Also import feed if it is not active.
+   * @usage feeds:import-all
+   * @usage feeds:import-all my_feed_type
+   * @usage feeds:import-all my_feed_type my_second_feed_type
+   *
+   * @throws \Exception
+   *   In case something went wrong when importing the feeds.
+   */
+  public function importAllFeeds(array $feed_types, array $options = ['import-disabled' => FALSE]) {
+    $entityQuery = \Drupal::entityQuery('feeds_feed');
+    if (!empty($feed_types)) {
+      $entityQuery->condition('type', $feed_types, 'IN');
+    }
+
+    $feeds = \Drupal::entityTypeManager()
+      ->getStorage('feeds_feed')
+      ->loadMultiple($entityQuery->execute());
+
+    // If there is more than one feed type specified, order the feeds on type.
+    if (!empty($feed_types) && count($feed_types) > 1) {
+      // First group feeds on type.
+      $feeds_per_type = [];
+      foreach ($feeds as $feed) {
+        $key = array_search($feed->bundle(), $feed_types);
+        $feeds_per_type[$key][] = $feed;
+      }
+
+      // Now merge all arrays into one.
+      ksort($feeds_per_type);
+      $feeds = [];
+      foreach ($feeds_per_type as $type_feeds) {
+        $feeds = array_merge($feeds, $type_feeds);
+      }
+    }
+
+    // Loop through all retrieved feed entities and import them.
+    /** @var \Drupal\feeds\FeedInterface $feed */
+    foreach ($feeds as $feed) {
+      // Only import feed if it is either active, or the user specifically wants
+      // to import the feed regardless of its active state.
+      if (!$feed->isActive() && !$options['import-disabled']) {
+        continue;
+      }
+
+      // Start import!
+      $this->logger()->notice($this->t('Starting import of feed ":label" (id :id).', [
+        ':label' => $feed->label(),
+        ':id' => $feed->id(),
+      ]));
+      $feed->import();
+    }
+  }
+
+  /**
    * Lock a feed specified by its id.
    *
    * @param int $fid

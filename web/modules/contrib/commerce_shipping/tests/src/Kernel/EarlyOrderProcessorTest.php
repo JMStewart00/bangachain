@@ -49,7 +49,7 @@ class EarlyOrderProcessorTest extends ShippingKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_checkout',
   ];
 

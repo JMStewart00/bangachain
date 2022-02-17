@@ -59,7 +59,7 @@ class SplideManager extends BlazyManagerBase implements SplideManagerInterface {
    */
   public function splide(array $build = []) {
     foreach (SplideDefault::themeProperties() as $key) {
-      $build[$key] = isset($build[$key]) ? $build[$key] : [];
+      $build[$key] = $build[$key] ?? [];
     }
 
     return empty($build['items']) ? [] : [
@@ -75,7 +75,7 @@ class SplideManager extends BlazyManagerBase implements SplideManagerInterface {
    */
   protected function prepareAttributes(array $build = []) {
     $settings = $build['settings'];
-    $attributes = isset($build['attributes']) ? $build['attributes'] : [];
+    $attributes = $build['attributes'] ?? [];
 
     if ($settings['display'] == 'main') {
       Blazy::containerAttributes($attributes, $settings);
@@ -158,9 +158,9 @@ class SplideManager extends BlazyManagerBase implements SplideManagerInterface {
   public function buildGridItem(array $items, array $settings = []) {
     $output = [];
     foreach ($items as $delta => $item) {
-      $sets = isset($item['settings']) ? array_merge($settings, $item['settings']) : $settings;
-      $attrs = empty($item['attributes']) ? [] : $item['attributes'];
-      $content_attrs = isset($item['content_attributes']) ? $item['content_attributes'] : [];
+      $sets = array_merge($settings, (array) ($item['settings'] ?? []));
+      $attrs = (array) ($item['attributes'] ?? []);
+      $content_attrs = (array) ($item['content_attributes'] ?? []);
       $sets['current_item'] = 'grid';
       $sets['delta'] = $delta;
 
@@ -205,7 +205,7 @@ class SplideManager extends BlazyManagerBase implements SplideManagerInterface {
    */
   public function build(array $build = []) {
     foreach (SplideDefault::themeProperties() as $key) {
-      $build[$key] = isset($build[$key]) ? $build[$key] : [];
+      $build[$key] = $build[$key] ?? [];
     }
 
     $splide = [
@@ -224,7 +224,7 @@ class SplideManager extends BlazyManagerBase implements SplideManagerInterface {
   /**
    * Prepares js-related options.
    */
-  protected function prepareOptions(array &$options, array &$settings) {
+  protected function prepareOptions($optionset, array &$options, array &$settings) {
     // Disable draggable for Layout Builder UI to not conflict with UI sortable.
     if (strpos($settings['route_name'], 'layout_builder.') === 0 || !empty($settings['is_preview'])) {
       $options['drag'] = FALSE;
@@ -240,6 +240,8 @@ class SplideManager extends BlazyManagerBase implements SplideManagerInterface {
     }
 
     if ($settings['display'] == 'main') {
+      $options['pagination'] = Splide::toBoolOrString($optionset->getSetting('pagination'));
+
       // Overrides common options to re-use an optionset.
       if (!empty($settings['override'])) {
         foreach ($settings['overridables'] as $key => $override) {
@@ -272,25 +274,30 @@ class SplideManager extends BlazyManagerBase implements SplideManagerInterface {
 
     $optionset = &$build['optionset'];
     $options = &$build['options'];
-    $this->prepareOptions($options, $settings);
+    $this->prepareOptions($optionset, $options, $settings);
 
     // Additional settings, Splide supports nav for Vanilla, unlike Slick.
-    $settings['down']       = $optionset->getSetting('down');
-    $settings['count']      = empty($settings['count']) ? count($build['items']) : $settings['count'];
-    $settings['nav']        = $settings['nav'] && (!empty($settings['optionset_nav']) && isset($build['items'][1]));
-    $settings['navpos']     = ($settings['nav'] && !empty($settings['navpos'])) ? $settings['navpos'] : '';
-    $settings['transition'] = isset($options['type']) ? $options['type'] : $optionset->getSetting('type');
-    $settings['vertical']   = isset($options['direction']) && $options['direction'] == 'ttb';
-    $settings['wheel']      = isset($options['wheel']) ? $options['wheel'] : $optionset->getSetting('wheel');
+    $settings['down']         = $optionset->getSetting('down');
+    $settings['count']        = empty($settings['count']) ? count($build['items']) : $settings['count'];
+    $settings['nav']          = $settings['nav'] && (!empty($settings['optionset_nav']) && isset($build['items'][1]));
+    $settings['navpos']       = ($settings['nav'] && !empty($settings['navpos'])) ? $settings['navpos'] : '';
+    $settings['transition']   = $options['type'] ?? $optionset->getSetting('type');
+    $settings['vertical']     = ($options['direction'] ?? FALSE) == 'ttb';
+    $settings['wheel']        = $options['wheel'] ?? $optionset->getSetting('wheel');
+    $settings['autoscroll']   = $optionset->getSetting('autoScroll');
+    $settings['intersection'] = $optionset->getSetting('intersection');
 
     // Removes pagination thumbnail effect if has no thumbnails.
-    $fx = $optionset->getSetting('pagination') && (!empty($settings['thumbnail_style']) || !empty($settings['thumbnail']));
+    $pagination = $options['pagination'] ?? $optionset->getSetting('pagination');
+    $pagination = Splide::toBoolOrString($pagination);
+    $fx = $pagination && (!empty($settings['thumbnail_style']) || !empty($settings['thumbnail']));
     $settings['pagination_fx'] = $fx ? $settings['thumbnail_effect'] : '';
+    $settings['pagination_tab'] = $pagination && !empty($settings['pagination_texts']);
 
     if ($settings['nav']) {
       $optionset_nav            = $build['optionset_nav'] = Splide::loadWithFallback($settings['optionset_nav']);
       $settings['vertical_nav'] = $optionset_nav->getSetting('direction') == 'ttb';
-      $settings['wheel']        = isset($options['wheel']) ? $options['wheel'] : $optionset_nav->getSetting('wheel');
+      $settings['wheel']        = $options['wheel'] ?? $optionset_nav->getSetting('wheel');
     }
     else {
       // Pass extra attributes such as those from Commerce product variations to
@@ -324,7 +331,7 @@ class SplideManager extends BlazyManagerBase implements SplideManagerInterface {
   protected function buildNavigation(array &$build, array $navs) {
     $settings = $build['settings'];
     foreach (['items', 'options', 'settings'] as $key) {
-      $build[$key] = isset($navs[$key]) ? $navs[$key] : [];
+      $build[$key] = $navs[$key] ?? [];
     }
 
     $optionset             = $build['optionset_nav'];
@@ -351,7 +358,7 @@ class SplideManager extends BlazyManagerBase implements SplideManagerInterface {
     $this->prepareSettings($element, $build);
 
     // Checks if we have thumbnail navigation.
-    $navs     = isset($build['nav']) ? $build['nav'] : [];
+    $navs     = $build['nav'] ?? [];
     $settings = $build['settings'];
 
     // Prevents unused thumb going through the main display.

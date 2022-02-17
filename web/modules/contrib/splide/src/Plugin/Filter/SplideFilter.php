@@ -128,7 +128,7 @@ class SplideFilter extends BlazyFilter {
    * Build the splide using the node ID and field_name.
    */
   private function byEntity($object, array $settings, $attribute) {
-    list($entity_type, $id, $field_name, $field_image) = array_pad(array_map('trim', explode(":", $attribute, 4)), 4, NULL);
+    [$entity_type, $id, $field_name, $field_image] = array_pad(array_map('trim', explode(":", $attribute, 4)), 4, NULL);
     if (empty($field_name)) {
       return [];
     }
@@ -152,7 +152,7 @@ class SplideFilter extends BlazyFilter {
         $definition = $list->getFieldDefinition();
         $field_type = $settings['field_type'] = $definition->get('field_type');
         $field_settings = $definition->get('settings');
-        $handler = isset($field_settings['handler']) ? $field_settings['handler'] : NULL;
+        $handler = $field_settings['handler'] ?? NULL;
         $texts = ['text', 'text_long', 'text_with_summary'];
 
         $formatter = NULL;
@@ -547,14 +547,14 @@ class SplideFilter extends BlazyFilter {
    */
   private static function toGrid(\DOMElement $node, array &$settings) {
     if ($check = $node->getAttribute('grid')) {
-      list($settings['style'], $grid, $settings['visible_items']) = array_pad(array_map('trim', explode(":", $check, 3)), 3, NULL);
+      [$settings['style'], $grid, $settings['visible_items']] = array_pad(array_map('trim', explode(":", $check, 3)), 3, NULL);
 
       if ($grid) {
-        list(
+        [
           $settings['grid_small'],
           $settings['grid_medium'],
-          $settings['grid']
-        ) = array_pad(array_map('trim', explode("-", $grid, 3)), 3, NULL);
+          $settings['grid'],
+        ] = array_pad(array_map('trim', explode("-", $grid, 3)), 3, NULL);
       }
     }
   }

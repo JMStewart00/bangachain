@@ -326,7 +326,7 @@ class FormAlter implements ContainerInjectionInterface {
    */
   public function entityFormEntityBuild($entity_type_id, LayoutEntityDisplayInterface $display, &$form, FormStateInterface &$form_state) {
     $static_id = $form_state->getTemporaryValue('static_id');
-    // @todo: change naming to avoid color-based metaphor.
+    // @todo change naming to avoid color-based metaphor.
     $restriction_types = ['whitelisted', 'blacklisted'];
 
     // Set allowed layouts.
@@ -399,16 +399,12 @@ class FormAlter implements ContainerInjectionInterface {
       else {
         // Unset 'all_regions'. This will be readded if there is tempstore data.
         foreach ($restriction_types as $logic_type) {
-          unset($third_party_settings[$logic_type . '_blocks'][$section]['all_regions']);
+          unset($third_party_settings[$logic_type . '_blocks'][$section]);
         }
         unset($third_party_settings['restricted_categories'][$section]);
         foreach ($regions as $region_id => $region) {
           $categories = $store->get($static_id . ':' . $section . ':' . $region_id);
           if (!is_null($categories)) {
-            // Unset any existing config for region.
-            foreach ($restriction_types as $logic_type) {
-              unset($third_party_settings[$logic_type . '_blocks'][$section][$region_id]);
-            }
             foreach ($categories as $category => $settings) {
               $restriction_type = $settings['restriction_type'];
               // Category is restricted.

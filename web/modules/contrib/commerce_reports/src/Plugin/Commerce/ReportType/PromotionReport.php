@@ -7,7 +7,6 @@ use Drupal\commerce_order\Entity\OrderInterface;
 use Drupal\commerce_price\Price;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Query\QueryAggregateInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\entity\BundleFieldDefinition;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -21,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   provider = "commerce_promotion",
  * )
  */
-class PromotionReport extends ReportTypeBase implements ContainerFactoryPluginInterface {
+class PromotionReport extends ReportTypeBase {
 
   /**
    * The promotion storage.

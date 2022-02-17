@@ -19,6 +19,9 @@ use Drupal\feeds\Entity\Feed;
  */
 function feeds_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
+    case 'help.page.feeds':
+      return '<p>' . t('You can find the <a href=":feeds-help" target="_blank" rel="noopener">documention</a> for the Feeds module on drupal.org.', [':feeds-help' => 'https://www.drupal.org/docs/contributed-modules/feeds']) . '</p>';
+
     case 'entity.feeds_feed_type.collection':
       return '<p>' . t('Create one or more feed types for pulling content into Drupal.') . '</p>';
 

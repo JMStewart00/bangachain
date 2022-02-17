@@ -22,13 +22,14 @@ class EntityCreateDeriver extends DeriverBase implements ContainerDeriverInterfa
   use StringTranslationTrait;
 
   /**
-   * The entity type manager.
+   * The entity type manager service.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
+
   /**
-   * The entity field manager.
+   * The entity field manager service.
    *
    * @var \Drupal\Core\Entity\EntityFieldManagerInterface
    */
@@ -38,9 +39,9 @@ class EntityCreateDeriver extends DeriverBase implements ContainerDeriverInterfa
    * Creates a new EntityCreateDeriver object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
+   *   The entity type manager service.
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
-   *   The entity field manager.
+   *   The entity field manager service.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation service.
    */
@@ -72,13 +73,15 @@ class EntityCreateDeriver extends DeriverBase implements ContainerDeriverInterfa
       }
 
       $this->derivatives[$entity_type_id] = [
-        'label' => $this->t('Create a new @entity_type', ['@entity_type' => $entity_type->getSingularLabel()]),
+        'label' => $this->t('Create a new @entity_type entity', [
+          '@entity_type' => $entity_type->getSingularLabel(),
+        ]),
         'category' => $entity_type->getLabel(),
         'entity_type_id' => $entity_type_id,
         'context_defintions' => [],
         'provides' => [
           $entity_type->id() . '_created' => ContextDefinition::create("entity:$entity_type_id")
-            ->setLabel($this->t('Created @entity_type', ['@entity_type' => $entity_type->getSingularLabel()]))
+            ->setLabel($this->t('Created @entity_type entity', ['@entity_type' => $entity_type->getSingularLabel()]))
             ->setRequired(TRUE),
         ],
       ] + $base_plugin_definition;

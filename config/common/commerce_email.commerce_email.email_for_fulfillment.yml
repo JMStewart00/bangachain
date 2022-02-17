@@ -4,8 +4,6 @@ status: true
 dependencies: {  }
 id: email_for_fulfillment
 label: 'Email for Fulfillment'
-event: order_status_updated
-targetEntityType: commerce_order
 from: no-reply@bangachain.com
 to: '[commerce_order:uid:entity:mail]'
 cc: ''
@@ -15,3 +13,5 @@ body: "<p>Hey [commerce_order:uid:entity:display-name]!</p>\r\n<p>Get Excited!!!
 logIntoOrder: true
 conditions: {  }
 conditionOperator: AND
+event: order_status_updated
+targetEntityType: commerce_order

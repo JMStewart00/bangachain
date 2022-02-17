@@ -4,6 +4,7 @@
 
  * [Introduction](#introduction)
  * [Requirements](#requirements)
+ * [Plugins](#plugins)
  * [Recommended modules](#recommended-modules)
  * [Features](#features)
  * [Installation](#installation)
@@ -54,6 +55,35 @@ issues might or might not be resolved, or inherited.
    multi-serving images, lazyload ahead for smoother UX.
    Check out Blazy installation guides!
 
+***
+***
+# <a name="plugins"> </a>PLUGINS
+Not all plugins are supported nor implemented, below are:  
+1. [AutoScroll](https://github.com/Splidejs/splide-extension-auto-scroll):  
+
+   + `/libraries/splidejs--splide-extension-auto-scroll` (via packagist)  
+   + `/libraries/splide-extension-auto-scroll` (via github)   
+
+   Or any supported path by priority, and they must have
+   `/dist/js/splide-extension-auto-scroll.min.js`.
+
+2. [Intersection](https://github.com/Splidejs/splide-extension-intersection):  
+
+   + `/libraries/splidejs--splide-extension-intersection` (via packagist)  
+   + `/libraries/splide-extension-intersection` (via github)   
+
+   Or any supported path by priority, and they must have
+   `/dist/js/splide-extension-intersection.min.js`.
+
+Packagist always takes precedence over Github.
+Unless explicitly supported, the reasons for not being supported are:  
+
+* `Grid` has already existing non-js implementation via `Blazy Grid` including
+  `Grid Foundation`, `CSS3 Columns Masonry`, `Native Grid` (both layouts:
+  two-dimensional ala `GridStack` and one-dimensional ala `Masonry`).  
+* `Video` has already existing battle-tested GDPR-friendly media player via
+  `Image to iframe` under `Media switch` option.  
+* Other plugins, nobody need them, yet. Patches are welcome.  
 
 ***
 ***
@@ -71,12 +101,13 @@ Splide to avoid headaches for just ~15-minute read.
 
    ```
    $ composer require npm-asset/blazy \
-   npm-asset/splidejs--splide:^3.0 \
+   npm-asset/splidejs--splide:^3 \
    drupal/blazy \
    drupal/splide
    ```
    See [Blazy composer](/admin/help/blazy_ui#composer) for details.
-   Bleeding edge releases might not be available at NPM, yet. Please go github.
+   Bleeding edge releases might not be available weeks after releases at
+   Packagist via `npm-asset`, yet. Please go github.
    [Read more](https://github.com/hiqdev/asset-packagist/issues/139).
 
 
@@ -133,10 +164,10 @@ The Splide module has several sub-modules:
 ***
 # <a name="features"></a>FEATURES
 * Fully responsive. Scales with its container.
-* Lightweight, 26kB (11kB gzipped)
-* Accessibility friendly
-* Internet Explorer 10
-* Mouse drag and touch swipe
+* Lightweight, 26kB (11kB gzipped).
+* Accessibility friendly.
+* Internet Explorer 10.
+* Mouse drag and touch swipe.
 * Built-in lazyLoad, and multiple breakpoint options.
 * Random, autoplay, pagers, arrows, dots/text/tabs/thumbnail pagers etc...
 * Supports pure text, responsive image, iframe, video carousels with
@@ -156,6 +187,8 @@ The Splide module has several sub-modules:
 
 ## ROADMAP
 * Vanilla with thumbnail navigation for both Splide Views and formatters.
-  - [x] Views, fixed with Rendered entity + Fields (not Content) under Format.
-  - [x] Media, [x] Entity reference, [X] Paragraphs.
+  - [x] Views, fixed with Rendered entity + Fields (not Content) under Format
+  - [x] Media
+  - [x] Entity reference
+  - [X] Paragraphs
 * Bug fixes, code cleanup, optimization, and full release.

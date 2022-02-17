@@ -86,7 +86,7 @@ class BlazyOEmbedFormatter extends FormatterBase {
 
         // Update data with local image.
         $settings = array_merge($settings, $data['settings']);
-        $image_item = isset($data['item']) ? $data['item'] : NULL;
+        $image_item = $data['item'] ?? NULL;
       }
 
       $box = ['item' => $image_item, 'settings' => $settings];

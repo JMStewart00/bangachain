@@ -11,12 +11,12 @@ pattern: 'team/[node:title]'
 selection_criteria:
   bca0dc6c-3c58-4c59-b09c-773cac874b88:
     id: node_type
-    bundles:
-      team_member: team_member
     negate: false
+    uuid: bca0dc6c-3c58-4c59-b09c-773cac874b88
     context_mapping:
       node: node
-    uuid: bca0dc6c-3c58-4c59-b09c-773cac874b88
+    bundles:
+      team_member: team_member
 selection_logic: and
 weight: -5
 relationships: {  }

@@ -1,5 +1,5 @@
-core_stock_events_order_complete: true
-core_stock_events_order_cancel: true
-core_stock_events_order_updates: true
 _core:
   default_config_hash: FL-WkgniPypCWECCor6zBuzt_R81-G5zUqW3G2rHNsU
+core_stock_events_order_complete_event_type: placed
+core_stock_events_order_cancel: true
+core_stock_events_order_updates: true

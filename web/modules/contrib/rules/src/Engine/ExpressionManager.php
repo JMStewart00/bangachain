@@ -26,7 +26,7 @@ class ExpressionManager extends DefaultPluginManager implements ExpressionManage
    * Constructor.
    */
   public function __construct(\Traversable $namespaces, ModuleHandlerInterface $module_handler, UuidInterface $uuid_service, $plugin_definition_annotation_name = RulesExpression::class) {
-    $this->alterInfo('rules_expression');
+    $this->alterInfo('rules_expression_info');
     parent::__construct('Plugin/RulesExpression', $namespaces, $module_handler, ExpressionInterface::class, $plugin_definition_annotation_name);
     $this->uuidService = $uuid_service;
   }

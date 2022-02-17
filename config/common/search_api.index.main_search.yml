@@ -205,8 +205,8 @@ tracker_settings:
   default:
     indexing_order: fifo
 options:
-  index_directly: true
   cron_limit: 50
-  algolia_index_name: prod_bangachain_main
+  index_directly: true
   track_changes_in_references: true
+  algolia_index_name: prod_bangachain_main
 server: algolia

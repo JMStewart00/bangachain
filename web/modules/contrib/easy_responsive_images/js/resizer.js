@@ -18,8 +18,12 @@
         for (let entry of entries) {
           const images = entry.target.querySelectorAll('img[data-srcset]');
           images.forEach(image => {
-            const availableWidth = Math.floor(image.parentNode.clientWidth);
-            const attrWidth = image.getAttribute('width');
+            let availableWidth = Math.floor(image.parentNode.clientWidth);
+            var query = "(-webkit-min-device-pixel-ratio: 2), (min-device-pixel-ratio: 2), (min-resolution: 192dpi)";
+            if (matchMedia(query).matches) {
+              availableWidth = availableWidth * 2;
+            }
+            const attrWidth = image.width;
             const sources = image.getAttribute('data-srcset').split(',');
 
             // If the selected image is already bigger than the available width,
@@ -41,9 +45,7 @@
 
             // Update the "src" with the new image and also set the "width"
             // attribute to easily check if we need a new image after resize.
-            if (responsiveImgPath) {
-              image.setAttribute('src', responsiveImgPath);
-            }
+            image.setAttribute('src', responsiveImgPath);
             image.setAttribute('width', responsiveImgWidth);
           });
         }

@@ -61,7 +61,7 @@ class OrderItemMatcher implements OrderItemMatcherInterface {
     $comparison_fields = ['type', 'purchased_entity'];
     $comparison_fields = array_merge($comparison_fields, $this->getCustomFields($order_item));
     $event = new OrderItemComparisonFieldsEvent($comparison_fields, $order_item);
-    $this->eventDispatcher->dispatch(CartEvents::ORDER_ITEM_COMPARISON_FIELDS, $event);
+    $this->eventDispatcher->dispatch($event, CartEvents::ORDER_ITEM_COMPARISON_FIELDS);
     $comparison_fields = $event->getComparisonFields();
     $comparison_fields = array_unique($comparison_fields);
 

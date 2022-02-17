@@ -17,7 +17,7 @@ class OrderAdminTest extends OrderBrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_log',
   ];
 

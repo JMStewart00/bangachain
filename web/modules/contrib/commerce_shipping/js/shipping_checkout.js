@@ -5,8 +5,7 @@
 * @preserve
 **/
 
-(function ($, Drupal, drupalSettings) {
-
+(function (Drupal, drupalSettings, once) {
   Drupal.shippingRecalculate = {
     recalculateButtonSelector: '',
     submitButtonSelector: '[id^=edit-actions-next]',
@@ -14,10 +13,11 @@
     onChange: function onChange(element) {
       var waitForAjaxComplete = function waitForAjaxComplete(element) {
         setTimeout(function () {
-          if (element.is(':disabled')) {
+          if (element.disabled) {
             waitForAjaxComplete(element);
             return;
           }
+
           if (Drupal.shippingRecalculate.canRecalculateRates()) {
             Drupal.shippingRecalculate.recalculateRates();
           }
@@ -29,31 +29,37 @@
     init: function init(context) {
       var _this = this;
 
-      $(this.wrapper).find(':input.required', context).once('shipping-recalculate').on('change', function (_ref) {
-        var currentTarget = _ref.currentTarget;
+      var requiredInputs = document.getElementById(this.wrapper).querySelectorAll('input[required], select[required]');
 
-        _this.onChange($(currentTarget));
-      });
+      if (requiredInputs.length) {
+        once('shipping-recalculate', requiredInputs, context).forEach(function (element) {
+          element.addEventListener('change', function (el) {
+            _this.onChange(el.target);
+          });
+        });
+      }
     },
     canRecalculateRates: function canRecalculateRates() {
       var canRecalculate = true;
-      $(this.wrapper).find(':input.required').each(function (index, element) {
-        if (!$(element).val()) {
+      var requiredInputs = document.getElementById(this.wrapper).querySelectorAll('input[required], select[required]');
+      Array.prototype.forEach.call(requiredInputs, function (el) {
+        if (!el.value) {
           canRecalculate = false;
           return false;
         }
       });
-
       return canRecalculate;
     },
     recalculateRates: function recalculateRates() {
-      if ($(this.submitButtonSelector).length) {
-        $(this.submitButtonSelector).prop('disabled', true);
+      var buttons = document.querySelectorAll(this.submitButtonSelector);
+
+      if (buttons.length) {
+        buttons[0].disabled = true;
       }
-      $(this.wrapper).find(this.recalculateButtonSelector).trigger('mousedown');
+
+      document.getElementById(this.wrapper).querySelector(this.recalculateButtonSelector).dispatchEvent(new Event('mousedown'));
     }
   };
-
   Drupal.behaviors.shippingRatesRecalculate = {
     attach: function attach(context) {
       Drupal.shippingRecalculate.wrapper = drupalSettings.commerceShipping.wrapper;
@@ -61,4 +67,4 @@
       Drupal.shippingRecalculate.init(context);
     }
   };
-})(jQuery, Drupal, drupalSettings);
+})(Drupal, drupalSettings, once);

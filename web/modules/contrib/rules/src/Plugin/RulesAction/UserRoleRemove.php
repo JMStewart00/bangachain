@@ -16,11 +16,13 @@ use Drupal\rules\Exception\InvalidArgumentException;
  *   context_definitions = {
  *     "user" = @ContextDefinition("entity:user",
  *       label = @Translation("User"),
- *       description = @Translation("The user whose roles should be changed.")
+ *       description = @Translation("The user whose roles should be changed."),
+ *       assignment_restriction = "selector"
  *     ),
  *     "roles" = @ContextDefinition("entity:user_role",
  *       label = @Translation("Roles"),
- *       description = @Translation("One or more role ids to remove."),
+ *       description = @Translation("The user role(s) to remove."),
+ *       options_provider = "\Drupal\rules\TypedData\Options\RolesOptions",
  *       multiple = TRUE
  *     ),
  *   }

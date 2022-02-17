@@ -47,7 +47,7 @@ class RulesEventManager extends DefaultPluginManager implements CategorizingPlug
    *   The entity type bundle information manager.
    */
   public function __construct(ModuleHandlerInterface $module_handler, EntityTypeBundleInfoInterface $entity_bundle_info) {
-    $this->alterInfo('rules_event');
+    $this->alterInfo('rules_event_info');
     $this->discovery = new ContainerDerivativeDiscoveryDecorator(new YamlDiscovery('rules.events', $module_handler->getModuleDirectories()));
     $this->factory = new ContainerFactory($this, RulesEventHandlerInterface::class);
     $this->moduleHandler = $module_handler;

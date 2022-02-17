@@ -1,9 +1,9 @@
+_core:
+  default_config_hash: o-VTd4-27euO9X90O2Ky-pu-xnqm0ah7BfocjiLD3Oc
 order_lookup_limit: 10
 product_search_server: point_of_sale
 product_search_index: pos
-_core:
-  default_config_hash: o-VTd4-27euO9X90O2Ky-pu-xnqm0ah7BfocjiLD3Oc
-default_payment_gateway: pos_credit
 look_and_feel_login_bg: {  }
 look_and_feel_store_logo: {  }
 look_and_feel_accent_colour: '#000000'
+default_payment_gateway: pos_credit

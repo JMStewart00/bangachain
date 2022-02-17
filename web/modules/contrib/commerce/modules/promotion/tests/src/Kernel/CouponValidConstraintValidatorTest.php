@@ -22,7 +22,7 @@ class CouponValidConstraintValidatorTest extends OrderKernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_promotion',
   ];
 

@@ -3,12 +3,13 @@
  * Provides Splide loader.
  */
 
-(function (Drupal, drupalSettings, _db, _ds) {
+(function ($, Drupal, drupalSettings, _ds) {
 
   'use strict';
 
-  var _wrapper = 'splide-wrapper';
-  var _mounted = 'is-mounted';
+  var _id = 'splide-wrapper';
+  var _mounted = 'is-sw-mounted';
+  var _element = '.' + _id + ':not(.' + _mounted + ')';
 
   /**
    * Splide wrapper utility functions.
@@ -20,7 +21,7 @@
     // Respects nested.
     var main = elm.querySelectorAll('.splide--main');
     var nav = elm.querySelectorAll('.splide--nav');
-    if (main === null || nav === null) {
+    if (!main.length || !nav.length) {
       return;
     }
 
@@ -58,15 +59,14 @@
   Drupal.behaviors.splideNav = {
     attach: function (context) {
 
-      // Context is unreliable with AJAX contents like product variations, etc.
-      context = context instanceof HTMLDocument ? context : document;
+      // @todo replace by dBlazy.context post Blazy:2.6+.
+      context = _ds.context(context);
 
-      var items = context.querySelectorAll('.' + _wrapper + ':not(.' + _mounted + ')');
-      if (items.length) {
-        _db.once(_db.forEach(items, doWrapper, context));
+      var elms = context.querySelectorAll(_element);
+      if (elms.length) {
+        $.once($.forEach(elms, doWrapper));
       }
-
     }
   };
 
-})(Drupal, drupalSettings, dBlazy, dSplide);
+})(dBlazy, Drupal, drupalSettings, dSplide);

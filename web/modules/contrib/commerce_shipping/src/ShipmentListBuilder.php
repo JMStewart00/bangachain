@@ -125,8 +125,9 @@ class ShipmentListBuilder extends EntityListBuilder {
    */
   protected function getDefaultOperations(EntityInterface $entity) {
     $operations = parent::getDefaultOperations($entity);
+    $order = $entity->getOrder();
 
-    if ($entity->getOrder()->access('resend_receipt')) {
+    if ($order && $order->access('resend_receipt')) {
       $operations['resend_confirmation'] = [
         'title' => $this->t('Resend confirmation'),
         'weight' => 20,

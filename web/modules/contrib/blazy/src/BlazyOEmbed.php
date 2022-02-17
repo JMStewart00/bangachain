@@ -2,7 +2,6 @@
 
 namespace Drupal\blazy;
 
-use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Url;
 use Drupal\Core\Image\ImageFactory;
@@ -190,21 +189,6 @@ class BlazyOEmbed implements BlazyOEmbedInterface {
   /**
    * {@inheritdoc}
    */
-  public function getAutoPlayUrl($url = '') {
-    $data = [];
-    if (!empty($url)) {
-      $data['oembed_url'] = $url;
-      // Adds autoplay for media URL on lightboxes, saving another click.
-      if (strpos($url, 'autoplay') === FALSE || strpos($url, 'autoplay=0') !== FALSE) {
-        $data['autoplay_url'] = strpos($url, '?') === FALSE ? $url . '?autoplay=1' : $url . '&autoplay=1';
-      }
-    }
-    return $data;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getMediaItem(array &$data, $media) {
     // Only proceed if we do have Media.
     if ($media->getEntityTypeId() != 'media') {
@@ -290,52 +274,12 @@ class BlazyOEmbed implements BlazyOEmbedInterface {
   }
 
   /**
-   * Overrides variables for media-oembed-iframe.html.twig templates.
+   * Returns the autoplay url, no-longer currently in use.
+   *
+   * @todo deprecated and removed for BlazyTheme::getAutoPlayUrl().
    */
-  public function preprocessMediaOembedIframe(array &$variables) {
-    // Without internet, this may be empty, bail out.
-    if (empty($variables['media'])) {
-      return;
-    }
-
-    // Only needed to autoplay video, and make responsive iframe.
-    try {
-      // Blazy formatters with oEmbed provide contextual params to the query.
-      $request = $this->request->getCurrentRequest();
-      $is_blazy = $request->query->getInt('blazy', NULL);
-      $is_autoplay = $request->query->getInt('autoplay', NULL);
-      $url = $request->query->get('url');
-
-      // Only replace url if it is required by Blazy.
-      if ($url && $is_blazy == 1) {
-        // Load iframe string as a DOMDocument as alternative to regex.
-        $dom = Html::load($variables['media']);
-        $iframe = $dom->getElementsByTagName('iframe');
-
-        // Replace old oEmbed url with autoplay support, and save the DOM.
-        if ($iframe->length > 0) {
-          // Fetches autoplay_url.
-          $embed_url = $iframe->item(0)->getAttribute('src');
-          $settings = $this->getAutoPlayUrl($embed_url);
-
-          // Only replace if autoplay == 1 for Image to iframe, or lightboxes.
-          if ($is_autoplay == 1 && !empty($settings['autoplay_url'])) {
-            $iframe->item(0)->setAttribute('src', $settings['autoplay_url']);
-          }
-
-          // Make responsive iframe with/ without autoplay.
-          // The following ensures iframe does not shrink due to its attributes.
-          $iframe->item(0)->setAttribute('height', '100%');
-          $iframe->item(0)->setAttribute('width', '100%');
-          $dom->getElementsByTagName('body')->item(0)->setAttribute('class', 'is-b-oembed');
-          $variables['media'] = $dom->saveHTML();
-        }
-      }
-    }
-    catch (\Exception $ignore) {
-      // Do nothing, likely local work without internet, or the site is down.
-      // No need to be chatty on this.
-    }
+  public function getAutoPlayUrl(?string $url) {
+    return BlazyTheme::getAutoPlayUrl($url);
   }
 
 }

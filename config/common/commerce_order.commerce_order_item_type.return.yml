@@ -9,9 +9,9 @@ third_party_settings:
     taxable_type: physical_goods
 _core:
   default_config_hash: 1qrva2PEkPAmYhv6x4SkZXb_RNSeEtSnssXJHuqPWgQ
-label: Return
 id: return
-purchasableEntityType: commerce_product_variation
-orderType: default
+label: Return
 traits: {  }
 locked: false
+purchasableEntityType: commerce_product_variation
+orderType: default

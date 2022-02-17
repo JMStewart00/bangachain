@@ -210,7 +210,7 @@ class RuleExpression extends ExpressionBase implements RuleExpressionInterface, 
   /**
    * {@inheritdoc}
    */
-  public function getIterator() {
+  public function getIterator(): \Traversable {
     // Just pass up the actions for iterating over.
     return $this->actions->getIterator();
   }

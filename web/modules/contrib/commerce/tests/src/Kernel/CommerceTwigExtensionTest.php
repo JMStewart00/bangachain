@@ -14,7 +14,7 @@ class CommerceTwigExtensionTest extends CommerceKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_test',
   ];
 

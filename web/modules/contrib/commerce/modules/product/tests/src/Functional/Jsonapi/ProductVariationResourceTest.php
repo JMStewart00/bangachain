@@ -240,7 +240,7 @@ class ProductVariationResourceTest extends ResourceTestBase {
           'sku' => 'ABC123',
           'price' => [
             'currency_code' => 'USD',
-            'number' => '8.99',
+            'number' => $this->entity->getPrice()->getNumber(),
           ],
         ],
         'relationships' => $relationships,

@@ -6,11 +6,11 @@ type: module
 package: 'Layout Builder'
 dependencies:
   - drupal:layout_builder
-  - drupal:layout_builder_restrictions
+  - layout_builder_restrictions:layout_builder_restrictions
 test_dependencies:
   - layout_library:layout_library
 
-# Information added by Drupal.org packaging script on 2021-10-12
-version: '8.x-2.10'
+# Information added by Drupal.org packaging script on 2022-01-14
+version: '8.x-2.12'
 project: 'layout_builder_restrictions'
-datestamp: 1634056698
+datestamp: 1642181242

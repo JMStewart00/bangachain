@@ -5,9 +5,12 @@ blazy.settings:
     admin_css:
       type: boolean
       label: 'Admin CSS'
-    decode:
-      type: boolean
-      label: 'Use decoding'
+    nojs:
+      type: sequence
+      label: 'No JavaScript'
+      sequence:
+        - type: string
+          label: nojs
     fx:
       type: string
       label: 'Image effect'
@@ -49,9 +52,6 @@ blazy.settings:
       type: mapping
       label: IO
       mapping:
-        enabled:
-          type: boolean
-          label: 'Enable IO'
         unblazy:
           type: boolean
           label: 'Unload bLazy'

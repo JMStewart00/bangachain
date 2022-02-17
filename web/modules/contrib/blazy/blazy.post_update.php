@@ -26,7 +26,7 @@ function blazy_post_update_schema_formatter_grid_int_to_string(array &$sandbox =
   $callback = function (EntityViewDisplayInterface $display) {
     $needs_save = FALSE;
     foreach ($display->getComponents() as $field_name => &$component) {
-      $config = isset($component['settings']) ? $component['settings'] : [];
+      $config = $component['settings'] ?? [];
       if (!isset($config['style'], $config['grid'], $config['grid_small'])) {
         continue;
       }
@@ -40,13 +40,13 @@ function blazy_post_update_schema_formatter_grid_int_to_string(array &$sandbox =
       }
 
       // Removed old deprecated/ unused formatter settings.
-      foreach (['breakpoints', 'sizes', 'grid_header'] as $key) {
-        if (isset($config[$key]) && empty($config[$key])) {
-          unset($component['settings'][$key]);
-          $needs_save = TRUE;
-        }
-      }
-
+      // @todo Postponed till 3.x.
+      // foreach (['breakpoints', 'sizes', 'grid_header'] as $key) {
+      // if (isset($config[$key]) && empty($config[$key])) {
+      // unset($component['settings'][$key]);
+      // $needs_save = TRUE;
+      // }
+      // }
       if ($needs_save) {
         $display->setComponent($field_name, $component);
       }
@@ -77,7 +77,7 @@ function blazy_post_update_schema_view_grid_int_to_string(array &$sandbox = []) 
     }
 
     foreach ($view->get('display') as &$display) {
-      $style = isset($display['display_options'], $display['display_options']['style']) ? $display['display_options']['style'] : [];
+      $style = $display['display_options']['style'] ?? [];
 
       if (!isset($style['options'])) {
         continue;
@@ -106,4 +106,21 @@ function blazy_post_update_schema_view_grid_int_to_string(array &$sandbox = []) 
   };
 
   $config_entity_updater->update($sandbox, 'view', $callback);
+}
+
+/**
+ * Clear cache to re-generate assets.
+ */
+function blazy_post_update_vanilla_once() {
+  // Empty hook to clear caches.
+}
+
+/**
+ * Removed io.enabled settings as per #3258851.
+ */
+function blazy_post_update_remove_io_enabled_key() {
+  $config = \Drupal::configFactory()->getEditable('blazy.settings');
+  $config->clear('decode');
+  $config->clear('io.enabled');
+  $config->save(TRUE);
 }

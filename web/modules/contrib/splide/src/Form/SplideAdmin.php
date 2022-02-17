@@ -6,6 +6,7 @@ use Drupal\Core\Url;
 use Drupal\Core\Render\Element;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\blazy\Dejavu\BlazyAdminExtended;
 use Drupal\splide\SplideManagerInterface;
@@ -17,6 +18,13 @@ use Drupal\splide\SplideDefault;
 class SplideAdmin implements SplideAdminInterface {
 
   use StringTranslationTrait;
+
+  /**
+   * The entity field manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected $entityFieldManager;
 
   /**
    * The blazy admin service.
@@ -35,12 +43,15 @@ class SplideAdmin implements SplideAdminInterface {
   /**
    * Constructs a SplideAdmin object.
    *
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   *   The entity_field.manager service.
    * @param \Drupal\blazy\Dejavu\BlazyAdminExtended $blazy_admin
    *   The blazy admin service.
    * @param \Drupal\splide\SplideManagerInterface $manager
    *   The splide manager service.
    */
-  public function __construct(BlazyAdminExtended $blazy_admin, SplideManagerInterface $manager) {
+  public function __construct(EntityFieldManagerInterface $entity_field_manager, BlazyAdminExtended $blazy_admin, SplideManagerInterface $manager) {
+    $this->entityFieldManager = $entity_field_manager;
     $this->blazyAdmin = $blazy_admin;
     $this->manager = $manager;
   }
@@ -50,6 +61,7 @@ class SplideAdmin implements SplideAdminInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
+      $container->get('entity_field.manager'),
       $container->get('blazy.admin.extended'),
       $container->get('splide.manager')
     );
@@ -70,14 +82,14 @@ class SplideAdmin implements SplideAdminInterface {
   }
 
   /**
-   * Returns the main form elements.
+   * Modifies the main form elements.
    */
-  public function buildSettingsForm(array &$form, $definition = []) {
-    $definition['caches']           = isset($definition['caches']) ? $definition['caches'] : TRUE;
+  public function buildSettingsForm(array &$form, $definition = []): void {
+    $definition['caches']           = $definition['caches'] ?? TRUE;
     $definition['namespace']        = 'splide';
-    $definition['optionsets']       = isset($definition['optionsets']) ? $definition['optionsets'] : $this->getOptionsetsByGroupOptions('main');
-    $definition['skins']            = isset($definition['skins']) ? $definition['skins'] : $this->getSkinsByGroupOptions('main');
-    $definition['responsive_image'] = isset($definition['responsive_image']) ? $definition['responsive_image'] : TRUE;
+    $definition['optionsets']       = $definition['optionsets'] ?? $this->getOptionsetsByGroupOptions('main');
+    $definition['skins']            = $definition['skins'] ?? $this->getSkinsByGroupOptions('main');
+    $definition['responsive_image'] = $definition['responsive_image'] ?? TRUE;
 
     foreach (['optionsets', 'skins'] as $key) {
       if (isset($definition[$key]['default'])) {
@@ -116,10 +128,10 @@ class SplideAdmin implements SplideAdminInterface {
   }
 
   /**
-   * Returns the opening form elements.
+   * Modifies the opening form elements.
    */
-  public function openingForm(array &$form, &$definition = []) {
-    $path         = drupal_get_path('module', 'splide');
+  public function openingForm(array &$form, &$definition = []): void {
+    $path         = SplideDefault::getPath('module', 'splide');
     $is_splide_ui = $this->manager()->getModuleHandler()->moduleExists('splide_ui');
     $is_help      = $this->manager()->getModuleHandler()->moduleExists('help');
     $route_name   = ['name' => 'splide_ui'];
@@ -244,9 +256,9 @@ class SplideAdmin implements SplideAdminInterface {
   }
 
   /**
-   * Returns the image formatter form elements.
+   * Modifies the image formatter form elements.
    */
-  public function mediaSwitchForm(array &$form, $definition = []) {
+  public function mediaSwitchForm(array &$form, $definition = []): void {
     $this->blazyAdmin->mediaSwitchForm($form, $definition);
 
     if (isset($form['media_switch'])) {
@@ -265,13 +277,13 @@ class SplideAdmin implements SplideAdminInterface {
   }
 
   /**
-   * Returns the image formatter form elements.
+   * Modifies the image formatter form elements.
    */
-  public function imageStyleForm(array &$form, $definition = []) {
-    $definition['thumbnail_style'] = isset($definition['thumbnail_style']) ? $definition['thumbnail_style'] : TRUE;
-    $definition['ratios'] = isset($definition['ratios']) ? $definition['ratios'] : TRUE;
+  public function imageStyleForm(array &$form, $definition = []): void {
+    $definition['thumbnail_style'] = $definition['thumbnail_style'] ?? TRUE;
+    $definition['ratios'] = $definition['ratios'] ?? TRUE;
 
-    $definition['thumbnail_effect'] = isset($definition['_thumbnail_effect']) ? $definition['_thumbnail_effect'] : [
+    $definition['thumbnail_effect'] = $definition['_thumbnail_effect'] ?? [
       'hover' => $this->t('Hoverable'),
       'grid'  => $this->t('Static grid'),
     ];
@@ -287,24 +299,20 @@ class SplideAdmin implements SplideAdminInterface {
       $form['thumbnail_style']['#enforced'] = TRUE;
     }
 
-    if (isset($form['thumbnail_effect'])) {
-      $form['thumbnail_effect']['#description'] = $this->t('Dependent on a Skin, Dots and Thumbnail style options. No asnavfor/ Optionset thumbnail is needed. <ol><li><strong>Hoverable</strong>: Dots pager are kept, and thumbnail will be hidden and only visible on dot mouseover, default to min-width 120px.</li><li><strong>Static grid</strong>: Dots are hidden, and thumbnails are displayed as a static grid acting like dots pager.</li></ol>Alternative to asNavFor aka separate thumbnails as slider.');
-    }
-
     if (isset($form['background'])) {
       $form['background']['#description'] .= ' ' . $this->t('Works best with a single visible slide, skins full width/screen.');
     }
   }
 
   /**
-   * Returns re-usable fieldable formatter form elements.
+   * Modifies re-usable fieldable formatter form elements.
    */
-  public function fieldableForm(array &$form, $definition = []) {
+  public function fieldableForm(array &$form, $definition = []): void {
     $this->blazyAdmin->fieldableForm($form, $definition);
 
     if (isset($form['image'])) {
       $form['image']['#enforced'] = TRUE;
-      $description = isset($form['image']['#description']) ? ' ' . $form['image']['#description'] : '';
+      $description = $form['image']['#description'] ?? '';
       $form['image']['#description'] = $this->t('If Vanilla enabled and Optionset nav is provided, this will be used for thumbnail instead. The actual Main stage will be the rendered entity, not this image.') . $description;
     }
 
@@ -320,9 +328,9 @@ class SplideAdmin implements SplideAdminInterface {
   }
 
   /**
-   * Returns re-usable grid elements across Splide field formatter and Views.
+   * Modifies re-usable grid elements across Splide field formatter and Views.
    */
-  public function gridForm(array &$form, $definition = []) {
+  public function gridForm(array &$form, $definition = []): void {
     if (!isset($form['grid'])) {
       $this->blazyAdmin->gridForm($form, $definition);
     }
@@ -335,9 +343,9 @@ class SplideAdmin implements SplideAdminInterface {
   }
 
   /**
-   * Returns the closing ending form elements.
+   * Modifies the closing ending form elements.
    */
-  public function closingForm(array &$form, $definition = []) {
+  public function closingForm(array &$form, $definition = []): void {
     if (empty($definition['_views']) && !empty($definition['field_name'])) {
       $form['use_theme_field'] = [
         '#title'       => $this->t('Use field template'),
@@ -384,13 +392,56 @@ class SplideAdmin implements SplideAdminInterface {
       }
     }
 
+    $states = [
+      'visible' => [
+        ':input[name$="[overridables][pagination]"]' => ['checked' => TRUE],
+      ],
+    ];
+
+    if (isset($definition['pagination_texts'])) {
+      $form['pagination_text'] = [
+        '#type'         => 'select',
+        '#title'        => $this->t('Pagination text'),
+        '#description'  => $this->t("Select a text field that should be used for the pagination labels. Useful for tab-style selection of slides. <b>Note:</b> requires a field of type `text` or `string` on all target bundles configured for the field. Might conflict with `Pagination effect`. Requires extra theming as usual."),
+        '#options'      => (array) $definition['pagination_texts'],
+        '#empty_option' => $this->t('- None -'),
+        '#weight'       => 115,
+        '#enforced'     => TRUE,
+        '#states'       => $states,
+      ];
+    }
+
+    $form['pagination_pos'] = [
+      '#type'         => 'select',
+      '#title'        => $this->t('Pagination position'),
+      '#description'  => $this->t("Applies a class `is-paginated--[left|right|top|custom]` to customize pagination positioning. Default to `bottom`, and do nothing for all. Requires extra theming as usual."),
+      '#empty_option' => $this->t('Default'),
+      '#options'      => [
+        'left'   => $this->t('Left'),
+        'right'  => $this->t('Right'),
+        'top'    => $this->t('Top'),
+        'custom' => $this->t('Custom'),
+      ],
+      '#weight'       => 116,
+      '#enforced'     => TRUE,
+      '#states'       => $states,
+    ];
+
+    // It was originally Slick's, specific for pagination thumbnails.
+    if (isset($form['thumbnail_effect'])) {
+      $form['thumbnail_effect']['#states'] = $states;
+      $form['thumbnail_effect']['#weight'] = 117;
+      $form['thumbnail_effect']['#title'] = $this->t('Pagination effect');
+      $form['thumbnail_effect']['#description'] = $this->t('Dependent on a Skin, Dots and Thumbnail style options. No asnavfor/ Optionset thumbnail is needed. <ol><li><strong>Hoverable</strong>: Dots pager are kept, and thumbnail will be hidden and only visible on dot mouseover, default to min-width 120px.</li><li><strong>Static grid</strong>: Dots are hidden, and thumbnails are displayed as a static grid acting like dots pager.</li></ol>Alternative to asNavFor aka separate thumbnails as slider.');
+    }
+
     $this->blazyAdmin->closingForm($form, $definition);
   }
 
   /**
    * Returns overridable options to re-use one optionset.
    */
-  public function getOverridableOptions() {
+  public function getOverridableOptions(): array {
     $options = SplideDefault::overridableOptions(TRUE);
 
     $this->manager->getModuleHandler()->alter('splide_overridable_options_info', $options);
@@ -400,7 +451,7 @@ class SplideAdmin implements SplideAdminInterface {
   /**
    * Returns default layout options for the core Image, or Views.
    */
-  public function getLayoutOptions() {
+  public function getLayoutOptions(): array {
     return [
       'bottom'      => $this->t('Caption bottom'),
       'top'         => $this->t('Caption top'),
@@ -421,7 +472,7 @@ class SplideAdmin implements SplideAdminInterface {
   /**
    * Returns available splide optionsets by group.
    */
-  public function getOptionsetsByGroupOptions($group = '') {
+  public function getOptionsetsByGroupOptions($group = ''): array {
     $optionsets = $groups = $ungroups = [];
     $splides = $this->manager->entityLoadMultiple('splide');
     foreach ($splides as $splide) {
@@ -448,28 +499,61 @@ class SplideAdmin implements SplideAdminInterface {
   /**
    * Returns available splide skins for select options.
    */
-  public function getSkinsByGroupOptions($group = '') {
+  public function getSkinsByGroupOptions($group = ''): array {
     return $this->manager->skinManager()->getSkinsByGroup($group, TRUE);
   }
 
   /**
    * Return the field formatter settings summary.
    */
-  public function getSettingsSummary($definition = []) {
+  public function getSettingsSummary($definition = []): array {
     return $this->blazyAdmin->getSettingsSummary($definition);
   }
 
   /**
    * Returns available fields for select options.
    */
-  public function getFieldOptions($target_bundles = [], $allowed_field_types = [], $entity_type_id = 'media', $target_type = '') {
+  public function getFieldOptions($target_bundles = [], $allowed_field_types = [], $entity_type_id = 'media', $target_type = ''): array {
     return $this->blazyAdmin->getFieldOptions($target_bundles, $allowed_field_types, $entity_type_id, $target_type);
   }
 
   /**
-   * Returns re-usable logic, styling and assets across fields and Views.
+   * Get list of valid label text fields that appear on ALL possible bundles.
+   *
+   * @todo THIS SHOULD PROBABLY BE REPLACED with $admin->getFieldOptions() if it
+   * is possible to narrow the list to include only fields that are present on
+   * every bundle.
    */
-  public function finalizeForm(array &$form, $definition = []) {
+  public function getValidFieldOptions(array $bundles, string $target_type, array $valid_field_types = [
+    'string',
+    'text',
+  ]) {
+    $candidate_fields = [];
+
+    foreach ($bundles as $bundle) {
+      $candidate_fields[$bundle] = [];
+      foreach ($this->entityFieldManager->getFieldDefinitions($target_type, $bundle) as $field) {
+        if (is_a($field, 'Drupal\field\Entity\FieldConfig') and in_array($field->getType(), $valid_field_types)) {
+          $candidate_fields[$bundle][$field->getName()] = $field->getLabel();
+        }
+      }
+    }
+
+    $valid_fields = [];
+    if (count($candidate_fields) === 1) {
+      $valid_fields = reset($candidate_fields);
+    }
+    elseif (count($candidate_fields) > 1) {
+      $valid_fields = call_user_func_array('array_intersect', $candidate_fields);
+    }
+
+    return $valid_fields;
+  }
+
+  /**
+   * Modifies re-usable logic, styling and assets across fields and Views.
+   */
+  public function finalizeForm(array &$form, $definition = []): void {
     $this->blazyAdmin->finalizeForm($form, $definition);
   }
 

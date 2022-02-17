@@ -12,14 +12,14 @@ label: Cash
 weight: null
 plugin: manual
 configuration:
-  instructions:
-    value: ''
-    format: plain_text
   display_label: Cash
   mode: n/a
   payment_method_types:
     - credit_card
   collect_billing_information: true
+  instructions:
+    value: ''
+    format: plain_text
 conditions:
   -
     plugin: order_type

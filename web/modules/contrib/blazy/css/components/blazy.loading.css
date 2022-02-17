@@ -30,8 +30,6 @@
   }
 }
 
-/* @todo deprecated and removed media--loading for is-b-loading to make sense outside media. */
-.media--loading,
 .is-b-loading {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
@@ -40,7 +38,6 @@
 }
 
 /* Prevents costly double animations when Blur is enabled. */
-.media--loading:not([data-animation])::before,
 .is-b-loading:not([data-animation])::before {
   content: '';
   display: block;
@@ -64,10 +61,6 @@
  * No worries about video iframes, they are broken without JS anyway.
  * Hide JS stuffs when being disabled. Ensures to not mess up JS users.
  */
-.media--loading > span + .b-lazy,
-.media--loading > span + picture,
-.media--loading > span + a,
-.media--loading.media--player > span ~ .b-lazy,
 .is-b-loading > span + .b-lazy,
 .is-b-loading > span + picture,
 .is-b-loading > span + a,

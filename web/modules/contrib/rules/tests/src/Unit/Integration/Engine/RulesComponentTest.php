@@ -33,7 +33,8 @@ class RulesComponentTest extends RulesIntegrationTestBase {
       ->execute();
 
     // Ensure the provided context is returned.
-    $this->assertTrue(isset($result['concatenated']) && $result['concatenated'] == 'foofoo');
+    $this->assertArrayHasKey('concatenated', $result);
+    $this->assertEquals('foofoo', $result['concatenated']);
   }
 
   /**

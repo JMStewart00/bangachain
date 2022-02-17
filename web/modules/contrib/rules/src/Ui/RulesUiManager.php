@@ -24,7 +24,7 @@ class RulesUiManager extends DefaultPluginManager implements RulesUiManagerInter
    * {@inheritdoc}
    */
   public function __construct(ModuleHandlerInterface $module_handler) {
-    $this->alterInfo('rules_ui');
+    $this->alterInfo('rules_ui_info');
     $this->discovery = new ContainerDerivativeDiscoveryDecorator(new YamlDiscovery('rules_ui', $module_handler->getModuleDirectories()));
     $this->factory = new ContainerFactory($this, RulesUiHandlerInterface::class);
     $this->moduleHandler = $module_handler;

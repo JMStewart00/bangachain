@@ -81,7 +81,7 @@ abstract class BlazyViewsFieldPluginBase extends FieldPluginBase {
 
     foreach ($this->getDefaultValues() as $key => $default) {
       if (isset($form[$key])) {
-        $form[$key]['#default_value'] = isset($this->options[$key]) ? $this->options[$key] : $default;
+        $form[$key]['#default_value'] = $this->options[$key] ?? $default;
         $form[$key]['#weight'] = 0;
         if (in_array($key, ['box_style', 'box_media_style'])) {
           $form[$key]['#empty_option'] = $this->t('- None -');
@@ -132,7 +132,7 @@ abstract class BlazyViewsFieldPluginBase extends FieldPluginBase {
 
     // Only fetch what we already asked for.
     foreach ($this->getDefaultValues() as $key => $default) {
-      $settings[$key] = isset($this->options[$key]) ? $this->options[$key] : $default;
+      $settings[$key] = $this->options[$key] ?? $default;
     }
 
     $settings['count'] = count($this->view->result);

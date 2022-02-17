@@ -6,7 +6,7 @@ services:
     calls:
       # @todo remove and use DI instead after sub-module updates, and put as the
       # last argument only if to support careless users ignoring hook_update().
-      - [setRoot, ['@app.root']]
+      - [setRoot, ['%app.root%']]
       - [setLanguageManager, ['@language_manager']]
 
   blazy.manager:

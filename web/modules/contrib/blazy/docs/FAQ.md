@@ -38,9 +38,10 @@ a new one, respecting the defaults is better. Following BEM standard is not
 crucial for most JS generated CSS classes. Uniqueness matters.
 
 ## NATIVE LAZY LOADING
+Blazy library last release was v1.8.2 (2016/10/25). 3 years later, 
 Native lazy loading is supported by Chrome 76+ as of 01/2019. Blazy or IO will
 be used as fallback for other browsers instead. Currently the offset/ threshold
-before loading is hard-coded to [800px at Chrome](https://cs.chromium.org/chromium/src/third_party/blink/renderer/core/frame/settings.json5?l=971-1003&rcl=e8f3cf0bbe085fee0d1b468e84395aad3ebb2cad),
+before loading is hard-coded to [8000px at Chrome](https://cs.chromium.org/chromium/src/third_party/blink/renderer/core/frame/settings.json5?l=971-1003&rcl=e8f3cf0bbe085fee0d1b468e84395aad3ebb2cad),
 so it might only be good for super tall pages for now, be aware.
 [Read more](https://web.dev/native-lazy-loading/)
 
@@ -49,6 +50,23 @@ tab to verify that it still does work.
 
 **UPDATE 2020-04-24**: Added a delay to only lazy load once the first found is
   loaded, see [#3120696](https://drupal.org/node/3120696)
+
+**UPDATE 2022-01-22**:
+With bIO as the main lazyloader, the game changed, quoted from:
+https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Author_fast-loading_HTML_pages
+> Note that lazily-loaded images may not be available when the load event is
+fired. You can determine if a given image is loaded by checking to see if
+the value of its Boolean complete property is true.  
+
+Old bLazy relies on `onload`, meaning too early loaded decision for Native,
+the reason for our previous deferred invocation, not `decoding` like what bIO
+did which is more precise as suggested by the quote.
+
+Assumed, untested, fine with combo IO + `decoding` checks before blur spits.
+
+Shortly we are in the right direction to cope with Native vs. `data-[SRC]`.
+See `bio.js ::natively` for more contextual info.  
+[?] Todo recheck IF wrong so to put back https://drupal.org/node/3120696.
 
 ## ANIMATE.CSS INTEGRATION
 Blazy container (`.media`) can be animated using

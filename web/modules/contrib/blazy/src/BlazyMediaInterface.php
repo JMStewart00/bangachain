@@ -27,12 +27,12 @@ interface BlazyMediaInterface {
    * @param array $settings
    *   The contextual settings array.
    *
-   * @return array|bool
-   *   The renderable array of the media field, or false if not applicable.
+   * @return array
+   *   The renderable array of the media field, or empty if not applicable.
    *
    * @todo make it non-static method.
    */
-  public static function build($media, array $settings = []);
+  public static function build($media, array $settings = []): array;
 
   /**
    * Returns a field item/ content to be wrapped by theme_blazy().
@@ -45,7 +45,7 @@ interface BlazyMediaInterface {
    *
    * @todo make it non-static method.
    */
-  public static function wrap(array $field = []);
+  public static function wrap(array $field = []): array;
 
   /**
    * Extracts image from non-media entities for the main background/ stage.
@@ -62,6 +62,6 @@ interface BlazyMediaInterface {
    *
    * @see \Drupal\blazy\Dejavu\BlazyEntityMediaBase::buildElement
    */
-  public static function imageItem(array &$element, $entity);
+  public static function imageItem(array &$element, $entity): void;
 
 }

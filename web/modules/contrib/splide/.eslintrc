@@ -4,6 +4,7 @@
   // eslint . -o ../../eslint/splide.html -f html
   "extends": "../../../core/.eslintrc.legacy.json",
   "globals": {
+    "once": true,
     "Blazy": true,
     "dBlazy": true,
     "Promise": true,

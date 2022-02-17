@@ -36,6 +36,22 @@ class RouteSubscriber extends RouteSubscriberBase {
           'type' => 'entity:commerce_promotion',
         ],
       ]);
+
+      // Coupons can be created if the parent promotion can be updated so they
+      // should be able to access the canonical page.
+      // We need alter after Views to ensure the View access doesn't override
+      // our change.
+      $requirements = $route->getRequirements();
+      if (isset($requirements['_permission'])) {
+        // Unset the _permission access handler in case Views is not installed.
+        unset($requirements['_permission']);
+      }
+      if (isset($requirements['_access'])) {
+        // Unset the unrestricted access in case Views overrode it.
+        unset($requirements['_access']);
+      }
+      $requirements['_entity_access'] = 'commerce_promotion.update';
+      $route->setRequirements($requirements);
     }
   }
 

@@ -2,12 +2,12 @@ uuid: f3c2a748-bdfa-4bbe-9990-23d12dd8a5d2
 langcode: en
 status: true
 dependencies:
-  enforced:
-    module:
-      - commerce_pos
   module:
     - commerce_order
     - user
+  enforced:
+    module:
+      - commerce_pos
 _core:
   default_config_hash: jET6oiL-ttTtf9SuGOsM900lxXA2R9_V2rSTc4wt3L4
 id: commerce_order.field_cashier

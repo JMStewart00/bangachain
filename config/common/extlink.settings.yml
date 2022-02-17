@@ -1,4 +1,7 @@
+_core:
+  default_config_hash: gp38_GoeI-5DmdfeFE0NfHi_mbT2SqdU0zsJIQv-ehc
 extlink_use_external_js_file: false
+extlink_exclude_admin_routes: false
 extlink_target: false
 extlink_target_no_override: false
 extlink_nofollow: false
@@ -20,6 +23,3 @@ extlink_use_font_awesome: false
 extlink_font_awesome_classes: {  }
 extlink_icon_placement: append
 whitelisted_domains: {  }
-_core:
-  default_config_hash: gp38_GoeI-5DmdfeFE0NfHi_mbT2SqdU0zsJIQv-ehc
-extlink_exclude_admin_routes: false

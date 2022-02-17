@@ -73,10 +73,10 @@ class SplideListBuilder extends SplideListBuilderBase {
     $skins = $manager->skinManager()->getSkins()['skins'];
 
     foreach ($skins as $key => $skin) {
-      $name = isset($skin['name']) ? $skin['name'] : $key;
-      $group = isset($skin['group']) ? Html::escape($skin['group']) : 'None';
-      $provider = isset($skin['provider']) ? Html::escape($skin['provider']) : 'Lory';
-      $description = isset($skin['description']) ? Html::escape($skin['description']) : $this->t('No description');
+      $name = $skin['name'] ?? $key;
+      $group = Html::escape($skin['group'] ?? 'None');
+      $provider = Html::escape($skin['provider'] ?? 'Splide');
+      $description = Html::escape($skin['description'] ?? 'No description');
 
       $markup = '<h3>' . $this->t('@skin <br><small>Id: @id | Group: @group | Provider: @provider</small>', [
         '@skin' => $name,

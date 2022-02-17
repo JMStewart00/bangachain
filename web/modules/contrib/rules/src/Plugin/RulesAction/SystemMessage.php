@@ -12,6 +12,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a 'Show a message on the site' action.
  *
+ * @todo Add access callback information from Drupal 7.
+ *
  * @RulesAction(
  *   id = "rules_system_message",
  *   label = @Translation("Show a message on the site"),
@@ -25,19 +27,19 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *       label = @Translation("Message type"),
  *       description = @Translation("The message type: status, warning, or error."),
  *       default_value = "status",
+ *       options_provider = "\Drupal\rules\TypedData\Options\MessageTypeOptions",
  *       required = FALSE
  *     ),
  *     "repeat" = @ContextDefinition("boolean",
  *       label = @Translation("Repeat message"),
- *       description = @Translation("If disabled and the message has been already shown, then the message won't be repeated."),
+ *       description = @Translation("If set to No and the message has been already shown, then the message won't be repeated."),
  *       assignment_restriction = "input",
  *       default_value = TRUE,
+ *       options_provider = "\Drupal\rules\TypedData\Options\YesNoOptions",
  *       required = FALSE
  *     ),
  *   }
  * )
- *
- * @todo Add access callback information from Drupal 7.
  */
 class SystemMessage extends RulesActionBase implements ContainerFactoryPluginInterface {
 

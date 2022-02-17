@@ -29,7 +29,7 @@ class ShippingMethodStorage extends CommerceContentEntityStorage implements Ship
     $shipping_methods = $this->loadMultiple($result);
     // Allow the list of shipping methods to be filtered via code.
     $event = new FilterShippingMethodsEvent($shipping_methods, $shipment);
-    $this->eventDispatcher->dispatch(ShippingEvents::FILTER_SHIPPING_METHODS, $event);
+    $this->eventDispatcher->dispatch($event, ShippingEvents::FILTER_SHIPPING_METHODS);
     $shipping_methods = $event->getShippingMethods();
     // Evaluate conditions for the remaining ones.
     foreach ($shipping_methods as $shipping_method_id => $shipping_method) {

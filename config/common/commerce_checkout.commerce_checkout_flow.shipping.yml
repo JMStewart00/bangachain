@@ -14,32 +14,32 @@ dependencies:
     - email_registration
 _core:
   default_config_hash: eGgj-Vay13MNDxbtb1YAjNZuUUgbp92Tr9hDQcR7ogo
-id: shipping
 label: Shipping
+id: shipping
 plugin: multistep_default
 configuration:
   display_checkout_progress: true
   display_checkout_progress_breadcrumb_links: false
   panes:
     email_registration_login:
-      allow_guest_checkout: true
-      allow_registration: true
       step: login
       weight: 0
+      allow_guest_checkout: true
+      allow_registration: true
     contact_information:
-      double_entry: false
       step: order_information
       weight: 1
+      double_entry: false
     shipping_information:
-      auto_recalculate: true
-      require_shipping_profile: false
       step: order_information
       weight: 4
+      auto_recalculate: true
+      require_shipping_profile: false
     multi_payment_apply:
-      display_label: 'Apply Multiple Payments'
-      wrapper_element: fieldset
       step: order_information
       weight: 2
+      display_label: 'Apply Multiple Payments'
+      wrapper_element: fieldset
     payment_information:
       step: order_information
       weight: 3
@@ -47,26 +47,26 @@ configuration:
       step: review
       weight: 5
     payment_process:
-      capture: true
       step: payment
       weight: 6
-    paypal_checkout_payment_process:
       capture: true
+    paypal_checkout_payment_process:
       step: payment
       weight: 7
+      capture: true
     completion_message:
+      step: complete
+      weight: 8
       message:
         value: "<p class=\"text-align-center\">Thank you! Your order number is [commerce_order:order_number]. You should receive an email to [commerce_order:mail:value] with a receipt.</p>\r\n\r\n<p class=\"text-align-center\">If you selected \"Local Pickup\" as your shipping option, please come see us at 145 Burt Rd, Ste 12, Lexington, KY. Otherwise, we'll have your order shipped out in 1-3 business days.</p>\r\n\r\n<p class=\"text-align-center\">Thank you for supporting your local disc golf shop and...</p>\r\n\r\n<p class=\"text-align-center\">KEEP BANGING THOSE CHAINS!</p>\r\n"
         format: full_html
-      step: complete
-      weight: 8
     completion_register:
       step: complete
       weight: 9
     order_summary:
-      view: commerce_checkout_order_summary
       step: _sidebar
       weight: 10
+      view: commerce_checkout_order_summary
     giftcards_view_pane:
       step: _sidebar
       weight: 13
@@ -74,18 +74,18 @@ configuration:
       step: _sidebar
       weight: 14
     commerce_giftcard_redemption:
-      allow_multiple: true
       step: _sidebar
       weight: 12
-    coupon_redemption:
       allow_multiple: true
+    coupon_redemption:
       step: _sidebar
       weight: 11
+      allow_multiple: true
     login:
-      allow_guest_checkout: true
-      allow_registration: false
       step: _disabled
       weight: 15
+      allow_guest_checkout: true
+      allow_registration: false
     email_registration_completion_registration:
       step: _disabled
       weight: 16

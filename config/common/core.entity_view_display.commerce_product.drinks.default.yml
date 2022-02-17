@@ -15,36 +15,36 @@ bundle: drinks
 mode: default
 content:
   body:
-    label: hidden
     type: text_default
-    weight: 11
+    label: hidden
     settings: {  }
     third_party_settings: {  }
+    weight: 11
     region: content
   field_default_image:
-    weight: 12
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 12
     region: content
   title:
-    label: hidden
     type: string
-    weight: -5
-    region: content
+    label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
+    weight: -5
+    region: content
   variations:
     type: commerce_add_to_cart
-    weight: 10
-    region: content
     label: above
     settings:
       combine: true
     third_party_settings: {  }
+    weight: 10
+    region: content
 hidden:
   add_to_cart_link: true
   created: true

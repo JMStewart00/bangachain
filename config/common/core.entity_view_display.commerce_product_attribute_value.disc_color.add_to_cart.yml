@@ -9,8 +9,8 @@ dependencies:
     - layout_builder
 third_party_settings:
   layout_builder:
-    allow_custom: false
     enabled: false
+    allow_custom: false
 id: commerce_product_attribute_value.disc_color.add_to_cart
 targetEntityType: commerce_product_attribute_value
 bundle: disc_color

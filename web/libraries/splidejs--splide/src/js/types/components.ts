@@ -20,9 +20,9 @@ import { BaseComponent, TransitionComponent } from './general';
 
 
 /**
- * The interface for components.
+ * The interface for all components.
  *
- * @since 3.5.3
+ * @since 3.0.0
  */
 export interface Components {
   [ key: string ]: BaseComponent;

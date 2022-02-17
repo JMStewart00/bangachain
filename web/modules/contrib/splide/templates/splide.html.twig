@@ -41,8 +41,11 @@
     settings.skin_arrows or arrow_down_attributes is defined ? 'is-arrowed',
     arrow_down_attributes is defined ? 'is-arrowed--down',
     settings.skin_arrows ? 'is-arrowed--' ~ settings.skin_arrows|clean_class,
+    settings.autoscroll ? 'is-autoscroll',
     settings.pagination ? 'is-paginated',
     settings.pagination_fx ? 'is-paginated--fx-' ~ settings.pagination_fx|clean_class,
+    settings.pagination_tab ? 'is-paginated--tab',
+    settings.pagination_pos ? 'is-paginated--' ~ settings.pagination_pos|clean_class,
     settings.skin_dots ? 'is-paginated--' ~ settings.skin_dots|clean_class,
     settings.attributes.class ? settings.attributes.class|join(' '),
   ]

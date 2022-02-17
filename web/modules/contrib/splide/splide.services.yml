@@ -11,7 +11,7 @@ services:
 
   splide.admin:
     class: Drupal\splide\Form\SplideAdmin
-    arguments: ['@blazy.admin.extended', '@splide.manager']
+    arguments: ['@entity_field.manager', '@blazy.admin.extended', '@splide.manager']
 
   splide.skin_manager:
     class: Drupal\splide\SplideSkinManager

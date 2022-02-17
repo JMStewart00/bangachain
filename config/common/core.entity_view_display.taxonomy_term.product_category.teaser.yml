@@ -18,12 +18,12 @@ mode: teaser
 content:
   field_image:
     type: image
-    weight: 0
-    region: content
     label: hidden
     settings:
-      image_style: sc400x400
       image_link: ''
+      image_style: sc400x400
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   description: true

@@ -21,7 +21,7 @@ class PromotionCartTest extends CartKernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_promotion',
   ];
 

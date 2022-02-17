@@ -11,48 +11,21 @@
   box-sizing: border-box;
 }
 
-.splide-wrapper--skyblue
-  .splide--nav
-  > .splide__slider
-  > .splide__track
-  > .splide__list
-  > .splide__slide,
-.splide-wrapper--skyblue
-  .splide--nav
-  > .splide__track
-  > .splide__list
-  > .splide__slide {
+.splide-wrapper--skyblue .splide--nav > .splide__slider > .splide__track > .splide__list > .splide__slide,
+.splide-wrapper--skyblue .splide--nav > .splide__track > .splide__list > .splide__slide {
   cursor: pointer;
   opacity: 0.7;
   border: 3px solid transparent;
 }
 
-.splide-wrapper--skyblue
-  .splide--nav
-  > .splide__slider
-  > .splide__track
-  > .splide__list
-  > .splide__slide.is-active,
-.splide-wrapper--skyblue
-  .splide--nav
-  > .splide__track
-  > .splide__list
-  > .splide__slide.is-active {
+.splide-wrapper--skyblue .splide--nav > .splide__slider > .splide__track > .splide__list > .splide__slide.is-active,
+.splide-wrapper--skyblue .splide--nav > .splide__track > .splide__list > .splide__slide.is-active {
   opacity: 1;
   border: 3px solid #00bfff;
 }
 
-.splide-wrapper--skyblue
-  .splide--nav
-  > .splide__slider
-  > .splide__track
-  > .splide__list
-  > .splide__slide:focus,
-.splide-wrapper--skyblue
-  .splide--nav
-  > .splide__track
-  > .splide__list
-  > .splide__slide:focus {
+.splide-wrapper--skyblue .splide--nav > .splide__slider > .splide__track > .splide__list > .splide__slide:focus,
+.splide-wrapper--skyblue .splide--nav > .splide__track > .splide__list > .splide__slide:focus {
   outline: none;
 }
 
@@ -240,23 +213,13 @@
   user-select: none;
 }
 
-.splide--skin--skyblue.splide--fade
-  > .splide__slider
-  > .splide__track
-  > .splide__list,
+.splide--skin--skyblue.splide--fade > .splide__slider > .splide__track > .splide__list,
 .splide--skin--skyblue.splide--fade > .splide__track > .splide__list {
   display: block;
 }
 
-.splide--skin--skyblue.splide--fade
-  > .splide__slider
-  > .splide__track
-  > .splide__list
-  > .splide__slide,
-.splide--skin--skyblue.splide--fade
-  > .splide__track
-  > .splide__list
-  > .splide__slide {
+.splide--skin--skyblue.splide--fade > .splide__slider > .splide__track > .splide__list > .splide__slide,
+.splide--skin--skyblue.splide--fade > .splide__track > .splide__list > .splide__slide {
   position: absolute;
   z-index: 0;
   top: 0;
@@ -264,15 +227,8 @@
   opacity: 0;
 }
 
-.splide--skin--skyblue.splide--fade
-  > .splide__slider
-  > .splide__track
-  > .splide__list
-  > .splide__slide.is-active,
-.splide--skin--skyblue.splide--fade
-  > .splide__track
-  > .splide__list
-  > .splide__slide.is-active {
+.splide--skin--skyblue.splide--fade > .splide__slider > .splide__track > .splide__list > .splide__slide.is-active,
+.splide--skin--skyblue.splide--fade > .splide__track > .splide__list > .splide__slide.is-active {
   position: relative;
   z-index: 1;
   opacity: 1;
@@ -282,10 +238,7 @@
   direction: rtl;
 }
 
-.splide--skin--skyblue.splide--ttb.is-active
-  > .splide__slider
-  > .splide__track
-  > .splide__list,
+.splide--skin--skyblue.splide--ttb.is-active > .splide__slider > .splide__track > .splide__list,
 .splide--skin--skyblue.splide--ttb.is-active > .splide__track > .splide__list {
   display: block;
 }
@@ -295,216 +248,66 @@
   background: #ccc;
 }
 
-.splide--skin--skyblue.splide--rtl
-  > .splide--skin--skyblue
-  .splide__arrows
-  .splide--skin--skyblue
-  .splide__arrow--prev,
-.splide--skin--skyblue.splide--rtl
-  > .splide__slider
-  > .splide__track
-  > .splide--skin--skyblue
-  .splide__arrows
-  .splide--skin--skyblue
-  .splide__arrow--prev,
-.splide--skin--skyblue.splide--rtl
-  > .splide__track
-  > .splide--skin--skyblue
-  .splide__arrows
-  .splide--skin--skyblue
-  .splide__arrow--prev {
+.splide--skin--skyblue.splide--rtl > .splide--skin--skyblue .splide__arrows .splide--skin--skyblue .splide__arrow--prev,
+.splide--skin--skyblue.splide--rtl > .splide__slider > .splide__track > .splide--skin--skyblue .splide__arrows .splide--skin--skyblue .splide__arrow--prev,
+.splide--skin--skyblue.splide--rtl > .splide__track > .splide--skin--skyblue .splide__arrows .splide--skin--skyblue .splide__arrow--prev {
   right: 1em;
   left: auto;
 }
 
-.splide--skin--skyblue.splide--rtl
-  > .splide--skin--skyblue
-  .splide__arrows
-  .splide--skin--skyblue
-  .splide__arrow--prev
-  svg,
-.splide--skin--skyblue.splide--rtl
-  > .splide__slider
-  > .splide__track
-  > .splide--skin--skyblue
-  .splide__arrows
-  .splide--skin--skyblue
-  .splide__arrow--prev
-  svg,
-.splide--skin--skyblue.splide--rtl
-  > .splide__track
-  > .splide--skin--skyblue
-  .splide__arrows
-  .splide--skin--skyblue
-  .splide__arrow--prev
-  svg {
+.splide--skin--skyblue.splide--rtl > .splide--skin--skyblue .splide__arrows .splide--skin--skyblue .splide__arrow--prev svg,
+.splide--skin--skyblue.splide--rtl > .splide__slider > .splide__track > .splide--skin--skyblue .splide__arrows .splide--skin--skyblue .splide__arrow--prev svg,
+.splide--skin--skyblue.splide--rtl > .splide__track > .splide--skin--skyblue .splide__arrows .splide--skin--skyblue .splide__arrow--prev svg {
   transform: scaleX(1);
 }
 
-.splide--skin--skyblue.splide--rtl
-  > .splide--skin--skyblue
-  .splide__arrows
-  .splide--skin--skyblue
-  .splide__arrow--next,
-.splide--skin--skyblue.splide--rtl
-  > .splide__slider
-  > .splide__track
-  > .splide--skin--skyblue
-  .splide__arrows
-  .splide--skin--skyblue
-  .splide__arrow--next,
-.splide--skin--skyblue.splide--rtl
-  > .splide__track
-  > .splide--skin--skyblue
-  .splide__arrows
-  .splide--skin--skyblue
-  .splide__arrow--next {
+.splide--skin--skyblue.splide--rtl > .splide--skin--skyblue .splide__arrows .splide--skin--skyblue .splide__arrow--next,
+.splide--skin--skyblue.splide--rtl > .splide__slider > .splide__track > .splide--skin--skyblue .splide__arrows .splide--skin--skyblue .splide__arrow--next,
+.splide--skin--skyblue.splide--rtl > .splide__track > .splide--skin--skyblue .splide__arrows .splide--skin--skyblue .splide__arrow--next {
   right: auto;
   left: 1em;
 }
 
-.splide--skin--skyblue.splide--rtl
-  > .splide--skin--skyblue
-  .splide__arrows
-  .splide--skin--skyblue
-  .splide__arrow--next
-  svg,
-.splide--skin--skyblue.splide--rtl
-  > .splide__slider
-  > .splide__track
-  > .splide--skin--skyblue
-  .splide__arrows
-  .splide--skin--skyblue
-  .splide__arrow--next
-  svg,
-.splide--skin--skyblue.splide--rtl
-  > .splide__track
-  > .splide--skin--skyblue
-  .splide__arrows
-  .splide--skin--skyblue
-  .splide__arrow--next
-  svg {
+.splide--skin--skyblue.splide--rtl > .splide--skin--skyblue .splide__arrows .splide--skin--skyblue .splide__arrow--next svg,
+.splide--skin--skyblue.splide--rtl > .splide__slider > .splide__track > .splide--skin--skyblue .splide__arrows .splide--skin--skyblue .splide__arrow--next svg,
+.splide--skin--skyblue.splide--rtl > .splide__track > .splide--skin--skyblue .splide__arrows .splide--skin--skyblue .splide__arrow--next svg {
   transform: scaleX(-1);
 }
 
-.splide--skin--skyblue.splide--ttb
-  > .splide--skin--skyblue
-  .splide__arrows
-  .splide--skin--skyblue
-  .splide__arrow,
-.splide--skin--skyblue.splide--ttb
-  > .splide__slider
-  > .splide__track
-  > .splide--skin--skyblue
-  .splide__arrows
-  .splide--skin--skyblue
-  .splide__arrow,
-.splide--skin--skyblue.splide--ttb
-  > .splide__track
-  > .splide--skin--skyblue
-  .splide__arrows
-  .splide--skin--skyblue
-  .splide__arrow {
+.splide--skin--skyblue.splide--ttb > .splide--skin--skyblue .splide__arrows .splide--skin--skyblue .splide__arrow,
+.splide--skin--skyblue.splide--ttb > .splide__slider > .splide__track > .splide--skin--skyblue .splide__arrows .splide--skin--skyblue .splide__arrow,
+.splide--skin--skyblue.splide--ttb > .splide__track > .splide--skin--skyblue .splide__arrows .splide--skin--skyblue .splide__arrow {
   left: 50%;
   transform: translate(-50%);
 }
 
-.splide--skin--skyblue.splide--ttb
-  > .splide--skin--skyblue
-  .splide__arrows
-  .splide--skin--skyblue
-  .splide__arrow--prev,
-.splide--skin--skyblue.splide--ttb
-  > .splide__slider
-  > .splide__track
-  > .splide--skin--skyblue
-  .splide__arrows
-  .splide--skin--skyblue
-  .splide__arrow--prev,
-.splide--skin--skyblue.splide--ttb
-  > .splide__track
-  > .splide--skin--skyblue
-  .splide__arrows
-  .splide--skin--skyblue
-  .splide__arrow--prev {
+.splide--skin--skyblue.splide--ttb > .splide--skin--skyblue .splide__arrows .splide--skin--skyblue .splide__arrow--prev,
+.splide--skin--skyblue.splide--ttb > .splide__slider > .splide__track > .splide--skin--skyblue .splide__arrows .splide--skin--skyblue .splide__arrow--prev,
+.splide--skin--skyblue.splide--ttb > .splide__track > .splide--skin--skyblue .splide__arrows .splide--skin--skyblue .splide__arrow--prev {
   top: 1em;
 }
 
-.splide--skin--skyblue.splide--ttb
-  > .splide--skin--skyblue
-  .splide__arrows
-  .splide--skin--skyblue
-  .splide__arrow--prev
-  svg,
-.splide--skin--skyblue.splide--ttb
-  > .splide__slider
-  > .splide__track
-  > .splide--skin--skyblue
-  .splide__arrows
-  .splide--skin--skyblue
-  .splide__arrow--prev
-  svg,
-.splide--skin--skyblue.splide--ttb
-  > .splide__track
-  > .splide--skin--skyblue
-  .splide__arrows
-  .splide--skin--skyblue
-  .splide__arrow--prev
-  svg {
+.splide--skin--skyblue.splide--ttb > .splide--skin--skyblue .splide__arrows .splide--skin--skyblue .splide__arrow--prev svg,
+.splide--skin--skyblue.splide--ttb > .splide__slider > .splide__track > .splide--skin--skyblue .splide__arrows .splide--skin--skyblue .splide__arrow--prev svg,
+.splide--skin--skyblue.splide--ttb > .splide__track > .splide--skin--skyblue .splide__arrows .splide--skin--skyblue .splide__arrow--prev svg {
   transform: rotate(-90deg);
 }
 
-.splide--skin--skyblue.splide--ttb
-  > .splide--skin--skyblue
-  .splide__arrows
-  .splide--skin--skyblue
-  .splide__arrow--next,
-.splide--skin--skyblue.splide--ttb
-  > .splide__slider
-  > .splide__track
-  > .splide--skin--skyblue
-  .splide__arrows
-  .splide--skin--skyblue
-  .splide__arrow--next,
-.splide--skin--skyblue.splide--ttb
-  > .splide__track
-  > .splide--skin--skyblue
-  .splide__arrows
-  .splide--skin--skyblue
-  .splide__arrow--next {
+.splide--skin--skyblue.splide--ttb > .splide--skin--skyblue .splide__arrows .splide--skin--skyblue .splide__arrow--next,
+.splide--skin--skyblue.splide--ttb > .splide__slider > .splide__track > .splide--skin--skyblue .splide__arrows .splide--skin--skyblue .splide__arrow--next,
+.splide--skin--skyblue.splide--ttb > .splide__track > .splide--skin--skyblue .splide__arrows .splide--skin--skyblue .splide__arrow--next {
   top: auto;
   bottom: 1em;
 }
 
-.splide--skin--skyblue.splide--ttb
-  > .splide--skin--skyblue
-  .splide__arrows
-  .splide--skin--skyblue
-  .splide__arrow--next
-  svg,
-.splide--skin--skyblue.splide--ttb
-  > .splide__slider
-  > .splide__track
-  > .splide--skin--skyblue
-  .splide__arrows
-  .splide--skin--skyblue
-  .splide__arrow--next
-  svg,
-.splide--skin--skyblue.splide--ttb
-  > .splide__track
-  > .splide--skin--skyblue
-  .splide__arrows
-  .splide--skin--skyblue
-  .splide__arrow--next
-  svg {
+.splide--skin--skyblue.splide--ttb > .splide--skin--skyblue .splide__arrows .splide--skin--skyblue .splide__arrow--next svg,
+.splide--skin--skyblue.splide--ttb > .splide__slider > .splide__track > .splide--skin--skyblue .splide__arrows .splide--skin--skyblue .splide__arrow--next svg,
+.splide--skin--skyblue.splide--ttb > .splide__track > .splide--skin--skyblue .splide__arrows .splide--skin--skyblue .splide__arrow--next svg {
   transform: rotate(90deg);
 }
 
 .splide--skin--skyblue.splide--ttb > .splide--skin--skyblue .splide__pagination,
-.splide--skin--skyblue.splide--ttb
-  > .splide__slider
-  > .splide--skin--skyblue
-  .splide__pagination {
+.splide--skin--skyblue.splide--ttb > .splide__slider > .splide--skin--skyblue .splide__pagination {
   top: 0;
   right: 0.5em;
   bottom: 0;

@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\blazy\Kernel;
 
-use Drupal\blazy\Blazy;
 use Drupal\blazy\BlazyDefault;
+use Drupal\blazy\BlazyTheme;
 
 /**
  * Tests the Blazy manager methods.
@@ -18,7 +18,7 @@ class BlazyManagerTest extends BlazyKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $bundle = $this->bundle;
@@ -117,7 +117,7 @@ class BlazyManagerTest extends BlazyKernelTestBase {
    * @param mixed|bool|int $expected
    *   The expected output.
    *
-   * @covers \Drupal\blazy\Blazy::preprocessBlazy
+   * @covers \Drupal\blazy\BlazyTheme::blazy
    * @covers \Drupal\blazy\Blazy::urlAndDimensions
    * @covers \Drupal\blazy\BlazyDefault::entitySettings
    * @dataProvider providerPreprocessBlazy
@@ -140,7 +140,7 @@ class BlazyManagerTest extends BlazyKernelTestBase {
     $variables['element']['#item'] = $this->testItem;
     $variables['element']['#settings'] = $settings;
 
-    Blazy::preprocessBlazy($variables);
+    BlazyTheme::blazy($variables);
 
     $image = $expected == TRUE ? !empty($variables['image']) : empty($variables['image']);
     $iframe = $iframe == TRUE ? !empty($variables['iframe']) : empty($variables['iframe']);
@@ -208,7 +208,7 @@ class BlazyManagerTest extends BlazyKernelTestBase {
 
     $variables['img_element']['#uri'] = $this->uri;
 
-    Blazy::preprocessResponsiveImage($variables);
+    BlazyTheme::responsiveImage($variables);
 
     $this->assertEquals($expected, $variables['output_image_tag']);
   }

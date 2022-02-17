@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\rules\Kernel;
 
+use Drupal\Component\EventDispatcher\Event;
 use Drupal\rules\Context\ContextConfig;
 use Drupal\user\Entity\User;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -21,9 +22,7 @@ class EventIntegrationTest extends RulesKernelTestBase {
   protected $storage;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['field', 'node', 'text', 'user'];
 
@@ -183,7 +182,8 @@ class EventIntegrationTest extends RulesKernelTestBase {
       }
     }
     // Manually trigger the initialization event.
-    $dispatcher->dispatch(KernelEvents::REQUEST);
+    $event = new Event();
+    $dispatcher->dispatch($event, KernelEvents::REQUEST);
 
     // Test that the action in the rule logged something.
     $this->assertRulesDebugLogEntryExists('action called');
@@ -218,7 +218,8 @@ class EventIntegrationTest extends RulesKernelTestBase {
       }
     }
     // Manually trigger the initialization event.
-    $dispatcher->dispatch(KernelEvents::TERMINATE);
+    $event = new Event();
+    $dispatcher->dispatch($event, KernelEvents::TERMINATE);
 
     // Test that the action in the rule logged something.
     $this->assertRulesDebugLogEntryExists('action called');

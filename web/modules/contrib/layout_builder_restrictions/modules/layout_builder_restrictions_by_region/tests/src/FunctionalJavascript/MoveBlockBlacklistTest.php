@@ -47,7 +47,7 @@ class MoveBlockBlacklistTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->createContentType(['type' => 'bundle_with_section_field']);
@@ -70,11 +70,8 @@ class MoveBlockBlacklistTest extends WebDriverTestBase {
     $layout->save();
 
     // Enable Layout Builder.
-    $this->drupalPostForm(
-      static::FIELD_UI_PREFIX . '/display/default',
-      ['layout[enabled]' => TRUE],
-      'Save'
-    );
+    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
+    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
     $this->getSession()->resizeWindow(1200, 4000);
 
     // Enable entity_view_mode_restriction_by_region plugin.
@@ -183,7 +180,7 @@ class MoveBlockBlacklistTest extends WebDriverTestBase {
     $this->openMoveForm(1, 'content', 'block-field-blocknodebundle-with-section-fieldbody', ['Links', 'Body (current)']);
     $this->moveBlockWithKeyboard('up', 'Body (current)', ['Body (current)*', 'Links']);
     $page->pressButton('Move');
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertNotEmpty($assert_session->waitForText('Content cannot be placed'));
     // Verify that a validation error is provided.
     $modal = $page->find('css', '#drupal-off-canvas p');
     $this->assertSame("There is a restriction on Body placement in the layout_onecol all_regions region for bundle_with_section_field content.", trim($modal->getText()));
@@ -261,7 +258,7 @@ class MoveBlockBlacklistTest extends WebDriverTestBase {
     $page->selectFieldOption('Region', '1:content');
     $this->assertBlockTable(['Links', 'Body (current)']);
     $page->pressButton('Move');
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertNotEmpty($assert_session->waitForText('Content cannot be placed'));
     $modal = $page->find('css', '#drupal-off-canvas p');
     // Content cannot be moved between sections if a restriction exists.
     $this->assertSame("There is a restriction on Body placement in the layout_onecol all_regions region for bundle_with_section_field content.", trim($modal->getText()));

@@ -11,6 +11,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a 'Send account email' action.
  *
+ * @todo Add access callback information from Drupal 7.
+ *
  * @RulesAction(
  *   id = "rules_send_account_email",
  *   label = @Translation("Send account email"),
@@ -22,12 +24,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *     ),
  *     "email_type" = @ContextDefinition("string",
  *       label = @Translation("Email type"),
- *       description = @Translation("The type of the email to send.")
+ *       description = @Translation("The type of the email to send."),
+ *       options_provider = "\Drupal\rules\TypedData\Options\EmailTypeOptions",
  *     ),
  *   }
  * )
- *
- * @todo Add access callback information from Drupal 7.
  */
 class SendAccountEmail extends RulesActionBase implements ContainerFactoryPluginInterface {
 

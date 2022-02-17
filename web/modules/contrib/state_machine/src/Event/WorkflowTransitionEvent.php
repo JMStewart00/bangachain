@@ -2,10 +2,10 @@
 
 namespace Drupal\state_machine\Event;
 
+use Drupal\Component\EventDispatcher\Event;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\state_machine\Plugin\Workflow\WorkflowInterface;
 use Drupal\state_machine\Plugin\Workflow\WorkflowTransition;
-use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Defines the workflow transition event.

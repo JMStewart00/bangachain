@@ -89,7 +89,7 @@ abstract class ActionExpressionContainer extends ExpressionContainerBase impleme
   /**
    * {@inheritdoc}
    */
-  public function getIterator() {
+  public function getIterator(): \Traversable {
     $iterator = new \ArrayIterator($this->actions);
     $iterator->uasort([ExpressionContainerBase::class, 'sortByWeightProperty']);
     return $iterator;

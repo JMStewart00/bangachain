@@ -245,7 +245,7 @@ abstract class TaxTypeBase extends PluginBase implements TaxTypeInterface, Conta
     $customer_profile = $this->buildCustomerProfile($order);
     // Allow the customer profile to be altered, per order item.
     $event = new CustomerProfileEvent($customer_profile, $order_item);
-    $this->eventDispatcher->dispatch(TaxEvents::CUSTOMER_PROFILE, $event);
+    $this->eventDispatcher->dispatch($event, TaxEvents::CUSTOMER_PROFILE);
     $customer_profile = $event->getCustomerProfile();
 
     return $customer_profile;

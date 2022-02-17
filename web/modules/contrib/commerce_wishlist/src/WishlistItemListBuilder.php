@@ -63,6 +63,7 @@ class WishlistItemListBuilder extends EntityListBuilder {
   protected function getEntityIds() {
     $wishlist = $this->routeMatch->getParameter('commerce_wishlist');
     $query = $this->getStorage()->getQuery()
+      ->accessCheck(TRUE)
       ->condition('wishlist_id', $wishlist->id())
       ->sort('purchasable_entity')
       ->sort('quantity');
@@ -88,7 +89,7 @@ class WishlistItemListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    /* @var \Drupal\commerce_wishlist\Entity\WishlistItemInterface $entity */
+    /** @var \Drupal\commerce_wishlist\Entity\WishlistItemInterface $entity */
     $row['id'] = $entity->id();
     $row['item'] = $entity->getTitle();
     $row['quantity'] = Calculator::trim($entity->getQuantity());

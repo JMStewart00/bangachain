@@ -5,6 +5,7 @@ namespace Drupal\Tests\blazy\Kernel\Form;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\blazy\BlazyDefault;
 use Drupal\blazy_ui\Form\BlazySettingsForm;
 
 /**
@@ -47,7 +48,7 @@ class BlazySettingsFormTest extends KernelTestBase {
    *
    * @covers ::__construct
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installConfig(static::$modules);
@@ -66,10 +67,12 @@ class BlazySettingsFormTest extends KernelTestBase {
    * @covers ::submitForm
    */
   public function testBlazySettingsForm() {
+    $nojs = BlazyDefault::nojs();
     // Emulate a form state of a submitted form.
     $form_state = (new FormState())->setValues([
-      'admin_css'        => TRUE,
+      'admin_css' => TRUE,
       'responsive_image' => FALSE,
+      'nojs' => array_combine($nojs, $nojs),
     ]);
 
     $this->assertInstanceOf(FormInterface::class, $this->blazySettingsForm);

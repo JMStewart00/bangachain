@@ -1,0 +1,70 @@
+views.style.views_aggregator_plugin_style_table:
+  type: views.style.table
+  label: 'Table with aggregation options'
+  mapping:
+    info:
+      type: sequence
+      label: 'Columns info'
+      sequence:
+        type: mapping
+        label:  'Column info'
+        mapping:
+          has_aggr:
+            type: boolean
+            label: 'Has aggregation'
+          aggr:
+            type: sequence
+            label: 'Aggregation'
+            sequence:
+              type: string
+              label: 'Aggregation group'
+          aggr_par:
+            type: string
+            label: 'Aggregation parameter'
+          has_aggr_column:
+            type: boolean
+            label: 'Has aggregation column'
+          aggr_column:
+            type: string
+            label: 'Aggregation column'
+          aggr_par_column:
+            type: string
+            label: 'Aggregation parameter column'
+    group_aggregation:
+      type: mapping
+      label: 'Group aggregation'
+      mapping:
+        group_aggregation_results:
+          type: string
+          label: 'Group aggregation results'
+        grouping_field_class:
+          type: string
+          label: 'Grouping field class'
+        result_label_prefix:
+          type: string
+          label: 'Result label prefix'
+        result_label_suffix:
+          type: string
+          label: 'Result label suffix'
+        grouping_row_class:
+          type: string
+          label: 'Grouping row class'
+    column_aggregation:
+      type: mapping
+      label: 'Column aggregation'
+      mapping:
+        totals_row_position:
+          type: sequence
+          label: 'Totals row position'
+          sequence:
+            type: integer
+            label: 'Position'
+        totals_per_page:
+          type: string
+          label: 'Totals per page'
+        precision:
+          type: string
+          label: 'Precision'
+        totals_row_class:
+          type: string
+          label: 'Totals row class'

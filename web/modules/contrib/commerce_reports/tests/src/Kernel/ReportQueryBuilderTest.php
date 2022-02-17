@@ -39,7 +39,7 @@ class ReportQueryBuilderTest extends CommerceKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->reportQueryBuilder = $this->container->get('commerce_reports.query_builder');
     $this->reportTypeManager = $this->container->get('plugin.manager.commerce_report_type');

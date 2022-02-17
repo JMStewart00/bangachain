@@ -14,7 +14,7 @@ class BlazyAdminExtended extends BlazyAdminFormatterBase implements BlazyAdminIn
    * Returns shared form elements across field formatter and Views.
    */
   public function openingForm(array &$form, &$definition = []) {
-    $namespace = isset($definition['namespace']) ? $definition['namespace'] : 'blazy';
+    $namespace = $definition['namespace'] ?? 'blazy';
 
     if (!empty($definition['vanilla'])) {
       $form['vanilla'] = [

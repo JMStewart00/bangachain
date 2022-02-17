@@ -16,18 +16,18 @@ dependencies:
     - layout_builder
 third_party_settings:
   layout_builder:
-    allow_custom: false
     enabled: false
+    allow_custom: false
 id: commerce_product_variation.accessories.summary
 targetEntityType: commerce_product_variation
 bundle: accessories
 mode: summary
 content:
   add_to_cart_link:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   attribute_disc_color: true
   field_loyalty_points: true

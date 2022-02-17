@@ -10,9 +10,7 @@ namespace Drupal\Tests\rules\Functional;
 class RulesDebugLogTest extends RulesBrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['rules', 'rules_test'];
 
@@ -74,7 +72,7 @@ class RulesDebugLogTest extends RulesBrowserTestBase {
     $assert = $this->assertSession();
 
     // Ensure that one and only one event message appears.
-    $assert->pageTextContainsOnce('0 ms Reacting on event After saving a new content item.');
+    $assert->pageTextContainsOnce('0 ms Reacting on event After saving a new content item entity.');
   }
 
 }

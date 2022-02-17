@@ -113,82 +113,62 @@ class StoreCreditForm extends InlineFormBase {
       }
     }
 
-    $inline_form = [
+    $balance = $payment_gateway_plugin->getBalance($order->getCustomerId());
+    if ($balance !== NULL && $balance->getNumber() > 0) {
+      $inline_form = [
         '#tree' => TRUE,
         '#theme' => 'commerce_multi_payment_example_storecredit_form',
         '#configuration' => $this->getConfiguration(),
       ] + $inline_form;
 
-    $balance = $this->configuration['balance'];
-    $formatted_balance = [
-      '#type' => 'inline_template',
-      '#template' => '{{ price|commerce_price_format }}',
-      '#context' => [
-        'price' => $balance,
-      ],
-    ];
+      $balance = $this->configuration['balance'];
+      $formatted_balance = [
+        '#type' => 'inline_template',
+        '#template' => '{{ price|commerce_price_format }}',
+        '#context' => [
+          'price' => $balance,
+        ],
+      ];
 
 
-    $inline_form['store_credit'] = [
-      '#type' => 'details',
-      '#open' => !empty($staged_payment),
-      '#title' => t('@label: @balance available', [
-        '@label' => $payment_gateway_plugin->multiPaymentDisplayLabel(),
-        '@balance' => render($formatted_balance),
-      ]),
-    ];
+      $inline_form['store_credit'] = [
+        '#type' => 'details',
+        '#open' => !empty($staged_payment),
+        '#title' => t('@label: @balance available', [
+          '@label' => $payment_gateway_plugin->multiPaymentDisplayLabel(),
+          '@balance' => render($formatted_balance),
+        ]),
+      ];
 
-    if (!empty($staged_payment)) {
-      $default_amount = $staged_payment->getAmount();
-    }
-    else {
-      if ($order->getTotalPrice()->compareTo($balance) <= 0) {
-        $default_amount = $order->getTotalPrice();
+      if (!empty($staged_payment)) {
+        $default_amount = $staged_payment->getAmount();
+      } else {
+        if ($order->getTotalPrice()->compareTo($balance) <= 0) {
+          $default_amount = $order->getTotalPrice();
+        } else {
+          $default_amount = $balance;
+        }
       }
-      else {
-        $default_amount = $balance;
-      }
-    }
 
-    $inline_form['#staged_payment_id'] = !empty($staged_payment) ? $staged_payment->id() : NULL;
+      $inline_form['#staged_payment_id'] = !empty($staged_payment) ? $staged_payment->id() : NULL;
 
-    $inline_form['store_credit']['amount'] = [
-      '#title' => t('Amount to apply to order'),
-      '#type' => 'commerce_price',
-      '#currency_code' => $balance->getCurrencyCode(),
-      '#default_value' => $default_amount->toArray(),
-    ];
+      $inline_form['store_credit']['amount'] = [
+        '#title' => t('Amount to apply to order'),
+        '#type' => 'commerce_price',
+        '#currency_code' => $balance->getCurrencyCode(),
+        '#default_value' => $default_amount->toArray(),
+      ];
 
-    $inline_form['store_credit']['apply'] = [
-      '#type' => 'submit',
-      '#value' => t('Apply'),
-      '#staged_payment_id' => !empty($staged_payment) ? $staged_payment->id() : NULL,
-      '#name' => $this->configuration['payment_gateway_id'] . '_apply_store_credit_payment',
-      '#limit_validation_errors' => [
-        $inline_form['#parents'],
-      ],
-      '#submit' => [
-        [get_called_class(), 'applyStoreCredit'],
-      ],
-      '#ajax' => [
-        'callback' => [get_called_class(), 'ajaxRefreshForm'],
-        'element' => $inline_form['#parents'],
-      ],
-      // Simplify ajaxRefresh() by having all triggering elements
-      // on the same level.
-      '#parents' => array_merge($inline_form['#parents'], [$this->configuration['payment_gateway_id'] . '_apply_store_credit_payment']),
-    ];
-
-    if (!empty($staged_payment)) {
-      $element['store_credit']['remove'] = [
+      $inline_form['store_credit']['apply'] = [
         '#type' => 'submit',
-        '#value' => t('Remove'),
-        '#name' => $this->configuration['payment_gateway_id'] . '_remove_store_credit_payment',
+        '#value' => t('Apply'),
+        '#staged_payment_id' => !empty($staged_payment) ? $staged_payment->id() : NULL,
+        '#name' => $this->configuration['payment_gateway_id'] . '_apply_store_credit_payment',
         '#limit_validation_errors' => [
           $inline_form['#parents'],
         ],
         '#submit' => [
-          [get_called_class(), 'removeStoreCredit'],
+          [get_called_class(), 'applyStoreCredit'],
         ],
         '#ajax' => [
           'callback' => [get_called_class(), 'ajaxRefreshForm'],
@@ -196,8 +176,29 @@ class StoreCreditForm extends InlineFormBase {
         ],
         // Simplify ajaxRefresh() by having all triggering elements
         // on the same level.
-        '#parents' => array_merge($inline_form['#parents'], [$this->configuration['payment_gateway_id'] . '_remove_store_credit_payment']),
+        '#parents' => array_merge($inline_form['#parents'], [$this->configuration['payment_gateway_id'] . '_apply_store_credit_payment']),
       ];
+
+      if (!empty($staged_payment)) {
+        $element['store_credit']['remove'] = [
+          '#type' => 'submit',
+          '#value' => t('Remove'),
+          '#name' => $this->configuration['payment_gateway_id'] . '_remove_store_credit_payment',
+          '#limit_validation_errors' => [
+            $inline_form['#parents'],
+          ],
+          '#submit' => [
+            [get_called_class(), 'removeStoreCredit'],
+          ],
+          '#ajax' => [
+            'callback' => [get_called_class(), 'ajaxRefreshForm'],
+            'element' => $inline_form['#parents'],
+          ],
+          // Simplify ajaxRefresh() by having all triggering elements
+          // on the same level.
+          '#parents' => array_merge($inline_form['#parents'], [$this->configuration['payment_gateway_id'] . '_remove_store_credit_payment']),
+        ];
+      }
     }
 
     return $inline_form;

@@ -21,8 +21,8 @@ plugin: bangachain_hours_block
 settings:
   id: bangachain_hours_block
   label: 'Hours Block'
-  provider: bangachain_custom_blocks
   label_display: visible
+  provider: bangachain_custom_blocks
   content:
     value: "<ul>\r\n\t<li>Wed-Sat 12:00 - 7:00 p.m.</li>\r\n\t<li>Sunday 12:00 - 5:00 p.m.</li>\r\n</ul>\r\n"
     format: full_html

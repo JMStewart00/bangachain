@@ -10,9 +10,7 @@ namespace Drupal\Tests\rules\Kernel;
 class EntityViewTest extends RulesKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['field', 'node', 'text', 'user'];
 

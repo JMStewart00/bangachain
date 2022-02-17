@@ -14,7 +14,7 @@ abstract class ShippingKernelTestBase extends OrderKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'physical',
     'path',
     'commerce_shipping',

@@ -17,13 +17,13 @@ class BlazyLightbox {
    * @param array $element
    *   The element being modified.
    */
-  public static function build(array &$element = []) {
+  public static function build(array &$element = []): void {
     $item       = $element['#item'];
     $settings   = &$element['#settings'];
     $uri        = $settings['uri'];
     $switch     = $settings['media_switch'];
     $switch_css = str_replace('_', '-', $switch);
-    $valid      = BlazyUtil::isValidUri($uri);
+    $valid      = BlazyFile::isValidUri($uri);
 
     // Provide relevant URL if it is a lightbox.
     $url_attributes = &$element['#url_attributes'];
@@ -44,9 +44,9 @@ class BlazyLightbox {
     // The formatter might be duplicated on a page, although rare at production.
     $gallery_id             = empty($settings['gallery_id']) ? $gallery_default : $settings['gallery_id'] . '-' . $gallery_default;
     $settings['gallery_id'] = !$gallery_enabled ? NULL : str_replace('_', '-', $gallery_id);
-    $settings['box_url']    = $valid ? BlazyUtil::transformRelative($uri) : $uri;
-    $settings['box_width']  = isset($item->width) ? $item->width : (empty($settings['width']) ? NULL : $settings['width']);
-    $settings['box_height'] = isset($item->height) ? $item->height : (empty($settings['height']) ? NULL : $settings['height']);
+    $settings['box_url']    = $valid ? BlazyFile::transformRelative($uri) : $uri;
+    $settings['box_width']  = $item->width ?? $settings['width'] ?? NULL;
+    $settings['box_height'] = $item->height ?? $settings['height'] ?? NULL;
 
     $dimensions = [
       'width' => $settings['box_width'],
@@ -65,7 +65,7 @@ class BlazyLightbox {
     // Supports local and remote videos, also legacy VEF which has no bundles.
     // See https://drupal.org/node/3210636#comment-14097266.
     $videos = ['remote_video', 'video'];
-    $is_video = isset($json['type']) && $json['type'] == 'video';
+    $is_video = ($json['type'] ?? FALSE) == 'video';
     $is_video = (isset($json['bundle']) && in_array($json['bundle'], $videos)) || $is_video;
 
     if (!empty($settings['box_style']) && $valid) {
@@ -91,8 +91,8 @@ class BlazyLightbox {
       // Use non-responsive images if not-so-configured.
       if (!isset($is_resimage)) {
         if ($box_style = ImageStyle::load($settings['box_style'])) {
-          $dimensions = array_merge($dimensions, BlazyUtil::transformDimensions($box_style, $dimensions));
-          $settings['box_url'] = BlazyUtil::transformRelative($uri, $box_style);
+          $dimensions = array_merge($dimensions, BlazyFile::transformDimensions($box_style, $dimensions));
+          $settings['box_url'] = BlazyFile::transformRelative($uri, $box_style);
         }
       }
     }
@@ -110,8 +110,8 @@ class BlazyLightbox {
     // This allows PhotoSwipe with videos still swipable.
     if (!empty($settings['box_media_style']) && $valid) {
       if ($box_media_style = ImageStyle::load($settings['box_media_style'])) {
-        $dimensions = array_merge($dimensions, BlazyUtil::transformDimensions($box_media_style, $dimensions));
-        $settings['box_media_url'] = BlazyUtil::transformRelative($uri, $box_media_style);
+        $dimensions = array_merge($dimensions, BlazyFile::transformDimensions($box_media_style, $dimensions));
+        $settings['box_media_url'] = BlazyFile::transformRelative($uri, $box_media_style);
       }
     }
 
@@ -200,10 +200,10 @@ class BlazyLightbox {
    * @return array
    *   The renderable array of caption, or empty array.
    */
-  private static function buildCaptions($item, array $settings = []) {
-    $title   = empty($item->title) ? '' : $item->title;
-    $alt     = empty($item->alt) ? '' : $item->alt;
-    $delta   = empty($settings['delta']) ? 0 : $settings['delta'];
+  private static function buildCaptions($item, array $settings = []): array {
+    $title   = $item->title ?? '';
+    $alt     = $item->alt ?? '';
+    $delta   = $settings['delta'] ?? 0;
     $caption = '';
 
     switch ($settings['box_caption']) {
@@ -243,7 +243,7 @@ class BlazyLightbox {
           if (!empty($caption) && strpos($caption, ", <p>") !== FALSE) {
             $caption = str_replace(", <p>", '| <p>', $caption);
             $captions = explode("|", $caption);
-            $caption = isset($captions[$delta]) ? $captions[$delta] : '';
+            $caption = $captions[$delta] ?? '';
           }
         }
         break;

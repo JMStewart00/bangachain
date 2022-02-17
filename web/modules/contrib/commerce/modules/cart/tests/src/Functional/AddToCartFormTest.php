@@ -21,7 +21,7 @@ class AddToCartFormTest extends CartBrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_test',
   ];
 

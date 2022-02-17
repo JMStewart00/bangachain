@@ -4,6 +4,7 @@ namespace Drupal\rules\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\rules\Rules;
+use Drupal\rules\Core\RulesTriggerableInterface;
 use Drupal\rules\Ui\RulesUiComponentProviderInterface;
 use Drupal\rules\Engine\ExpressionInterface;
 use Drupal\rules\Engine\RulesComponent;
@@ -56,7 +57,7 @@ use Drupal\rules\Engine\RulesComponent;
  *   }
  * )
  */
-class ReactionRuleConfig extends ConfigEntityBase implements RulesUiComponentProviderInterface {
+class ReactionRuleConfig extends ConfigEntityBase implements RulesUiComponentProviderInterface, RulesTriggerableInterface {
 
   /**
    * The unique ID of the Reaction Rule.
@@ -114,8 +115,8 @@ class ReactionRuleConfig extends ConfigEntityBase implements RulesUiComponentPro
    *
    * Events array. The array is numerically indexed and contains arrays with the
    * following structure:
-   *   - event_name: String with the event machine name.
-   *   - configuration: An array containing the event configuration.
+   * - event_name: String with the event machine name.
+   * - configuration: An array containing the event configuration.
    *
    * @var array
    */
@@ -234,30 +235,60 @@ class ReactionRuleConfig extends ConfigEntityBase implements RulesUiComponentPro
   }
 
   /**
-   * Gets configuration of all events the rule is reacting on.
-   *
-   * @return array
-   *   The events array. The array is numerically indexed and contains arrays
-   *   with the following structure:
-   *     - event_name: String with the event machine name.
-   *     - configuration: An array containing the event configuration.
+   * {@inheritdoc}
    */
   public function getEvents() {
     return $this->events;
   }
 
   /**
-   * Gets machine names of all events the rule is reacting on.
-   *
-   * @return string[]
-   *   The array of fully qualified event names of the rule.
+   * {@inheritdoc}
    */
   public function getEventNames() {
-    $names = [];
-    foreach ($this->events as $event) {
-      $names[] = $event['event_name'];
+    return array_column($this->events, 'event_name');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addEvent(string $event_name, array $configuration = []) {
+    if (!$this->hasEvent($event_name)) {
+      $event = [
+        'event_name' => $event_name,
+      ];
+      // Only set configuration key if there is configuration.
+      // @todo Is this really necessary, as the method parameter has an array
+      // type and defaults to the empty array. So $configuration should always
+      // be a valid value.
+      if (!empty($configuration)) {
+        $event['configuration'] = $configuration;
+      }
+      $this->events[] = $event;
     }
-    return $names;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasEvent(string $event_name) {
+    return in_array($event_name, $this->getEventNames());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function removeEvent(string $event_name) {
+    $indexed_event_names = array_combine(array_keys($this->events), array_column($this->events, 'event_name'));
+    if (($id = array_search($event_name, $indexed_event_names)) !== FALSE) {
+      unset($this->events[$id]);
+    }
+    // Use array_values() to re-index $this->events to ensure that this data
+    // structure always has numerical keys that are ordered sequentially,
+    // starting with 0. Removing an event might have left a gap in this
+    // sequence, which would affect how the configuration was stored.
+    $this->events = array_values($this->events);
+    return $this;
   }
 
   /**

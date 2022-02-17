@@ -74,4 +74,13 @@ interface BlazyManagerInterface {
    */
   public function isBlazy(array &$settings, array $item = []);
 
+  /**
+   * Returns the route name manager.
+   *
+   * @return string
+   *   Returns the name of the current route.
+   *   If it is not possible to obtain it will return an empty string.
+   */
+  public function getRouteName();
+
 }

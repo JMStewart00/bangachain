@@ -9,8 +9,8 @@ dependencies:
     - node.type.team_member
   module:
     - node
-id: team_member_update
 label: 'Team Member Update'
+id: team_member_update
 description: ''
 help: ''
 import_period: -1
@@ -25,38 +25,38 @@ parser_configuration:
   line_limit: 100
 processor: 'entity:node'
 processor_configuration:
+  values:
+    type: team_member
   langcode: en
   update_existing: 2
   update_non_existent: _keep
+  skip_hash_check: false
+  authorize: true
   expire: -1
   owner_feed_author: false
   owner_id: 41
-  authorize: true
-  skip_hash_check: false
-  values:
-    type: team_member
 custom_sources:
   name:
-    label: name
     value: name
+    label: name
     machine_name: name
   team:
-    label: team
     value: team
+    label: team
     machine_name: team
   pdga_number:
-    label: pdga_number
     value: pdga_number
+    label: pdga_number
     machine_name: pdga_number
 mappings:
   -
     target: title
     map:
       value: name
-    unique:
-      value: '1'
     settings:
       language: null
+    unique:
+      value: '1'
   -
     target: field_team_designation
     map:
@@ -67,6 +67,6 @@ mappings:
     target: field_pdga_number
     map:
       value: pdga_number
-    unique: {  }
     settings:
       language: null
+    unique: {  }

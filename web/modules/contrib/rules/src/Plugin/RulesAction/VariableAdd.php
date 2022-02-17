@@ -7,13 +7,15 @@ use Drupal\rules\Core\RulesActionBase;
 /**
  * Provides an 'Add a variable' action.
  *
+ * @todo The context definition for "type" needs an options_provider list.
+ *
  * @RulesAction(
  *   id = "rules_variable_add",
  *   label = @Translation("Add a variable"),
  *   category = @Translation("Data"),
  *   context_definitions = {
  *     "type" = @ContextDefinition("string",
- *       label = @Translation("Type"),
+ *       label = @Translation("Data Type"),
  *       description = @Translation("Specifies the type of the variable that should be added."),
  *       assignment_restriction = "input"
  *     ),

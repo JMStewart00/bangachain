@@ -3,7 +3,7 @@
 # <a name="faq"></a>FAQS
 
 ## PROGRAMATICALLY
-[**splide.api.php**](https://git.drupalcode.org/project/splide/blob/1.x/splide.api.php)
+[**splide.api.php**](https://git.drupalcode.org/project/splide/-/blob/1.0.x/splide.api.php)
 
 
 ## QUICK PERFORMANCE TIPS
@@ -60,7 +60,7 @@ accordingly. The provided skins are very basic to support the necessary layouts.
 It is not the module job to match your awesome design requirements.
 
 ### Registering Splide skins:
-[**splide.api.php**](https://git.drupalcode.org/project/splide/blob/1.x/splide.api.php#L337)
+[**splide.api.php**](https://git.drupalcode.org/project/splide/-/blob/1.0.x/splide.api.php#L352)
 
 1. Copy `\Drupal\splide\Plugin\splide\SplideSkin` into your module
   `/src/Plugin/splide directory`.
@@ -119,11 +119,12 @@ Be sure to clear cache since skins are permanently cached!
   **Requires:**
 
   `Visible slides`, `Skin Grid` for starter, A reasonable amount of slides,
-  Optionset with Rows and slidesPerRow = 1.
+  Optionset with Rows and slidesPerRow = 1. If no`Display style` selected,
+  default  to `Grid Foundation`.
 
   Avoid `autoWidth` and `autoHeight`. Use consistent dimensions.
   This is module feature, and offers more flexibility.
-  Available at `splide_views` plugin via Views UI or formatters via Field UI.
+  Available at `splide_views` plugin via Views UI, or formatters via Field UI.
 
 If you want to attach extra 3rd libraries, e.g.: image reflection, image zoomer,
 more advanced 3d carousels, etc.:
@@ -132,9 +133,6 @@ more advanced 3d carousels, etc.:
    (`splide.load.min.js`) is the one.
 2. use the provided js plugin extensions, see: `js/components` for samples.
 
-See [**splide.api.php**](https://git.drupalcode.org/project/splide/blob/1.x/splide.api.php#L337)
-for more info on skins, including registering skins.
-
 Other skins are available at
 **Splide X**
 Some extra skins are WIP which may not work as expected.
@@ -142,7 +140,7 @@ Use them as starters, not final products!
 
 
 ## GRID
-To create Splide grid or multiple rows carousel, there are 3 options:
+To create Splide grid or multi-row carousels, there are 3 options:
 
 1. **One row grid managed by library:**
 
@@ -154,7 +152,7 @@ To create Splide grid or multiple rows carousel, there are 3 options:
 
 2. **Multiple rows grid managed by library:**
 
-   @todo: Must use a separated plugin, currently not included, 2021/5.
+   Not currently supported, 2022/2.
 
 3. **Multiple rows grid managed by module:**
 
@@ -165,7 +163,8 @@ To create Splide grid or multiple rows carousel, there are 3 options:
    + `perPage = 1`
 
 The first 2 are supported by core library using pure JS approach.
-The last is the Module feature using pure `CSS Foundation` block-grid.
+The last is the Module feature using pure CSS: `Grid Foundation`, `CSS3 columns`
+or `Native Grid` via `Blazy Grid` available under `Display style` option.
 
 **The key is:**
 
@@ -205,6 +204,7 @@ Unlike Slick, Splide requires manual additions of `splide__track, splide__list`.
 
 
 ## SPLIDE VS. SLICK CSS STATE CLASSES
+<pre>
 * `is-mounted`       x `slick--initialized`
 * `is-carousel`      x `slick--multiple-view`
 * `is-less`          x `slick--less`
@@ -214,12 +214,16 @@ Unlike Slick, Splide requires manual additions of `splide__track, splide__list`.
 * `is-MEDIA-SWITCH`  x `slick--MEDIA-SWITCH`
 * `is-active`        x `slick-current`
 * `is-visible`       x `slick-active`
+</pre>
 
 ## SPLIDE VS. SLICK CSS DISPLAY CLASSES
+<pre>
 * `splide--main`     x `slick--main`
 * `splide--nav`      x `slick--thumbnail`
+</pre>
 
-The `splide--nav` is backed/ reserved by the library.
+The `splide--nav` is backed/ reserved by the library. Display classes are only
+available if using synced navigation. Otherwise just `splide--default`.
 
 The skin and optionset remain the same, only different namespace:  
 

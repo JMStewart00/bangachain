@@ -24,7 +24,7 @@ abstract class SplideViewsBase extends BlazyStylePluginBase {
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
     $instance->manager = $container->get('splide.manager');
-    $instance->blazyManager = isset($instance->blazyManager) ? $instance->blazyManager : $container->get('blazy.manager');
+    $instance->blazyManager = $instance->blazyManager ?? $container->get('blazy.manager');
 
     return $instance;
   }

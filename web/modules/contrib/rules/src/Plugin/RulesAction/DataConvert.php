@@ -8,6 +8,10 @@ use Drupal\rules\Exception\InvalidArgumentException;
 /**
  * Provides an action to convert data from one type to another.
  *
+ * @todo Add rounding_behavior default value "round".
+ * @todo Add options_list for target type.
+ * @todo Specify the right data type for the provided result.
+ *
  * @RulesAction(
  *   id = "rules_data_convert",
  *   label = @Translation("Convert data"),
@@ -21,11 +25,13 @@ use Drupal\rules\Exception\InvalidArgumentException;
  *     "target_type" = @ContextDefinition("string",
  *       label = @Translation("Target type"),
  *       description = @Translation("The data type to convert a value to."),
+ *       options_provider = "\Drupal\rules\TypedData\Options\ConvertTypeOptions",
  *       assignment_restriction = "input"
  *     ),
  *     "rounding_behavior" = @ContextDefinition("string",
  *       label = @Translation("Rounding behavior"),
  *       description = @Translation("For integer target types, specify how the conversion result should be rounded."),
+ *       options_provider = "\Drupal\rules\TypedData\Options\RoundingOptions",
  *       default_value = NULL,
  *       required = FALSE
  *     ),
@@ -36,9 +42,6 @@ use Drupal\rules\Exception\InvalidArgumentException;
  *     ),
  *   }
  * )
- * @todo Add rounding_behavior default value "round".
- * @todo Add options_list for target type.
- * @todo Specify the right data type for the provided result.
  */
 class DataConvert extends RulesActionBase {
 
@@ -68,6 +71,8 @@ class DataConvert extends RulesActionBase {
     }
 
     // Ensure valid contexts have been provided.
+    // @todo check how this works. May need to use !empty to allow the selection
+    // list to be used and give an empty value?
     if (isset($rounding_behavior) && $target_type != 'integer') {
       throw new InvalidArgumentException('A rounding behavior only makes sense with an integer target type.');
     }

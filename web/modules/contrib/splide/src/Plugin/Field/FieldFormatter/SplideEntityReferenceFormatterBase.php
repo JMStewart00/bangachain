@@ -50,8 +50,9 @@ abstract class SplideEntityReferenceFormatterBase extends BlazyEntityReferenceBa
     $target_type = $this->getFieldSetting('target_type');
     $views_ui    = $this->getFieldSetting('handler') == 'default';
     $bundles     = $views_ui ? [] : $this->getFieldSetting('handler_settings')['target_bundles'];
-    $texts       = ['text', 'text_long', 'string', 'string_long', 'link'];
-    $texts       = $admin->getFieldOptions($bundles, $texts, $target_type);
+    $text_fields = ['text', 'text_long', 'string', 'string_long', 'link'];
+    $texts       = $admin->getFieldOptions($bundles, $text_fields, $target_type);
+    $texts2      = $admin->getValidFieldOptions($bundles, $target_type);
 
     if ($bundles) {
       // @todo figure out to not hard-code stock bundle image.
@@ -62,9 +63,10 @@ abstract class SplideEntityReferenceFormatterBase extends BlazyEntityReferenceBa
     }
 
     return [
-      'thumb_captions'  => $texts,
-      'thumb_positions' => TRUE,
-      'nav'             => TRUE,
+      'thumb_captions'         => $texts,
+      'thumb_positions'        => TRUE,
+      'nav'                    => TRUE,
+      'pagination_texts' => array_merge($texts, $texts2),
     ] + $this->getCommonScopedFormElements() + parent::getScopedFormElements();
   }
 

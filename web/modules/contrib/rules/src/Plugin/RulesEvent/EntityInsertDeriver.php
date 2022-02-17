@@ -57,7 +57,9 @@ class EntityInsertDeriver extends DeriverBase implements ContainerDeriverInterfa
       }
 
       $this->derivatives[$entity_type_id] = [
-        'label' => $this->t('After saving a new @entity_type', ['@entity_type' => $entity_type->getSingularLabel()]),
+        'label' => $this->t('After saving a new @entity_type entity', [
+          '@entity_type' => $entity_type->getSingularLabel(),
+        ]),
         'category' => $entity_type->getLabel(),
         'entity_type_id' => $entity_type_id,
         'context_definitions' => [

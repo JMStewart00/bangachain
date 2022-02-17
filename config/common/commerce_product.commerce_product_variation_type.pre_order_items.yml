@@ -4,8 +4,8 @@ status: true
 dependencies: {  }
 id: pre_order_items
 label: 'Pre Order Items'
-orderItemType: default
-generateTitle: false
 traits:
   - maximum_order_quantity
 locked: false
+orderItemType: default
+generateTitle: false

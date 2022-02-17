@@ -8,9 +8,10 @@ use Drupal\rules\Context\ExecutionState;
 use Drupal\rules\Core\RulesConfigurableEventHandlerInterface;
 use Drupal\rules\Core\RulesEventManager;
 use Drupal\rules\Engine\RulesComponentRepositoryInterface;
-use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
+use Symfony\Component\EventDispatcher\Event as SymfonyComponentEvent;
+use Symfony\Contracts\EventDispatcher\Event as SymfonyContractsEvent;
 
 /**
  * Subscribes to Symfony events and maps them to Rules events.
@@ -97,12 +98,22 @@ class GenericEventSubscriber implements EventSubscriberInterface {
   /**
    * Reacts on the given event and invokes configured reaction rules.
    *
-   * @param \Symfony\Component\EventDispatcher\Event $event
+   * @param object $event
    *   The event object containing context for the event.
+   *   In Drupal 9 this will be a \Symfony\Component\EventDispatcher\Event,
+   *   In Drupal 10 this will be a \Symfony\Contracts\EventDispatcher\Event.
    * @param string $event_name
    *   The event name.
    */
-  public function onRulesEvent(Event $event, $event_name) {
+  public function onRulesEvent(object $event, $event_name) {
+    // @todo The 'object' type hint should be replaced with the appropriate
+    // class once Symfony 4 is no longer supported, and the assert() should be
+    // removed.
+    assert(
+      $event instanceof SymfonyComponentEvent ||
+      $event instanceof SymfonyContractsEvent
+    );
+
     // Get event metadata and the to-be-triggered events.
     $event_definition = $this->eventManager->getDefinition($event_name);
     $handler_class = $event_definition['class'];
@@ -119,22 +130,25 @@ class GenericEventSubscriber implements EventSubscriberInterface {
     // Setup the execution state.
     $state = ExecutionState::create();
     foreach ($event_definition['context_definitions'] as $context_name => $context_definition) {
-      // If this is a GenericEvent, get the context for the rule from the event
-      // arguments.
-      if ($event instanceof GenericEvent) {
+      // If there is a getter method set in the event definition, use that.
+      // @see https://www.drupal.org/project/rules/issues/2762517
+      if ($context_definition->hasGetter()) {
+        $value = $event->{$context_definition->getGetter()}();
+      }
+      // If this is a GenericEvent, get the value of the context variable from
+      // the event arguments.
+      elseif ($event instanceof GenericEvent) {
         $value = $event->getArgument($context_name);
       }
-      // Else there must be a getter method or public property.
-      // @todo Add support for the getter method.
-      // @see https://www.drupal.org/project/rules/issues/2762517
+      // Else we cheat and use a closure to get the property value.
+      // This works for public, protected, and private Event properties.
       else {
-        $value = $event->$context_name;
+        $getter = function ($property) {
+          return $this->{$property};
+        };
+        $value = $getter->call($event, $context_name);
       }
-      $state->setVariable(
-        $context_name,
-        $context_definition,
-        $value
-      );
+      $state->setVariable($context_name, $context_definition, $value);
     }
 
     $components = $this->componentRepository->getMultiple($triggered_events, 'rules_event');

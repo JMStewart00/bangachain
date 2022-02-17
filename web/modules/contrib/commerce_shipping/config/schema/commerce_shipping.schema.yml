@@ -5,6 +5,17 @@ commerce.commerce_condition.plugin.shipment_address:
       type: address_zone
       label: 'Zone'
 
+commerce.commerce_condition.plugin.order_shipping_method:
+  type: commerce_condition_configuration
+  mapping:
+    shipping_methods:
+      type: sequence
+      label: 'Shipping methods'
+      orderby: value
+      sequence:
+        type: string
+        label: 'Shipping method'
+
 commerce.commerce_condition.plugin.shipment_quantity:
   type: commerce_condition_configuration
   mapping:

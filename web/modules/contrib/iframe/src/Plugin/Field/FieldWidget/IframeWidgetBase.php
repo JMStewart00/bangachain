@@ -19,9 +19,10 @@ class IframeWidgetBase extends WidgetBase {
    */
   public $allowedAttributes = [
     'title' => 1,
+    'url' => 1,
     'width' => 1,
     'height' => 1,
-    'url' => 1,
+    'tokensupport' => 1,
   ];
 
   /**
@@ -56,17 +57,29 @@ class IframeWidgetBase extends WidgetBase {
   public function settingsForm(array $form, FormStateInterface $form_state) {
     /* Settings form after "manage form display" page, valid for one content type */
     $field_settings = $this->getFieldSettings();
-    $settings = $this->getSettings();
-    $values = [];
-    $values = $settings + $field_settings + self::defaultSettings();
+    $widget_settings = $this->getSettings();
+    // \iframe_debug(0, 'manage settingsForm widget_settings', $widget_settings);
     // \iframe_debug(0, 'manage settingsForm field_settings', $field_settings);
+
+    $settings = [];
+    foreach($widget_settings as $wkey => $wvalue) {
+      if (empty($wvalue) && isset($field_settings[$wkey])) {
+        $settings[$wkey] = $field_settings[$wkey];
+      }
+      else {
+        $settings[$wkey] = $wvalue;
+      }
+    }
+    $settings = $settings + $field_settings + self::defaultSettings();
     // \iframe_debug(0, 'manage settingsForm settings', $settings);
-    // \iframe_debug(0, 'manage settingsForm values', $values);
+    /* NOW all values have their default values at minimum */
+
+    // widget width/heigth wins, only if empty, then field-width/height are taken
     $element['width'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Iframe Width'),
       // ''
-      '#default_value' => isset($values['width']) ? $values['width'] : '',
+      '#default_value' => $settings['width'],
       '#description' => self::getSizedescription(),
       '#maxlength' => 4,
       '#size' => 4,
@@ -75,7 +88,7 @@ class IframeWidgetBase extends WidgetBase {
       '#type' => 'textfield',
       '#title' => $this->t('Iframe Height'),
       // ''
-      '#default_value' => isset($values['height']) ? $values['height'] : '',
+      '#default_value' => $settings['height'],
       '#description' => self::getSizedescription(),
       '#maxlength' => 4,
       '#size' => 4,
@@ -84,14 +97,14 @@ class IframeWidgetBase extends WidgetBase {
       '#type' => 'textfield',
       '#title' => $this->t('Additional CSS Class'),
       // ''
-      '#default_value' => isset($values['class']) ? $values['class'] : '',
+      '#default_value' => $settings['class'],
       '#description' => $this->t('When output, this iframe will have this class attribute. Multiple classes should be separated by spaces.'),
     ];
     $element['expose_class'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Expose Additional CSS Class'),
       // 0
-      '#default_value' => isset($values['expose_class']) ? $values['expose_class'] : '',
+      '#default_value' => $settings['expose_class'],
       '#description' => $this->t('Allow author to specify an additional class attribute for this iframe.'),
     ];
     $element['frameborder'] = [
@@ -99,7 +112,7 @@ class IframeWidgetBase extends WidgetBase {
       '#title' => $this->t('Frameborder'),
       '#options' => ['0' => $this->t('No frameborder'), '1' => $this->t('Show frameborder')],
       // 0
-      '#default_value' => isset($values['frameborder']) ? $values['frameborder'] : '0',
+      '#default_value' => $settings['frameborder'],
       '#description' => $this->t('Frameborder is the border around the iframe. Most people want it removed, so the default value for frameborder is zero (0), or no border.'),
     ];
     $element['scrolling'] = [
@@ -111,7 +124,7 @@ class IframeWidgetBase extends WidgetBase {
         'yes' => $this->t('Enabled'),
       ],
       // 'auto'
-      '#default_value' => isset($values['scrolling']) ? $values['scrolling'] : 'auto',
+      '#default_value' => $settings['scrolling'],
       '#description' => $this->t('Scrollbars help the user to reach all iframe content despite the real height of the iframe content. Please disable it only if you know what you are doing.'),
     ];
     $element['transparency'] = [
@@ -122,20 +135,8 @@ class IframeWidgetBase extends WidgetBase {
         '1' => $this->t('Allow transparency'),
       ],
       // 0
-      '#default_value' => isset($values['transparency']) ? $values['transparency'] : '0',
+      '#default_value' => $settings['transparency'],
       '#description' => $this->t('Allow transparency per CSS in the outer iframe tag. You have to set background-color:transparent in your iframe body tag too!'),
-    ];
-    $element['tokensupport'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Token Support'),
-      '#options' => [
-        '0' => $this->t('No tokens allowed'),
-        '1' => $this->t('Tokens only in title field'),
-        '2' => $this->t('Tokens for title and URL field'),
-      ],
-      // 0
-      '#default_value' => isset($values['tokensupport']) ? $values['tokensupport'] : '0',
-      '#description' => $this->t('Are tokens allowed for users to use in title or URL field?'),
     ];
     $element['allowfullscreen'] = [
       '#type' => 'select',
@@ -145,7 +146,7 @@ class IframeWidgetBase extends WidgetBase {
         '1' => $this->t('true'),
       ],
       // 0
-      '#default_value' => isset($values['allowfullscreen']) ? $values['allowfullscreen'] : '0',
+      '#default_value' => $settings['allowfullscreen'],
       '#description' => $this->t('Allow fullscreen for iframe. The iframe can activate fullscreen mode by calling the requestFullscreen() method.'),
     ];
 
@@ -159,11 +160,24 @@ class IframeWidgetBase extends WidgetBase {
    * {@inheritdoc}
    */
   public function settingsSummary() {
+    $widget_settings = $this->getSettings();
     $field_settings = $this->getFieldSettings();
-    $settings = $this->getSettings() + $field_settings;
+    // \iframe_debug(0, 'settingsSummary widget_settings', $widget_settings);
+    // \iframe_debug(0, 'settingsSummary field_settings', $field_settings);
+
+    $settings = [];
+    foreach($widget_settings as $wkey => $wvalue) {
+      if (empty($wvalue) && isset($field_settings[$wkey])) {
+        $settings[$wkey] = $field_settings[$wkey];
+      }
+      else {
+        $settings[$wkey] = $wvalue;
+      }
+    }
+    $settings = $settings + $field_settings + self::defaultSettings();
+
     /* summary on the "manage display" page, valid for one content type */
     $summary = [];
-
     $summary[] = $this->t('Iframe default width: @width', ['@width' => $settings['width']]);
     $summary[] = $this->t('Iframe default height: @height', ['@height' => $settings['height']]);
     $summary[] = $this->t('Iframe default frameborder: @frameborder', ['@frameborder' => $settings['frameborder']]);
@@ -184,16 +198,37 @@ class IframeWidgetBase extends WidgetBase {
     // -- (on_admin_page = true).
     // 2) Edit-fields on the article-edit-page (on_admin_page = false).
     // Global settings.
+    // getSettings from manage form display after work-symbol (admin/structure/types/manage/test/form-display and wheel behind iframe-field)
+    $widget_settings = $this->getSettings();
+    // getFieldSettings from field edit page on admin/structure/types/manage/test/fields/node.test.field_iframe
     $field_settings = $this->getFieldSettings();
-    $settings = $this->getSettings() + $field_settings + self::defaultSettings();
+    // \iframe_debug(0, 'formElement widget_settings', $widget_settings);
+    // \iframe_debug(0, 'formElement field_settings', $field_settings);
+    // \iframe_debug(0, 'formElement defaultSettings', self::defaultSettings());
+
     /** @var \Drupal\iframe\Plugin\Field\FieldType\IframeItem $item */
     $item =& $items[$delta];
     $field_definition = $item->getFieldDefinition();
+    /* on_admin_page TRUE only if on field edit page, not on widget-edit */
     $on_admin_page = isset($element['#field_parents'][0]) && ('default_value_input' == $element['#field_parents'][0]);
     $is_new = $item->getEntity()->isNew();
-    // \iframe_debug(0, 'add-story formElement field_setting', $field_settings);
-    // \iframe_debug(0, 'add-story formElement setting', $settings);
+    // \iframe_debug(0, 'formElement onAdminPage', $on_admin_page ? "TRUE" : "false");
+    // \iframe_debug(0, 'formElement isNew', $is_new ? "TRUE" : "false");
     $values = $item->toArray();
+
+    $settings = [];
+    /* take widget_settings only if NOT on_admin_page (so not on field-edit-page, where we edit the field_settings) */
+    if (!$on_admin_page) {
+      foreach($widget_settings as $wkey => $wvalue) {
+        if (empty($wvalue) && isset($field_settings[$wkey])) {
+          $settings[$wkey] = $field_settings[$wkey];
+        }
+        else {
+          $settings[$wkey] = $wvalue;
+        }
+      }
+    }
+    $settings = $settings + $field_settings + self::defaultSettings();
 
     if ($is_new || $on_admin_page) {
       foreach ($values as $vkey => $vval) {
@@ -212,7 +247,7 @@ class IframeWidgetBase extends WidgetBase {
         }
       }
     }
-    // \iframe_debug(0, 'add-story formElement final setting', $settings);
+    // \iframe_debug(0, 'add-story formElement final settings', $settings);
     foreach ($settings as $attribute => $attrValue) {
       $item->setValue($attribute, $attrValue);
     }
@@ -226,6 +261,12 @@ class IframeWidgetBase extends WidgetBase {
       $element['#title'] = $field_definition->getLabel();
     }
 
+    /* if field is required, then url/width/height should be shown as required too! */
+    $required = [];
+    if (!empty($element['#required'])) {
+      $required['#required'] = TRUE;
+    }
+
     $element['title'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Iframe Title'),
@@ -235,7 +276,7 @@ class IframeWidgetBase extends WidgetBase {
       '#maxlength' => 1024,
       '#weight' => 2,
       // '#element_validate' => array('text'),
-    ];
+    ] + $required;
 
     $element['url'] = [
       '#type' => 'textfield',
@@ -245,8 +286,8 @@ class IframeWidgetBase extends WidgetBase {
       '#size' => 80,
       '#maxlength' => 1024,
       '#weight' => 1,
-      '#element_validate' => [[get_class($this), 'validateUrl']],
-    ];
+      '#element_validate' => [[$this, 'validateUrl']],
+    ] + $required;
 
     $element['width'] = [
       '#title' => $this->t('Iframe Width'),
@@ -256,8 +297,8 @@ class IframeWidgetBase extends WidgetBase {
       '#maxlength' => 4,
       '#size' => 4,
       '#weight' => 3,
-      '#element_validate' => [[get_class($this), 'validateWidth']],
-    ];
+      '#element_validate' => [[$this, 'validateWidth']],
+    ] + $required;
     $element['height'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Iframe Height'),
@@ -266,8 +307,8 @@ class IframeWidgetBase extends WidgetBase {
       '#maxlength' => 4,
       '#size' => 4,
       '#weight' => 4,
-      '#element_validate' => [[get_class($this), 'validateHeight']],
-    ];
+      '#element_validate' => [[$this, 'validateHeight']],
+    ] + $required;
     if (isset($settings['expose_class']) && $settings['expose_class']) {
       $element['class'] = [
         '#type' => 'textfield',
@@ -278,7 +319,6 @@ class IframeWidgetBase extends WidgetBase {
         '#weight' => 5,
       ];
     }
-    // \iframe_debug(0, 'formElement', $element);
     return $element;
   }
 
@@ -287,8 +327,10 @@ class IframeWidgetBase extends WidgetBase {
    *
    * @see \Drupal\Core\Form\FormValidator
    */
-  public static function validateWidth(&$form, FormStateInterface &$form_state) {
-    $me = IframeWidgetBase::getField($form, $form_state);
+  public function validateWidth(&$form, FormStateInterface &$form_state) {
+    // get settings for this field
+    $settings = $this->getFieldSettings();
+    $me = $this->getField($form, $form_state);
 
     // \iframe_debug(0, 'validateWidth', $me);
     if (!empty($me['url']) && isset($me['width'])) {
@@ -303,8 +345,10 @@ class IframeWidgetBase extends WidgetBase {
    *
    * @see \Drupal\Core\Form\FormValidator
    */
-  public static function validateHeight(&$form, FormStateInterface &$form_state) {
-    $me = IframeWidgetBase::getField($form, $form_state);
+  public function validateHeight(&$form, FormStateInterface &$form_state) {
+    // get settings for this field
+    $settings = $this->getFieldSettings();
+    $me = $this->getField($form, $form_state);
 
     // \iframe_debug(0, 'validateHeight', $me);
     if (!empty($me['url']) && isset($me['height'])) {
@@ -319,8 +363,20 @@ class IframeWidgetBase extends WidgetBase {
    *
    * @see \Drupal\Core\Form\FormValidator
    */
-  public static function validateUrl(&$form, FormStateInterface &$form_state) {
-    $me = IframeWidgetBase::getField($form, $form_state);
+  public function validateUrl(&$form, FormStateInterface &$form_state) {
+    // get settings for this field
+    $settings = $this->getFieldSettings();
+    $me = $this->getField($form, $form_state);
+    if (isset($settings['tokensupport'])) {
+      $tokensupport = $settings['tokensupport'];
+    }
+    else {
+      $tokensupport = 0;
+    }
+    if ($tokensupport == 2) {
+      $tokencontext = ['user' => \Drupal::currentUser()];
+      $me['url'] = \Drupal::token()->replace($me['url'], $tokencontext);
+    }
 
     $testabsolute = true;
     // \iframe_debug(0, 'validateUrl', $me);
@@ -348,7 +404,7 @@ class IframeWidgetBase extends WidgetBase {
    *
    * @return array
    */
-  private static function getField(&$form, FormStateInterface &$form_state) {
+  private function getField(&$form, FormStateInterface &$form_state) {
     $parents = $form['#parents'];
     $node = $form_state->getUserInput();
 

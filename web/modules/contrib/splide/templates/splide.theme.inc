@@ -17,7 +17,7 @@ use Drupal\splide\Entity\Splide;
 function template_preprocess_splide(&$variables) {
   $element = $variables['element'];
   foreach (['attributes', 'options', 'optionset', 'settings'] as $key) {
-    $variables[$key] = isset($element["#$key"]) ? $element["#$key"] : [];
+    $variables[$key] = $element["#$key"] ?? [];
   }
 
   $variables['settings'] += SplideDefault::htmlSettings();
@@ -25,12 +25,12 @@ function template_preprocess_splide(&$variables) {
   $optionset = $variables['optionset'] ?: Splide::loadWithFallback($sets['optionset']);
   $variables['options'] += $optionset->getSettings();
   $key = 'content_attributes';
-  $variables[$key] = isset($element["#$key"]) ? $element["#$key"] : new Attribute();
+  $variables[$key] = $element["#$key"] ?? new Attribute();
 
   // Shortcuts.
   $js        = &$variables['options'];
   $display   = $variables['display'] = $sets['display'];
-  $direction = isset($js['direction']) ? $js['direction'] : 'ltr';
+  $direction = $js['direction'] ?? 'ltr';
   $id        = empty($sets['id']) ? Blazy::getHtmlId('splide') : $sets['id'];
   $id        = 'splide-' . substr(md5($id), 0, 11);
   $attrs     = &$variables['attributes'];
@@ -38,14 +38,13 @@ function template_preprocess_splide(&$variables) {
   $minimal   = $sets['vanilla'] || $display == 'nav';
 
   // @see SplideManager::buildGrid(), and this should make sense.
-  $sets['count']    = isset($sets['count']) ? $sets['count'] : count($element['#items']);
-  $sets['unsplide'] = $sets['unsplide'] || $sets['count'] == 1;
+  $sets['count']    = $sets['count'] ?? count($element['#items']);
   $sets['vertical'] = $direction == 'ttb';
   $attrs['id']      = $display == 'nav' ? $id . '-nav' : $id;
   $attrs['class']   = array_merge(['splide', 'splide--default'], $classes);
 
   foreach (SplideDefault::jsSettings() as $key => $default) {
-    $sets[$key] = isset($js[$key]) ? $js[$key] : $default;
+    $sets[$key] = $js[$key] ?? $default;
   }
 
   // Blazy can still lazyload an unsplide.
@@ -53,7 +52,9 @@ function template_preprocess_splide(&$variables) {
   $sets['lazy'] = $sets['lazy'] ?: $js['lazyLoad'];
   if ($sets['lazy'] == 'blazy' || !empty($sets['blazy'])) {
     $js['lazyLoad'] = 'blazy';
-    $js['cover'] = FALSE;
+    if (!empty($sets['background'])) {
+      $js['cover'] = FALSE;
+    }
   }
 
   // Make splide language-direction-aware.
@@ -82,9 +83,9 @@ function template_preprocess_splide(&$variables) {
   // Process individual item.
   $variables['items'] = [];
   foreach ($element['#items'] as $delta => $item) {
-    $item_sets = isset($item['settings']) ? array_merge($sets, $item['settings']) : $sets;
-    $item_attrs = isset($item['attributes']) ? $item['attributes'] : [];
-    $content_attrs = isset($item['content_attributes']) ? $item['content_attributes'] : [];
+    $item_sets = array_merge($sets, (array) ($item['settings'] ?? []));
+    $item_attrs = (array) ($item['attributes'] ?? []);
+    $content_attrs = (array) ($item['content_attributes'] ?? []);
     $item_sets['current_item'] = $display;
 
     unset($item['settings'], $item['attributes'], $item['content_attributes'], $item['item']);
@@ -109,7 +110,7 @@ function template_preprocess_splide(&$variables) {
  */
 function template_preprocess_splide_wrapper(&$variables) {
   foreach (['attributes', 'items', 'settings'] as $key) {
-    $variables[$key] = isset($variables['element']["#$key"]) ? $variables['element']["#$key"] : [];
+    $variables[$key] = $variables['element']["#$key"] ?? [];
   }
 }
 
@@ -121,7 +122,7 @@ function template_preprocess_splide_slide(&$variables) {
 
   // All slide types -- main, thumbnail, grid, overlay -- may have captions.
   foreach (['alt', 'data', 'link', 'overlay', 'title'] as $key) {
-    $variables['item']['caption'][$key] = isset($variables['item']['caption'][$key]) ? $variables['item']['caption'][$key] : [];
+    $variables['item']['caption'][$key] = $variables['item']['caption'][$key] ?? [];
   }
 
   $item = &$variables['item'];
@@ -132,7 +133,7 @@ function template_preprocess_splide_slide(&$variables) {
   // fullwidth: If full skins, add wrappers to hold caption and overlay.
   // detroy: Remove .slide__content if it is an enforced unsplide grid.
   // wrapper: Remove divities for a single item or grid to have clean markups.
-  $item['slide']     = isset($item['slide']) ? $item['slide'] : [];
+  $item['slide']     = $item['slide'] ?? [];
   $item['caption']   = array_filter($item['caption']);
   $caption           = &$item['caption'];
   $sets['split']     = !empty($item) && (!empty($sets['caption']) || !empty($sets['title']));
@@ -151,7 +152,7 @@ function _splide_preprocess_splide_item(&$variables) {
   $element = $variables['element'];
   foreach (['attributes', 'content_attributes', 'delta', 'item', 'settings'] as $key) {
     $default = $key == 'delta' ? NULL : [];
-    $variables[$key] = isset($element["#$key"]) ? $element["#$key"] : $default;
+    $variables[$key] = $element["#$key"] ?? $default;
   }
 
   // Because Twig prepends new classes, not appends as expected by BEM.

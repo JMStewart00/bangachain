@@ -184,7 +184,7 @@ class MoveBlockRestrictionTest extends LayoutBuilderRestrictionsTestBase {
     $this->openMoveForm(1, 'content', 'block-field-blocknodebundle-with-section-fieldbody', ['Links', 'Body (current)']);
     $this->moveBlockWithKeyboard('up', 'Body (current)', ['Body (current)*', 'Links']);
     $page->pressButton('Move');
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertNotEmpty($assert_session->waitForText('Content cannot be placed'));
     // Verify that a validation error is provided.
     $modal = $page->find('css', '#drupal-off-canvas p');
     $this->assertSame("There is a restriction on Body placement in the layout_onecol content region for bundle_with_section_field content.", trim($modal->getText()));
@@ -217,7 +217,7 @@ class MoveBlockRestrictionTest extends LayoutBuilderRestrictionsTestBase {
     $this->assertBlockTable(['Powered by Drupal', 'Body (current)']);
     $this->moveBlockWithKeyboard('up', 'Body', ['Body (current)*', 'Powered by Drupal']);
     $page->pressButton('Move');
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertNotEmpty($assert_session->waitForText('Content cannot be placed'));
     $modal = $page->find('css', '#drupal-off-canvas p');
     // Content cannot be moved between sections if a restriction exists.
     $this->assertSame("There is a restriction on Body placement in the layout_twocol_section first region for bundle_with_section_field content.", trim($modal->getText()));
@@ -284,7 +284,7 @@ class MoveBlockRestrictionTest extends LayoutBuilderRestrictionsTestBase {
     $this->openMoveForm(0, 'first', 'block-block-content' . $blocks['Alternate Block 1'], ['Basic Block 1', 'Alternate Block 1 (current)']);
     $this->moveBlockWithKeyboard('up', 'Alternate Block 1', ['Alternate Block 1 (current)*', 'Basic Block 1']);
     $page->pressButton('Move');
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertNotEmpty($assert_session->waitForText('Content cannot be placed'));
     // Verify that a validation error is provided.
     $modal = $page->find('css', '#drupal-off-canvas p');
     $this->assertSame("There is a restriction on Alternate Block 1 placement in the layout_twocol_section first region for bundle_with_section_field content.", trim($modal->getText()));
@@ -331,7 +331,7 @@ class MoveBlockRestrictionTest extends LayoutBuilderRestrictionsTestBase {
     $this->openMoveForm(0, 'first', 'block-block-content' . $blocks['Basic Block 1'], ['Alternate Block 1', 'Basic Block 1 (current)']);
     $this->moveBlockWithKeyboard('up', 'Basic Block 1', ['Basic Block 1 (current)*', 'Alternate Block 1']);
     $page->pressButton('Move');
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertNotEmpty($assert_session->waitForText('Content cannot be placed'));
     // Verify that a validation error is provided.
     $modal = $page->find('css', '#drupal-off-canvas p');
     $this->assertSame("There is a restriction on Basic Block 1 placement in the layout_twocol_section first region for bundle_with_section_field content.", trim($modal->getText()));

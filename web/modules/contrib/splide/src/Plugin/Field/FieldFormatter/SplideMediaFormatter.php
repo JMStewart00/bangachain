@@ -42,6 +42,10 @@ class SplideMediaFormatter extends SplideEntityReferenceFormatterBase {
       return [];
     }
 
+    // If text pagination is enabled and configured, we need to build an array
+    // of strings to pass to the JavaScript.
+    $this->checkTextPagination($entities);
+
     return $this->commonViewElements($items, $langcode, $entities);
   }
 

@@ -28,6 +28,7 @@ expression:
         id: rules_action
         uuid: aacb28c1-7df5-4bd5-bed3-1880af4ed03c
         weight: 0
+        action_id: rules_send_email
         context_values:
           to:
             - '{{ commerce_giftcard.uid.entity.mail.value }}'
@@ -48,4 +49,3 @@ expression:
           language:
             rules_tokens: {  }
         provides_mapping: {  }
-        action_id: rules_send_email

@@ -13,20 +13,20 @@ bundle: iframe
 mode: default
 content:
   field_iframe:
+    type: iframe_urlwidthheight
     weight: 26
+    region: content
     settings:
-      width: ''
-      height: ''
       class: ''
-      expose_class: false
       frameborder: '0'
       scrolling: auto
       transparency: '0'
-      tokensupport: '0'
       allowfullscreen: '0'
+      tokensupport: '0'
+      width: ''
+      height: ''
+      expose_class: false
     third_party_settings: {  }
-    type: iframe_urlwidthheight
-    region: content
   info:
     type: string_textfield
     weight: -5

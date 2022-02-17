@@ -246,7 +246,7 @@ class ShippingInformation extends CheckoutPaneBase implements ContainerFactoryPl
     if (!$form_state->has('shipping_profile') ||
       // For some reason, when the address selected is changed, the shipping
       // profile in form state is stale.
-      (isset($triggering_element['#parents']) && in_array('select_address', $triggering_element['#parents']))) {
+      (isset($triggering_element['#parents']) && in_array('select_address', $triggering_element['#parents'], TRUE))) {
       $form_state->set('shipping_profile', $inline_form->getEntity());
     }
 
@@ -368,7 +368,7 @@ class ShippingInformation extends CheckoutPaneBase implements ContainerFactoryPl
       $recalculate_button_selector = $element['recalculate_shipping']['#attributes']['data-drupal-selector'];
       $element['#attached']['library'][] = 'commerce_shipping/shipping_checkout';
       $element['#attached']['drupalSettings']['commerceShipping'] = [
-        'wrapper' => '#' . $element['#wrapper_id'],
+        'wrapper' => $element['#wrapper_id'],
         'recalculateButtonSelector' => '[data-drupal-selector="' . $recalculate_button_selector . '"]',
       ];
       $element['recalculate_shipping']['#attributes']['class'][] = 'js-hide';

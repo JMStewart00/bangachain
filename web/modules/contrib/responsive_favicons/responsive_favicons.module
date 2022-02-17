@@ -60,8 +60,14 @@ function responsive_favicons_page_attachments(array &$page) {
 function responsive_favicons_page_attachments_alter(array &$attachments) {
   $config = \Drupal::config('responsive_favicons.settings');
   if ($config->get('remove_default') && isset($attachments['#attached']['html_head_link'])) {
-    foreach ($attachments['#attached']['html_head_link'] as $key => $config) {
-      if (isset($config[0]['rel']) && $config[0]['rel'] === 'shortcut icon') {
+    foreach ($attachments['#attached']['html_head_link'] as $key => $link) {
+      // Drupal 9.2.
+      // @todo remove this when no longer needed to be supported.
+      if (isset($link[0]['rel']) && $link[0]['rel'] === 'shortcut icon') {
+        unset($attachments['#attached']['html_head_link'][$key]);
+      }
+      // Drupal 9.3.
+      if (isset($link[0]['href']) && preg_match('#/favicon\.ico$#', $link[0]['href'])) {
         unset($attachments['#attached']['html_head_link'][$key]);
       }
     }
@@ -183,5 +189,10 @@ function _responsive_favicons_normalise_path($file_path) {
     $file_path = str_replace(\Drupal::request()->getSchemeAndHttpHost(), '', $file_path);
   }
 
-  return '/' . PublicStream::basePath() . '/' . $config->get('path') . $file_path;
+  if ($config->get('path_type') === 'upload') {
+    return '/' . PublicStream::basePath() . '/' . $config->get('path') . $file_path;
+  }
+  else {
+    return $config->get('path') . $file_path;
+  }
 }

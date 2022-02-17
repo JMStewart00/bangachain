@@ -115,7 +115,8 @@ class CanadianSalesTax extends LocalTaxTypeBase {
           'id' => 'pst',
           'label' => $this->t('PST'),
           'percentages' => [
-            ['number' => '0.08', 'start_date' => '2013-07-01', 'end_date' => '2023-06-30'],
+            ['number' => '0.08', 'start_date' => '2013-07-01', 'end_date' => '2019-06-30'],
+            ['number' => '0.07', 'start_date' => '2019-07-01'],
           ],
         ],
       ],

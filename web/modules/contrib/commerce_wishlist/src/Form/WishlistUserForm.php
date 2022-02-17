@@ -233,7 +233,7 @@ class WishlistUserForm extends EntityForm {
     $form['items'] = [];
     foreach ($wishlist->getItems() as $item) {
       $purchasable_entity = $item->getPurchasableEntity();
-      if (!$purchasable_entity) {
+      if (!$purchasable_entity || !$purchasable_entity->access('view')) {
         continue;
       }
       $item_form = &$form['items'][$item->id()];

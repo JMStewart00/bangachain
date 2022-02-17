@@ -20,7 +20,10 @@ class WishlistCacheContextTest extends UnitTestCase {
   public function testWishlistCacheContext() {
     $account = $this->createMock(AccountInterface::class);
     $wishlistProvider = $this->createMock(WishlistProviderInterface::class);
-    $wishlistProvider->expects($this->once())->method('getWishlistIds')->willReturn(['19', '12']);
+    $wishlistProvider->expects($this->once())->method('getWishlistIds')->willReturn([
+      '19',
+      '12',
+    ]);
     $wishlistProvider->expects($this->once())->method('getWishlists')->willReturn([
       new TestCacheableDependency([], ['commerce_wishlist:19'], 0),
       new TestCacheableDependency([], ['commerce_wishlist:24'], 0),

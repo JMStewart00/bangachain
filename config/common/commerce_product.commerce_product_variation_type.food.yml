@@ -4,7 +4,7 @@ status: true
 dependencies: {  }
 id: food
 label: Food
-orderItemType: food_order_item
-generateTitle: false
 traits: {  }
 locked: false
+orderItemType: food_order_item
+generateTitle: false

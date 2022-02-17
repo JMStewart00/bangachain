@@ -10,7 +10,7 @@
   // Browser globals (root is window).
   factory(window.dBlazy, window, window.document);
 
-})(function (_db, _win, _doc) {
+})(function ($, _win, _doc) {
 
   'use strict';
 
@@ -22,14 +22,80 @@
   _win.dSplide = {};
 
   var _ds = _win.dSplide;
+  var _id = 'splide';
 
   _ds.extensions = {};
+  _ds.listeners = {};
   _ds.transitions = [];
 
-  _ds.extend = function (fn) {
-    this.extensions = _db.extend({}, this.extensions, fn);
+  // Init non-module library built-in, yet separated, extensions.
+  _ds.initExtensions = function () {
+    var me = this;
+    if (_win.splide && _win.splide.Extensions) {
+      if (_win.splide.Extensions.AutoScroll) {
+        me.extend({AutoScroll: _win.splide.Extensions.AutoScroll});
+      }
+      if (_win.splide.Extensions.Intersection) {
+        me.extend({Intersection: _win.splide.Extensions.Intersection});
+      }
+    }
   };
 
+  // Init module/ custom listener extensions, must be called before init event.
+  _ds.initListeners = function (instance) {
+    var me = this;
+    var o = instance.options;
+    var append = function (prev, sel) {
+      var el = instance.root.querySelector(sel);
+      if (el !== null) {
+        prev.insertAdjacentElement('afterend', el);
+      }
+    };
+
+    instance.on('arrows:mounted', function (prev, next) {
+      if (prev === null) {
+        return;
+      }
+
+      _win.setTimeout(function () {
+        // Puts dots inbetween arrows for easy theming like this: < ooooo >.
+        if (o.pagination === '.' + _id + '__arrows') {
+          append(prev, '.' + _id + '__pagination');
+        }
+
+        // Puts arrow down inbetween arrows for easy theming like this: < v >.
+        if (o.down) {
+          append(prev, '.' + _id + '__arrow--down');
+        }
+      }, 100);
+    });
+
+    instance.on('lazyload:loaded', me.unloading);
+
+    var listeners = me.listeners;
+    if (listeners) {
+      $.forEach(listeners, function (listener) {
+        if (listener && typeof listener === 'function') {
+          var fn = listener(instance, instance.Components, o);
+          if ('mount' in fn) {
+            fn.mount();
+          }
+        }
+      });
+    }
+  };
+
+  // Register module/ custom extensions not bound to before init event.
+  _ds.extend = function (fn) {
+    this.extensions = $.extend({}, this.extensions, fn);
+  };
+
+  // Register module/ custom listener plugins, must be called before init event.
+  _ds.listen = function (fn) {
+    this.listeners = $.extend({}, this.listeners, fn);
+  };
+
+  // Register module/ custom transitions aside from defaults: loop, slide, fade.
   _ds.addTransition = function (fn) {
     this.transitions.push(fn);
   };
@@ -38,7 +104,7 @@
     var me = this;
     var fn = null;
     if (me.transitions.length) {
-      _db.forEach(me.transitions, function (obj) {
+      $.forEach(me.transitions, function (obj) {
         if (obj.fn && (obj.type && obj.type === type)) {
           fn = obj.fn;
           return false;
@@ -67,7 +133,7 @@
 
   _ds.applyStyle = function (elm, styles) {
     if (elm) {
-      _db.forEach(styles, function (value, prop) {
+      $.forEach(styles, function (value, prop) {
         if (value !== null) {
           elm.style[prop] = value;
         }
@@ -77,7 +143,7 @@
 
   _ds.checkSizes = function (img, parent) {
     var _sizes = {};
-    if (!img && !parent) {
+    if (img === null || parent === null) {
       return _sizes;
     }
 
@@ -87,16 +153,16 @@
       _sizes = {
         w: img.offsetWidth,
         h: img.offsetHeight,
-        nw: img.naturalWidth || parseInt(aw),
-        nh: img.naturalHeight || parseInt(ah),
-        aw: parseInt(aw),
-        ah: parseInt(ah),
+        nw: img.naturalWidth || parseInt(aw, 10),
+        nh: img.naturalHeight || parseInt(ah, 10),
+        aw: parseInt(aw, 10),
+        ah: parseInt(ah, 10),
         pw: parent.offsetWidth,
         ph: parent.offsetHeight
       };
 
       if (e) {
-        _db.unbindEvent(img, 'load', recheck);
+        $.unbindEvent(img, 'load', recheck);
       }
     };
 
@@ -104,7 +170,7 @@
       recheck();
     }
     else {
-      _db.bindEvent(img, 'load', recheck);
+      $.bindEvent(img, 'load', recheck);
     }
 
     return _sizes;
@@ -136,21 +202,31 @@
     return delta > 0 ? 1 : -1;
   };
 
-  // @todo remove and replace with _db.clearLoading post Blazy 2.3.
-  _ds.clearLoading = function (el) {
-    var loaders = [el, _db.closest(el, '[class*="loading"]')];
+  // @todo remove for $.unloading post Blazy 2.3+.
+  _ds.unloading = function (el) {
+    var loaders = [el, $.closest(el, '[class*="loading"]')];
 
-    _db.forEach(loaders, function (loader) {
+    $.forEach(loaders, function (loader) {
       if (loader !== null) {
         loader.className = loader.className.replace(/(\S+)loading/g, '');
       }
     });
   };
 
-  // @todo Replace with _db.attr post Blazy 2.3+.
+  // @todo remove for $.attr post Blazy 2.3+.
   _ds.attr = function (el, attr, def) {
     def = def || '';
     return el && el.hasAttribute(attr) ? el.getAttribute(attr) : def;
+  };
+
+  // @todo remove for dBlazy.context post Blazy:2.6+.
+  _ds.context = function (context) {
+    // Weirdo: context may be null after Colorbox close.
+    context = context || document;
+
+    // jQuery may pass its array as non-expected context identified by length.
+    context = 'length' in context ? context[0] : context;
+    return context instanceof HTMLDocument ? context : document;
   };
 
   return _ds;

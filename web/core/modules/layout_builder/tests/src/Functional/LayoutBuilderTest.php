@@ -28,7 +28,6 @@ class LayoutBuilderTest extends BrowserTestBase {
     'contextual',
     'node',
     'layout_builder_test',
-    'layout_builder_context_test',
   ];
 
   /**
@@ -1331,12 +1330,9 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
-    // Install Quick Edit as well.
-    $this->container->get('module_installer')->install(['quickedit']);
     $this->drupalLogin($this->drupalCreateUser([
       'configure any layout',
       'administer node display',
-      'access in-place editing',
     ]));
 
     $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
@@ -1456,8 +1452,10 @@ class LayoutBuilderTest extends BrowserTestBase {
 
   /**
    * Asserts that the correct layouts are available.
+   *
+   * @internal
    */
-  protected function assertCorrectLayouts() {
+  protected function assertCorrectLayouts(): void {
     $assert_session = $this->assertSession();
     // Ensure the layouts provided by layout_builder are available.
     $expected_layouts_hrefs = [
@@ -1483,7 +1481,7 @@ class LayoutBuilderTest extends BrowserTestBase {
   }
 
   /**
-   * Tests the Layout Builder UI with global context for block.
+   * Tests the Layout Builder UI with a context defined at runtime.
    */
   public function testLayoutBuilderContexts() {
     $node_url = 'node/1';
@@ -1496,8 +1494,15 @@ class LayoutBuilderTest extends BrowserTestBase {
       'administer node display',
     ]));
     $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
-    $this->drupalPostForm("$field_ui_prefix/display/default", ['layout[enabled]' => TRUE], 'Save');
-    $this->drupalPostForm("$field_ui_prefix/display/default", ['layout[allow_custom]' => TRUE], 'Save');
+    $this->drupalGet("$field_ui_prefix/display/default");
+    $this->submitForm([
+      'layout[enabled]' => TRUE,
+    ], 'Save');
+
+    $this->drupalGet("$field_ui_prefix/display/default");
+    $this->submitForm([
+      'layout[allow_custom]' => TRUE,
+    ], 'Save');
 
     $this->drupalGet($node_url);
     $assert_session->linkExists('Layout');
@@ -1506,9 +1511,53 @@ class LayoutBuilderTest extends BrowserTestBase {
 
     // Add the testing block.
     $page->clickLink('Add block');
-    $this->clickLink('Can I have runtimes');
+    $this->clickLink('Can I have runtime contexts');
     $page->pressButton('Add block');
-    // Make sure runtime context value rendered before save.
+
+    // Ensure the runtime context value is rendered before saving.
+    $assert_session->pageTextContains('for sure you can');
+
+    // Save the layout, and test that the value is rendered after save.
+    $page->pressButton('Save layout');
+    $assert_session->addressEquals($node_url);
+    $assert_session->pageTextContains('for sure you can');
+    $assert_session->elementExists('css', '.layout');
+  }
+
+  /**
+   * Tests the Layout Builder UI with a context defined at runtime.
+   */
+  public function testLayoutBuilderContexts() {
+    $node_url = 'node/1';
+
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'configure any layout',
+      'administer node display',
+    ]));
+    $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
+    $this->drupalGet("$field_ui_prefix/display/default");
+    $this->submitForm([
+      'layout[enabled]' => TRUE,
+    ], 'Save');
+
+    $this->drupalGet("$field_ui_prefix/display/default");
+    $this->submitForm([
+      'layout[allow_custom]' => TRUE,
+    ], 'Save');
+
+    $this->drupalGet($node_url);
+    $assert_session->linkExists('Layout');
+    $this->clickLink('Layout');
+    $assert_session->linkExists('Add section');
+
+    // Add the testing block.
+    $page->clickLink('Add block');
+    $this->clickLink('Can I have runtime contexts');
+    $page->pressButton('Add block');
+    // Ensure the runtime context value is rendered before saving.
     $assert_session->pageTextContains('for sure you can');
     // Save the layout, and test that value rendered after save.
     $page->pressButton('Save layout');

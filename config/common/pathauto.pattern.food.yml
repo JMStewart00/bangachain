@@ -12,12 +12,12 @@ pattern: '[commerce_product:title]'
 selection_criteria:
   8940145e-0cc6-4057-9e90-0b51058d04c0:
     id: 'entity_bundle:commerce_product'
-    bundles:
-      food: food
     negate: false
+    uuid: 8940145e-0cc6-4057-9e90-0b51058d04c0
     context_mapping:
       commerce_product: commerce_product
-    uuid: 8940145e-0cc6-4057-9e90-0b51058d04c0
+    bundles:
+      food: food
 selection_logic: and
 weight: -5
 relationships: {  }

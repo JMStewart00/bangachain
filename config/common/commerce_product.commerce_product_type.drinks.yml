@@ -9,9 +9,9 @@ third_party_settings:
     show_in_pos: true
 id: drinks
 label: Drinks
+traits: {  }
+locked: false
 description: ''
 variationType: drinks
 multipleVariations: true
 injectVariationFields: true
-traits: {  }
-locked: false

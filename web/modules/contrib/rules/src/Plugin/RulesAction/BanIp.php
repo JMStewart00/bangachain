@@ -5,6 +5,10 @@ namespace Drupal\rules\Plugin\RulesAction;
 /**
  * Provides the 'Ban IP' action.
  *
+ * @todo Add access callback information from Drupal 7.
+ * @todo We should maybe use a dedicated data type for the ip address, as we
+ * do in Drupal 7.
+ *
  * @RulesAction(
  *   id = "rules_ban_ip",
  *   label = @Translation("Ban an IP address"),
@@ -19,10 +23,6 @@ namespace Drupal\rules\Plugin\RulesAction;
  *     ),
  *   }
  * )
- *
- * @todo Add access callback information from Drupal 7.
- * @todo We should maybe use a dedicated data type for the ip address, as we
- * do in Drupal 7.
  */
 class BanIp extends RulesBanActionBase {
 

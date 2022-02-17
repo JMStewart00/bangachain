@@ -25,6 +25,7 @@ class OrderReportGeneratorTest extends CommerceKernelTestBase {
     'entity_reference_revisions',
     'profile',
     'state_machine',
+    'commerce_number_pattern',
     'commerce_order',
     'commerce_product',
     'commerce_reports',
@@ -54,15 +55,15 @@ class OrderReportGeneratorTest extends CommerceKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('profile');
     $this->installEntitySchema('commerce_order');
     $this->installEntitySchema('commerce_order_item');
     $this->installEntitySchema('commerce_product');
     $this->installEntitySchema('commerce_product_variation');
-    $this->installConfig('commerce_order');
-    $this->installConfig('commerce_product');
+    $this->installConfig(['commerce_product', 'commerce_order']);
+    $this->installSchema('commerce_number_pattern', ['commerce_number_pattern_sequence']);
     $this->installEntitySchema('commerce_order_report');
 
     /** @var \Drupal\commerce_product\Entity\ProductVariationInterface $variation */

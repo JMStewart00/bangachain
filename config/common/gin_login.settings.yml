@@ -1,8 +1,8 @@
+_core:
+  default_config_hash: OhypfKr4_Eo8XwXg3Sios05lN-LjxOhSdSOSkEN9Ndo
 logo:
   use_default: false
   path: ./themes/custom/bangachain/assets/images/logo-no-chains--blue.png
 brand_image:
   use_default: false
   path: ./themes/custom/bangachain/assets/images/login.webp
-_core:
-  default_config_hash: OhypfKr4_Eo8XwXg3Sios05lN-LjxOhSdSOSkEN9Ndo

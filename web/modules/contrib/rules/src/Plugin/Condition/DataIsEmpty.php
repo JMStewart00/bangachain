@@ -12,6 +12,8 @@ use Drupal\rules\Core\RulesConditionBase;
 /**
  * Provides a 'Data value is empty' condition.
  *
+ * @todo Add access callback information from Drupal 7.
+ *
  * @Condition(
  *   id = "rules_data_is_empty",
  *   label = @Translation("Data value is empty"),
@@ -24,8 +26,6 @@ use Drupal\rules\Core\RulesConditionBase;
  *     ),
  *   }
  * )
- *
- * @todo Add access callback information from Drupal 7.
  */
 class DataIsEmpty extends RulesConditionBase {
 

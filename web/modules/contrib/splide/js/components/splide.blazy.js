@@ -3,7 +3,7 @@
  * Provides Splide extensions for Blazy.
  */
 
-(function (Drupal, _db, _ds) {
+(function (Drupal, _ds) {
 
   'use strict';
 
@@ -59,4 +59,4 @@
     Blazy: Blazy
   });
 
-})(Drupal, dBlazy, dSplide);
+})(Drupal, dSplide);

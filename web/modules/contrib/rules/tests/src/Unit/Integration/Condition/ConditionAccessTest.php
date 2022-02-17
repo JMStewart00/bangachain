@@ -22,7 +22,7 @@ class ConditionAccessTest extends RulesIntegrationTestBase {
     $definition = $plugin->getPluginDefinition();
     $this->assertNotEmpty($definition['configure_permissions'], "Plugin has configure permission info.");
     $perms = $definition['configure_permissions'];
-    $this->assertTrue(is_array($perms), "configure_permissions is an array");
+    $this->assertIsArray($perms, "configure_permissions is an array");
     $this->assertContains("access test configuration", $perms, "Expected permission found in configure_permissions.");
 
     // Now see if the permission is actually used.

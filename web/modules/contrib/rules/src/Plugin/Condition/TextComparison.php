@@ -20,13 +20,14 @@ use Drupal\rules\Core\RulesConditionBase;
  *     "operator" = @ContextDefinition("string",
  *       label = @Translation("Operator"),
  *       description = @Translation("The comparison operator. One of 'contains', 'starts', 'ends', or 'regex'. Defaults to 'contains'."),
+ *       options_provider = "\Drupal\rules\TypedData\Options\ComparisonOperatorTextOptions",
  *       assignment_restriction = "input",
  *       default_value = "contains",
  *       required = FALSE
  *     ),
  *     "match" = @ContextDefinition("string",
  *       label = @Translation("Matching text"),
- *       description = @Translation("A string or pattern (in the case of regex) to search for in the given text data.")
+ *       description = @Translation("A string (or pattern in the case of regex) to search for in the given text data.")
  *     ),
  *   }
  * )

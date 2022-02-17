@@ -15,7 +15,7 @@ class PriceTwigExtensionTest extends CommerceKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_price_test',
   ];
 

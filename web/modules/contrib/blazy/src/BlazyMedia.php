@@ -14,7 +14,7 @@ class BlazyMedia implements BlazyMediaInterface {
   /**
    * {@inheritdoc}
    */
-  public static function build($media, array $settings = []) {
+  public static function build($media, array $settings = []): array {
     // Prevents fatal error with disconnected internet when having ME Facebook,
     // ME SlideShare, resorted to static thumbnails to avoid broken displays.
     if (!empty($settings['input_url'])) {
@@ -22,7 +22,7 @@ class BlazyMedia implements BlazyMediaInterface {
         \Drupal::httpClient()->get($settings['input_url'], ['timeout' => 3]);
       }
       catch (\Exception $e) {
-        return FALSE;
+        return [];
       }
     }
 
@@ -37,14 +37,16 @@ class BlazyMedia implements BlazyMediaInterface {
   /**
    * {@inheritdoc}
    */
-  public static function wrap(array $field = []) {
-    $item       = $field[0];
-    $settings   = $field['#settings'];
-    $iframe     = isset($item['#tag']) && $item['#tag'] == 'iframe';
-    $attributes = [];
+  public static function wrap(array $field = []): array {
+    $item     = $field[0];
+    $settings = $field['#settings'];
+    $iframe   = isset($item['#tag']) && $item['#tag'] == 'iframe';
 
     if (isset($item['#attributes'])) {
       $attributes = &$item['#attributes'];
+    }
+    else {
+      $attributes = [];
     }
 
     // Update iframe/video dimensions based on configurable image style, if any.
@@ -77,15 +79,15 @@ class BlazyMedia implements BlazyMediaInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Modifies media item data to provide image item.
    */
-  public static function mediaItem(array &$data, $media) {
+  public static function mediaItem(array &$data, $media): void {
     $item     = NULL;
     $settings = &$data['settings'];
 
     $settings['bundle']           = $media->bundle();
     $settings['source_field']     = $media->getSource()->getConfiguration()['source_field'];
-    $settings['media_url']        = $media->toUrl()->toString();
+    $settings['media_url']        = $media->isNew() ? '' : $media->toUrl()->toString();
     $settings['media_id']         = $media->id();
     $settings['media_source']     = $media->getSource()->getPluginId();
     $settings['view_mode']        = empty($settings['view_mode']) ? 'default' : $settings['view_mode'];
@@ -108,7 +110,10 @@ class BlazyMedia implements BlazyMediaInterface {
     if ($item) {
       $settings['file_tags'] = ['file:' . $item->target_id];
       $settings['uri'] = Blazy::uri($item);
-      $item->title = $media->label();
+
+      if (trim($item->title) == '') {
+        $item->title = $media->label();
+      }
 
       // Pass through image item including poster image overrides.
       $data['item'] = $item;
@@ -116,25 +121,27 @@ class BlazyMedia implements BlazyMediaInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Modifies item attributes for local video item.
    */
-  public static function videoItem(array &$item, array $settings) {
+  public static function videoItem(array &$item, array $settings): void {
     // Do this as $item['#settings'] is not available as file_video variables.
     foreach ($item['#files'] as &$file) {
       $file['blazy'] = new BlazySettings($settings);
     }
+
     $item['#attributes']->setAttribute('data-b-lazy', TRUE);
-    if (!empty($settings['is_preview'])) {
-      $item['#attributes']->setAttribute('data-b-preview', TRUE);
+    if (!empty($settings['is_nojs'])) {
+      $item['#attributes']->setAttribute('data-b-nojs', TRUE);
     }
   }
 
   /**
-   * {@inheritdoc}
+   * Modifies data to provide fake image item.
    */
-  public static function fakeImageItem(array &$data, $entity, $image) {
+  public static function fakeImageItem(array &$data, $entity, $image): void {
     /** @var \Drupal\file\Entity\File $entity */
-    list($type,) = explode('/', $entity->getMimeType(), 2);
+    [$type] = explode('/', $entity->getMimeType(), 2);
+
     if ($type == 'image' && $image->isValid()) {
       $settings = [
         'uri'       => $entity->getFileUri(),
@@ -158,7 +165,7 @@ class BlazyMedia implements BlazyMediaInterface {
   /**
    * {@inheritdoc}
    */
-  public static function imageItem(array &$data, $entity) {
+  public static function imageItem(array &$data, $entity): void {
     $settings = &$data['settings'];
     $stage = $settings['image'];
 

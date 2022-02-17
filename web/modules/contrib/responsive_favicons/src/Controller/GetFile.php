@@ -24,7 +24,12 @@ class GetFile extends ControllerBase {
    */
   private function getFile($file_path) {
     $config = $this->config('responsive_favicons.settings');
-    $uri = 'public://' . $config->get('path') . $file_path;
+    if ($config->get('path_type') == 'upload') {
+      $uri = 'public://' . $config->get('path') . $file_path;
+    }
+    else {
+      $uri = DRUPAL_ROOT . $config->get('path') . $file_path;
+    }
 
     $file = new \stdClass();
     $file->uri = $uri;

@@ -69,7 +69,7 @@ class ShipmentAdminTest extends CommerceWebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_shipping_test',
     'telephone',
   ];
@@ -83,6 +83,7 @@ class ShipmentAdminTest extends CommerceWebDriverTestBase {
       'administer commerce_shipment',
       'administer commerce_shipment_type',
       'access commerce_order overview',
+      'administer commerce_payment_gateway',
     ], parent::getAdministratorPermissions());
   }
 
@@ -233,6 +234,13 @@ class ShipmentAdminTest extends CommerceWebDriverTestBase {
       'field_phone' => '202-555-0108',
     ]);
     $this->defaultProfile->save();
+
+    /** @var \Drupal\commerce_payment\Entity\PaymentGatewayInterface $payment_gateway */
+    $payment_gateway = $this->createEntity('commerce_payment_gateway', [
+      'id' => 'example',
+      'label' => 'Example',
+      'plugin' => 'manual',
+    ]);
   }
 
   /**
@@ -736,7 +744,7 @@ class ShipmentAdminTest extends CommerceWebDriverTestBase {
       if ($property === 'country_code') {
         $value = $this->countryList[$value];
       }
-      $this->assertContains($value, $address_text);
+      $this->assertStringContainsString($value, $address_text);
     }
   }
 
@@ -789,12 +797,28 @@ class ShipmentAdminTest extends CommerceWebDriverTestBase {
     $email = current($this->getMails());
     $this->assertEquals('testBcc@shipping.com', $email['headers']['Bcc']);
     $this->assertEquals("An item for order #{$this->order->getOrderNumber()} shipped!", $email['subject']);
-    $this->assertContains('Bryan Centarro', $email['body']);
-    $this->assertContains('9 Drupal Ave', $email['body']);
-    $this->assertContains('Greenville, SC', $email['body']);
-    $this->assertContains('29616', $email['body']);
-    $this->assertContains('Tracking information:', $email['body']);
-    $this->assertContains('A1234567890', $email['body']);
+    $this->assertStringContainsString('Bryan Centarro', $email['body']);
+    $this->assertStringContainsString('9 Drupal Ave', $email['body']);
+    $this->assertStringContainsString('Greenville, SC', $email['body']);
+    $this->assertStringContainsString('29616', $email['body']);
+    $this->assertStringContainsString('Tracking information:', $email['body']);
+    $this->assertStringContainsString('A1234567890', $email['body']);
+  }
+
+  /**
+   * Tests the Shipment add page.
+   */
+  public function testPaymentGatewayConfig() {
+    $this->drupalGet('admin/commerce/config/payment-gateways');
+    $page = $this->getSession()->getPage();
+    $page->clickLink('Edit');
+    $this->assertSession()->pageTextContains('Shipment');
+    $page->clickLink('Shipment');
+    $this->assertSession()->pageTextContains('Shipping method');
+    $page->checkField('Shipping method');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->pageTextContains('Standard shipping');
+    $this->assertSession()->pageTextContains('Overnight shipping');
   }
 
 }

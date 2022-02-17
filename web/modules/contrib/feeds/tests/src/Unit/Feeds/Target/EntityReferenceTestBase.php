@@ -5,7 +5,7 @@ namespace Drupal\Tests\feeds\Unit\Feeds\Target;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\feeds\EntityFinderInterface;
 use Drupal\feeds\Exception\EmptyFeedException;
 use Drupal\feeds\FieldTargetDefinition;
 
@@ -29,18 +29,11 @@ abstract class EntityReferenceTestBase extends FieldTargetTestBase {
   protected $entityStorage;
 
   /**
-   * Entity repository used in the test.
+   * The Feeds entity finder service.
    *
-   * @var \Prophecy\Prophecy\ProphecyInterface|\Drupal\Core\Entity\EntityRepositoryInterface
+   * @var \Drupal\feeds\EntityFinderInterface
    */
-  protected $entityRepository;
-
-  /**
-   * The FeedsTarget plugin being tested.
-   *
-   * @var \Drupal\feeds\Plugin\Type\Target\FieldTargetBase
-   */
-  protected $targetPlugin;
+  protected $entityFinder;
 
   /**
    * {@inheritdoc}
@@ -52,7 +45,6 @@ abstract class EntityReferenceTestBase extends FieldTargetTestBase {
 
     // Entity type manager.
     $this->entityTypeManager = $this->prophesize(EntityTypeManagerInterface::class);
-    $this->entityRepository = $this->prophesize(EntityRepositoryInterface::class);
 
     // Entity storage (needed for entity queries).
     $this->entityStorage = $this->prophesize($this->getEntityStorageClass());
@@ -60,7 +52,21 @@ abstract class EntityReferenceTestBase extends FieldTargetTestBase {
 
     // Made-up entity type that we are referencing to.
     $this->entityTypeManager->getDefinition($referencable_entity_type_id)->willReturn($this->createReferencableEntityType())->shouldBeCalled();
+
+    // Entity finder.
+    $this->entityFinder = $this->prophesize(EntityFinderInterface::class);
   }
+
+  /**
+   * Creates a new target plugin instance.
+   *
+   * @param array $configuration
+   *   (optional) The configuration for the target plugin.
+   *
+   * @return \Drupal\feeds\Plugin\Type\Target\TargetInterface
+   *   A FeedsTarget plugin instance.
+   */
+  abstract protected function createTargetPluginInstance(array $configuration = []);
 
   /**
    * Returns the entity storage class name to use in this test.
@@ -141,7 +147,7 @@ abstract class EntityReferenceTestBase extends FieldTargetTestBase {
    * @covers ::prepareValue
    */
   public function testPrepareValueEmptyFeed() {
-    $method = $this->getProtectedClosure($this->targetPlugin, 'prepareValue');
+    $method = $this->getProtectedClosure($this->createTargetPluginInstance(), 'prepareValue');
     $values = ['target_id' => ''];
     $this->expectException(EmptyFeedException::class);
     $method(0, $values);

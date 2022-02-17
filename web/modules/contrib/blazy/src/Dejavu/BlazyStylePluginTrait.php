@@ -28,16 +28,16 @@ trait BlazyStylePluginTrait {
       // Supports multiple image styles within a single view such as GridStack,
       // else fallbacks to the defined image style if available.
       if (empty($settings['image_style'])) {
-        $image_style = isset($image['rendered']['#image_style']) ? $image['rendered']['#image_style'] : '';
+        $image_style = $image['rendered']['#image_style'] ?? '';
         $settings['image_style'] = empty($settings['image_style']) ? $image_style : $settings['image_style'];
       }
 
       // Converts image formatter for blazy to reduce complexity with CSS
       // background option, and other options, and still lazyload it.
-      $theme = isset($image['rendered']['#theme']) ? $image['rendered']['#theme'] : '';
+      $theme = $image['rendered']['#theme'] ?? '';
       if (in_array($theme, ['blazy', 'image_formatter'])) {
         $settings['uri'] = Blazy::uri($item);
-        $settings['cache_tags'] = isset($image['rendered']['#cache']['tags']) ? $image['rendered']['#cache']['tags'] : [];
+        $settings['cache_tags'] = $image['rendered']['#cache']['tags'] ?? [];
 
         if ($theme == 'blazy') {
           // Pass Blazy field formatter settings into Views style plugin.
@@ -49,7 +49,7 @@ trait BlazyStylePluginTrait {
         }
         elseif ($theme == 'image_formatter') {
           // Deals with "link to content/image" by formatters.
-          $settings['content_url'] = isset($image['rendered']['#url']) ? $image['rendered']['#url'] : '';
+          $settings['content_url'] = $image['rendered']['#url'] ?? '';
           // Prevent images from having absurd height when being lazyloaded.
           // Allows to disables it by _noratio such as enforced CSS background.
           $settings['ratio'] = empty($settings['_noratio']) ? 'fluid' : '';

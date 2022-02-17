@@ -250,7 +250,7 @@ trait ContextFormTrait {
             // robust parsing we should also accommodate just \n or just \r.
             // Additionally, we want to remove leading and trailing whitespace
             // from each line, and discard any empty lines.
-            $values = preg_split('/\s*\R\s*/', $input, NULL, PREG_SPLIT_NO_EMPTY);
+            $values = preg_split('/\s*\R\s*/', $input, 0, PREG_SPLIT_NO_EMPTY);
             $context_config->setValue($context_name, $values);
           }
           else {

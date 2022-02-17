@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ReactionRuleEditForm extends RulesComponentFormBase {
 
   /**
-   * The event plugin manager.
+   * The Rules event plugin manager.
    *
    * @var \Drupal\rules\Core\RulesEventManager
    */
@@ -93,11 +93,35 @@ class ReactionRuleEditForm extends RulesComponentFormBase {
           '#suffix' => '<div class="description">' . $this->t('Machine name: @name', ['@name' => $event_name]) . '</div>',
         ],
       ];
-      $form['events']['table']['#rows'][$key]['element']['colspan'] = 2;
+      // Provide a delete button ONLY IF there is more than one event.
+      if (count($this->entity->getEventNames()) > 1) {
+        $form['events']['table']['#rows'][$key]['operations'] = [
+          'data' => [
+            '#type' => 'operations',
+            '#links' => [
+              'delete' => [
+                'title' => $this->t('Delete'),
+                'url' => $this->rulesUiHandler->getUrlFromRoute('event.delete', [
+                  'id' => $event_name,
+                ]),
+              ],
+            ],
+          ],
+        ];
+      }
+      else {
+        $form['events']['table']['#rows'][$key]['element']['colspan'] = 2;
+      }
     }
 
     // Put action buttons in the table footer.
-    $links['add-event'] = [];
+    $links['add-event'] = [
+      '#theme' => 'menu_local_action',
+      '#link' => [
+        'title' => $this->t('Add event'),
+        'url' => $this->rulesUiHandler->getUrlFromRoute('event.add', []),
+      ],
+    ];
     $form['events']['table']['#footer'][] = [
       [
         'data' => [

@@ -17,7 +17,7 @@ class DataProcessorManager extends DefaultPluginManager {
    * {@inheritdoc}
    */
   public function __construct(\Traversable $namespaces, ModuleHandlerInterface $module_handler, $plugin_definition_annotation_name = RulesDataProcessor::class) {
-    $this->alterInfo('rules_data_processor');
+    $this->alterInfo('rules_data_processor_info');
     parent::__construct('Plugin/RulesDataProcessor', $namespaces, $module_handler, DataProcessorInterface::class, $plugin_definition_annotation_name);
   }
 

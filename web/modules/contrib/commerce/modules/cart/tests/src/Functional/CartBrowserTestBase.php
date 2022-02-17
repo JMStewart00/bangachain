@@ -33,7 +33,7 @@ abstract class CartBrowserTestBase extends OrderBrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_cart',
     'commerce_cart_test',
     'node',

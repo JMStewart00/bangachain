@@ -9,7 +9,7 @@ use Drupal\user\Entity\User;
 /**
  * @coversDefaultClass \Drupal\user\ContextProvider\CurrentUserContext
  *
- * @group rules
+ * @group Rules
  */
 class CurrentDateContextTest extends KernelTestBase {
 

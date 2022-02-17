@@ -52,7 +52,7 @@ for a `16_9` view mode, containing the following code:
   file.uri.value|image_url('responsive_16_9_1250w') ~ ' 1250w',
   file.uri.value|image_url('responsive_16_9_1450w') ~ ' 1450w',
 ] %}
-<img src="{{ src|raw }}" data-srcset="{{ srcset|join(',')|raw }}" alt="{{ media.field_media_image.alt }}" loading="lazy" />
+<img src="{{ src }}" data-srcset="{{ srcset|join(',') }}" alt="{{ media.field_media_image.alt }}" loading="lazy" />
 
 ```
 

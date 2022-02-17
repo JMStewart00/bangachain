@@ -12,14 +12,14 @@ label: 'Gift card'
 weight: null
 plugin: manual
 configuration:
-  instructions:
-    value: ''
-    format: plain_text
   display_label: 'Gift card'
   mode: n/a
   payment_method_types:
     - credit_card
   collect_billing_information: true
+  instructions:
+    value: ''
+    format: plain_text
 conditions:
   -
     plugin: order_type

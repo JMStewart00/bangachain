@@ -47,8 +47,6 @@
  * @see template_preprocess_blazy()
  *
  * @ingroup themeable
- *
- * @todo remove media--loading for is-b-loading post sub-module updates.
  */
 #}
 {%
@@ -56,7 +54,7 @@
     content ? 'media--rendered',
     settings.bundle ? 'media--bundle--' ~ settings.bundle|clean_class,
     settings.namespace ? 'media--' ~ settings.namespace,
-    settings.lazy and settings.use_loading ? 'media--loading is-b-loading',
+    settings.lazy and settings.use_loading ? 'is-b-loading',
     settings.media_switch ? 'media--switch media--switch--' ~ settings.media_switch|clean_class,
     settings.player ? 'media--player',
     settings.ratio ? 'media--ratio media--ratio--' ~ settings.ratio,
@@ -108,9 +106,10 @@
   {% block blazy_media %}
     <div{{ attributes.addClass(classes) }}>
       {{- preface -}}
-      {{- noscript -}}
       {{- content -}}
       {{- image -}}
+      {# Above image, to minimize CSS works. #}
+      {{- noscript -}}
       {{- overlay -}}
       {{- player -}}
 

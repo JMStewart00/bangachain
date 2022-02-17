@@ -2,10 +2,14 @@
 
 namespace Drupal\state_machine\Plugin\Workflow;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+
 /**
  * Defines the class for workflow states.
  */
 class WorkflowState {
+
+  use StringTranslationTrait;
 
   /**
    * The state ID.
@@ -51,7 +55,7 @@ class WorkflowState {
    *   The translated label.
    */
   public function getLabel() {
-    return (string) t($this->label, [], ['context' => 'workflow state']);
+    return (string) $this->t($this->label, [], ['context' => 'workflow state']);
   }
 
   /**

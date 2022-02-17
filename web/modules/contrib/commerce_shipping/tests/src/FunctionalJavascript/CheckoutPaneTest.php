@@ -69,7 +69,7 @@ class CheckoutPaneTest extends CommerceWebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_payment',
     'commerce_payment_example',
     'commerce_promotion',
@@ -789,6 +789,8 @@ class CheckoutPaneTest extends CommerceWebDriverTestBase {
     $this->firstShippingMethod->set('conditions', $conditions)->save();
     $conditions['target_plugin_configuration']['zone']['territories'][0]['country_code'] = 'FR';
     $this->secondShippingMethod->set('conditions', $conditions)->save();
+    // Check if the shipping adjustment is removed in the summary.
+    $order_summary_selector = '//div[@data-drupal-selector="edit-order-summary"]';
 
     $this->drupalGet($this->firstProduct->toUrl()->toString());
     $this->submitForm([], 'Add to cart');
@@ -809,6 +811,7 @@ class CheckoutPaneTest extends CommerceWebDriverTestBase {
     else {
       $this->assertSession()->waitForText('Standard shipping');
     }
+    $this->assertSession()->elementTextContains('xpath', $order_summary_selector, 'Shipping $9.99');
     $this->getSession()->getPage()->fillField('shipping_information[shipping_profile][select_address]', '_new');
     $this->assertSession()->assertWaitOnAjaxRequest();
 
@@ -832,7 +835,9 @@ class CheckoutPaneTest extends CommerceWebDriverTestBase {
     else {
       $this->assertSession()->waitForText('There are no shipping rates available for this address.');
     }
+    $this->assertSession()->elementTextNotContains('xpath', $order_summary_selector, 'Shipping $9.99');
     $this->assertSession()->pageTextContains('There are no shipping rates available for this address.');
+
     $this->assertSession()->pageTextNotContains('An illegal choice has been detected. Please contact the site administrator.');
 
     $address_us = [
@@ -1025,10 +1030,79 @@ class CheckoutPaneTest extends CommerceWebDriverTestBase {
   }
 
   /**
+   * Tests the payment gateway filtering by shipping method.
+   */
+  public function testPaymentGatewayCondition() {
+    $checkout_flow = CheckoutFlow::load('shipping');
+    $checkout_flow_configuration = $checkout_flow->get('configuration');
+    $checkout_flow_configuration['panes']['payment_information'] = [
+      'step' => 'review',
+      'weight' => 3,
+    ];
+    $checkout_flow->set('configuration', $checkout_flow_configuration);
+    $checkout_flow->save();
+
+    $payment_gateway = PaymentGateway::create([
+      'id' => 'cash_on_delivery',
+      'label' => 'Manual',
+      'plugin' => 'manual',
+      'configuration' => [
+        'display_label' => 'Cash on delivery',
+        'instructions' => [
+          'value' => 'Sample payment instructions.',
+          'format' => 'plain_text',
+        ],
+      ],
+      'conditions' => [
+        [
+          'plugin' => 'order_shipping_method',
+          'configuration' => [
+            'shipping_methods' => [$this->secondShippingMethod->uuid()],
+          ],
+        ],
+      ],
+      'weight' => 10,
+    ]);
+    $payment_gateway->save();
+
+    $this->drupalGet($this->firstProduct->toUrl()->toString());
+    $this->submitForm([], 'Add to cart');
+    $this->drupalGet('checkout/1');
+    $page = $this->getSession()->getPage();
+
+    $address = [
+      'given_name' => 'John',
+      'family_name' => 'Smith',
+      'address_line1' => 'Hauptstrasse 38',
+      'locality' => 'Berlin',
+      'postal_code' => '75002',
+    ];
+
+    $address_prefix = 'shipping_information[shipping_profile][address][0][address]';
+    $page->fillField($address_prefix . '[country_code]', 'DE');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    foreach ($address as $property => $value) {
+      $page->fillField($address_prefix . '[' . $property . ']', $value);
+    }
+    $page->findButton('Recalculate shipping')->click();
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $page->selectFieldOption('shipping_information[shipments][0][shipping_method][0]', '2--default');
+    $this->submitForm([], 'Continue to review');
+
+    $this->assertSession()->pageTextContains('Credit card');
+    $this->assertSession()->pageTextContains('Cash on delivery');
+
+    $this->clickLink('Go back');
+    $page->selectFieldOption('shipping_information[shipments][0][shipping_method][0]', '1--default');
+    $this->assertSession()->pageTextNotContains('Cash on delivery');
+    $this->submitForm([], 'Continue to review');
+  }
+
+  /**
    * Tests that the shipping method doesn't change.
    */
   public function testSelectedShippingMethodPersists() {
-    $default_profile = $this->createEntity('profile', [
+    $this->createEntity('profile', [
       'type' => 'customer',
       'uid' => $this->adminUser->id(),
       'address' => $this->defaultAddress,

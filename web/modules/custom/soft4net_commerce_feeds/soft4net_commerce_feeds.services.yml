@@ -1,0 +1,6 @@
+services:
+  soft4net_commerce_feeds.feeds_event_subscriber:
+    class: Drupal\soft4net_commerce_feeds\EventSubscriber\FeedsEventSubscriber
+    arguments: ['@commerce_stock.service_manager', '@current_user']
+    tags:
+      - { name: 'event_subscriber' }

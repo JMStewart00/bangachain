@@ -1,0 +1,7 @@
+name: 'Soft4Net commerce_feeds'
+type: module
+description: 'Soft4Net commerce_feeds extension'
+core_version_requirement: 9.x
+package: 'Custom'
+dependencies:
+  - commerce_feeds

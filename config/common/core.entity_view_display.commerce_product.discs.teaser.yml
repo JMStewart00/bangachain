@@ -5,7 +5,6 @@ dependencies:
   config:
     - commerce_product.commerce_product_type.discs
     - core.entity_view_mode.commerce_product.teaser
-    - field.field.commerce_product.discs.feeds_item
     - field.field.commerce_product.discs.field_brand
     - field.field.commerce_product.discs.field_default_image
     - field.field.commerce_product.discs.field_description
@@ -132,7 +131,6 @@ content:
 hidden:
   add_to_cart_link: true
   created: true
-  feeds_item: true
   field_meta_tags: true
   field_no_payout_allowed: true
   field_restock_date: true

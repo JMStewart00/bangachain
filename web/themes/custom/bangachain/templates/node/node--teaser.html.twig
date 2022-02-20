@@ -77,14 +77,14 @@
   ]
 %}
 
-<a href="{{ url }}">
-  <div{{attributes.addClass(classes)}}>
-      {{ title_prefix }}
-      {{ title_suffix }}
+<article{{attributes.addClass(classes)}}>
+  <a href="{{ url }}">
+    {{ title_prefix }}
+    {{ title_suffix }}
 
-      {% block content %}
-        {{ content }}
-      {% endblock %}
-  </div>
-</a>
+    {% block content %}
+      {{ content }}
+    {% endblock %}
+  </a>
+</article>
 

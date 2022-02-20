@@ -10,6 +10,7 @@ folder: ''
 module:
   devel: 0
   upgrade_status: 0
+  dblog: 0
 theme: {  }
 blacklist: {  }
 graylist: {  }

@@ -96,6 +96,10 @@ custom_sources:
     value: stock
     label: stock
     machine_name: stock
+  shipping_weight:
+    value: shipping_weight
+    label: shipping_weight
+    machine_name: shipping_weight
 mappings:
   -
     target: product_id
@@ -170,7 +174,7 @@ mappings:
   -
     target: weight
     map:
-      number: weight
+      number: shipping_weight
     settings:
       unit: g
   -

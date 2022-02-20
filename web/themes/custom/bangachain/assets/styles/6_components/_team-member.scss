@@ -21,6 +21,18 @@
 
   &__title {
     text-transform: uppercase;
+    text-align: center;
+  }
+
+  .social-media-links--platforms {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .h3 {
+    margin-bottom: 0 !important;
   }
 }
 

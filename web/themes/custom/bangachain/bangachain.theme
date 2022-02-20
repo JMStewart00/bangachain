@@ -56,8 +56,17 @@ function bangachain_form_alter(&$form, &$form_state, $form_id) {
       $form['price'] = [
         '#type'   => 'markup',
         '#markup' => '<div class="c-product__price">$' . number_format($selected_variation->getPrice()->getNumber(), 2) . '</div>',
+        '#weight' => -100,
       ];
-      $form['price']['#weight'] = -100;
+
+      $stockServiceManager = \Drupal::service('commerce_stock.service_manager');
+      if ($stock_level = intval($stockServiceManager->getStockLevel($selected_variation))) {
+        $form['stock'] = [
+          '#type'   => 'markup',
+          '#markup' => '<div class="c-product__stock h2">' . $stock_level . ' in stock.</div>',
+          '#weight' => -99,
+        ];
+      }
     }
 
     switch ($selected_variation->bundle()) {

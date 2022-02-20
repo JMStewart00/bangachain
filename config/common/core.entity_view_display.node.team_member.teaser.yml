@@ -17,12 +17,21 @@ dependencies:
     - field.field.node.team_member.field_video
     - node.type.team_member
   module:
+    - social_media_links_field
     - user
 id: node.team_member.teaser
 targetEntityType: node
 bundle: team_member
 mode: teaser
 content:
+  field_hometown:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 3
+    region: content
   field_pdga_number:
     type: number_integer
     label: hidden
@@ -41,14 +50,25 @@ content:
     third_party_settings: {  }
     weight: 0
     region: content
+  field_social_media_links:
+    type: social_media_links_field_default
+    label: hidden
+    settings:
+      appearance:
+        orientation: v
+        show_name: 0
+      link_attributes:
+        target: _blank
+        rel: nofollow
+    third_party_settings: {  }
+    weight: 2
+    region: content
 hidden:
   body: true
   feeds_item: true
   field_favorite_discs: true
   field_handedness: true
-  field_hometown: true
   field_rating: true
-  field_social_media_links: true
   field_team_designation: true
   field_video: true
   links: true

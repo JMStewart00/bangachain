@@ -8295,7 +8295,24 @@ div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
   transform: scale(1.1); }
 
 .c-teaser-team-member__title {
-  text-transform: uppercase; }
+  text-transform: uppercase;
+  text-align: center; }
+
+.c-teaser-team-member .social-media-links--platforms {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-flow: row nowrap;
+  flex-flow: row nowrap;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  gap: 10px; }
+
+.c-teaser-team-member .h3 {
+  margin-bottom: 0 !important; }
 
 .c-node-team-member__favorite-discs {
   display: -ms-grid;

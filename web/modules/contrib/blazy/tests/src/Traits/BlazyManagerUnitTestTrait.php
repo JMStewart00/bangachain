@@ -33,7 +33,7 @@ trait BlazyManagerUnitTestTrait {
     $this->configFactory = $this->getConfigFactoryStub([
       'blazy.settings' => [
         'admin_css' => TRUE,
-        'responsive_image' => TRUE,
+        'noscript' => TRUE,
         'one_pixel' => TRUE,
         'blazy' => ['loadInvisible' => FALSE, 'offset' => 100],
       ],

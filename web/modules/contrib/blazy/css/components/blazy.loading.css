@@ -30,7 +30,7 @@
   }
 }
 
-.is-b-loading {
+.is-b-loading:not(.is-b-loaded) {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   position: relative;
@@ -38,7 +38,7 @@
 }
 
 /* Prevents costly double animations when Blur is enabled. */
-.is-b-loading:not([data-animation])::before {
+.is-b-loading:not(.is-b-loaded):not([data-animation])::before {
   content: '';
   display: block;
   width: 30px;
@@ -54,16 +54,4 @@
   z-index: 22;
   -webkit-animation: rotateplane 1.2s infinite ease-in-out;
   animation: rotateplane 1.2s infinite ease-in-out;
-}
-
-/**
- * With JS being disabled, the NOSCRIPT tag is replaced by SPAN.
- * No worries about video iframes, they are broken without JS anyway.
- * Hide JS stuffs when being disabled. Ensures to not mess up JS users.
- */
-.is-b-loading > span + .b-lazy,
-.is-b-loading > span + picture,
-.is-b-loading > span + a,
-.is-b-loading.media--player > span ~ .b-lazy {
-  display: none;
 }

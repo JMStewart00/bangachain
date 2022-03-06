@@ -54,12 +54,12 @@
     content ? 'media--rendered',
     settings.bundle ? 'media--bundle--' ~ settings.bundle|clean_class,
     settings.namespace ? 'media--' ~ settings.namespace,
-    settings.lazy and settings.use_loading ? 'is-b-loading',
     settings.media_switch ? 'media--switch media--switch--' ~ settings.media_switch|clean_class,
     settings.player ? 'media--player',
     settings.ratio ? 'media--ratio media--ratio--' ~ settings.ratio,
-    settings.responsive_image_style_id ? 'media--responsive',
     settings.type ? 'media--' ~ settings.type,
+    blazies.resimage.id ? 'media--responsive',
+    settings.use_loading or blazies.use.loader ? 'is-b-loading',
     settings.classes ? settings.classes|join(' ')|clean_class,
   ]
 %}

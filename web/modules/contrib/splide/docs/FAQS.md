@@ -1,12 +1,12 @@
-***
-***
-# <a name="faq"></a>FAQS
 
-## PROGRAMATICALLY
+***
+## <a name="faq"></a>FAQS
+
+### PROGRAMATICALLY
 [**splide.api.php**](https://git.drupalcode.org/project/splide/-/blob/1.0.x/splide.api.php)
 
 
-## QUICK PERFORMANCE TIPS
+### QUICK PERFORMANCE TIPS
 * Use lazyLoad **nearby** for tons of images, not **sequential**. Unless within
   an ajaxified lightbox.
 * Use lazyload **Blazy** for carousels below the fold to delay loading them.
@@ -20,7 +20,7 @@
 * Enable Drupal cache, and CSS/ JS assets aggregation.
 
 
-## OPTIONSETS
+### OPTIONSETS
 To create optionsets, go to:
 
   [Splide UI](/admin/config/media/splide)
@@ -28,14 +28,14 @@ To create optionsets, go to:
 Enable Splide UI sub-module first, otherwise regular **Access denied**.
 They will be available at field formatter "Manage display", and Views UI.
 
-## VIEWS AND FIELDS
+### VIEWS AND FIELDS
 Splide works with Views and as field display formatters.
 Splide Views is available as a style plugin included at splide_views.module.
 Splide Fields formatters included as a plugin which supports:
 Image, Media, Field Collection, Paragraphs, Text.
 
 
-## NESTED SPLIDES
+### NESTED SPLIDES
 Nested splide is a parent Splide containing slides which contain individual
 splide per slide. The child splides are basically regular slide overlays like
 a single video over the large background image, only with nested splides it can
@@ -44,7 +44,7 @@ Use Splide Fields with Field Collection or Paragraphs or Views to build one.
 Supported multi-value fields for nested splides: Image, Text, Media.
 
 
-## <a name="skins"></a>SKINS
+### <a name="skins"></a>SKINS
 The main purpose of skins are to demonstrate that often some CSS lines are
 enough to build fairly variant layouts. No JS needed. Unless, of course, for
 more sophisticated slider like spiral 3D carousel which is beyond what CSS can
@@ -59,7 +59,7 @@ Some default complex layout skins applied to desktop only, adjust for the mobile
 accordingly. The provided skins are very basic to support the necessary layouts.
 It is not the module job to match your awesome design requirements.
 
-### Registering Splide skins:
+#### Registering Splide skins:
 [**splide.api.php**](https://git.drupalcode.org/project/splide/-/blob/1.0.x/splide.api.php#L352)
 
 1. Copy `\Drupal\splide\Plugin\splide\SplideSkin` into your module
@@ -75,7 +75,7 @@ and arrows skins respectively.
 The declared skins will be available for custom coded, or UI selections.
 Be sure to clear cache since skins are permanently cached!
 
-### Optional skins:
+#### Optional skins:
 * **None**
 
   It is all about DIY.
@@ -139,7 +139,7 @@ Some extra skins are WIP which may not work as expected.
 Use them as starters, not final products!
 
 
-## GRID
+### GRID
 To create Splide grid or multi-row carousels, there are 3 options:
 
 1. **One row grid managed by library:**
@@ -172,7 +172,7 @@ The total amount of Views results must be bigger than `Visible slides`,
 otherwise broken Grid, see skin Grid above for more details.
 
 
-## <a name="html-structure"></a>HTML STRUCTURE
+### <a name="html-structure"></a>HTML STRUCTURE
 Unlike Slick, Splide library supports BEM.
 
 ```html
@@ -203,7 +203,7 @@ require it till further updates. Leave it as is unless you are on your own.
 Unlike Slick, Splide requires manual additions of `splide__track, splide__list`.
 
 
-## SPLIDE VS. SLICK CSS STATE CLASSES
+### SPLIDE VS. SLICK CSS STATE CLASSES
 <pre>
 * `is-mounted`       x `slick--initialized`
 * `is-carousel`      x `slick--multiple-view`
@@ -216,7 +216,7 @@ Unlike Slick, Splide requires manual additions of `splide__track, splide__list`.
 * `is-visible`       x `slick-active`
 </pre>
 
-## SPLIDE VS. SLICK CSS DISPLAY CLASSES
+### SPLIDE VS. SLICK CSS DISPLAY CLASSES
 <pre>
 * `splide--main`     x `slick--main`
 * `splide--nav`      x `slick--thumbnail`
@@ -231,7 +231,7 @@ The skin and optionset remain the same, only different namespace:
 * `splide--optionset--OPTIONSET-NAME`
 
 
-## CURRENT DEVELOPMENT STATUS
+### CURRENT DEVELOPMENT STATUS
 Alpha, Beta, DEV releases are for developers only. Beware of possible breakage.
 
 However if it is broken, unless an update is explicitly required, clearing cache
@@ -247,7 +247,7 @@ For drush users, if running regular `drush updb` and `drush cr` breaks for some
 reasons, try the good old browser above. Such breakages not necessarily relate
 to this module.
 
-## HOW CAN YOU HELP?
+### HOW CAN YOU HELP?
 Please consider helping in the issue queue, provide improvement, or helping with
 documentation.
 

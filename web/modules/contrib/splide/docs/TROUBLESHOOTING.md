@@ -1,6 +1,5 @@
 
 ***
-***
 ## <a name="troubleshooting"></a>TROUBLESHOOTING
 Please consult Slick projects for additional info such as Slick Paragraphs, etc.
 Most docs are still relevant for Splide, but might not be written at Splide.

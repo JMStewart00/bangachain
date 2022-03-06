@@ -42,6 +42,9 @@ class FeedTypeAccessControlHandlerTest extends FeedsUnitTestCase {
    * @covers ::checkAccess
    */
   public function testCheckAccess() {
+    $this->entity->id()->willReturn('feed_type');
+    $this->account->hasPermission('view feed_type feeds')->willReturn(TRUE);
+
     $method = $this->getMethod(FeedTypeAccessControlHandler::class, 'checkAccess');
     $result = $method->invokeArgs($this->controller, [
       $this->entity->reveal(),
@@ -78,6 +81,7 @@ class FeedTypeAccessControlHandlerTest extends FeedsUnitTestCase {
     ]);
     $this->assertFalse($result->isAllowed());
 
+    $this->account->hasPermission('view feed_type feeds')->willReturn(FALSE);
     $result = $method->invokeArgs($this->controller, [
       $this->entity->reveal(),
       'view',

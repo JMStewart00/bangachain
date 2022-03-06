@@ -1,6 +1,6 @@
 
 ***
-# <a name="roadmap"></a>ROADMAP/ TODO
+## <a name="roadmap"></a>ROADMAP/ TODO
 * [x] Adds a basic configuration to load the library, probably an image
   formatter.  
   2/24/2016

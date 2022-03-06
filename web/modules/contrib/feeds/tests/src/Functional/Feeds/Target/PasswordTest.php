@@ -15,7 +15,7 @@ class PasswordTest extends FeedsBrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'feeds',
     'user',
   ];

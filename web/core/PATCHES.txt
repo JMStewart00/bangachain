@@ -21,10 +21,6 @@ Conflict with field_group, missing options in sidebar when creating/updating a n
 Source: https://www.drupal.org/files/issues/2019-11-29/claro-fix_node_sidebar_accordion_items-3097407-4--fix-only.patch
 
 
-Layout builder incorrectly resolves global contexts values when viewing layouts
-Source: https://www.drupal.org/files/issues/2021-06-28/3099968-79.patch
-
-
 Break long text strings in layout edit
 Source: https://www.drupal.org/files/issues/2020-08-10/break-long-text-strings-in-layout-3016507-32.patch
 

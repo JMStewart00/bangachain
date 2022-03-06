@@ -7,7 +7,8 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 /**
  * A Trait common for deprecated methods for easy removal and declutter.
  *
- * @todo remove at blazy:8.x-2.1, or earlier.
+ * @todo deprecated in blazy:8.x-2.0 and is removed from blazy:3.0.0. Use BVEF
+ * instead.
  * @see https://www.drupal.org/node/3103018
  */
 trait BlazyDeprecatedTrait {

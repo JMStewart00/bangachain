@@ -38,14 +38,7 @@ feeds.feed_type.*:
     custom_sources:
       type: sequence
       sequence:
-        type: mapping
-        mapping:
-          value:
-            type: string
-          label:
-            type: string
-          machine_name:
-            type: string
+        type: feeds.custom_source.[type]
     mappings:
       type: sequence
       sequence:
@@ -204,3 +197,16 @@ feeds.processor.entity:
 
 feeds.processor.entity:*:
   type: feeds.processor.entity
+
+# Custom source configurations.
+feeds.custom_source.*:
+  type: mapping
+  mapping:
+    value:
+      type: string
+    label:
+      type: string
+    machine_name:
+      type: string
+    type:
+      type: string

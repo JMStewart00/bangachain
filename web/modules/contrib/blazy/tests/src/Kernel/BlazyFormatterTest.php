@@ -3,7 +3,7 @@
 namespace Drupal\Tests\blazy\Kernel;
 
 use Drupal\Core\Form\FormState;
-use Drupal\blazy\BlazyMedia;
+use Drupal\blazy\Media\BlazyMedia;
 use GuzzleHttp\Exception\GuzzleException;
 
 /**

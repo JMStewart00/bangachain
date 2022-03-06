@@ -63,7 +63,7 @@
    * @namespace
    */
   function BioMedia(options) {
-    var me = _bio.apply($.extend(_super, $.extend(fn, this)), arguments);
+    var me = _bio.apply($.extend({}, _super, $.extend({}, fn, this)), arguments);
 
     me.name = ns;
 
@@ -202,8 +202,7 @@
   // Assumed, untested, fine with combo IO + decoding checks before blur spits.
   // Shortly we are in the right direction to cope with Native vs. data-[SRC].
   // @todo recheck IF wrong so to put back https://drupal.org/node/3120696.
-  fn.natively = function () {
-    var me = this;
+  function natively(me) {
     var opts = me.options;
 
     if (!$.isNativeLazy || _isNativeChecked) {
@@ -223,6 +222,40 @@
     }
 
     _isNativeChecked = true;
+  }
+
+  // https://caniuse.com/dom-manip-convenience
+  // https://developer.mozilla.org/en-US/docs/Web/API/Element/replaceWith
+  function webp(me) {
+    if ($.webp.isSupported()) {
+      return;
+    }
+
+    var sel = function (prefix) {
+      prefix = prefix || '';
+      // IE9 err: :not(picture img)
+      return $.selector(me.options, '[' + prefix + 'srcset*=".webp"]');
+    };
+
+    var elms = $.findAll(_doc, sel());
+    if (!elms.length) {
+      elms = $.findAll(_doc, sel('data-'));
+    }
+
+    if (elms.length) {
+      $.webp.run(elms);
+    }
+  }
+
+  fn.prepare = function () {
+    var me = this;
+
+    natively(me);
+
+    // Runs after native set to minimize works.
+    if ($.webp) {
+      webp(me);
+    }
   };
 
   return BioMedia;

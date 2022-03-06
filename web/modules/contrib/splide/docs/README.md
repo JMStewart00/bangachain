@@ -1,5 +1,5 @@
 
-# <a name="top"> </a>CONTENTS OF THIS FILE
+## <a name="top"> </a>CONTENTS OF THIS FILE
 ## @todo: update from Slick docs, not all below apply to Splide.
 
  * [Introduction](#introduction)
@@ -11,14 +11,14 @@
  * [Configuration](#configuration)
  * [Splide Formatters](#formatters)
  * [Splide Paragraphs](#paragraphs)
+ * [Splide Views](#views)
  * [Troubleshooting](#troubleshooting)
  * [FAQ](#faq)
  * [Contribution](#contribution)
  * [Maintainers](#maintainers)
 
 ***
-***
-# <a name="introduction"></a>INTRODUCTION
+## <a name="introduction"></a>INTRODUCTION
 
 Visit **/admin/help/splide_ui** once Splide UI installed to read it in comfort.
 
@@ -36,8 +36,7 @@ issues might or might not be resolved, or inherited.
 
 
 ***
-***
-# <a name="requirements"> </a>REQUIREMENTS
+## <a name="requirements"> </a>REQUIREMENTS
 1. Splide library at minimum `v3+` since `1.0.1`:
    * Download Splide archive from [Splide releases](https://github.com/Splidejs/splide/releases)
    * Extract and rename it to `splide`, so the assets are at:
@@ -56,24 +55,21 @@ issues might or might not be resolved, or inherited.
    Check out Blazy installation guides!
 
 ***
-***
-# <a name="plugins"> </a>PLUGINS
-Not all plugins are supported nor implemented, below are:  
+## <a name="plugins"> </a>PLUGINS
+Not all plugins are supported or implemented, below are:  
+
 1. [AutoScroll](https://github.com/Splidejs/splide-extension-auto-scroll):  
 
-   + `/libraries/splidejs--splide-extension-auto-scroll` (via packagist)  
-   + `/libraries/splide-extension-auto-scroll` (via github)   
-
-   Or any supported path by priority, and they must have
-   `/dist/js/splide-extension-auto-scroll.min.js`.
+  + `/libraries/splidejs--splide-extension-auto-scroll` (via packagist)
+  + `/libraries/splide-extension-auto-scroll` (via github)
+  + Or any supported path by priority, and they must have `/dist/js/splide-extension-auto-scroll.min.js`.  
 
 2. [Intersection](https://github.com/Splidejs/splide-extension-intersection):  
 
-   + `/libraries/splidejs--splide-extension-intersection` (via packagist)  
-   + `/libraries/splide-extension-intersection` (via github)   
-
-   Or any supported path by priority, and they must have
-   `/dist/js/splide-extension-intersection.min.js`.
+  + `/libraries/splidejs--splide-extension-intersection` (via packagist)
+  + `/libraries/splide-extension-intersection` (via github)
+  + Or any supported path by priority, and they must have  
+     `/dist/js/splide-extension-intersection.min.js`.
 
 Packagist always takes precedence over Github.
 Unless explicitly supported, the reasons for not being supported are:  
@@ -85,9 +81,9 @@ Unless explicitly supported, the reasons for not being supported are:
   `Image to iframe` under `Media switch` option.  
 * Other plugins, nobody need them, yet. Patches are welcome.  
 
+
 ***
-***
-# <a name="installation"> </a>INSTALLATION
+## <a name="installation"> </a>INSTALLATION
 Be sure to read the entire docs and form descriptions before working with
 Splide to avoid headaches for just ~15-minute read.
 
@@ -100,9 +96,7 @@ Splide to avoid headaches for just ~15-minute read.
 2. **COMPOSER:**
 
    ```
-   $ composer require npm-asset/blazy \
-   npm-asset/splidejs--splide:^3 \
-   drupal/blazy \
+   $ composer require npm-asset/splidejs--splide:^3 \
    drupal/splide
    ```
    See [Blazy composer](/admin/help/blazy_ui#composer) for details.
@@ -112,8 +106,7 @@ Splide to avoid headaches for just ~15-minute read.
 
 
 ***
-***
-# <a name="configuration"> </a>CONFIGURATION
+## <a name="configuration"> </a>CONFIGURATION
 Visit the following to configure Splide:
 
 1. `/admin/config/media/splide`
@@ -123,6 +116,7 @@ Visit the following to configure Splide:
 2. Visit any entity types:  
   + `/admin/structure/types`
   + `/admin/structure/block/block-content/types`
+  + `/admin/structure/media`
   + `/admin/structure/paragraphs_type`
   + etc.
 
@@ -136,11 +130,10 @@ Visit the following to configure Splide:
 
 
 ***
-***
-# <a name="recommended-modules"> </a>RECOMMENDED MODULES
+## <a name="recommended-modules"> </a>RECOMMENDED MODULES
 Splide supports enhancements and more complex layouts.
 
-## OPTIONAL
+### OPTIONAL
 * Responsive Image at core D8.
 * Media at core D8.6+.
 * [Colorbox](https://drupal.org/project/colorbox), to have grids/slides that
@@ -150,7 +143,7 @@ Splide supports enhancements and more complex layouts.
   slides at field level.
 
 
-## SUB-MODULES
+### SUB-MODULES
 The Splide module has several sub-modules:
 * Splide UI, included, to manage optionsets, can be uninstalled at production.
 
@@ -161,8 +154,7 @@ The Splide module has several sub-modules:
   to have Splide within lightbox.
 
 ***
-***
-# <a name="features"></a>FEATURES
+## <a name="features"></a>FEATURES
 * Fully responsive. Scales with its container.
 * Lightweight, 26kB (11kB gzipped).
 * Accessibility friendly.
@@ -186,9 +178,9 @@ The Splide module has several sub-modules:
 * Cacheability + lazyload = light + fast.
 
 ## ROADMAP
-* Vanilla with thumbnail navigation for both Splide Views and formatters.
+* [x] Vanilla with thumbnail navigation for both Splide Views and formatters.
   - [x] Views, fixed with Rendered entity + Fields (not Content) under Format
   - [x] Media
   - [x] Entity reference
   - [X] Paragraphs
-* Bug fixes, code cleanup, optimization, and full release.
+* [?] Bug fixes, code cleanup, optimization, and full release.

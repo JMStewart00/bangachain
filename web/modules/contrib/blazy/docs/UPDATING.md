@@ -1,6 +1,9 @@
 
 ***
-# <a name="updating"></a>UPDATE SOP
+## <a name="updating"></a>UPDATE SOP
+Check [this](https://drupal.org/node/3263027#comment-14402693) out for hints
+on testing updates against Blazy ecosystem.
+
 Visit any of the following URLs when updating Blazy, or its related modules.
 Please ignore any documentation if already aware of Drupal site building. This
 is for the sake of completed documentation for those who may need it.

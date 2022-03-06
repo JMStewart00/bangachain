@@ -1,6 +1,6 @@
 
 ***
-# <a name="troubleshooting"></a>TROUBLESHOOTING
+## <a name="troubleshooting"></a>TROUBLESHOOTING
 * Any javascript-related issues might no longer be valid when
   `No JavaScript lazy` enabled. Unless the exceptions, things that Native
   doesn't support (Blur, BG, Video, etc.) are met, or for those who still
@@ -25,7 +25,7 @@
   [Check out few aspect ratio samples](https://cgit.drupalcode.org/blazy/tree/docs/ASPECT_RATIO.md)
 
 
-## 1. JavaScript Errors
+### 1. JavaScript Errors
 Any references to bLazy library is no longer required for forked version at 2.6.  
 **Symptons**:  
 Blazy is not defined. Images are gone, only eternal blue loader is
@@ -40,32 +40,32 @@ Ensure that no extras errors. Steps:
 * Try disabling `Disconnect` option under IO.  
 
 
-## 2. BLAZY GRID WITH SINGLE VALUE FIELD (D7 ONLY)
+### 2. BLAZY GRID WITH SINGLE VALUE FIELD (D7 ONLY)
 This is no issue at D8. Blazy Grid formatter is designed for multi-value fields.
 Unfortunately no handy way to disable formatters for single value at D7. So
 the formatter is available even for single value, but not actually
 functioning. Please ignore it till we can get rid of it at D7, if possible,
 without extra legs.
 
-## 3. MIN-WIDTH
+### 3. MIN-WIDTH
 If the images appear to be shrink within a **floating** container, add
 some expected width or min-width to the parent container via CSS accordingly.
 Non-floating image parent containers aren't affected.
 
-## 4. MIN-HEIGHT
+### 4. MIN-HEIGHT
 Add a min-height CSS to individual element to avoid layout reflow if not using
 **Aspect ratio** or when **Aspect ratio** is not supported such as with
 Responsive image. Otherwise some collapsed image containers will defeat the
 purpose of lazyloading. When using CSS background, the container may also be
 collapsed.
 
-### SOLUTIONS
+#### SOLUTIONS
 Both layout reflow and lazyloading delay issues are actually taken care of
 if **Aspect ratio** option is enabled in the first place.
 
 Adjust, and override blazy CSS/ JS files accordingly.
 
-## 5. BLAZY FILTER
+### 5. BLAZY FILTER
 Blazy Filter must run after **Align/ Caption filters** as otherwise the required
 CSS class `b-lazy` will be moved into `<figure>` elements and make Blazy fail
 with JS error due to not finding the required `SRC` and `[data-src]` attributes.
@@ -79,7 +79,7 @@ instead. However it might be useful for User Generated Contents (UGC) where
 Entity/Media Embed are likely more for privileged users, editors, admins, alike.
 Or when Entity/Media Embed is disabled.
 
-## 6. INTERSECTION OBSERVER API
+### 6. INTERSECTION OBSERVER API
 This API will not be used if `No JavaScript lazy` option enabled unless the
 exceptions, things that Native doesn't support (Blur, BG, Video, etc.) are met.
 * **IntersectionObserver API** is not loading all images, try disabling
@@ -91,7 +91,7 @@ exceptions, things that Native doesn't support (Blur, BG, Video, etc.) are met.
 **FYI:**
 IO is also used for infinite pager and lazyloaded blocks like seen at IO.module.
 
-## 7. BLUR IMAGE EFFECT
+### 7. BLUR IMAGE EFFECT
 `/admin/config/media/blazy`
 
 The `Image effect` Blur will override `Placeholder` option.
@@ -113,7 +113,7 @@ Currently only works with a proper `Aspect ratio` as otherwise collapsed image.
 Be sure to add one. If not, add regular CSS `width: 100%` to the blurred
 image if doable with your design.
 
-## 8. ASPECT RATIO
+### 8. ASPECT RATIO
 **UPDATE 05/02/2020**:
 Blazy RC7+ is 99% integrated with Responsive image, including
 CSS background and the notorious aspect ratio **Fluid**. The remaining 1% is
@@ -151,7 +151,7 @@ GridStack gapless grids. Image sizes, hence Aspect ratio, cannot be applied
 to gapless grids. Aspect ratio is based on image sizes, not grid sizes.
 
 
-## 9. BLAZY WITHIN SCROLLING CONTAINER DOES NOT LOAD
+### 9. BLAZY WITHIN SCROLLING CONTAINER DOES NOT LOAD
 `/admin/config/media/blazy`
 
 **Note**: `IO` does not need it, old `bLazy` does.
@@ -169,7 +169,7 @@ has CSS rules containing `overflow` with values anything but `hidden` such as
 Default to known `#drupal-modal, .is-b-scroll`.
 The `.is-b-scroll` can be used when Blazy UI is unreachable without extra legs.
 
-## 10. LINKED FIELD INTEGRATION
+### 10. LINKED FIELD INTEGRATION
 Under `Media switcher` option, only `Image to iFrame` makes sense. The rest like
 `Image to lightboxes`, or `Image linked to content` will obviously be ignored
 since these will output A tag just like what Linked Field does.
@@ -177,7 +177,7 @@ Alternatively leave `Media switcher` empty, if no videos are mixed with images.
 With `Image to iFrame`, the good thing is video will be still playable, and the
 image be linked as required. Best of Both Worlds for real.
 
-## 11. VIEWS GOTCHAS
+### 11. VIEWS GOTCHAS
 Blazy provides a simple Views field for File Entity, and Media. Also a Blazy
 Grid views style plugin.
 
@@ -193,10 +193,11 @@ This is a Views common gotcha with field formatter, so be aware of it.
 If confusing, just toggle **Use field template**, and see the output. You'll
 know which works.
 
-## 12. NATIVE GRID MASONRY
+### 12. NATIVE GRID MASONRY
 Q: The native grid masonry (_Display style_: native Grid, _Grid large_: any
    single number) doesn't have correct bottom gaps?  
 A: It does. Your eyes are likely being tricked. **Solutions**:  
+
    * Try adding background color to `.grid__content`. Notice even gaps. The
      problem is inner divities do not have 100%. Read more below.
    * If image and applicable, enable `CSS background` using Blazy formatter.
@@ -213,15 +214,16 @@ A: It does. Your eyes are likely being tricked. **Solutions**:
    * If you don't want all these headaches, consider a more robust GridStack. It
      may take care these type of issues for you.
 
-## 13. BLAZY IMAGES DO NOT LOAD
+### 13. BLAZY IMAGES DO NOT LOAD
 Images does not load within hidden tabs, or other hidden containers:  
+
 * `/admin/config/media/blazy`  
 * Enable `Load invisible` option.  
 
 Only an issue with old bLazy, not IO, AFAIK. Other than that, be sure to read
 back the topmost troubleshooting section.
 
-## 14. BROKEN MODULES
+### 14. BROKEN MODULES
 Alpha, Beta, DEV releases are for developers only. Beware of possible breakage.
 
 However if it is broken, unless an update is provided, running `drush cr` during

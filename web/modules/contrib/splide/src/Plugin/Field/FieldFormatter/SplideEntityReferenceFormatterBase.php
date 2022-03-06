@@ -63,9 +63,9 @@ abstract class SplideEntityReferenceFormatterBase extends BlazyEntityReferenceBa
     }
 
     return [
-      'thumb_captions'         => $texts,
-      'thumb_positions'        => TRUE,
-      'nav'                    => TRUE,
+      'thumb_captions'   => $texts,
+      'thumb_positions'  => TRUE,
+      'nav'              => TRUE,
       'pagination_texts' => array_merge($texts, $texts2),
     ] + $this->getCommonScopedFormElements() + parent::getScopedFormElements();
   }

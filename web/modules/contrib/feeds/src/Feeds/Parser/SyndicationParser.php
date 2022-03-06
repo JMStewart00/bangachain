@@ -6,7 +6,6 @@ use Drupal\feeds\Exception\EmptyFeedException;
 use Drupal\feeds\FeedInterface;
 use Drupal\feeds\Feeds\Item\SyndicationItem;
 use Drupal\feeds\Plugin\Type\Parser\ParserInterface;
-use Drupal\feeds\Plugin\Type\PluginBase;
 use Drupal\feeds\Result\FetcherResultInterface;
 use Drupal\feeds\Result\ParserResult;
 use Drupal\feeds\StateInterface;
@@ -22,7 +21,7 @@ use Laminas\Feed\Reader\Reader;
  *   description = @Translation("Default parser for RSS, Atom and RDF feeds.")
  * )
  */
-class SyndicationParser extends PluginBase implements ParserInterface {
+class SyndicationParser extends ParserBase implements ParserInterface {
 
   /**
    * {@inheritdoc}
@@ -84,6 +83,7 @@ class SyndicationParser extends PluginBase implements ParserInterface {
 
       if ($media_content = $entry->getMediaContent()) {
         $item->set('mediarss_content', $media_content['url']);
+        $item->set('mediarss_description', $media_content['description']);
       }
 
       if ($media_thumbnail = $entry->getMediaThumbnail()) {
@@ -190,6 +190,10 @@ class SyndicationParser extends PluginBase implements ParserInterface {
       'mediarss_content' => [
         'label' => $this->t('Media content'),
         'description' => $this->t('Available if the feed supports the Media RSS specification. Can contain audio, video or other media.'),
+      ],
+      'mediarss_description' => [
+        'label' => $this->t('Media description'),
+        'description' => $this->t('Available if the feed supports the Media RSS specification. Text that describes the media object.'),
       ],
       'mediarss_thumbnail' => [
         'label' => $this->t('Media thumbnail'),

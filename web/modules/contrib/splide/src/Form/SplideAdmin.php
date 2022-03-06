@@ -524,15 +524,34 @@ class SplideAdmin implements SplideAdminInterface {
    * is possible to narrow the list to include only fields that are present on
    * every bundle.
    */
-  public function getValidFieldOptions(array $bundles, string $target_type, array $valid_field_types = [
-    'string',
-    'text',
-  ]) {
+  public function getValidFieldOptions(
+    array $bundles,
+    string $target_type,
+    array $valid_field_types = [
+      'string',
+      'text',
+    ]): array {
+
+    $storage = $this->manager->getEntityTypeManager()->getStorage('field_config');
     $candidate_fields = [];
 
-    foreach ($bundles as $bundle) {
+    // Fix for Views UI not recognizing Media bundles, unlike Formatters.
+    if (empty($bundles) && $bundle_service = self::service('entity_type.bundle.info')) {
+      $bundles = $bundle_service->getBundleInfo($target_type);
+    }
+
+    foreach ($bundles as $bundle => $label) {
       $candidate_fields[$bundle] = [];
-      foreach ($this->entityFieldManager->getFieldDefinitions($target_type, $bundle) as $field) {
+      $fields = $this->entityFieldManager->getFieldDefinitions($target_type, $bundle);
+
+      if (empty($fields)) {
+        $fields = $storage->loadByProperties([
+          'entity_type' => $target_type,
+          'bundle' => $bundle,
+        ]);
+      }
+
+      foreach ((array) $fields as $field) {
         if (is_a($field, 'Drupal\field\Entity\FieldConfig') and in_array($field->getType(), $valid_field_types)) {
           $candidate_fields[$bundle][$field->getName()] = $field->getLabel();
         }
@@ -544,7 +563,7 @@ class SplideAdmin implements SplideAdminInterface {
       $valid_fields = reset($candidate_fields);
     }
     elseif (count($candidate_fields) > 1) {
-      $valid_fields = call_user_func_array('array_intersect', $candidate_fields);
+      $valid_fields = call_user_func_array('array_intersect', array_values($candidate_fields));
     }
 
     return $valid_fields;
@@ -555,6 +574,13 @@ class SplideAdmin implements SplideAdminInterface {
    */
   public function finalizeForm(array &$form, $definition = []): void {
     $this->blazyAdmin->finalizeForm($form, $definition);
+  }
+
+  /**
+   * Returns a wrapper to pass tests, or DI where adding params is troublesome.
+   */
+  private static function service($service) {
+    return \Drupal::hasService($service) ? \Drupal::service($service) : NULL;
   }
 
 }

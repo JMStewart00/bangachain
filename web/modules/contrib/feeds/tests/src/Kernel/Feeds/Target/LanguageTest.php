@@ -23,7 +23,7 @@ class LanguageTest extends FeedsKernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'field',
     'node',
     'feeds',

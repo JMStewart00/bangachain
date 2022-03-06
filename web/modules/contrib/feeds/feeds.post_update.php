@@ -7,6 +7,7 @@
 
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\feeds\FeedTypeInterface;
+use Drupal\feeds\Feeds\Parser\CsvParser;
 
 /**
  * Replace deprecated action ID's for 'update_non_existent' setting.
@@ -33,5 +34,31 @@ function feeds_post_update_actions_update_non_existent(&$sandbox = NULL) {
         return TRUE;
       };
       return FALSE;
+    });
+}
+
+/**
+ * Add types to existing custom sources on feeds parsers.
+ */
+function feeds_post_update_custom_sources(&$sandbox = NULL) {
+  \Drupal::classResolver(ConfigEntityUpdater::class)
+    ->update($sandbox, 'feeds_feed_type', function (FeedTypeInterface $feed_type) {
+      $parser = $feed_type->getParser();
+      if ($parser instanceof CsvParser) {
+        $custom_source_type = 'csv';
+      }
+      else {
+        return FALSE;
+      }
+
+      // Add type to custom sources to those that don't have it yet.
+      foreach ($feed_type->getCustomSources() as $name => $custom_source) {
+        if (empty($custom_source['type'])) {
+          $custom_source['type'] = $custom_source_type;
+          $feed_type->addCustomSource($name, $custom_source);
+        }
+      }
+
+      return TRUE;
     });
 }

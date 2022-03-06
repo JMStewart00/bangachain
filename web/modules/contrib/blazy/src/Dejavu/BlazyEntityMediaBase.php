@@ -5,7 +5,7 @@ namespace Drupal\blazy\Dejavu;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\blazy\BlazyDefault;
-use Drupal\blazy\BlazyMedia;
+use Drupal\blazy\Media\BlazyMedia;
 
 /**
  * Base class for Media entity reference formatters with field details.

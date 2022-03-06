@@ -54,7 +54,7 @@ class ProductTypeListBuilder extends ConfigEntityListBuilder {
   public function buildHeader() {
     $header['name'] = $this->t('Product type');
     $header['type'] = $this->t('ID');
-    $header['product_variation_type'] = $this->t('Product variation type');
+    $header['product_variation_types'] = $this->t('Product variation types');
     return $header + parent::buildHeader();
   }
 
@@ -62,17 +62,16 @@ class ProductTypeListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    $variation_type = $this->variationTypeStorage->load($entity->getVariationTypeId());
+    $variation_types = $this->variationTypeStorage->loadMultiple($entity->getVariationTypeIds());
     $row['name'] = $entity->label();
     $row['type'] = $entity->id();
-    if (empty($variation_type)) {
-      $row['product_variation_type'] = $this->t('N/A');
-    }
-    else {
-      $row['product_variation_type']['data'] = [
+    $row['product_variation_type'] = ['data' => []];
+    foreach ($variation_types as $variation_type) {
+      $row['product_variation_type']['data'][] = [
         '#type' => 'link',
         '#title' => $variation_type->label(),
         '#url' => $variation_type->toUrl('edit-form'),
+        '#suffix' => '<br />',
       ];
     }
     return $row + parent::buildRow($entity);

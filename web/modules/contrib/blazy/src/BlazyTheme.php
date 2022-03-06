@@ -5,6 +5,7 @@ namespace Drupal\blazy;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Template\Attribute;
+use Drupal\blazy\Media\BlazyFile;
 
 /**
  * Provides theme-related alias methods to de-clutter Blazy.
@@ -63,8 +64,10 @@ class BlazyTheme {
     }
 
     // Provides sensible default html settings to shutup notices when lacking.
-    $settings  = &$variables['settings'];
+    $attributes = &$variables['attributes'];
+    $settings = &$variables['settings'];
     $settings += BlazyDefault::itemSettings();
+    $blazies = &$settings['blazies'];
 
     // Do not proceed if no URI is provided. URI is not Blazy theme property.
     // Blazy is a wrapper for theme_[(responsive_)image], etc. who wants URI.
@@ -74,8 +77,11 @@ class BlazyTheme {
 
     // URL and dimensions are built out at BlazyManager::preRenderBlazy().
     // Still provides a failsafe for direct call to theme_blazy().
-    if (empty($settings['_api'])) {
-      Blazy::urlAndDimensions($settings, $variables['item']);
+    if (!$blazies->get('_api')) {
+      // Prepares URI, extension, image styles, lightboxes.
+      BlazyFile::prepare($settings);
+      BlazyFile::urlAndDimensions($settings, $variables['item']);
+      BlazyFile::lazyOrNot($settings);
     }
 
     // Allows rich Media entities stored within `content` to take over.
@@ -87,18 +93,15 @@ class BlazyTheme {
     // Aspect ratio to fix layout reflow with lazyloaded images responsively.
     // This is outside 'lazy' to allow non-lazyloaded iframe/content use it too.
     // Prevents double padding hacks with AMP which also uses similar technique.
-    $stack = Blazy::requestStack();
-    $amp = $stack && $stack->getCurrentRequest()->query->get('amp');
-    $settings['ratio'] = empty($settings['width']) || $amp ? '' : $settings['ratio'];
-
+    $settings['ratio'] = empty($settings['width']) || $blazies->get('is.amp') ? '' : $settings['ratio'];
     if ($settings['ratio']) {
-      Blazy::aspectRatioAttributes($variables['attributes'], $settings);
+      Blazy::aspectRatioAttributes($attributes, $settings);
     }
 
     // Makes a little BEM order here due to Twig ignoring the preset priority.
-    $attributes = &$variables['attributes'];
     $classes = (array) ($attributes['class'] ?? []);
     $attributes['class'] = array_merge(['media', 'media--blazy'], $classes);
+    $variables['blazies'] = $settings['blazies'];
   }
 
   /**
@@ -124,7 +127,8 @@ class BlazyTheme {
    */
   public static function fileVideo(array &$variables): void {
     if ($files = $variables['files']) {
-      if (empty($variables['attributes']['data-b-nojs'])) {
+      $use_dataset = empty($variables['attributes']['data-b-undata']);
+      if ($use_dataset) {
         $variables['attributes']->addClass(['b-lazy']);
         foreach ($files as $file) {
           $source_attributes = &$file['source_attributes'];
@@ -138,19 +142,23 @@ class BlazyTheme {
         if ($blazy->get('image') && $blazy->get('uri')) {
           $settings = $blazy->storage();
           $settings['_dimensions'] = TRUE;
+          $blazies = &$settings['blazies'];
 
           BlazyFile::imageUrl($settings);
 
+          if (!$blazies->get('use.loader') && $use_dataset) {
+            $blazies->set('use.loader', TRUE);
+          }
           if (!empty($settings['image_url'])) {
             $variables['attributes']->setAttribute('poster', $settings['image_url']);
           }
-          if (!empty($settings['lightbox'])) {
+          if ($blazies->get('lightbox') && !empty($settings['_richbox'])) {
             $variables['attributes']->setAttribute('autoplay', TRUE);
           }
         }
       }
 
-      $attrs = ['data-b-lazy', 'data-b-nojs'];
+      $attrs = ['data-b-lazy', 'data-b-undata'];
       $variables['attributes']->addClass(['media__element']);
       $variables['attributes']->removeAttribute($attrs);
     }
@@ -285,8 +293,15 @@ class BlazyTheme {
   private static function thirdPartyField(array &$variables): void {
     $element = $variables['element'];
     $settings = $element['#blazy'] ?? [];
+
+    if (!isset($settings['blazies'])) {
+      $settings += BlazyDefault::htmlSettings();
+    }
+
     $settings['third_party'] = $element['#third_party_settings'];
-    $is_nojs = !empty($settings['is_nojs']);
+    $blazies = &$settings['blazies'];
+    // @todo re-check at CKEditor.
+    $is_undata = $blazies->get('is.undata');
 
     foreach ($variables['items'] as &$item) {
       if (empty($item['content'])) {
@@ -295,8 +310,9 @@ class BlazyTheme {
 
       $item_attributes = &$item['content'][isset($item['content']['#attributes']) ? '#attributes' : '#item_attributes'];
       $item_attributes['data-b-lazy'] = TRUE;
-      if ($is_nojs) {
-        $item_attributes['data-b-nojs'] = TRUE;
+
+      if ($is_undata) {
+        $item_attributes['data-b-undata'] = TRUE;
       }
     }
 

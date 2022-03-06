@@ -4,14 +4,16 @@
  * A launcher for responsive (remote|local) videos, Responsive|Picture images.
  */
 
-(function ($, Drupal, drupalSettings, _d, _win) {
+(function ($, _d, Drupal, drupalSettings, _win, _doc) {
 
   'use strict';
 
-  var cboxTimer;
+  var _context = _doc;
+  var _id = 'colorbox';
+  var _idOnce = 'b-' + _id;
   var $body = $('body');
-  var _mounted = 'litebox--on';
-  var _element = '[data-colorbox-trigger]:not(.' + _mounted + ')';
+  var _element = '[data-' + _id + '-trigger]';
+  var cboxTimer;
 
   /**
    * Blazy Colorbox utility functions.
@@ -75,7 +77,10 @@
         t.css('top', -(h - ph) / 2);
       }
       else if (h < ph) {
-        t.css({height: ph, width: 'auto'});
+        t.css({
+          height: ph,
+          width: 'auto'
+        });
         t.css('left', -(t.width() - pw) / 2);
       }
       else if (pw > w) {
@@ -138,12 +143,18 @@
             if ($iframe.length) {
               $container.addClass('media media--ratio');
               $iframe.attr('width', o.width).attr('height', o.height).addClass('media__element');
-              $container.css({paddingBottom: (o.height / o.width) * 100 + '%', height: 0});
+              $container.css({
+                paddingBottom: (o.height / o.width) * 100 + '%',
+                height: 0
+              });
             }
           }
           else {
             $container.removeClass('media media--ratio');
-            $container.css({paddingBottom: '', height: o.height}).removeClass('media__element');
+            $container.css({
+              paddingBottom: '',
+              height: o.height
+            }).removeClass('media__element');
           }
 
           $.colorbox.resize({
@@ -155,7 +166,6 @@
     }
 
     $box.colorbox($.extend({}, _cbox, runtimeOptions));
-    $box.addClass(_mounted);
   }
 
   /**
@@ -165,26 +175,26 @@
    */
   Drupal.behaviors.blazyColorbox = {
     attach: function (context) {
+
       var _cbox = drupalSettings.colorbox;
-      if (_d.isUnd(_cbox)) {
+
+      // Disable Colorbox for small screens.
+      if (_d.isUnd(_cbox) || _cbox.mobiledetect && _d.matchMedia(_cbox.mobiledevicewidth)) {
         return;
       }
 
-      if (_cbox.mobiledetect && _win.matchMedia) {
-        // Disable Colorbox for small screens.
-        var mq = _win.matchMedia('(max-device-width: ' + _cbox.mobiledevicewidth + ')');
-        if (mq.matches) {
-          return;
-        }
-      }
+      _context = _d.context(context);
 
-      context = _d.context(context);
-
-      var elms = _d.once(process, _element, context);
+      var elms = _d.once(process, _idOnce, _element, _context);
       if (elms.length) {
         $('#colorbox').attr('aria-label', 'color box');
+      }
+    },
+    detach: function (context, setting, trigger) {
+      if (trigger === 'unload') {
+        _d.once.removeSafely(_idOnce, _element, _context);
       }
     }
   };
 
-})(jQuery, Drupal, drupalSettings, dBlazy, this);
+})(jQuery, dBlazy, Drupal, drupalSettings, this, this.document);

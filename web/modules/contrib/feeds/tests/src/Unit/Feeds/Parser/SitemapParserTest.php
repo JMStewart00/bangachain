@@ -7,7 +7,6 @@ use Drupal\feeds\Feeds\Parser\SitemapParser;
 use Drupal\feeds\Result\RawFetcherResult;
 use Drupal\feeds\State;
 use Drupal\Tests\feeds\Unit\FeedsUnitTestCase;
-use Exception;
 
 /**
  * @coversDefaultClass \Drupal\feeds\Feeds\Parser\SitemapParser
@@ -85,7 +84,7 @@ class SitemapParserTest extends FeedsUnitTestCase {
   public function testInvalidFeed() {
     $fetcher_result = new RawFetcherResult('beep boop', $this->getMockFileSystem());
 
-    $this->expectException(Exception::class);
+    $this->expectException(\Exception::class);
     $result = $this->parser->parse($this->feed, $fetcher_result, $this->state);
   }
 

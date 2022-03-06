@@ -5,6 +5,7 @@ namespace Drupal\Tests\blazy\FunctionalJavascript;
 use Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\blazy\Blazy;
 use Drupal\blazy\BlazyDefault;
 use Drupal\Tests\blazy\Traits\BlazyUnitTestTrait;
 use Drupal\Tests\blazy\Traits\BlazyCreationTestTrait;
@@ -51,7 +52,7 @@ class BlazyFilterJavaScriptTest extends WebDriverTestBase {
 
     $this->setUpVariables();
 
-    $this->root                   = $this->container->getParameter('app.root');
+    $this->root                   = Blazy::root($this->container);
     $this->fileSystem             = $this->container->get('file_system');
     $this->entityFieldManager     = $this->container->get('entity_field.manager');
     $this->formatterPluginManager = $this->container->get('plugin.manager.field.formatter');

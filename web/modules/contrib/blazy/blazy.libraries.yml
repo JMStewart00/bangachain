@@ -65,6 +65,7 @@ load:
 
 # Compat methods between Native and lazyload script when being ditched to enact
 # lost module features: Blur, VIDEO, multi-breakpoint BG and aspect ratio.
+# @todo refine to not depend on bio.media.
 compat:
   js:
     js/blazy.compat.min.js: { minified: true, weight: -1.4 }
@@ -148,7 +149,7 @@ flex:
     component:
       css/components/grid/blazy.flex.css: {}
   js:
-    js/components/grid/blazy.flex.min.js: { minified: true }
+    js/components/grid/blazy.flex.min.js: { minified: true, weight: -0.04 }
   dependencies:
     - blazy/compat
 
@@ -167,8 +168,11 @@ nativegrid:
     - blazy/base
 
 nativegrid.masonry:
+  css:
+    component:
+      css/components/grid/blazy.nativegrid.masonry.css: {}
   js:
-    js/components/grid/blazy.nativegrid.masonry.min.js: { minified: true }
+    js/components/grid/blazy.nativegrid.masonry.min.js: { minified: true, weight: -0.04 }
   dependencies:
     - blazy/compat
     - blazy/nativegrid
@@ -202,6 +206,35 @@ colorbox:
     - blazy/ratio
     - colorbox/colorbox
 
+# A decent altenative for the deprecated photobox, and too old colorbox.
+# Cannot depend on its module due to libraries and loader are not separated.
+magnific_popup:
+  remote: http://dimsemenov.com/plugins/magnific-popup/
+  version: 1.0
+  license:
+    name: MIT
+    url: https://github.com/dimsemenov/Magnific-Popup/blob/master/LICENSE
+    gpl-compatible: true
+  js:
+    /libraries/magnific-popup/dist/jquery.magnific-popup.min.js: { minified: true }
+  css:
+    base:
+      /libraries/magnific-popup/dist/magnific-popup.css: {}
+  dependencies:
+    - core/jquery
+
+mfp:
+  css:
+    theme:
+      css/components/box/blazy.mfp.css: {}
+  js:
+    js/components/jquery/blazy.mfp.min.js: { minified: true }
+  dependencies:
+    - blazy/magnific_popup
+    # @todo revert if not enough: - blazy/compat
+    - blazy/lightbox
+    - blazy/media
+
 admin:
   css:
     theme:
@@ -213,6 +246,7 @@ admin:
     - core/jquery
     - blazy/drupal
     - blazy/dblazy
+    - blazy/dom
 
 # deprecated at 2.5 and removed at 3.+, unmaintained. Use PhotoSwipe, etc.
 photobox:

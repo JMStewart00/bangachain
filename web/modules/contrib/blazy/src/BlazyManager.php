@@ -4,10 +4,10 @@ namespace Drupal\blazy;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Cache\Cache;
+use Drupal\blazy\Media\BlazyFile;
 
 /**
  * Implements a public facing blazy manager.
@@ -74,12 +74,13 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
 
     // Fetch the newly modified settings.
     $settings = $element['#settings'];
+    $blazies = &$settings['blazies'];
 
     if ($settings['media_switch']) {
       if ($settings['media_switch'] == 'content' && !empty($settings['content_url'])) {
         $element['#url'] = $settings['content_url'];
       }
-      elseif ($settings['lightbox']) {
+      elseif ($blazies->get('lightbox')) {
         BlazyLightbox::build($element);
       }
     }
@@ -99,20 +100,12 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
   protected function prepareBlazy(array &$element, array $build) {
     $item = $build['item'];
     $settings = &$build['settings'];
-    $settings['_api'] = TRUE;
-    $pathinfo = pathinfo($settings['uri']);
-    $settings['extension'] = $pathinfo['extension'] ?? '';
-    $settings['unstyled'] = BlazyUtil::unstyled($settings);
-    $settings['_richbox'] = !empty($settings['colorbox']) || !empty($settings['_richbox']);
-    $settings['is_external'] = UrlHelper::isExternal($settings['uri']);
+    $blazies = &$settings['blazies'];
 
-    // Disable image style if so configured.
-    if ($settings['unstyled']) {
-      $images = ['box', 'box_media', 'image', 'thumbnail', 'responsive_image'];
-      foreach ($images as $image) {
-        $settings[$image . '_style'] = '';
-      }
-    }
+    $blazies->set('_api', TRUE);
+
+    // Prepares URI, extension, image styles, lightboxes.
+    BlazyFile::prepare($settings);
 
     foreach (BlazyDefault::themeAttributes() as $key) {
       $key = $key . '_attributes';
@@ -130,7 +123,7 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
 
     // Prepare image URL and its dimensions, including for rich-media content,
     // such as for local video poster image if a poster URI is provided.
-    Blazy::urlAndDimensions($settings, $item);
+    BlazyFile::urlAndDimensions($settings, $item);
 
     // Only process (Responsive) image/ video if no rich-media are provided.
     $this->buildContent($element, $build);
@@ -138,10 +131,13 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
       $this->buildMedia($element, $build);
     }
 
+    // Must listen to BG `unlazy`.
+    BlazyFile::lazyOrNot($settings);
+
     // Multi-breakpoint aspect ratio only applies if lazyloaded.
     // These may be set once at formatter level, or per breakpoint above.
-    if (!empty($settings['blazy_data']['dimensions'])) {
-      $attributes['data-dimensions'] = Json::encode($settings['blazy_data']['dimensions']);
+    if (!$blazies->get('is.undata') && $ratios = $blazies->get('ratios', [])) {
+      $attributes['data-ratios'] = Json::encode($ratios);
     }
 
     // Provides extra attributes as needed, excluding url, item, done above.
@@ -168,173 +164,6 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
     // which cannot be simply dumped as array without elaborate arrangements).
     foreach (['content', 'icon', 'overlay', 'preface', 'postscript'] as $key) {
       $element["#$key"] = empty($element["#$key"]) ? $build[$key] : NestedArray::mergeDeep($element["#$key"], $build[$key]);
-    }
-  }
-
-  /**
-   * Build out (rich media) content.
-   */
-  protected function buildContent(array &$element, array &$build) {
-    $settings = &$build['settings'];
-    if (empty($build['content'])) {
-      return;
-    }
-
-    // Prevents complication for now, such as lightbox for Facebook, etc.
-    // Either makes no sense, or not currently supported without extra legs.
-    // Original formatter settings can still be accessed via content variable.
-    $settings = array_merge($settings, BlazyDefault::richSettings());
-
-    // Supports HTML content for lightboxes as long as having image trigger.
-    // Type rich to not conflict with Image rendered by its formatter option.
-    $rich = $settings['type'] == 'rich' && !empty($settings['_richbox']);
-    if ($rich && $blazy = ($build['content'][0]['#settings'] ?? NULL)) {
-      if (!empty($settings['_hires']) && $blazy->get('lightbox')) {
-        // Overrides the overriden settings with original formatter settings.
-        $settings = array_merge($settings, $blazy->storage());
-
-        $element['#lightbox_html'] = $build['content'];
-        $build['content'] = [];
-      }
-    }
-  }
-
-  /**
-   * Build out (Responsive) image.
-   */
-  private function buildMedia(array &$element, array &$build) {
-    $item = $build['item'];
-    $settings = &$build['settings'];
-    $attributes = &$build['attributes'];
-
-    // (Responsive) image with item attributes, might be RDF.
-    $item_attributes = empty($build['item_attributes']) ? [] : BlazyUtil::sanitize($build['item_attributes']);
-
-    // Extract field item attributes for the theme function, and unset them
-    // from the $item so that the field template does not re-render them.
-    if ($item && isset($item->_attributes)) {
-      $item_attributes += $item->_attributes;
-      unset($item->_attributes);
-    }
-
-    // Responsive image integration, with/o CSS background so to work with.
-    // Prevents _responsive_image_build_source_attributes from WSOD if missing.
-    // Avoided is_file() check due to ramifications, see #3225859.
-    if ($settings['resimage'] && !$settings['unstyled']) {
-      try {
-        $this->buildResponsiveImage($element, $attributes, $settings);
-      }
-      catch (\Exception $e) {
-        // Silently failed like regular images when missing rather than WSOD.
-      }
-    }
-
-    // Regular image, with/o CSS background so to work with.
-    if (empty($settings['responsive_image_style_id'])) {
-      $this->buildImage($element, $attributes, $item_attributes, $settings);
-    }
-
-    // Pass non-rich-media elements to theme_blazy().
-    $element['#item_attributes'] = $item_attributes;
-
-    // The settings.urls is output specific for CSS background purposes with BC.
-    if (!empty($settings['urls'])) {
-      // @todo remove .media--background for .b-bg as more relevant for BG.
-      $attributes['class'][] = 'b-bg media--background';
-      $attributes['data-b-bg'] = Json::encode($settings['urls']);
-
-      if ($settings['is_sandboxed'] || $settings['is_amp']) {
-        Blazy::inlineStyle($attributes, 'background-image: url(' . $settings['image_url'] . ');');
-      }
-    }
-
-    $this->blur($element, $attributes, $settings);
-  }
-
-  /**
-   * Build out the blur image.
-   */
-  private function blur(array &$element, array &$attributes, array &$settings) {
-    if ($settings['fx'] && !$settings['unstyled']) {
-      $blur = [
-        '#theme' => 'image',
-        '#uri' => $settings['placeholder_ui'] ?: $settings['placeholder'],
-        '#attributes' => [
-          'class' => ['b-lazy', 'b-blur', 'b-blur--tmp'],
-          'data-src' => $settings['placeholder_fx'],
-          'loading' => 'lazy',
-          'decoding' => 'async',
-        ],
-      ];
-
-      // Reset as already stored.
-      unset($settings['placeholder_fx']);
-      $element['#preface']['blur'] = $blur;
-
-      if (($settings['width'] ?? 0) > 980) {
-        $attributes['class'][] = 'media--fx-lg';
-      }
-    }
-  }
-
-  /**
-   * Build out Responsive image.
-   */
-  private function buildResponsiveImage(array &$element, array &$attributes, array &$settings) {
-    $settings['responsive_image_style_id'] = $settings['resimage']->id();
-    $responsive_image = BlazyResponsiveImage::getStyles($settings['resimage']);
-    $element['#cache']['tags'] = $responsive_image['caches'];
-
-    // Makes Responsive image usable as CSS background image sources.
-    if ($settings['background']) {
-      $srcset = $dimensions = [];
-      foreach ($responsive_image['styles'] as $style) {
-        $styled = array_merge($settings, BlazyFile::transformDimensions($style, $settings, FALSE));
-
-        // Sort image URLs based on width.
-        $data = BlazyFile::backgroundImage($styled, $style);
-        $srcset[$styled['width']] = $data;
-        $dimensions[$styled['width']] = $data['ratio'];
-      }
-
-      // Sort the srcset from small to large image width or multiplier.
-      ksort($srcset);
-      ksort($dimensions);
-      $settings['urls'] = $srcset;
-
-      // Dynamic aspect ratio is useless without JS.
-      $settings['blazy_data']['dimensions'] = $dimensions;
-      $settings['padding_bottom'] = end($dimensions);
-
-      // To make compatible with old bLazy which expects no placeholder, provide
-      // a real smallest image. Bio will map it to the current breakpoint later.
-      $bg = reset($settings['urls']);
-      $settings['image_url'] = $settings['is_nojs'] ? $settings['image_url'] : $bg['src'];
-      Blazy::lazyAttributes($attributes, $settings);
-    }
-  }
-
-  /**
-   * Build out image, or anything related, including cache, CSS background, etc.
-   */
-  private function buildImage(array &$element, array &$attributes, array &$item_attributes, array &$settings) {
-    if ($settings['background']) {
-      // Attach data attributes to either IMG tag, or DIV container.
-      $settings['urls'][$settings['width']] = BlazyFile::backgroundImage($settings);
-      $settings['image_url'] = $settings['is_nojs'] ? $settings['image_url'] : $settings['placeholder'];
-      Blazy::lazyAttributes($attributes, $settings);
-    }
-
-    if (empty($settings['_no_cache'])) {
-      $file_tags = $settings['file_tags'] ?? [];
-      $settings['cache_tags'] = empty($settings['cache_tags']) ? $file_tags : Cache::mergeTags($settings['cache_tags'], $file_tags);
-
-      $element['#cache']['max-age'] = -1;
-      foreach (['contexts', 'keys', 'tags'] as $key) {
-        if (!empty($settings['cache_' . $key])) {
-          $element['#cache'][$key] = $settings['cache_' . $key];
-        }
-      }
     }
   }
 
@@ -371,6 +200,7 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
   public function build(array $build = []) {
     $settings = &$build['settings'];
     $settings += BlazyDefault::htmlSettings();
+    $blazies = &$settings['blazies'];
     $settings['_grid'] = $settings['_grid'] ?? ($settings['style'] && $settings['grid']);
 
     // If not a grid, pass the items as regular index children to theme_field().
@@ -393,7 +223,7 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
       ];
 
       // Yet allows theme_field(), if so required, such as for linked_field.
-      $build = $settings['use_field'] ? [$content] : $content;
+      $build = $blazies->get('use.field') ? [$content] : $content;
     }
 
     $this->moduleHandler->alter('blazy_build', $build, $settings);
@@ -470,6 +300,155 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
     // grouped. Meaning not a problem at all, only a problem for consistency.
     $build = $build['items'] ?? $build;
     unset($build['items'], $build['settings']);
+  }
+
+  /**
+   * Build out (rich media) content.
+   */
+  protected function buildContent(array &$element, array &$build) {
+    $settings = &$build['settings'];
+    if (empty($build['content'])) {
+      return;
+    }
+
+    // Prevents complication for now, such as lightbox for Facebook, etc.
+    // Either makes no sense, or not currently supported without extra legs.
+    // Original formatter settings can still be accessed via content variable.
+    $settings = array_merge($settings, BlazyDefault::richSettings());
+
+    // Supports HTML content for lightboxes as long as having image trigger.
+    // Type rich to not conflict with Image rendered by its formatter option.
+    $rich = $settings['type'] == 'rich' && !empty($settings['_richbox']);
+    if ($rich && $blazy = ($build['content'][0]['#settings'] ?? NULL)) {
+      if (!empty($settings['_hires']) && $blazy->get('lightbox')) {
+        // Overrides the overriden settings with original formatter settings.
+        $settings = array_merge($settings, $blazy->storage());
+
+        $element['#lightbox_html'] = $build['content'];
+        $build['content'] = [];
+      }
+    }
+  }
+
+  /**
+   * Build out (Responsive) image.
+   */
+  private function buildMedia(array &$element, array &$build) {
+    $item = $build['item'];
+    $settings = &$build['settings'];
+    $attributes = &$build['attributes'];
+    $blazies = &$settings['blazies'];
+
+    // (Responsive) image with item attributes, might be RDF.
+    $item_attributes = empty($build['item_attributes']) ? [] : BlazyUtil::sanitize($build['item_attributes']);
+
+    // Extract field item attributes for the theme function, and unset them
+    // from the $item so that the field template does not re-render them.
+    if ($item && isset($item->_attributes)) {
+      $item_attributes += $item->_attributes;
+      unset($item->_attributes);
+    }
+
+    // Responsive image integration, with/o CSS background so to work with.
+    // Prevents _responsive_image_build_source_attributes from WSOD if missing.
+    // Avoided is_file() check due to ramifications, see #3225859.
+    if ($blazies->get('resimage.style') && !$blazies->get('is.unstyled')) {
+      try {
+        $this->buildResponsiveImage($element, $attributes, $settings);
+      }
+      catch (\Exception $e) {
+        // Silently failed like regular images when missing rather than WSOD.
+      }
+    }
+
+    // Regular image, with/o CSS background so to work with.
+    if (!$blazies->get('resimage.id')) {
+      $this->buildImage($element, $attributes, $item_attributes, $settings);
+    }
+
+    // Pass non-rich-media elements to theme_blazy().
+    $element['#item_attributes'] = $item_attributes;
+
+    // The settings.bgs is output specific for CSS background purposes with BC.
+    if ($bgs = $blazies->get('bgs')) {
+      // @todo remove .media--background for .b-bg as more relevant for BG.
+      $attributes['class'][] = 'b-bg media--background';
+      $attributes['data-b-bg'] = Json::encode($bgs);
+
+      if ($blazies->get('is.static')) {
+        Blazy::inlineStyle($attributes, 'background-image: url(' . $settings['image_url'] . ');');
+      }
+    }
+
+    if ($blazies->get('libs.blur')) {
+      BlazyUtil::blur($element, $attributes, $settings);
+    }
+  }
+
+  /**
+   * Build out Responsive image.
+   */
+  private function buildResponsiveImage(array &$element, array &$attributes, array &$settings) {
+    $blazies = &$settings['blazies'];
+    $responsive_image = $blazies->get('resimage');
+    $element['#cache']['tags'] = $responsive_image['caches'];
+
+    // Makes Responsive image usable as CSS background image sources.
+    // @todo merge it with BlazyFormatter + BlazyFilter.
+    if ($settings['background']) {
+      $srcset = $ratios = [];
+      foreach ($responsive_image['styles'] as $style) {
+        $styled = array_merge($settings, BlazyFile::transformDimensions($style, $settings, FALSE));
+
+        // Sort image URLs based on width.
+        $data = BlazyFile::backgroundImage($styled, $style);
+        $srcset[$styled['width']] = $data;
+        $ratios[$styled['width']] = $data['ratio'];
+      }
+
+      // Sort the srcset from small to large image width or multiplier.
+      ksort($srcset);
+      ksort($ratios);
+
+      $blazies->set('bgs', $srcset)
+        ->set('ratios', $ratios)
+        ->set('item.padding_bottom', end($ratios));
+
+      // To make compatible with old bLazy which expects no placeholder, provide
+      // a real smallest image. Bio will map it to the current breakpoint later.
+      $bg = reset($srcset);
+      $unlazy = $settings['unlazy'] = $blazies->get('is.undata');
+      $settings['image_url'] = $unlazy ? $settings['image_url'] : $bg['src'];
+      Blazy::lazyAttributes($attributes, $settings);
+    }
+  }
+
+  /**
+   * Build out image, or anything related, including cache, CSS background, etc.
+   */
+  private function buildImage(array &$element, array &$attributes, array &$item_attributes, array &$settings) {
+
+    $blazies = &$settings['blazies'];
+    if ($settings['background']) {
+
+      // Attach data attributes to either IMG tag, or DIV container.
+      $blazies->set('bgs.' . $settings['width'], BlazyFile::backgroundImage($settings));
+      $unlazy = $settings['unlazy'] = $blazies->get('is.undata');
+      $settings['image_url'] = $unlazy ? $settings['image_url'] : $blazies->get('ui.placeholder');
+      Blazy::lazyAttributes($attributes, $settings);
+    }
+
+    if (empty($settings['_no_cache'])) {
+      $file_tags = $settings['file_tags'] ?? [];
+      $settings['cache_tags'] = empty($settings['cache_tags']) ? $file_tags : Cache::mergeTags($settings['cache_tags'], $file_tags);
+
+      $element['#cache']['max-age'] = -1;
+      foreach (['contexts', 'keys', 'tags'] as $key) {
+        if (!empty($settings['cache_' . $key])) {
+          $element['#cache'][$key] = $settings['cache_' . $key];
+        }
+      }
+    }
   }
 
   /**

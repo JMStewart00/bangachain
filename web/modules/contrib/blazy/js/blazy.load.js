@@ -20,10 +20,12 @@
 
   'use strict';
 
+  var _context = _doc;
   var _id = 'blazy';
-  var _mounted = _id + '--on';
-  var _element = '.' + _id + ':not(.' + _mounted + ')';
-  var _elementGlobal = 'html';
+  var _idOnce = _id;
+  var _element = '.' + _id;
+  var _elementGlobal = 'body';
+  var _idOnceGlobal = 'b-root';
   var _data = 'data';
   var _checked = 'b-checked';
   var _errorClass = 'errorClass';
@@ -167,8 +169,6 @@
     _opts = me.merge(opts);
     me.revalidate = me.revalidate || $.hasClass(elm, _id + '--revalidate');
 
-    $.addClass(elm, _mounted);
-
     // Each cointainer may have different image styles and aspect ratio.
     // Provides marker to call event once, since adding classes make no sense.
     // @todo this can be removed when we figure out a better solution.
@@ -214,17 +214,23 @@
     attach: function (context) {
 
       var me = Drupal.blazy;
-      var doc = $.context(context);
+      _context = $.context(context);
 
-      me.context = doc;
+      me.context = _context;
 
       // Processes .blazy, if available, without initialization.
       // Initialization is not per container to also support IO with root.
       // @todo replace with core/once when min D9.2, and or after sub-modules.
-      $.once(process.bind(me), _element, doc);
+      $.once(process.bind(me), _idOnce, _element, _context);
 
       // Initializes blazy once as a global observer, not per container.
-      $.once(init.bind(me), _elementGlobal, doc);
+      $.once(init.bind(me), _idOnceGlobal, _elementGlobal, _context);
+    },
+    detach: function (context, setting, trigger) {
+      if (trigger === 'unload') {
+        $.once.removeSafely(_idOnce, _element, _context);
+        $.once.removeSafely(_idOnceGlobal, _elementGlobal, _context);
+      }
     }
   };
 

@@ -46,6 +46,7 @@ use Drupal\commerce\Entity\CommerceBundleEntityBase;
  *     "label",
  *     "description",
  *     "variationType",
+ *     "variationTypes",
  *     "multipleVariations",
  *     "injectVariationFields",
  *     "traits",
@@ -67,7 +68,7 @@ class ProductType extends CommerceBundleEntityBase implements ProductTypeInterfa
    *
    * @var string
    */
-  protected $description;
+  protected $description = '';
 
   /**
    * The variation type ID.
@@ -75,6 +76,13 @@ class ProductType extends CommerceBundleEntityBase implements ProductTypeInterfa
    * @var string
    */
   protected $variationType;
+
+  /**
+   * The variation type IDs.
+   *
+   * @var array
+   */
+  protected $variationTypes = [];
 
   /**
    * Whether products of this type can have multiple variations.
@@ -93,14 +101,14 @@ class ProductType extends CommerceBundleEntityBase implements ProductTypeInterfa
   /**
    * {@inheritdoc}
    */
-  public function getDescription() {
+  public function getDescription() : string {
     return $this->description;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setDescription($description) {
+  public function setDescription($description) : ProductTypeInterface {
     $this->description = $description;
     return $this;
   }
@@ -108,14 +116,17 @@ class ProductType extends CommerceBundleEntityBase implements ProductTypeInterfa
   /**
    * {@inheritdoc}
    */
-  public function getVariationTypeId() {
-    return $this->variationType;
+  public function getVariationTypeId() : ?string {
+    if (count($this->getVariationTypeIds()) > 1) {
+      throw new \RuntimeException(sprintf('"%s" supports multiple variation types.', $this->label()));
+    }
+    return $this->variationType ?? reset($this->variationTypes);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setVariationTypeId($variation_type_id) {
+  public function setVariationTypeId(string $variation_type_id) : ProductTypeInterface {
     $this->variationType = $variation_type_id;
     return $this;
   }
@@ -123,14 +134,34 @@ class ProductType extends CommerceBundleEntityBase implements ProductTypeInterfa
   /**
    * {@inheritdoc}
    */
-  public function allowsMultipleVariations() {
+  public function getVariationTypeIds() : array {
+    if (!empty($this->variationTypes)) {
+      return array_filter($this->variationTypes);
+    }
+    else {
+      return [$this->variationType];
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setVariationTypeIds(array $variation_type_ids) : ProductTypeInterface {
+    $this->variationTypes = $variation_type_ids;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function allowsMultipleVariations() : bool {
     return $this->multipleVariations;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setMultipleVariations($multiple_variations) {
+  public function setMultipleVariations(bool $multiple_variations) : ProductTypeInterface {
     $this->multipleVariations = $multiple_variations;
     return $this;
   }
@@ -138,15 +169,15 @@ class ProductType extends CommerceBundleEntityBase implements ProductTypeInterfa
   /**
    * {@inheritdoc}
    */
-  public function shouldInjectVariationFields() {
+  public function shouldInjectVariationFields() : bool {
     return $this->injectVariationFields;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setInjectVariationFields($inject) {
-    $this->injectVariationFields = (bool) $inject;
+  public function setInjectVariationFields(bool $inject) : ProductTypeInterface {
+    $this->injectVariationFields = $inject;
     return $this;
   }
 

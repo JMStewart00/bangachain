@@ -22,6 +22,14 @@ class SplideFormatter extends BlazyFormatter implements SplideFormatterInterface
     $settings['item_id']   = 'slide';
     $settings['namespace'] = 'splide';
 
+    // Splide specific stuffs.
+    // @todo move this into ::prepareData() post Blazy 2.7.
+    $build['optionset'] = $optionset = Splide::loadWithFallback($settings['optionset']);
+    if (isset($settings['blazies'])) {
+      $blazies = &$settings['blazies'];
+      $blazies->set('initial', $optionset->getSetting('start'));
+    }
+
     // Pass basic info to parent::buildSettings().
     parent::buildSettings($build, $items);
   }
@@ -33,9 +41,6 @@ class SplideFormatter extends BlazyFormatter implements SplideFormatterInterface
     parent::preBuildElements($build, $items, $entities);
 
     $settings = &$build['settings'];
-
-    // Splide specific stuffs.
-    $build['optionset'] = Splide::loadWithFallback($settings['optionset']);
 
     // Only display thumbnail nav if having at least 2 slides. This might be
     // an issue such as for ElevateZoom Plus module, but it should work it out.

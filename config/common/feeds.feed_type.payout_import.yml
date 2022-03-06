@@ -7,8 +7,8 @@ dependencies:
   module:
     - commerce_feeds
     - commerce_giftcard
-label: 'Payout Import'
 id: payout_import
+label: 'Payout Import'
 description: 'Importing payout for giftcards.'
 help: ''
 import_period: -1
@@ -32,27 +32,33 @@ processor_configuration:
   expire: -1
   owner_feed_author: true
   owner_id: 0
+  insert_new: 1
 custom_sources:
   code:
     value: Code
     label: Code
     machine_name: code
+    type: csv
   balance:
     value: Balance
     label: Balance
     machine_name: balance
+    type: csv
   owner:
     value: Owner
     label: Owner
     machine_name: owner
+    type: csv
   status:
     value: Status
     label: Status
     machine_name: status
+    type: csv
   stores:
     value: Stores
     label: Stores
     machine_name: stores
+    type: csv
 mappings:
   -
     target: code

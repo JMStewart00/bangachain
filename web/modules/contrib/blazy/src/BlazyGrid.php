@@ -19,7 +19,11 @@ class BlazyGrid {
    *   The modified array of grid items.
    */
   public static function build(array $items = [], array $settings = []): array {
-    $settings += BlazyDefault::htmlSettings();
+    if (!isset($settings['blazies'])) {
+      $settings += BlazyDefault::htmlSettings();
+    }
+
+    $blazies = &$settings['blazies'];
     $style = $settings['style'];
     $settings['_grid'] = $is_grid = $settings['_grid'] ?? ($style && $settings['grid']);
     $item_class = $is_grid ? 'grid' : 'blazy__item';
@@ -62,7 +66,7 @@ class BlazyGrid {
 
     // Supports field label via Field UI, unless use_field takes place.
     $title = '';
-    if (empty($settings['use_field'])
+    if (!$blazies->get('use.field')
       && isset($settings['label'], $settings['label_display'])
       && $settings['label_display'] != 'hidden') {
       $title = $settings['label'];
@@ -89,7 +93,8 @@ class BlazyGrid {
    * Provides reusable container attributes.
    */
   public static function attributes(array &$attributes, array $settings = []): void {
-    $is_gallery = !empty($settings['lightbox']) && !empty($settings['gallery_id']);
+    $blazies = &$settings['blazies'];
+    $is_gallery = $blazies->get('lightbox') && !empty($settings['gallery_id']);
 
     // Provides data-attributes to avoid conflict with original implementations.
     Blazy::containerAttributes($attributes, $settings);

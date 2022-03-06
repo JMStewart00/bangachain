@@ -2,7 +2,6 @@
 
 namespace Drupal\blazy;
 
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FormatterInterface;
 use Drupal\editor\Entity\Editor;
@@ -30,6 +29,8 @@ class BlazyAlter {
     if (isset($definitions[$formatter])) {
       $mappings = &$definitions[$formatter]['mapping'];
       $settings = $settings ?: BlazyDefault::extendedSettings() + BlazyDefault::gridSettings();
+      $settings += BlazyDefault::deprecatedSettings();
+
       foreach ($settings as $key => $value) {
         // Seems double is ignored, and causes a missing schema, unlike float.
         $type = gettype($value);
@@ -62,8 +63,7 @@ class BlazyAlter {
     // and dependency-free and a dependency for many other generic ones.
     // @todo watch out for core @todo to remove drupal namespace for debounce.
     $debounce = 'drupal.debounce';
-    $is_debounce = $extension === 'core' && isset($libraries[$debounce]);
-    if ($is_debounce) {
+    if ($extension === 'core' && isset($libraries[$debounce])) {
       $libraries[$debounce]['js']['misc/debounce.js'] = ['weight' => -16];
     }
 
@@ -82,20 +82,25 @@ class BlazyAlter {
       foreach ($polyfills as $id) {
         // Matches common core polyfills' weight.
         $weight = $id == 'polyfill' ? -21 : -20;
+        $weight = $id == 'webp' ? -5.5 : $weight;
         $common = ['minified' => TRUE, 'weight' => $weight];
         $libraries[$id] = [
           'js' => [
             'js/polyfill/blazy.' . $id . '.min.js' => $common,
           ],
         ];
+
+        if ($id == 'webp') {
+          $libraries[$id]['dependencies'][] = 'blazy/dblazy';
+        }
       }
 
       // Plugins extending dBlazy.
       foreach (BlazyDefault::plugins() as $id) {
-        $base = $id == 'viewport' || $id == 'css';
+        $base = in_array($id, ['viewport', 'dataset', 'css', 'dom']);
         $deps = $base ? ['blazy/dblazy', 'blazy/base'] : ['blazy/xlazy'];
         if ($id == 'xlazy') {
-          $deps = ['blazy/viewport'];
+          $deps = ['blazy/viewport', 'blazy/dataset', 'blazy/dom'];
         }
         $weight = $base ? -5.6 : -5.5;
         $common = ['minified' => TRUE, 'weight' => $weight];
@@ -201,19 +206,6 @@ class BlazyAlter {
     $on = $context['formatter']->getThirdPartySetting('blazy', 'blazy', FALSE);
     if ($on && in_array($context['formatter']->getPluginId(), self::thirdPartyFormatters())) {
       $summary[] = 'Blazy';
-    }
-  }
-
-  /**
-   * Attaches Colorbox if so configured.
-   */
-  public static function attachColorbox(array &$load, $attach = []): void {
-    if (\Drupal::hasService('colorbox.attachment')) {
-      $dummy = [];
-      \Drupal::service('colorbox.attachment')->attach($dummy);
-      $load = isset($dummy['#attached']) ? NestedArray::mergeDeep($load, $dummy['#attached']) : $load;
-      $load['library'][] = 'blazy/colorbox';
-      unset($dummy);
     }
   }
 

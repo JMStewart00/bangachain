@@ -2,11 +2,10 @@ services:
   blazy.manager.base:
     abstract: true
     class: Drupal\blazy\BlazyManagerBase
-    arguments: ['@entity.repository', '@entity_type.manager', '@module_handler', '@renderer', '@config.factory', '@cache.default']
+    arguments: ['%app.root%', '@entity.repository', '@entity_type.manager', '@module_handler', '@renderer', '@config.factory', '@cache.default']
     calls:
       # @todo remove and use DI instead after sub-module updates, and put as the
       # last argument only if to support careless users ignoring hook_update().
-      - [setRoot, ['%app.root%']]
       - [setLanguageManager, ['@language_manager']]
 
   blazy.manager:
@@ -19,7 +18,7 @@ services:
     parent: blazy.manager
 
   blazy.oembed:
-    class: Drupal\blazy\BlazyOEmbed
+    class: Drupal\blazy\Media\BlazyOEmbed
     arguments: ['@request_stack', '@media.oembed.resource_fetcher', '@media.oembed.url_resolver', '@media.oembed.iframe_url_helper', '@image.factory', '@blazy.manager']
 
   blazy.entity:
@@ -52,7 +51,7 @@ services:
 
   # @todo deprecate this if you can't make it non-static at blazy: 8.3+.
   blazy.media:
-    class: Drupal\blazy\BlazyMedia
+    class: Drupal\blazy\Media\BlazyMedia
     # @todo arguments: ['@blazy.entity']
 
   # @todo deprecated and is removed for blazy.formatter at blazy: 8.3+.

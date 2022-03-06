@@ -1,6 +1,6 @@
 
 ***
-# <a name="composer"></a>INSTALLING THIRD-PARTY LIBRARIES VIA COMPOSER
+## <a name="composer"></a>INSTALLING THIRD-PARTY LIBRARIES VIA COMPOSER
 
 Until Drupal has an official [core management of the 3rd-party front-end libraries](https://www.drupal.org/project/drupal/issues/2873160), there are various ways to
 install third party bower (deprecated)/ npm asset libraries.
@@ -18,7 +18,7 @@ plugins, and other workarounds to make Composer workflow easier. As many
 alternatives, it is not covered here. Please find more info on the
 above-mentioned issues.
 
-## VIA ASSET-PACKAGIST.ORG
+### VIA ASSET-PACKAGIST.ORG
 If using [asset-packagist.org](https://asset-packagist.org/), regardless cons,
 be sure to set up your composer.json correctly, some distros use it, see
 [Slick](https://drupal.org/project/slick) project for the supporting distros to

@@ -57,6 +57,7 @@
   .block-flex > .grid,
   .item-list > .block-flex > .grid {
     display: flex;
+    overflow: hidden;
   }
 
   .blazy.small-block-flex-2 > .grid {

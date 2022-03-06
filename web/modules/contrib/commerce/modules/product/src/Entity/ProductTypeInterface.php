@@ -13,10 +13,13 @@ interface ProductTypeInterface extends CommerceBundleEntityInterface, EntityDesc
   /**
    * Gets the product type's matching variation type ID.
    *
-   * @return string
-   *   The variation type ID.
+   * @return string|null
+   *   The variation type ID
+   *
+   * @throws \RuntimeException
+   *   If the product type allows multiple variation types.
    */
-  public function getVariationTypeId();
+  public function getVariationTypeId() : ?string;
 
   /**
    * Sets the product type's matching variation type ID.
@@ -26,7 +29,25 @@ interface ProductTypeInterface extends CommerceBundleEntityInterface, EntityDesc
    *
    * @return $this
    */
-  public function setVariationTypeId($variation_type_id);
+  public function setVariationTypeId(string $variation_type_id) : self;
+
+  /**
+   * Gets the product type's matching variation type IDs.
+   *
+   * @return array
+   *   The variation type ID.
+   */
+  public function getVariationTypeIds() : array;
+
+  /**
+   * Sets the product type's matching variation type IDs.
+   *
+   * @param array $variation_type_ids
+   *   The variation type IDs.
+   *
+   * @return $this
+   */
+  public function setVariationTypeIds(array $variation_type_ids) : self;
 
   /**
    * Gets whether products of this type can have multiple variations.
@@ -35,7 +56,7 @@ interface ProductTypeInterface extends CommerceBundleEntityInterface, EntityDesc
    *   TRUE if products of this type can have multiple variations,
    *   FALSE otherwise.
    */
-  public function allowsMultipleVariations();
+  public function allowsMultipleVariations() : bool;
 
   /**
    * Sets whether products of this type can have multiple variations.
@@ -45,7 +66,7 @@ interface ProductTypeInterface extends CommerceBundleEntityInterface, EntityDesc
    *
    * @return $this
    */
-  public function setMultipleVariations($multiple_variations);
+  public function setMultipleVariations(bool $multiple_variations) : self;
 
   /**
    * Gets whether variation fields should be injected into the rendered product.
@@ -54,7 +75,7 @@ interface ProductTypeInterface extends CommerceBundleEntityInterface, EntityDesc
    *   TRUE if the variation fields should be injected into the rendered
    *   product, FALSE otherwise.
    */
-  public function shouldInjectVariationFields();
+  public function shouldInjectVariationFields() : bool;
 
   /**
    * Sets whether variation fields should be injected into the rendered product.
@@ -64,6 +85,6 @@ interface ProductTypeInterface extends CommerceBundleEntityInterface, EntityDesc
    *
    * @return $this
    */
-  public function setInjectVariationFields($inject);
+  public function setInjectVariationFields(bool $inject) : self;
 
 }

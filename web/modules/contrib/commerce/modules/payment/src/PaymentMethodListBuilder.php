@@ -65,6 +65,10 @@ class PaymentMethodListBuilder extends EntityListBuilder {
       $icon = 'payment-method-icon--' . $entity->card_type->value;
       $row['label']['data']['#prefix'] = '<span class="payment-method-icon ' . $icon . '"></span>';
     }
+    if ($entity->isDefault()) {
+      $row['label']['data']['#markup'] .= ' <span class="payment-method-default-indicator">' . $this->t('(Default)') . '</span>';
+    }
+
     $row['expires']['data'] = [
       '#markup' => $expires ? date('n/Y', $expires) : $this->t('Never'),
     ];

@@ -25,9 +25,11 @@ options:
       breakpoint: 769
       unsplide: false
       settings:
+        focus: center
         perPage: 5
     -
       breakpoint: 481
       unsplide: false
       settings:
+        focus: center
         perPage: 3

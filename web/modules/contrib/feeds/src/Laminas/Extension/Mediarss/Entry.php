@@ -48,7 +48,13 @@ class Entry extends AbstractEntry {
         'url' => $media->getAttribute('url'),
         'width' => $media->getAttribute('width'),
         'height' => $media->getAttribute('height'),
+        'description' => '',
       ];
+
+      $media_description = $this->getMediaElement('description');
+      if (!empty($media_description) && is_object($media_description)) {
+        $this->data[$media_key]['description'] = $media_description->textContent;
+      }
     }
 
     return $this->data[$media_key];

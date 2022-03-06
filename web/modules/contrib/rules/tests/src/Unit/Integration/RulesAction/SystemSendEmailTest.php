@@ -98,9 +98,15 @@ class SystemSendEmailTest extends RulesIntegrationTestBase {
    */
   public function testSendMailToTwoRecipients() {
     $to = ['mail@example.com', 'mail2@example.com'];
+
+    // Use a language other than the site default.
+    $language = $this->prophesize(LanguageInterface::class);
+    $language->getId()->willReturn('da');
+
     $this->action->setContextValue('to', $to)
       ->setContextValue('subject', 'subject')
-      ->setContextValue('message', 'hello');
+      ->setContextValue('message', 'hello')
+      ->setContextValue('language', $language->reveal());
 
     $params = [
       'subject' => 'subject',
@@ -110,7 +116,7 @@ class SystemSendEmailTest extends RulesIntegrationTestBase {
     $this->mailManager->mail(
       'rules', 'rules_action_mail_' . $this->action->getPluginId(),
       implode(', ', $to),
-      LanguageInterface::LANGCODE_SITE_DEFAULT,
+      $language->reveal()->getId(),
       $params,
       NULL
     )

@@ -131,7 +131,8 @@ class ProductAttributesOverview extends FormatterBase implements ContainerFactor
     $attribute_storage = $this->entityTypeManager->getStorage('commerce_product_attribute');
     /** @var \Drupal\commerce_product\Entity\ProductTypeInterface $product_bundle */
     $product_bundle = $product_type_storage->load($this->fieldDefinition->getTargetBundle());
-    $attribute_map = $this->attributeFieldManager->getFieldMap($product_bundle->getVariationTypeId());
+    $product_variation_types = $product_bundle->getVariationTypeIds();
+    $attribute_map = $this->attributeFieldManager->getFieldMap(reset($product_variation_types));
     $used_attributes = [];
     foreach (array_column($attribute_map, 'attribute_id') as $item) {
       $attribute = $attribute_storage->load($item);
@@ -238,7 +239,9 @@ class ProductAttributesOverview extends FormatterBase implements ContainerFactor
   public static function isApplicable(FieldDefinitionInterface $field_definition) {
     $entity_type = $field_definition->getTargetEntityTypeId();
     $field_name = $field_definition->getName();
-    return $entity_type == 'commerce_product' && $field_name == 'variations';
+    $handler_settings = $field_definition->getSetting('handler_settings');
+    $target_bundles = $handler_settings['target_bundles'] ?? [];
+    return $entity_type == 'commerce_product' && $field_name == 'variations' && count($target_bundles) == 1;
   }
 
 }

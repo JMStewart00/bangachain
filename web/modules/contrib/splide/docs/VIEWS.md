@@ -1,6 +1,6 @@
+
 ***
-***
-# <a name="formatters"> </a>SPLIDE VIEWS
+## <a name="views"> </a>SPLIDE VIEWS
 
 This adds two new display styles to views called:
 
@@ -15,14 +15,14 @@ want to configure your Views display using Splide Slider through the web
 interface. This ensures you can leave Views UI off once everything is setup.
 
 
-## REQUIREMENTS
+### REQUIREMENTS
 * Views (in core)
 
 Be sure to install the Splide X
 to avoid adventures in the first place.
 
 
-## INSTALLATION & OPTION SETS:
+### INSTALLATION & OPTION SETS:
 Arm yourself with proper option sets. To create one, go to:
 
 **/admin/config/media/splide**
@@ -31,12 +31,12 @@ Be sure to install the Splide UI module first, included in the main Splide
 module, otherwise no such URL, and regular access denied error.
 
 
-## CONFIGURATION & USAGE:
+### CONFIGURATION & USAGE:
 Splide Views comes with two flavors: **Splide Slider** and **Splide Grouping**.
 
 Go to Views UI **/admin/structure/views**, add a new view, and a block.
 
-### Usage #1
+#### Usage #1
 Displaying multiple (rendered) entities for the slides.
 
 * Choose **Splide Slider** under the Format.
@@ -50,7 +50,7 @@ Themeing is related to their own entity display outside the Views UI.
 
 * Blogs, teams, testimonials, case studies sliders, etc.
 
-### Usage #2
+#### Usage #2
 Displaying multiple entities using selective fields for the slides.
 
 * Choose **Splide Slider** under the Format.
@@ -65,7 +65,7 @@ Themeing is all yours inside the Views UI.
 
 * similar as above.
 
-### Usage #3
+#### Usage #3
 Displaying a single multiple-value field in a single entity display for the
 slides. Use it either with contextual filter by NID, or filter criteria by NID.
 
@@ -87,7 +87,7 @@ the goodness of Views to provide better markups manually.
   slideshow.
 
 
-### Usage #4
+#### Usage #4
 A combination of (#1 or #2) and #3 to build nested slicks.
 
 **Example use case**:
@@ -96,7 +96,7 @@ A combination of (#1 or #2) and #3 to build nested slicks.
 * A large product/ portfolio slideshow containing a grid of slides.
 * A news slideshow containing latest related news items per slide.
 
-## GOTCHAS:
+### GOTCHAS:
 If you are choosing a single multi-value field (such as images, Media files, or
 Field collection fields) rather displaying various fields from multiple nodes,
 make sure to:

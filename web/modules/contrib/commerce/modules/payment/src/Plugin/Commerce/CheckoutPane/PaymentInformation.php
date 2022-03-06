@@ -207,15 +207,23 @@ class PaymentInformation extends CheckoutPaneBase {
     // Store the options for submitPaneForm().
     $pane_form['#payment_options'] = $options;
 
-    // If this is an existing payment method, return the pane form.
-    // Editing payment methods at checkout is not supported.
-    if ($default_option->getPaymentMethodId()) {
-      return $pane_form;
-    }
-
     $default_payment_gateway_id = $default_option->getPaymentGatewayId();
     $payment_gateway = $payment_gateways[$default_payment_gateway_id];
     $payment_gateway_plugin = $payment_gateway->getPlugin();
+
+    // If this is an existing payment method, return the pane form.
+    // Editing payment methods at checkout is not supported.
+    if ($default_option->getPaymentMethodId()) {
+      $payment_method_storage = $this->entityTypeManager->getStorage('commerce_payment_method');
+      /** @var \Drupal\commerce_payment\Entity\PaymentMethodInterface $payment_method */
+      $payment_method = $payment_method_storage->load($default_option->getPaymentMethodId());
+      // If the payment method hasn't been tokenized yet, allow updating the
+      // billing information.
+      if (empty($payment_method->getRemoteId()) && $payment_gateway_plugin->collectsBillingInformation()) {
+        $pane_form = $this->buildBillingProfileForm($pane_form, $form_state);
+      }
+      return $pane_form;
+    }
 
     // If this payment gateway plugin supports creating tokenized payment
     // methods before processing payment, we build the "add-payment-method"

@@ -36,7 +36,7 @@ class RulesAdminAccessTest extends RulesIntegrationTestBase {
     // RulesActionBase class for the test.
     $action = $this->getMockBuilder(RulesActionBase::class)
       ->disableOriginalConstructor()
-      ->setMethods(['getPluginDefinition'])
+      ->onlyMethods(['getPluginDefinition'])
       ->getMockForAbstractClass();
 
     $action

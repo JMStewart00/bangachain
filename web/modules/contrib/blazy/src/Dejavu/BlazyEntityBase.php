@@ -30,6 +30,10 @@ abstract class BlazyEntityBase extends EntityReferenceFormatterBase {
 
       $build['settings']['delta'] = $delta;
       $build['settings']['langcode'] = $langcode;
+      if ($bundle = $entity->bundle()) {
+        $build['settings']['bundles'][$bundle] = $bundle;
+      }
+
       $this->buildElement($build, $entity, $langcode);
 
       // Add the entity to cache dependencies so to clear when it is updated.

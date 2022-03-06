@@ -6,6 +6,9 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Render\Element;
+use Drupal\blazy\Media\BlazyResponsiveImage;
+use Drupal\blazy\Media\BlazyMedia;
+use Drupal\blazy\Media\BlazyOEmbedInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -66,9 +69,10 @@ class BlazyEntity implements BlazyEntityInterface {
       return [];
     }
 
-    // Supports core Media via Drupal\blazy\BlazyOEmbed::getMediaItem().
+    // Supports core Media via Drupal\blazy\Media\BlazyOEmbed::getMediaItem().
     $data['settings'] = empty($data['settings']) ? [] : $data['settings'];
 
+    $this->blazyManager->prepareData($data, $entity);
     $this->blazyManager->getCommonSettings($data['settings']);
     $this->blazyManager->getEntitySettings($data['settings'], $entity);
     $this->oembed->getMediaItem($data, $entity);
@@ -76,13 +80,9 @@ class BlazyEntity implements BlazyEntityInterface {
     $settings = &$data['settings'];
 
     // Made Responsive image also available outside formatters here.
-    if (!empty($settings['resimage'])) {
-      if (!empty($settings['preload'])) {
-        BlazyResponsiveImage::sources($settings);
-      }
-      if ($settings['ratio'] == 'fluid') {
-        BlazyResponsiveImage::dimensions($settings, FALSE);
-      }
+    $blazies = &$settings['blazies'];
+    if (!empty($blazies->get('resimage.style'))) {
+      BlazyResponsiveImage::dimensionsAndSources($settings, FALSE);
     }
 
     // Only pass to Blazy for known entities related to File or Media.

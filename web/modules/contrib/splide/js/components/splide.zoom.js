@@ -12,7 +12,7 @@
     var o = Splide.options;
     var oz = o.zoom || {};
     var max = oz.max || 1.5;
-    var min = oz.min || 0.6;
+    var min = oz.min || 0.8;
     var zoomOn = oz.on || false;
     var zoomScale = oz.scale || false;
     var zoomClick = oz.click || false;
@@ -34,22 +34,25 @@
     var _offset = 0;
     var _sizes = {};
     var _targets = [];
-    var cw;
-    var ch;
-    var nw;
-    var nh;
-    // @todo var mw;
-    // @todo var mh;
-    // @todo var size;
-    var de = _doc.documentElement;
-    var wh = _win.innerHeight || de.clientHeight;
-    var ww = _win.innerWidth || de.clientWidth;
-    var _dataSplide = 'data-splide';
-    var dataCw = _dataSplide + '-cw';
-    var dataCh = _dataSplide + '-ch';
-    var dataNw = _dataSplide + '-nw';
-    var dataNh = _dataSplide + '-nh';
     var _scrollRaf = null;
+
+    function dim(el, which) {
+      return which === 'width' ? el.offsetWidth : el.offsetHeight;
+    }
+
+    function updateDim(el, fit) {
+      var ow = el.dataset.sNw;
+      var oh = el.dataset.sNh;
+
+      var cw = el.dataset.sCw;
+      var ch = el.dataset.sCh;
+
+      var eh = _ds.attr(el, 'height', oh);
+      var ew = _ds.attr(el, 'width', ow);
+
+      el.style.width = (fit ? ew : cw) + 'px';
+      el.style.height = (fit ? eh : ch) + 'px';
+    }
 
     return {
       currSlide: null,
@@ -92,60 +95,12 @@
         if (_targets.length) {
           $.forEach(_targets, function (el) {
             var img = el.querySelector('.' + _isZoomable);
-            if (img !== null) {
-              me.fit(img);
+            if (img) {
               me.scale(false, img);
               me.bindWheel(el, true, me.zoom.bind(me));
             }
           });
         }
-      },
-
-      fit: function (el) {
-        var me = this;
-        var oh = el.offsetHeight;
-        var ow = el.offsetWidth;
-        var rh = parseInt(_ds.attr(el, 'height', 0));
-        var rw = parseInt(_ds.attr(el, 'width', 0));
-
-        if (oh > wh) {
-          if (wh / oh > ww / ow) {
-            nw = ww;
-            nh = oh * (ww / ow);
-          }
-          else {
-            nw = ow * (wh / oh);
-            nh = wh;
-          }
-        }
-
-        var dims = me.sizes(el);
-        if (!me.isEmpty(dims) && (dims.nw || dims.w)) {
-          cw = dims.w;
-          ch = dims.h;
-          nw = dims.nw || nw;
-          nh = dims.nh || nh;
-
-          me.toData(el);
-
-          if (!_ds.attr(el, dataNh)) {
-            el.setAttribute(dataCw, cw);
-            el.setAttribute(dataCh, ch);
-            el.setAttribute(dataNw, nw);
-            el.setAttribute(dataNh, nh);
-
-            // @todo size = _ds.resize(cw, ch, mw, mh);
-          }
-        }
-
-        if (rh < wh) {
-          nh = rh;
-          nw = rw;
-          el.dataset.splideFit = 1;
-        }
-
-        el.style.width = nw + 'px';
-        el.style.height = nh + 'px';
       },
 
       bindWheel: function (el, bind, callback) {
@@ -154,8 +109,66 @@
         });
       },
 
+      fit: function (el) {
+        var img = el.target || el;
+        var p = $.closest(img, '.slide');
+        var ph = dim(p, 'height');
+        var pw = ph;
+        var cw;
+        var ch;
+        var ratio = 0;
+        var ow = img.naturalWidth;
+        var oh = img.naturalHeight;
+        var eh = _ds.attr(img, 'width', oh);
+
+        img.style.width = 'auto';
+        img.style.height = 'auto';
+
+        if (ow > pw && ow > oh) {
+          ratio = ow / oh;
+          cw = pw;
+          ch = (pw / ratio);
+        }
+        else if (oh > ph && oh > ow) {
+          ratio = oh / ow;
+
+          cw = (ph / ratio);
+          ch = ph;
+        }
+        else {
+          cw = pw;
+          ch = ph;
+        }
+
+        var fit = eh < ph;
+        img.dataset.sFit = fit ? 1 : 0;
+
+        img.dataset.sNw = ow;
+        img.dataset.sNh = oh;
+
+        img.dataset.sCw = cw;
+        img.dataset.sCh = ch;
+
+        img.dataset.sRatio = ratio;
+
+        updateDim(img, fit);
+      },
+
       prepare: function () {
         var me = this;
+        var elms = _doc.querySelectorAll('.' + _isZoomable);
+
+        if (elms.length) {
+          $.forEach(elms, function (el) {
+            if (el.complete) {
+              me.fit(el);
+            }
+            else {
+              $.one(el, 'load', me.fit.bind(me));
+            }
+          });
+        }
+
         if (me.currSlide) {
           _target = me.currSlide.slide.querySelector(zoomTarget);
           if (_target !== null) {
@@ -202,29 +215,25 @@
         var me = this;
         currScale = scale;
         var zooming = zoomIn;
+        var fit = el && parseInt(el.dataset.sFit, 0) === 1;
 
         me.toogleClass(zooming);
 
-        if (el !== null) {
-          if (zoomScale) {
+        if (el) {
+          if (zoomScale && !fit) {
             var slide = $.closest(el, '.slide');
-            var cn = $.closest(el, '.slide__content');
-            var w = parseInt(_ds.attr(el, 'width', 0));
-            var h = parseInt(_ds.attr(el, 'height', 0));
-            var cw = cn.offsetWidth;
 
             slide.classList.add(_isZoomable + '-slide');
 
-            max = (h / wh); // / 1.5;
+            max = Math.min(
+              parseInt(el.dataset.sNw, 0) / parseInt(el.dataset.sCw, 0),
+              parseInt(el.dataset.sNh, 0) / parseInt(el.dataset.sCh, 0)
+            );
 
-            var mn = min; // (h / wh) / 3;
-            var mx = max > 2 ? 1.5 : max;
-            if (w < cw) {
-              mn = 0.8;
-              mx = 1;
-            }
+            max = max > 4 ? 3 : max;
 
-            currScale = zoomIn ? mx : mn;
+            currScale = zoomIn ? max : min;
+
             el.style.transform = 'scale(' + currScale + ')';
           }
         }
@@ -256,7 +265,7 @@
         e.stopPropagation();
 
         var el = _target.querySelector('.' + _isZoomable);
-        var fit = el !== null && el.dataset.splideFit;
+        var fit = el && parseInt(el.dataset.sFit, 0) === 1;
         var sy = Math.abs(_sizes.h - _sizes.ph) / 1.5;
         var delta = _ds.wheelDelta(e);
         var increment = sy * 0.5;
@@ -275,6 +284,7 @@
         }
 
         if (_target && !fit) {
+          // updateDim(el, false);
           _target.style.transform =
             'translate(' + pos.x + 'px,' + pos.y + 'px)';
         }
@@ -411,13 +421,6 @@
           Object.keys(obj).length === 0 &&
           Object.getPrototypeOf(obj) === Object.prototype
         );
-      },
-
-      toData: function (el) {
-        cw = _ds.attr(el, dataCw, cw);
-        ch = _ds.attr(el, dataCh, ch);
-        // @todo mw = _ds.attr(el, dataNw, nw);
-        // @todo mh = _ds.attr(el, dataNh, nh);
       },
 
       isValid: function () {

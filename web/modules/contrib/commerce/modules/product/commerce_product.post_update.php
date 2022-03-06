@@ -110,7 +110,9 @@ function commerce_product_post_update_6() {
         $role->hasPermission("update any {$product_type->id()} commerce_product") ||
         $role->hasPermission("update own {$product_type->id()} commerce_product")
       ) {
-        $role->grantPermission("manage {$product_type->getVariationTypeId()} commerce_product_variation");
+        foreach ($product_type->getVariationTypeIds() as $type) {
+          $role->grantPermission("manage {$type} commerce_product_variation");
+        }
       }
     }
     $role->save();

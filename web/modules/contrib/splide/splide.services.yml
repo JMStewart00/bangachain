@@ -16,4 +16,4 @@ services:
   splide.skin_manager:
     class: Drupal\splide\SplideSkinManager
     parent: default_plugin_manager
-    arguments: ['@app.root', '@config.factory']
+    arguments: ['%app.root%', '@config.factory']

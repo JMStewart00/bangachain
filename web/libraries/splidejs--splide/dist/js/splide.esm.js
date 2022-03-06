@@ -1,8 +1,8 @@
 /*!
  * Splide.js
- * Version  : 3.6.9
+ * Version  : 3.6.12
  * License  : MIT
- * Copyright: 2021 Naotoshi Fujita
+ * Copyright: 2022 Naotoshi Fujita
  */
 const PROJECT_CODE = "splide";
 const DATA_ATTRIBUTE = `data-${PROJECT_CODE}`;
@@ -2033,7 +2033,7 @@ function LazyLoad(Splide2, Components2, options) {
     bind(_img, "load error", (e) => {
       onLoad(data, e.type === "error");
     });
-    ["src", "srcset"].forEach((name) => {
+    ["srcset", "src"].forEach((name) => {
       if (data[name]) {
         setAttribute(_img, name, data[name]);
         removeAttribute(_img, name === "src" ? SRC_DATA_ATTRIBUTE : SRCSET_DATA_ATTRIBUTE);

@@ -5,17 +5,27 @@
  * @todo watch out for Drupal namespace removal, likely becomes under window.
  */
 
-(function ($, Drupal) {
+(function ($, Drupal, _win) {
 
   'use strict';
 
-  function _debounce(cb, arg, scope) {
+  $.debounce = function (cb, arg, scope, delay) {
     var _cb = function () {
       cb.call(scope, arg);
     };
-    Drupal.debounce(_cb, 201, true);
-  }
 
-  $.debounce = _debounce;
+    Drupal.debounce(_cb, delay || 201, true);
+  };
 
-})(dBlazy, Drupal);
+  $.matchMedia = function (width, minmax) {
+    if (_win.matchMedia) {
+      if ($.isUnd(minmax)) {
+        minmax = 'max';
+      }
+      var mq = _win.matchMedia('(' + minmax + '-device-width: ' + width + ')');
+      return mq.matches;
+    }
+    return false;
+  };
+
+})(dBlazy, Drupal, this);

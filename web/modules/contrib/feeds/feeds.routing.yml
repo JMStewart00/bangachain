@@ -96,3 +96,26 @@ entity.feeds_feed_type.mapping:
     _title_callback: '\Drupal\feeds\Form\MappingForm::mappingTitle'
   requirements:
     _entity_access: 'feeds_feed_type.mapping'
+
+entity.feeds_feed_type.sources:
+  path: '/admin/structure/feeds/manage/{feeds_feed_type}/sources'
+  defaults:
+    _controller: 'Drupal\feeds\Controller\CustomSourceListController::page'
+    _title_callback: '\Drupal\feeds\Controller\CustomSourceListController::title'
+  requirements:
+    _entity_access: 'feeds_feed_type.mapping'
+
+entity.feeds_feed_type.source_edit:
+  path: '/admin/structure/feeds/manage/{feeds_feed_type}/sources/{key}'
+  defaults:
+    _form: '\Drupal\feeds\Form\CustomSourceEditForm'
+    _title_callback: '\Drupal\feeds\Form\CustomSourceEditForm::title'
+  requirements:
+    _entity_access: 'feeds_feed_type.mapping'
+
+entity.feeds_feed_type.source_delete:
+  path: '/admin/structure/feeds/manage/{feeds_feed_type}/sources/{key}/delete'
+  defaults:
+    _form: '\Drupal\feeds\Form\CustomSourceDeleteForm'
+  requirements:
+    _entity_access: 'feeds_feed_type.mapping'

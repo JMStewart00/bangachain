@@ -311,6 +311,7 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
   public function baseForm($definition = []) {
     $settings   = $definition['settings'] ?? [];
     $lightboxes = $this->blazyManager->getLightboxes();
+    $namespace  = $definition['namespace'] ?? '';
     $form       = [];
     $ui_url     = '/admin/config/media/blazy';
 
@@ -335,13 +336,17 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
       ];
 
       $loadings = ['auto', 'eager', 'unlazy'];
+      $sliders = in_array($namespace, ['slick', 'splide']);
+      if (!empty($definitions['slider']) || $sliders) {
+        $loadings[] = 'slider';
+      }
       $form['loading'] = [
         '#type'         => 'select',
         '#title'        => $this->t('Loading priority'),
         '#options'      => array_combine($loadings, $loadings),
         '#empty_option' => $this->t('lazy'),
         '#weight'       => -111,
-        '#description'  => $this->t("Decide the `loading` attribute affected by the above fold aka onscreen critical contents. <ul><li>`lazy`, the default: defers loading below fold or offscreen images and iframes until users scroll near them.</li><li>`auto`: browser determines whether or not to lazily load. Only if uncertain about the above fold boundaries given different devices. </li><li>`eager`: loads right away. Similar effect like without `loading`, included for completeness. Good for above fold.</li><li>`unlazy`: explicitly removes loading attribute enforced by core. Also removes old `data-[SRC|SRCSET|LAZY]` if `No JavaScript` is disabled. Best for the above fold.</li></ul><b>Note</b>: lazy loading images/ iframes for the above fold is anti-pattern, avoid, <a href=':url' target='_blank'>read more</a>.", [
+        '#description'  => $this->t("Decide the `loading` attribute affected by the above fold aka onscreen critical contents. <ul><li>`lazy`, the default: defers loading below fold or offscreen images and iframes until users scroll near them.</li><li>`auto`: browser determines whether or not to lazily load. Only if uncertain about the above fold boundaries given different devices. </li><li>`eager`: loads right away. Similar effect like without `loading`, included for completeness. Good for above fold.</li><li>`unlazy`: explicitly removes loading attribute enforced by core. Also removes old `data-[SRC|SRCSET|LAZY]` if `No JavaScript` is disabled. Best for the above fold.</li><li>`slider`, if applicable: will `unlazy` the first visible, and leave the rest lazyloaded. Best for sliders (one visible at a time), not carousels (multiple visible slides at once).</li></ul><b>Note</b>: lazy loading images/ iframes for the above fold is anti-pattern, avoid, <a href=':url' target='_blank'>read more</a>.", [
           ':url' => 'https://www.drupal.org/node/3262724',
         ]),
         '#wrapper_attributes' => [
@@ -375,7 +380,7 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
           'content' => $this->t('Image linked to content'),
         ],
         '#empty_option' => $this->t('- None -'),
-        '#description'  => $this->t('May depend on the enabled supported or supportive modules: colorbox, photobox etc. Add Thumbnail style if using Photobox, Slick, or others which may need it. Try selecting "<strong>- None -</strong>" first before changing if trouble with this complex form states.'),
+        '#description'  => $this->t('May depend on the enabled supported or supportive modules: colorbox, photobox etc. See docs for details. Clear cache if they do not appear here due to being permanently cached. Add Thumbnail style if using Photobox, Slick, or others which may need it. Try selecting "<strong>- None -</strong>" first before changing if trouble with this complex form states.'),
         '#weight'       => -99,
       ];
 
@@ -385,6 +390,9 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
           $name = Unicode::ucwords(str_replace('_', ' ', $lightbox));
           if ($lightbox == 'photobox') {
             $name .= ' (Deprecated)';
+          }
+          if ($lightbox == 'mfp') {
+            $name = 'Magnific Popup';
           }
           $form['media_switch']['#options'][$lightbox] = $this->t('Image to @lightbox', ['@lightbox' => $name]);
         }

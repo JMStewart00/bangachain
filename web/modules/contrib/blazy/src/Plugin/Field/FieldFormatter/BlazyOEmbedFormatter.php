@@ -62,6 +62,14 @@ class BlazyOEmbedFormatter extends FormatterBase {
   public function buildElements(array &$build, $items) {
     $settings = $build['settings'];
 
+    // @todo remove check after another check.
+    if (!isset($settings['blazies'])) {
+      $settings += BlazyDefault::htmlSettings();
+    }
+
+    $blazies = &$settings['blazies'];
+    $lang = $blazies->get('current_language');
+
     foreach ($items as $delta => $item) {
       $main_property = $item->getFieldDefinition()->getFieldStorageDefinition()->getMainPropertyName();
       $value = trim($item->{$main_property});
@@ -77,8 +85,8 @@ class BlazyOEmbedFormatter extends FormatterBase {
       // Attempts to fetch media entity.
       $media = $this->formatter->getEntityTypeManager()->getStorage('media')->loadByProperties([$settings['field_name'] => $value]);
       if ($media = reset($media)) {
-        if ($media->hasTranslation($settings['current_language'])) {
-          $media = $media->getTranslation($settings['current_language']);
+        if ($media->hasTranslation($lang)) {
+          $media = $media->getTranslation($lang);
         }
 
         $data['settings'] = $settings;

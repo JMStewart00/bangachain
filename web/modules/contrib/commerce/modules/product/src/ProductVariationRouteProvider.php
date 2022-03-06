@@ -15,9 +15,33 @@ class ProductVariationRouteProvider extends AdminHtmlRouteProvider {
   /**
    * {@inheritdoc}
    */
+  protected function getAddPageRoute(EntityTypeInterface $entity_type) {
+    // The add-form route has no bundle argument because the bundle is selected
+    // via the product ($product_type->getVariationTypeIds()).
+    $route = new Route($entity_type->getLinkTemplate('add-page'));
+    $route
+      ->setDefaults([
+        '_controller' => ProductVariationController::class . '::addPage',
+        'entity_type_id' => 'commerce_product_variation',
+        '_title_callback' => ProductVariationController::class . '::addTitle',
+      ])
+      ->setRequirement('_product_variation_create_access', 'TRUE')
+      ->setOption('parameters', [
+        'commerce_product' => [
+          'type' => 'entity:commerce_product',
+        ],
+      ])
+      ->setOption('_admin_route', TRUE);
+
+    return $route;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function getAddFormRoute(EntityTypeInterface $entity_type) {
     // The add-form route has no bundle argument because the bundle is selected
-    // via the product ($product_type->getVariationTypeId()).
+    // via the product ($product_type->getVariationTypeIds()).
     $route = new Route($entity_type->getLinkTemplate('add-form'));
     $route
       ->setDefaults([
@@ -29,6 +53,9 @@ class ProductVariationRouteProvider extends AdminHtmlRouteProvider {
       ->setOption('parameters', [
         'commerce_product' => [
           'type' => 'entity:commerce_product',
+        ],
+        'commerce_product_variation_type' => [
+          'type' => 'entity:commerce_product_variation_type',
         ],
       ])
       ->setOption('_admin_route', TRUE);

@@ -39,15 +39,17 @@ class BlazyManagerTest extends BlazyKernelTestBase {
    *   Has the responsive image style ID.
    *
    * @covers ::preRenderBlazy
+   * @covers ::getCommonSettings
    * @covers \Drupal\blazy\BlazyLightbox::build
    * @covers \Drupal\blazy\BlazyLightbox::buildCaptions
    * @dataProvider providerTestPreRenderImage
    */
   public function testPreRenderImage(array $settings = [], $expected_has_responsive_image = FALSE) {
     $build = $this->data;
+    $this->blazyManager->getCommonSettings($settings);
     $settings['count'] = $this->maxItems;
     $settings['uri'] = $this->uri;
-    $settings['resimage'] = $expected_has_responsive_image ? $this->blazyManager->entityLoad('blazy_responsive_test', 'responsive_image_style') : NULL;
+    // @todo remove $settings['resimage'] = $expected_has_responsive_image ? $this->blazyManager->entityLoad('blazy_responsive_test', 'responsive_image_style') : NULL;
     $build['settings'] = array_merge($build['settings'], $settings);
     $switch_css = str_replace('_', '-', $settings['media_switch']);
 
@@ -62,7 +64,8 @@ class BlazyManagerTest extends BlazyKernelTestBase {
       $this->assertArrayHasKey('#url', $element);
     }
 
-    $this->assertEquals($expected_has_responsive_image, !empty($element['#settings']['responsive_image_style_id']));
+    $blazies = $element['#settings']['blazies'];
+    $this->assertEquals($expected_has_responsive_image, !empty($blazies->get('resimage.id')));
   }
 
   /**
@@ -118,7 +121,7 @@ class BlazyManagerTest extends BlazyKernelTestBase {
    *   The expected output.
    *
    * @covers \Drupal\blazy\BlazyTheme::blazy
-   * @covers \Drupal\blazy\Blazy::urlAndDimensions
+   * @covers \Drupal\blazy\Media\BlazyFile::urlAndDimensions
    * @covers \Drupal\blazy\BlazyDefault::entitySettings
    * @dataProvider providerPreprocessBlazy
    */

@@ -1,6 +1,6 @@
+
 ***
-***
-# <a name="maintainers"> </a>MAINTAINERS/CREDITS
+## <a name="maintainers"> </a>MAINTAINERS/CREDITS
 * [Gaus Surahman](https://drupal.org/user/159062)
 * [Splide Contributors](https://www.drupal.org/node/3215092/committers)
 * [Slick Contributors](https://www.drupal.org/node/2232779/committers)

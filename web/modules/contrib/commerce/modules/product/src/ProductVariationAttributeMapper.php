@@ -143,6 +143,9 @@ class ProductVariationAttributeMapper implements ProductVariationAttributeMapper
   protected function getAttributeValues(array $variations, $field_name, callable $callback = NULL) {
     $values = [];
     foreach ($variations as $variation) {
+      if (!$variation->hasField($field_name)) {
+        continue;
+      }
       if (is_null($callback) || call_user_func($callback, $variation)) {
         $attribute_value = $variation->getAttributeValue($field_name);
         if ($attribute_value) {

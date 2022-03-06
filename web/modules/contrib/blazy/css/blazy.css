@@ -43,6 +43,7 @@
 }
 
 .media-wrapper--inline {
+  margin: auto;
   max-width: 100%;
 }
 

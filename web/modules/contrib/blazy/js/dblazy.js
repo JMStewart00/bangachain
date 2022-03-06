@@ -11,6 +11,8 @@
  *
  * @todo use Cash for better DOM queries, or any core libraries when available.
  * @todo remove unneeded dup methods once all codebase migrated.
+ * @todo move more DOM methods into blazy.dom.js to make it ditchable for Cash.
+ * @todo https://caniuse.com/dom-manip-convenience
  */
 
 /* global define, module */
@@ -25,18 +27,14 @@
   var _splice = _aProto.splice;
   var _some = _aProto.some;
   var _symbol = typeof Symbol !== 'undefined' && Symbol;
+  // @todo var _cash = 'cash' in _win;
   var _class = 'class';
   var _add = 'add';
   var _remove = 'remove';
+  var _has = 'has';
+  var _get = 'get';
+  var _set = 'set';
   var _width = 'width';
-  var _height = 'height';
-  var _after = 'after';
-  var _before = 'before';
-  var _begin = 'begin';
-  var _end = 'end';
-  var _uTop = 'Top';
-  var _uLeft = 'Left';
-  var _uHeight = 'Height';
   var _uWidth = 'Width';
   var _clientWidth = 'client' + _uWidth;
   var _scroll = 'scroll';
@@ -44,6 +42,9 @@
   var _observer = 'Observer';
   var _dashAlphaRe = /-([a-z])/g;
   var _cssVariableRe = /^--/;
+  var _wsRe = /[\11\12\14\15\40]+/;
+  var _dataOnce = 'data-once';
+  var _storage = _win.localStorage;
   var _events = {};
 
   /**
@@ -55,8 +56,9 @@
    *   Returns this instance.
    */
   var dBlazy = function () {
-    function dBlazy(selector, context) {
+    function dBlazy(selector, ctx) {
       var me = this;
+
       me.name = ns;
 
       if (!selector) {
@@ -69,9 +71,10 @@
 
       var els = selector;
       if (isStr(selector)) {
-        var ctx = (isMe(context) ? context[0] : context) || _doc;
+        ctx = isMe(ctx) ? ctx[0] : ctx;
+        ctx = ctx && isQsa(ctx) ? ctx : context(ctx);
         els = findAll(ctx, selector);
-        if (isEmpty(els)) {
+        if (!els.length) {
           return;
         }
       }
@@ -89,13 +92,13 @@
       }
     }
 
-    dBlazy.prototype.init = function (selector, context) {
-      var instance = new dBlazy(selector, context);
+    dBlazy.prototype.init = function (selector, ctx) {
+      var instance = new dBlazy(selector, ctx);
+
       if (isElm(selector)) {
         if (!selector.idblazy) {
           selector.idblazy = instance;
         }
-
         return selector.idblazy;
       }
 
@@ -142,11 +145,13 @@
     me = isMe(me) ? me : db(me);
     var ln = me.length;
 
-    if (!ln || ln === 1) {
-      cb(me[0]);
-    }
-    else {
-      me.each(cb);
+    if (isFun(cb)) {
+      if (!ln || ln === 1) {
+        cb(me[0]);
+      }
+      else {
+        me.each(cb);
+      }
     }
 
     return me;
@@ -429,7 +434,7 @@
   function each(collection, cb, scope) {
     if (_oProto.toString.call(collection) === '[object Object]') {
       for (var prop in collection) {
-        if (has(collection, prop)) {
+        if (hasProp(collection, prop)) {
           if (prop === 'length') {
             continue;
           }
@@ -439,7 +444,9 @@
     }
     else if (collection) {
       if (collection.length === 1) {
-        cb.call(scope, collection[0], 0, collection);
+        if (collection[0]) {
+          cb.call(scope, collection[0], 0, collection);
+        }
       }
       else {
         collection.forEach(cb, scope);
@@ -465,7 +472,7 @@
    * @return {bool}
    *   Returns true if the property found.
    */
-  function has(collection, prop) {
+  function hasProp(collection, prop) {
     return _oProto.hasOwnProperty.call(collection, prop);
   }
 
@@ -535,7 +542,7 @@
       if (_undefined) {
         defValue = '';
       }
-      return hasAttr(el, attr) ? el.getAttribute(attr) : defValue;
+      return hasAttr(el, attr) ? _op(el, _get, attr) : defValue;
     }
 
     var chainCallback = function (el) {
@@ -546,15 +553,15 @@
       // Passing a key-value pair object means setting multiple attributes once.
       if (isObj(attr)) {
         each(attr, function (value, key) {
-          el.setAttribute(prefix + key, value);
+          _op(el, _set, prefix + key, value);
         });
       }
       // Since an attribute value null makes no sense, assumes nullify.
       else if (isNull(defValue)) {
         each(toArray(attr), function (value) {
           var name = prefix + value;
-          if (el.hasAttribute(name)) {
-            el.removeAttribute(name);
+          if (hasAttr(el, name)) {
+            _op(el, _remove, name);
           }
         });
       }
@@ -565,12 +572,16 @@
           el.src = defValue;
         }
         else {
-          el.setAttribute(attr, defValue);
+          _op(el, _set, attr, defValue);
         }
       }
     };
 
     return chain.call(els, chainCallback);
+  }
+
+  function _op(el, op, name, value) {
+    return el[op + 'Attribute'](name, value);
   }
 
   /**
@@ -587,7 +598,7 @@
    *   True if it has the attribute.
    */
   function hasAttr(el, name) {
-    return isQsa(el) && el.hasAttribute(name);
+    return isQsa(el) && _op(el, _has, name);
   }
 
   /**
@@ -635,6 +646,7 @@
           }
         }
         else {
+          // SVG may fail classList here.
           var check = _attr(el, _class);
           if (check && check.match(name)) {
             found++;
@@ -884,6 +896,9 @@
    * Alternatively flag the asArray to any value if an array is expected, or
    * use the shortcut ::findAll() to be clear.
    *
+   * To check if the expected element is found:
+   *   - use $.isElm(el) which returns a bool.
+   *
    * @param {Element} el
    *   The parent HTML element.
    * @param {string} selector
@@ -895,14 +910,17 @@
    *   Empty array if not found, else the expected element(s).
    */
   function find(el, selector, asArray) {
-    if (isStr(selector) && isQsa(el)) {
-      return isUnd(asArray) ? (el.querySelector(selector) || []) : toElms(selector, el);
+    if (isQsa(el)) {
+      return isUnd(asArray) && isStr(selector) ? (el.querySelector(selector) || []) : toElms(selector, el);
     }
     return [];
   }
 
   /**
    * A simple querySelectorAll wrapper.
+   *
+   * To check if the expected elements are found:
+   *   - use regular `els.length`. The length 0 means not found.
    *
    * @private
    *
@@ -971,7 +989,7 @@
    *   Returns the window width.
    */
   function windowWidth() {
-    return _win.innerWidth || _doc.documentElement[_clientWidth] || _doc.body[_clientWidth] || _win.screen[_width];
+    return _win.innerWidth || _doc.documentElement[_clientWidth] || _win.screen[_width];
   }
 
   /**
@@ -1122,6 +1140,9 @@
    *
    * @private
    *
+   * @author Daniel Lamb <dlamb.open.source@gmail.com>
+   * @link https://github.com/daniellmb/once.js
+   *
    * @param {Function} cb
    *   The executed function.
    *
@@ -1150,18 +1171,18 @@
    *
    * @param {NodeList|Array.<Element>|Element|string} selector
    *   A NodeList, array of elements, or string.
-   * @param {Document|Element} [context=document]
+   * @param {Document|Element} ctx
    *   An element to use as context for querySelectorAll.
    *
    * @return {Array.<Element>}
    *   An array of elements to process.
    */
-  function toElms(selector, context) {
+  function toElms(selector, ctx) {
     // Assume selector is an array-like element unless a string.
     var elements = toArray(selector);
     if (isStr(selector)) {
-      var check = context.querySelector(selector);
-      elements = isNull(check) ? [] : context.querySelectorAll(selector);
+      var check = ctx.querySelector(selector);
+      elements = isNull(check) ? [] : ctx.querySelectorAll(selector);
     }
 
     // Ensures an array is returned and not a NodeList or an Array-like object.
@@ -1392,7 +1413,7 @@
     return extend(fn, plugins);
   };
 
-  db.has = has;
+  db.hasProp = hasProp;
 
   db.parse = parse;
   db.toArray = toArray;
@@ -1568,31 +1589,21 @@
   };
 
   /**
-   * Executes a function once.
-   *
-   * To make easy conversion till D9.2 is a minimum at sub-modules, one
-   * core/once method are adapted.
-   *
-   * @author Daniel Lamb <dlamb.open.source@gmail.com>
-   * @link https://github.com/daniellmb/once.js
+   * A wrapper for core/once until D9.2 is a minimum.
    *
    * @param {Function} cb
    *   The executed function.
+   * @param {string} id
+   *   The id of the once call.
    * @param {NodeList|Array.<Element>|Element|string} selector
    *   A NodeList, array of elements, single Element, or a string.
-   * @param {Document|Element} [context=document]
+   * @param {Document|Element} ctx
    *   An element to use as context for querySelectorAll.
    *
    * @return {Array.<Element>}
    *   An array of elements to process, or empty for old behavior.
-   *
-   * @tbd deprecated in Blazy 2.5 and will be removed in Blazy 3.+. Use the
-   * core/once library instead. See https://www.drupal.org/node/3254668.
-   *
-   * @todo until D9.2 is a minimum, adapt core/once for better once at the next
-   * optimization sessions.
    */
-  db.once = function (cb, selector, context) {
+  function onceCompat(cb, id, selector, ctx) {
     var els = [];
 
     // Original once.
@@ -1601,16 +1612,17 @@
     }
     else {
       // If extra arguments are provided, assumes regular loop over elements.
-      // Safe to use fallback _doc since it is normally executed once onready.
-      els = isStr(selector) ? findAll(context || _doc, selector) : toArray(selector);
-      var len = els.length;
-      if (len) {
-        _once(len === 1 ? cb(els[0]) : each(els, cb));
+      els = initOnce(id, selector, ctx);
+      if (els.length) {
+        // Already avoids loop for a single item.
+        each(els, cb);
       }
     }
 
     return els;
-  };
+  }
+
+  db.once = onceCompat;
 
   /**
    * A simple wrapper to delay callback function, taken out of blazy library.
@@ -1684,7 +1696,7 @@
    */
   db.template = function (string, map) {
     for (var key in map) {
-      if (has(map, key)) {
+      if (hasProp(map, key)) {
         string = string.replace(new RegExp(escape('$' + key), 'g'), map[key]);
       }
     }
@@ -1698,22 +1710,24 @@
    * This can be null after Colorbox close, or absurd <script> element, likely
    * arbitrary, etc.
    *
-   * @param {HTMLDocument|Element} context
+   * @param {HTMLDocument|Element} ctx
    *   Any element, including weird script element.
    *
    * @return {Element|Document|DocumentFragment}
    *   The Element|Document|DocumentFragment to not fail querySelector, etc.
+   *
+   * @todo refine core/once expects Element only, or patch it for [1,9,11].
    */
-  db.context = function (context) {
+  function context(ctx) {
     // Weirdo: context may be null after Colorbox close.
-    context = context || _doc;
-
     // jQuery may pass its array as non-expected context identified by length.
-    context = context.length ? context[0] : context;
+    ctx = ctx && ctx.length ? ctx[0] : ctx;
 
     // IE9 knows not HTMLDocument, IE8 does.
-    return context && isDoc(context) ? context : _doc;
-  };
+    return ctx && isDoc(ctx) ? ctx : _doc;
+  }
+
+  db.context = context;
 
   // Minimum common DOM methods taken and modified from cash.
   // @todo refactor or remove dups when everyone uses cash, or vanilla alike.
@@ -1749,74 +1763,10 @@
     return _style[prop] || el.style[prop];
   }
 
-  function css(els, props, vals) {
-    var me = this;
-    var _undefined = isUnd(vals);
-    var _obj = isObj(props);
-    var _getter = !_obj && _undefined;
-
-    // Getter.
-    if (_getter && isStr(props)) {
-      // @todo figure out multi-element getters. Ok for now, as hardly multiple.
-      var el = els && els.length ? els[0] : els;
-      // @todo re-check common integer.
-      var arr = [_width, _height, 'top', 'right', 'bottom', 'left'];
-      var result = computeStyle(el, props);
-      return arr.indexOf(props) === -1 ? result : parseInt(result, 10);
-    }
-
-    var chainCallback = function (el) {
-      if (!isElm(el)) {
-        return _getter ? '' : me;
-      }
-
-      var setVal = function (prop, val) {
-        // Setter.
-        if (isFun(val)) {
-          val = val();
-        }
-
-        if (contains(prop, '-') || isVar(prop)) {
-          prop = camelCase(prop);
-        }
-
-        el.style[prop] = isStr(val) ? val : val + 'px';
-      };
-
-      // Passing a key-value pair object means setting multiple attributes once.
-      if (_obj) {
-        each(props, function (val, prop) {
-          setVal(prop, val);
-        });
-      }
-      // Since a css value null makes no sense, assumes nullify.
-      else if (isNull(vals)) {
-        each(toArray(props), function (prop) {
-          el.style.removeProperty(prop);
-        });
-      }
-      else {
-        // Else a setter.
-        if (isStr(props)) {
-          setVal(props, vals);
-        }
-      }
-    };
-
-    return chain.call(els, chainCallback);
-  }
-
   db.computeStyle = computeStyle;
 
   fn.computeStyle = function (prop) {
     return computeStyle(this[0], prop);
-  };
-
-  db.css = css;
-
-  // @tdo multiple css values once.
-  fn.css = function (prop, val) {
-    return css(this, prop, val);
   };
 
   // https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
@@ -1826,127 +1776,78 @@
 
   db.rect = rect;
 
-  function offset(el) {
-    var rect = rect(el);
-
-    return {
-      top: (rect.top || 0) + _doc.body[_scroll + _uTop],
-      left: (rect.left || 0) + _doc.body[_scroll + _uLeft]
-    };
-  }
-
-  db.offset = offset;
-
-  db.width = function (el, val) {
-    return css(el, _width, val);
-  };
-
-  db.height = function (el, val) {
-    return css(el, _height, val);
-  };
-
-  function outerDim(el, withMargin, prop) {
-    var result = 0;
-
-    if (isElm(el)) {
-      result = el['offset' + prop];
-      if (withMargin) {
-        var style = computeStyle(el);
-        var margin = function (pos) {
-          return parseInt(style['margin' + pos], 10);
-        };
-        if (prop === _uHeight) {
-          result += margin(_uTop) + margin('Bottom');
-        }
-        else {
-          result += margin(_uLeft) + margin('Right');
-        }
-      }
-    }
-    return result;
-  }
-
-  db.outerWidth = function (el, withMargin) {
-    return outerDim(el, withMargin, _uWidth);
-  };
-
-  db.outerHeight = function (el, withMargin) {
-    return outerDim(el, withMargin, _uHeight);
-  };
-
-  /**
-   * Insert Element or string into a position relative to a target element.
-   *
-   * To minimize confusions with native insertAdjacent[Element|HTML].
-   *
-   * <!-- beforebegin -->
-   * <p>
-   *   <!-- afterbegin -->
-   *   foo
-   *   <!-- beforeend -->
-   * </p>
-   * <!-- afterend -->
-   *
-   * @param {Element} target
-   *   The target Element.
-   * @param {Element|string} el
-   *   The element or string to insert.
-   * @param {string} position
-   *   The position or placement.
-   *
-   * @see https://developer.mozilla.org/en-US/docs/Web/API/Element/insertAdjacentElement
-   * @see https://developer.mozilla.org/en-US/docs/Web/API/Element/insertAdjacentHTML
-   */
-  function insert(target, el, position) {
-    // @todo recheck DocumentFragment if needed.
-    if (isElm(target)) {
-      var suffix = isElm(el) ? 'Element' : 'HTML';
-      target['insertAdjacent' + suffix](position, el);
-    }
-  }
-
-  db.after = function (target, el) {
-    insert(target, el, _after + _end);
-  };
-
-  // Node.insertBefore(), similar to beforebegin, with different arguments.
-  db.before = function (target, el) {
-    insert(target, el, _before + _begin);
-  };
-
-  // Node.appendChild(), same effect as beforeend.
-  db.append = function (target, el) {
-    insert(target, el, _before + _end);
-  };
-
-  db.prepend = function (target, el) {
-    insert(target, el, _after + _begin);
-  };
-
   function parent(el) {
     return isElm(el) && el.parentElement;
   }
 
   db.parent = parent;
+  fn.parent = function () {
+    return db.parent(this[0]);
+  };
 
   function prev(el) {
     return isElm(el) && el.previousElementSibling;
   }
 
   db.prev = prev;
+  fn.prev = function () {
+    return db.prev(this[0]);
+  };
 
   db.next = function (el) {
     return isElm(el) && el.nextElementSibling;
   };
 
-  db.index = function (el) {
+  fn.next = function () {
+    return db.next(this[0]);
+  };
+
+  db.index = function (el, parents) {
     var i = 0;
     if (isElm(el)) {
+      if (!isUnd(parents)) {
+        each(toArray(parents), function (sel) {
+          var check = closest(el, sel);
+          if (isElm(check)) {
+            el = check;
+            return false;
+          }
+        });
+      }
+
       while (!isNull(el = prev(el))) {
         i++;
       }
     }
     return i;
+  };
+
+  db.create = function (tagName, className, html) {
+    var el = _doc.createElement(tagName);
+
+    if (className) {
+      el.className = className;
+    }
+
+    if (html) {
+      el.innerHTML = html.trim();
+      if (tagName === 'template') {
+        el = el.content.firstChild;
+      }
+    }
+
+    return el;
+  };
+
+  // See https://caniuse.com/?search=localstorage
+  db.storage = function (key, value, defValue) {
+    if (_storage) {
+      if (isUnd(value)) {
+        return _storage.getItem(key);
+      }
+      _storage.setItem(key, value);
+    }
+    return defValue || false;
   };
 
   // @deprecated for shorter ::is(). Hardly used, except lory.
@@ -1959,6 +1860,88 @@
   db.bindEvent = on.bind(db);
 
   db.unbindEvent = off.bind(db);
+
+  // @todo remove all these when min D9.2, or take the least minimum for BC.
+  // Be sure to make context Element, or patch it to work with [1,9,11] types
+  // which distinguish this from core/once as per 2022/2.
+  // When removed and context issue is fixed, it will be just:
+  // `db.once = extend(db.once, once);` + `db.once.removeSafely()`.
+  function _filter(selector, elements, apply) {
+    return elements.filter(function (el) {
+      var selected = is(el, selector);
+      if (selected && apply) {
+        apply(el);
+      }
+      return selected;
+    });
+  }
+
+  db.filter = _filter;
+
+  function elsOnce(selector, ctx) {
+    return findAll(context(ctx), selector);
+  }
+
+  function selOnce(id) {
+    return '[' + _dataOnce + '~="' + id + '"]';
+  }
+
+  function updateOnce(el, opts) {
+    var add = opts.add;
+    var remove = opts.remove;
+    var result = [];
+    var unique = function (id) {
+      return !~result.indexOf(id);
+    };
+
+    if (hasAttr(el, _dataOnce)) {
+      var ids = _attr(el, _dataOnce).trim().split(_wsRe);
+      each(ids, function (id) {
+        if (unique(id) && id !== remove) {
+          result.push(id);
+        }
+      });
+    }
+    if (add && unique(add)) {
+      result.push(add);
+    }
+    var value = result.join(' ');
+    _op(el, value === '' ? _remove : _set, _dataOnce, value);
+  }
+
+  function initOnce(id, selector, ctx) {
+    return _filter(':not(' + selOnce(id) + ')', elsOnce(selector, ctx), function (el) {
+      updateOnce(el, {
+        add: id
+      });
+    });
+  }
+
+  if (!db.once.find) {
+    db.once.find = function (id, ctx) {
+      return elsOnce(!id ? '[' + _dataOnce + ']' : selOnce(id), ctx);
+    };
+    db.once.filter = function (id, selector, ctx) {
+      return _filter(selOnce(id), elsOnce(selector, ctx));
+    };
+    db.once.remove = function (id, selector, ctx) {
+      return _filter(
+        selOnce(id),
+        elsOnce(selector, ctx),
+        function (el) {
+          updateOnce(el, {
+            remove: id
+          });
+        }
+      );
+    };
+    db.once.removeSafely = function (id, selector, ctx) {
+      var me = this;
+      if (me.find(id, ctx).length) {
+        me.remove(id, selector, ctx);
+      }
+    };
+  }
 
   if (typeof exports !== 'undefined') {
     // Node.js.

@@ -9,7 +9,6 @@ use Drupal\feeds\Feeds\Parser\SyndicationParser;
 use Drupal\feeds\Result\RawFetcherResult;
 use Drupal\feeds\State;
 use Drupal\Tests\feeds\Unit\FeedsUnitTestCase;
-use RuntimeException;
 use Laminas\Feed\Reader\StandaloneExtensionManager;
 
 /**
@@ -126,18 +125,23 @@ class SyndicationParserTest extends FeedsUnitTestCase {
     $fetcher_result = new RawFetcherResult(file_get_contents($file), $this->getMockFileSystem());
 
     $result = $this->parser->parse($this->feed, $fetcher_result, $this->state);
-    $this->assertSame(count($result), 4);
+    $this->assertSame(count($result), 6);
 
     $expected = [
       1 => [
         'mediarss_content' => 'https://www.example.com/image1.png',
+        'mediarss_description' => '',
         'mediarss_thumbnail' => 'https://www.example.com/thumbnail1.png',
       ],
       2 => [
         'mediarss_content' => 'https://www.example.com/image2.png',
+        'mediarss_description' => '',
       ],
       3 => [
         'mediarss_thumbnail' => 'https://www.example.com/thumbnail3.png',
+      ],
+      4 => [
+        'mediarss_description' => 'Example media description',
       ],
     ];
     foreach ($expected as $index => $expected_values) {
@@ -176,7 +180,7 @@ class SyndicationParserTest extends FeedsUnitTestCase {
   public function testInvalidFeed() {
     $fetcher_result = new RawFetcherResult('beep boop', $this->getMockFileSystem());
 
-    $this->expectException(RuntimeException::class);
+    $this->expectException(\RuntimeException::class);
     $result = $this->parser->parse($this->feed, $fetcher_result, $this->state);
   }
 

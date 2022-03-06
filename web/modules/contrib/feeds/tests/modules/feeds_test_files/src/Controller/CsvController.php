@@ -28,7 +28,8 @@ class CsvController extends ControllerBase {
    *   http://www.example.com/modules/contrib/feeds/tests/resources
    */
   protected function getResourcesUrl() {
-    $resources_path = drupal_get_path('module', 'feeds') . '/tests/resources';
+    $resources_path = $this->getModulePath('feeds') . '/tests/resources';
+
     return Url::fromUri('internal:/' . $resources_path)
       ->setAbsolute()
       ->toString();
@@ -105,11 +106,32 @@ class CsvController extends ControllerBase {
     $response->headers->set('Content-Type', 'text/plain; charset=utf-8');
 
     // Read actual feed from file.
-    $csv = file_get_contents(drupal_get_path('module', 'feeds') . '/tests/resources/csv/' . $file);
+    $csv = file_get_contents($this->getModulePath('feeds') . '/tests/resources/csv/' . $file);
 
     // And return the file contents.
     $response->setContent($csv);
     return $response;
+  }
+
+  /**
+   * Gets the path for the specified module.
+   *
+   * @param string $module_name
+   *   The module name.
+   *
+   * @return string
+   *   The Drupal-root relative path to the module directory.
+   *
+   * @throws \Drupal\Core\Extension\Exception\UnknownExtensionException
+   *   If the module does not exist.
+   */
+  protected function getModulePath(string $module_name): string {
+    // @todo Remove drupal_get_path() when Drupal 9.2 is no longer supported.
+    if (!\Drupal::hasService('extension.list.module')) {
+      return drupal_get_path('module', $module_name);
+    }
+
+    return \Drupal::service('extension.list.module')->getPath($module_name);
   }
 
 }

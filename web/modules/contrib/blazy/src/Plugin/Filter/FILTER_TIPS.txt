@@ -1,5 +1,8 @@
 <h3>Blazy</h3>
-<p>Image or iframe is lazyloaded automatically unless
+<p>If you copy paste the lines here into CKEditor, be sure to view CKEditor
+source and remove the surrounding <code>&lt;code&gt;...&lt;/code&gt;</code>,
+in case mistakenly copied over.<br />
+Image or iframe is lazyloaded automatically unless
 disabled, no shortcodes required. Usages for shortcodes: grid, customizing
 settings, embedding a known entity. Pay attention to attributes,
 slashes, colons, single and double quotes:</p>
@@ -51,9 +54,12 @@ slashes, colons, single and double quotes:</p>
     <code>[blazy grid="nativegrid:2-3-4x4 4x3 2x2 2x4 2x2 2x3 2x3 4x2 4x2" /]
     </code>
     <br>is a shortcut for:<br>
-    <code>[blazy settings="{'style': 'nativegrid',
-    'grid': '4x4 4x3 2x2 2x4 2x2 2x3 2x3 4x2 4x2', 'grid_small': 2,
-    'grid_medium': 4}" /]</code><br>
+    <code>[blazy settings="{
+      'style': 'nativegrid',
+      'grid_small': 2,
+      'grid_medium': 3,
+      'grid': '4x4 ...'
+    }" /]</code><br>
     <code>4x4</code> defines <code>WIDTHxHEIGHT</code> based on
     <code>grid-row</code> CSS property, see and  override
     <code>blazy/css/blazy.nativegrid.css</code>.

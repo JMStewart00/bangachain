@@ -7,7 +7,7 @@ configure: entity.splide.collection
 dependencies:
   - splide:splide
 
-# Information added by Drupal.org packaging script on 2022-02-07
-version: '1.0.2'
+# Information added by Drupal.org packaging script on 2022-02-20
+version: '1.0.3'
 project: 'splide'
-datestamp: 1644225329
+datestamp: 1645369555

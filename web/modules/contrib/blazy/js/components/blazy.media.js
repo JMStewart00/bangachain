@@ -7,11 +7,12 @@
 
   'use strict';
 
+  var _context = _doc;
   var _md = 'media';
   var _id = 'blazy-' + _md;
+  var _idOnce = 'b-' + _md;
   var _player = _md + '--player';
-  var _mounted = _player + '--on';
-  var _element = '.' + _player + ':not(.' + _mounted + ')';
+  var _element = '.' + _player;
   var _icon = _md + '__icon';
   var _elIconPlay = '.' + _icon + '--play';
   var _elIconClose = '.' + _icon + '--close';
@@ -129,8 +130,7 @@
     $el.on('click.' + _id, _elIconPlay, play);
 
     // Closes the video.
-    $el.on('click.' + _id, _elIconClose, stop)
-      .addClass(_mounted);
+    $el.on('click.' + _id, _elIconClose, stop);
   }
 
   /**
@@ -203,9 +203,16 @@
    */
   Drupal.behaviors.blazyMedia = {
     attach: function (context) {
-      context = $.context(context);
 
-      $.once(process, _element, context);
+      _context = $.context(context);
+
+      $.once(process, _idOnce, _element, _context);
+
+    },
+    detach: function (context, setting, trigger) {
+      if (trigger === 'unload') {
+        $.once.removeSafely(_idOnce, _element, _context);
+      }
     }
   };
 

@@ -140,6 +140,7 @@ class CouponRedemptionPaneTest extends CommerceWebDriverTestBase {
       'uid' => $this->adminUser->id(),
       'type' => 'credit_card',
       'payment_gateway' => 'onsite',
+      'remote_id' => '123456',
       'card_type' => 'visa',
       'card_number' => '1111',
       'billing_profile' => $profile,
@@ -151,6 +152,7 @@ class CouponRedemptionPaneTest extends CommerceWebDriverTestBase {
     $payment_method2 = $this->createEntity('commerce_payment_method', [
       'type' => 'credit_card',
       'payment_gateway' => 'onsite',
+      'remote_id' => '123456',
       'card_type' => 'visa',
       'card_number' => '9999',
       'billing_profile' => $profile,

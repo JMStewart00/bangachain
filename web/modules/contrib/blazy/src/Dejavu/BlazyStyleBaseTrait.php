@@ -77,7 +77,6 @@ trait BlazyStyleBaseTrait {
     $settings['instance_id']       = $instance;
     $settings['multiple']          = TRUE;
     $settings['plugin_id']         = $settings['view_plugin_id'] = $plugin_id;
-    $settings['use_ajax']          = $view->ajaxEnabled();
     $settings['view_name']         = $view_name;
     $settings['view_display']      = $view->style_plugin->displayHandler->getPluginId();
     $settings['_views']            = TRUE;
@@ -87,6 +86,8 @@ trait BlazyStyleBaseTrait {
     }
 
     $this->blazyManager()->getCommonSettings($settings);
+    $blazies = &$settings['blazies'];
+    $blazies->set('use.ajax', $view->ajaxEnabled());
 
     $this->blazyManager()->getModuleHandler()->alter('blazy_settings_views', $settings, $view);
     return $settings;

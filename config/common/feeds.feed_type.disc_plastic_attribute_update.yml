@@ -8,8 +8,8 @@ dependencies:
     - field.field.commerce_product_attribute_value.disc_plastic.field_vendor_cost
   module:
     - commerce_product
-label: 'Disc Plastic Attribute Update'
 id: disc_plastic_attribute_update
+label: 'Disc Plastic Attribute Update'
 description: ''
 help: ''
 import_period: -1
@@ -34,19 +34,23 @@ processor_configuration:
   expire: -1
   owner_feed_author: false
   owner_id: 0
+  insert_new: 1
 custom_sources:
   plastic:
     value: Plastic
     label: Plastic
     machine_name: plastic
+    type: csv
   cost:
     value: Cost
     label: Cost
     machine_name: cost
+    type: csv
   price:
     value: Price
     label: Price
     machine_name: price
+    type: csv
 mappings:
   -
     target: name

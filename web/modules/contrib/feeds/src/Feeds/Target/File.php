@@ -2,10 +2,12 @@
 
 namespace Drupal\feeds\Feeds\Target;
 
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Utility\Token;
@@ -192,13 +194,13 @@ class File extends EntityReference {
         if (file_exists($filepath) && $fid = $this->findEntity('uri', $filepath)) {
           return $fid;
         }
-        if ($file = file_save_data($this->getContent($value), $filepath, FileSystemInterface::EXISTS_REPLACE)) {
+        if ($file = $this->writeData($this->getContent($value), $filepath, FileSystemInterface::EXISTS_REPLACE)) {
           return $file->id();
         }
         break;
 
       default:
-        if ($file = file_save_data($this->getContent($value), $filepath, $this->configuration['existing'])) {
+        if ($file = $this->writeData($this->getContent($value), $filepath, $this->configuration['existing'])) {
           return $file->id();
         }
     }
@@ -350,6 +352,49 @@ class File extends EntityReference {
     $entity->save();
 
     return $entity->id();
+  }
+
+  /**
+   * Saves a file to the specified destination and creates a database entry.
+   *
+   * @param string $data
+   *   A string containing the contents of the file.
+   * @param string|null $destination
+   *   (optional) A string containing the destination URI. This must be a stream
+   *   wrapper URI. If no value or NULL is provided, a randomized name will be
+   *   generated and the file will be saved using Drupal's default files scheme,
+   *   usually "public://".
+   * @param int $replace
+   *   (optional) The replace behavior when the destination file already exists.
+   *   Possible values include:
+   *   - FileSystemInterface::EXISTS_REPLACE: Replace the existing file. If a
+   *     managed file with the destination name exists, then its database entry
+   *     will be updated. If no database entry is found, then a new one will be
+   *     created.
+   *   - FileSystemInterface::EXISTS_RENAME: (default) Append
+   *     _{incrementing number} until the filename is unique.
+   *   - FileSystemInterface::EXISTS_ERROR: Do nothing and return FALSE.
+   *
+   * @return \Drupal\file\FileInterface|false
+   *   A file entity, or FALSE on error.
+   */
+  protected function writeData($data, $destination = NULL, $replace = FileSystemInterface::EXISTS_RENAME) {
+    // @todo Remove file_save_data() when Drupal 9.2 is no longer supported.
+    if (!\Drupal::hasService('file.repository')) {
+      return file_save_data($data, $destination, $replace);
+    }
+
+    if (empty($destination)) {
+      $destination = \Drupal::config('system.file')->get('default_scheme') . '://';
+    }
+    /** @var \Drupal\file\FileRepositoryInterface $fileRepository */
+    $fileRepository = \Drupal::service('file.repository');
+    try {
+      return $fileRepository->writeData($data, $destination, $replace);
+    }
+    catch (EntityStorageException | FileException $e) {
+      return FALSE;
+    }
   }
 
 }

@@ -62,7 +62,7 @@ class ProductVariationCollectionAccessCheck implements AccessInterface {
       return AccessResult::forbidden()->addCacheableDependency($product_type);
     }
 
-    $variation_type_id = $product_type->getVariationTypeId();
+    $variation_type_ids = $product_type->getVariationTypeIds();
     // The collection route can be accessed by users with the administer
     // or manage permissions, because those permissions grant full access
     // to variations (add/edit/delete). The route can also be accessed by
@@ -71,8 +71,10 @@ class ProductVariationCollectionAccessCheck implements AccessInterface {
     $permissions = [
       'administer commerce_product',
       'access commerce_product overview',
-      "manage $variation_type_id commerce_product_variation",
     ];
+    foreach ($variation_type_ids as $variation_type_id) {
+      $permissions[] = "manage $variation_type_id commerce_product_variation";
+    }
 
     return AccessResult::allowedIfHasPermissions($account, $permissions, 'OR');
   }

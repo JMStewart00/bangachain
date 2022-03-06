@@ -1,6 +1,7 @@
 admin_css: true
 nojs:
   lazy: '0'
+  classlist: '0'
   polyfill: '0'
   promise: '0'
   raf: '0'

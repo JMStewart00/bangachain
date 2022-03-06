@@ -162,7 +162,7 @@ trait FeedsCommonTrait {
    *   The absolute path to the Feeds module.
    */
   protected function absolutePath() {
-    return $this->absolute() . '/' . drupal_get_path('module', 'feeds');
+    return $this->absolute() . '/' . $this->getModulePath('feeds');
   }
 
   /**
@@ -172,7 +172,28 @@ trait FeedsCommonTrait {
    *   The url to the Feeds resources directory.
    */
   protected function resourcesUrl() {
-    return \Drupal::request()->getSchemeAndHttpHost() . '/' . drupal_get_path('module', 'feeds') . '/tests/resources';
+    return \Drupal::request()->getSchemeAndHttpHost() . '/' . $this->getModulePath('feeds') . '/tests/resources';
+  }
+
+  /**
+   * Gets the path for the specified module.
+   *
+   * @param string $module_name
+   *   The module name.
+   *
+   * @return string
+   *   The Drupal-root relative path to the module directory.
+   *
+   * @throws \Drupal\Core\Extension\Exception\UnknownExtensionException
+   *   If the module does not exist.
+   */
+  protected function getModulePath(string $module_name): string {
+    // @todo Remove drupal_get_path() when Drupal 9.2 is no longer supported.
+    if (!\Drupal::hasService('extension.list.module')) {
+      return drupal_get_path('module', $module_name);
+    }
+
+    return \Drupal::service('extension.list.module')->getPath($module_name);
   }
 
   /**

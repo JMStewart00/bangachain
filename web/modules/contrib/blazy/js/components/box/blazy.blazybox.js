@@ -9,8 +9,9 @@
 
   'use strict';
 
+  var _context = _doc;
   var _id = 'blazybox';
-  var _mounted = _id + '--on';
+  var _idOnce = _id;
   var _element = '.' + _id;
   var _elContent = _element + '__content';
   var _isOpened = 'is-' + _id + '--open';
@@ -168,8 +169,7 @@
     me.el = el;
     me.$el = $el;
 
-    $el.on('click.' + _id, _element + '__close', me.close, true)
-      .addClass(_mounted);
+    $el.on('click.' + _id, _element + '__close', me.close, true);
   }
 
   /**
@@ -180,10 +180,16 @@
   Drupal.behaviors.blazyBox = {
     attach: function (context) {
 
-      context = $.context(context);
+      _context = $.context(context);
 
       Drupal.blazyBox.attach();
-      $.once(process, _element + ':not(.' + _mounted + ')', context);
+
+      $.once(process, _idOnce, _element, _context);
+    },
+    detach: function (context, setting, trigger) {
+      if (trigger === 'unload') {
+        $.once.removeSafely(_idOnce, _element, _context);
+      }
     }
   };
 

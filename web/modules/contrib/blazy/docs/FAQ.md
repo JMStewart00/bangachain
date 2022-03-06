@@ -1,17 +1,17 @@
 
 ***
-# <a name="faq"></a>FAQ
+## <a name="faq"></a>FAQ
 
-## CURRENT DEVELOPMENT STATUS
+### CURRENT DEVELOPMENT STATUS
 A full release should be reasonable after proper feedback from the community,
 some code cleanup, and optimization where needed. Patches are very much welcome.
 
 
-## PROGRAMATICALLY
+### PROGRAMATICALLY
 [blazy.api.php](https://git.drupalcode.org/project/blazy/blob/8.x-2.x/blazy.api.php)
 
 
-## BLAZY VS. B-LAZY
+### BLAZY VS. B-LAZY
 `blazy` is the module namespace. `b-lazy` is the default CSS class to lazy load.
 
 * The `blazy` class is applied to the **top level container**, e,g.. `.field`,
@@ -21,7 +21,7 @@ some code cleanup, and optimization where needed. Patches are very much welcome.
 * The `b-lazy` class is applied to the **target item** to lazy load, normally
   the children of `.blazy`, but not always. This can be IMG, VIDEO, DIV, etc.
 
-## WHAT `BLAZY` CSS CLASS IS FOR?
+### WHAT `BLAZY` CSS CLASS IS FOR?
 Aside from the fact that a module must reserve its namespace including for CSS
 classes, the `blazy` is actually used to limit the scope to scan document.
 Rather than scanning the entire DOM, you limit your work to a particular
@@ -32,13 +32,13 @@ image to iframe; ones with CSS background, others with regular images; etc.
 right on the same page. This is only possible and efficient within the `.blazy`
 scope.
 
-## WHY NOT `BLAZY__LAZY` FOR `B-LAZY`?
+### WHY NOT `BLAZY__LAZY` FOR `B-LAZY`?
 `b-lazy` is the default CSS class reserved by JS script. Rather than recreating
 a new one, respecting the defaults is better. Following BEM standard is not
 crucial for most JS generated CSS classes. Uniqueness matters.
 
-## NATIVE LAZY LOADING
-Blazy library last release was v1.8.2 (2016/10/25). 3 years later, 
+### NATIVE LAZY LOADING
+Blazy library last release was v1.8.2 (2016/10/25). 3 years later,
 Native lazy loading is supported by Chrome 76+ as of 01/2019. Blazy or IO will
 be used as fallback for other browsers instead. Currently the offset/ threshold
 before loading is hard-coded to [8000px at Chrome](https://cs.chromium.org/chromium/src/third_party/blink/renderer/core/frame/settings.json5?l=971-1003&rcl=e8f3cf0bbe085fee0d1b468e84395aad3ebb2cad),
@@ -68,7 +68,7 @@ Shortly we are in the right direction to cope with Native vs. `data-[SRC]`.
 See `bio.js ::natively` for more contextual info.  
 [?] Todo recheck IF wrong so to put back https://drupal.org/node/3120696.
 
-## ANIMATE.CSS INTEGRATION
+### ANIMATE.CSS INTEGRATION
 Blazy container (`.media`) can be animated using
 [animate.css](https://github.com/daneden/animate.css). The container is chosen
 to be the animated element so to support various use cases:
@@ -83,7 +83,7 @@ To replace **Blur** effect with `animate.css` thingies, implements two things:
 2. **Fine grained**: `hook_blazy_settings_alter`, and replace a setting named
    `fx` with one of `animate.css` CSS classes, adjust conditions based settings.
 
-### Requirements:
+#### Requirements:
 
 * The `animate.css` library included in your theme, or via `animate_css` module.
 * Data attributes: `data-animation`, with optional: `data-animation-duration`,

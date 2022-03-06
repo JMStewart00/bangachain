@@ -5,6 +5,7 @@ namespace Drupal\feeds\Commands;
 use Consolidation\OutputFormatters\StructuredData\RowsOfFields;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\feeds\FeedInterface;
 use Drush\Commands\DrushCommands;
 use Drush\Exceptions\UserAbortException;
@@ -13,6 +14,24 @@ use Drush\Exceptions\UserAbortException;
  * Defines Drush commands for the Feeds module.
  */
 class FeedsDrushCommands extends DrushCommands {
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * Constructs a new FeedsDrushCommands object.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   */
+  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+    $this->entityTypeManager = $entity_type_manager;
+    parent::__construct();
+  }
 
   /**
    * Display all feeds using a drush command.
@@ -56,7 +75,8 @@ class FeedsDrushCommands extends DrushCommands {
     'disabled' => FALSE,
     'format' => 'table',
   ]) {
-    $entityQuery = \Drupal::entityQuery('feeds_feed');
+    $entityQuery = $this->entityTypeManager->getStorage('feeds_feed')->getQuery()
+      ->accessCheck(FALSE);
     if (!empty($feed_type)) {
       $entityQuery->condition('type', $feed_type);
     }
@@ -69,7 +89,7 @@ class FeedsDrushCommands extends DrushCommands {
     if ($options['limit'] > 0) {
       $entityQuery->range(0, $options['limit']);
     }
-    $feeds = \Drupal::entityTypeManager()
+    $feeds = $this->entityTypeManager
       ->getStorage('feeds_feed')
       ->loadMultiple($entityQuery->execute());
 
@@ -233,12 +253,13 @@ class FeedsDrushCommands extends DrushCommands {
    *   In case something went wrong when importing the feeds.
    */
   public function importAllFeeds(array $feed_types, array $options = ['import-disabled' => FALSE]) {
-    $entityQuery = \Drupal::entityQuery('feeds_feed');
+    $entityQuery = $this->entityTypeManager->getStorage('feeds_feed')->getQuery()
+      ->accessCheck(FALSE);
     if (!empty($feed_types)) {
       $entityQuery->condition('type', $feed_types, 'IN');
     }
 
-    $feeds = \Drupal::entityTypeManager()
+    $feeds = $this->entityTypeManager
       ->getStorage('feeds_feed')
       ->loadMultiple($entityQuery->execute());
 
@@ -357,7 +378,7 @@ class FeedsDrushCommands extends DrushCommands {
   private function getFeed($fid) {
     try {
       // Load the feed entity.
-      return \Drupal::entityTypeManager()
+      return $this->entityTypeManager
         ->getStorage('feeds_feed')
         ->load($fid);
     }

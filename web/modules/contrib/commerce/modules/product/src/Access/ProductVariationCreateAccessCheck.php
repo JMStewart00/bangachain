@@ -53,13 +53,30 @@ class ProductVariationCreateAccessCheck implements AccessInterface {
     if (!$product) {
       return AccessResult::forbidden();
     }
-    $access_control_handler = $this->entityTypeManager->getAccessControlHandler('commerce_product_variation');
+
     $product_type_storage = $this->entityTypeManager->getStorage('commerce_product_type');
     /** @var \Drupal\commerce_product\Entity\ProductTypeInterface $product_type */
     $product_type = $product_type_storage->load($product->bundle());
-    $variation_type_id = $product_type->getVariationTypeId();
+    $variation_type_ids = $product_type->getVariationTypeIds();
+    $access_control_handler = $this->entityTypeManager->getAccessControlHandler('commerce_product_variation');
 
-    return $access_control_handler->createAccess($variation_type_id, $account, [], TRUE);
+    $access_result = AccessResult::neutral();
+    /** @var \Drupal\commerce_product\Entity\ProductVariationTypeInterface $product_variation_type */
+    $product_variation_type = $route_match->getParameter('commerce_product_variation_type');
+    if ($product_variation_type) {
+      if (in_array($product_variation_type->id(), $variation_type_ids, TRUE)) {
+        $access_result = $access_control_handler->createAccess($product_variation_type->id(), $account, [], TRUE);
+      }
+      else {
+        $access_result = AccessResult::forbidden();
+      }
+    }
+
+    foreach ($variation_type_ids as $variation_type_id) {
+      $access_result = $access_result->orIf($access_control_handler->createAccess($variation_type_id, $account, [], TRUE));
+    }
+
+    return $access_result;
   }
 
 }

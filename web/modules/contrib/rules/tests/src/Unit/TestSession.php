@@ -2,148 +2,80 @@
 
 namespace Drupal\Tests\rules\Unit;
 
-use Symfony\Component\HttpFoundation\Session\SessionBagInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-
-/**
- * Implements just the methods we need for the Rules unit tests.
- */
-class TestSession implements SessionInterface {
+// Symfony 6, which is used by Drupal 10, requires PHP 8 features that
+// are not available in PHP 7. Specifically, the 'mixed' return type hint.
+// @todo Remove this hack when Drupal 9 is no longer supported.
+// @see https://www.drupal.org/project/rules/issues/3265360
+if (version_compare(\Drupal::VERSION, '10') >= 0) {
 
   /**
-   * Simulated session storage.
-   *
-   * @var array
+   * Implements just the methods we need for the Rules unit tests.
    */
-  protected $logs = [];
+  class TestSession extends TestSessionBase {
 
-  /**
-   * {@inheritdoc}
-   */
-  public function all() {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function clear() {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function get($key, $default = NULL) {
-    if (isset($this->logs[$key])) {
-      return $this->logs[$key];
+    /**
+     * {@inheritdoc}
+     */
+    public function get(string $key, mixed $default = NULL): mixed {
+      if (isset($this->logs[$key])) {
+        return $this->logs[$key];
+      }
+      else {
+        return $default;
+      }
     }
-    else {
-      return $default;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function remove(string $key): mixed {
+      if (isset($this->logs[$key])) {
+        $return = $this->logs[$key];
+        unset($this->logs[$key]);
+        return $return;
+      }
+      else {
+        return NULL;
+      }
     }
+
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getBag($name) {
-  }
+}
+// Otherwise use the PHP 7 compatible version of TestSession.
+else {
 
   /**
-   * {@inheritdoc}
+   * Implements just the methods we need for the Rules unit tests.
    */
-  public function getId() {
-  }
+  class TestSession extends TestSessionBase {
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getMetadataBag() {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getName() {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function has($name) {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function invalidate($lifetime = NULL) {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function isStarted() {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function migrate($destroy = FALSE, $lifetime = NULL) {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function registerBag(SessionBagInterface $bag) {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function remove($key) {
-    if (isset($this->logs[$key])) {
-      $return = $this->logs[$key];
-      unset($this->logs[$key]);
-      return $return;
+    /**
+     * {@inheritdoc}
+     */
+    public function get($key, $default = NULL) {
+      if (isset($this->logs[$key])) {
+        return $this->logs[$key];
+      }
+      else {
+        return $default;
+      }
     }
-    else {
-      return NULL;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function remove($key) {
+      if (isset($this->logs[$key])) {
+        $return = $this->logs[$key];
+        unset($this->logs[$key]);
+        return $return;
+      }
+      else {
+        return NULL;
+      }
     }
-  }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function replace(array $attributes) {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function save() {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function set($key, $value) {
-    $this->logs[$key] = $value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setId($id) {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setName($name) {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function start() {
   }
 
 }

@@ -42,18 +42,6 @@ interface BlazyFormatterInterface extends BlazyManagerInterface {
   public function postBuildElements(array &$build, $items, array $entities = []);
 
   /**
-   * Extract the first image item to build colorbox/zoom-like gallery.
-   *
-   * @param array $settings
-   *   The $settings array being modified.
-   * @param object $item
-   *   The Drupal\image\Plugin\Field\FieldType\ImageItem item.
-   * @param object $entity
-   *   The optional media entity.
-   */
-  public function extractFirstItem(array &$settings, $item, $entity = NULL);
-
-  /**
    * Checks if an image style contains crop effect.
    *
    * @param string $style

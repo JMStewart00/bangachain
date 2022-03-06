@@ -20,7 +20,7 @@ class PrivateFileTest extends FileFieldTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'file',
     'file_module_test',
@@ -59,10 +59,13 @@ class PrivateFileTest extends FileFieldTestBase {
     $node_file = File::load($node->{$field_name}->target_id);
     // Ensure the file can be viewed.
     $this->drupalGet('node/' . $node->id());
-    $this->assertRaw($node_file->getFilename(), 'File reference is displayed after attaching it');
+    // File reference is displayed after attaching it.
+    $this->assertSession()->responseContains($node_file->getFilename());
     // Ensure the file can be downloaded.
-    $this->drupalGet(file_create_url($node_file->getFileUri()));
-    $this->assertResponse(200, 'Confirmed that the generated URL is correct by downloading the shipped file.');
+    $this->drupalGet($node_file->createFileUrl());
+    // Confirmed that the generated URL is correct by downloading the shipped
+    // file.
+    $this->assertSession()->statusCodeEquals(200);
   }
 
 }

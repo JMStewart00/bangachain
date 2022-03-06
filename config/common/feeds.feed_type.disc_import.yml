@@ -16,8 +16,8 @@ dependencies:
     - commerce_feeds
     - commerce_product
     - soft4net_commerce_feeds
-label: 'Disc Import'
 id: disc_import
+label: 'Disc Import'
 description: ''
 help: ''
 import_period: -1
@@ -48,58 +48,67 @@ custom_sources:
     value: product_id
     label: product_id
     machine_name: product_id
+    type: csv
   bin:
     value: bin
     label: bin
     machine_name: bin
+    type: csv
   color:
     value: color
     label: color
     machine_name: color
+    type: csv
   plastic:
     value: plastic
     label: plastic
     machine_name: plastic
+    type: csv
   weight:
     value: weight
     label: weight
     machine_name: weight
+    type: csv
   list_price:
     value: list_price
     label: list_price
     machine_name: list_price
+    type: csv
   price:
     value: price
     label: price
     machine_name: price
+    type: csv
   maximum_order_quantity:
     value: maximum_order_quantity
     label: maximum_order_quantity
     machine_name: maximum_order_quantity
+    type: csv
   sku:
     value: sku
     label: sku
     machine_name: sku
+    type: csv
   vendor_cost:
     value: vendor_cost
     label: vendor_cost
     machine_name: vendor_cost
+    type: csv
   published:
     value: published
     label: published
     machine_name: published
+    type: csv
   disc:
     value: disc
     label: disc
     machine_name: disc
+    type: csv
   stock:
     value: stock
     label: stock
     machine_name: stock
-  shipping_weight:
-    value: shipping_weight
-    label: shipping_weight
-    machine_name: shipping_weight
+    type: csv
 mappings:
   -
     target: product_id
@@ -174,7 +183,7 @@ mappings:
   -
     target: weight
     map:
-      number: shipping_weight
+      number: weight
     settings:
       unit: g
   -

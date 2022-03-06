@@ -1,4 +1,40 @@
 
+Blazy 8.x-2.0-dev, 2022-02-20
+-----------------------------
+- Added core D9.2 webp client-side fallback for those who want to support old
+  browsers and want modern ones have cleaner native image markups.
+
+Blazy 8.x-2.0-dev, 2022-02-17
+-----------------------------
+- Added core/once compat to save headaches and easy migration when min D9.2.
+- Issue #3264754 by Qusai Taha: Fix Undefined index: ratio in
+  Drupal\blazy\BlazyFormatter->preBuildElements().
+- Fixed for local video autoplay which be on lightboxes, not inline.
+- Added core/once as soft dependencies, etc.
+
+Blazy 8.x-2.0-dev, 2022-02-15
+-----------------------------
+- Added `settings.blazies` grouping for sanity and to avoid conflict with
+  sub-modules till all settings converted into BlazySettings at 3+.
+- Issue #3264039 by xamount, gausarts: WSOD when using preload with a responsive
+  image style with no sizes attribute.
+
+Blazy 8.x-2.0-dev, 2022-02-11
+-----------------------------
+- Moved media-related classes and services into \Drupal\blazy\Media namespace.
+- Added hook_uninstall().
+
+Blazy 8.x-2.0-dev, 2022-02-09
+-----------------------------
+- Added Magnific Popup as decent replacement for Colorbox and Photobox.
+- Issue #3263027 by gausarts, kobusvw, mably, bogdog400: Incompatible with
+  Drupal 8, release 2.6 - app.root error.
+
+Blazy 8.x-2.0-dev, 2022-02-08
+-----------------------------
+- Fixed for NativeGrid Masonry with AJAX loaded contents like IO infinite pager.
+- Fixed for Bio.js immutable object regressions.
+
 Blazy 8.x-2.0-dev, 2022-02-06
 -----------------------------
 - Issue #3262804 by gausarts: Add preload option to help boost actual and

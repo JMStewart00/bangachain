@@ -27,7 +27,7 @@ abstract class FeedsBrowserTestBase extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'feeds',
     'node',
     'user',

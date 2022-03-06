@@ -38,5 +38,22 @@
       <guid isPermaLink="true">https://www.example.com/thumbnail-only</guid>
       <media:thumbnail url="https://www.example.com/thumbnail3.png" width="80" height="53" />
     </item>
+    <item>
+      <title>Media content and description</title>
+      <link>https://www.example.com/media-content-description</link>
+      <description></description>
+      <pubDate>Sun, 21 Apr 2019 19:48:50 +0200</pubDate>
+      <guid isPermaLink="true">https://www.example.com/media-content-description</guid>
+      <media:content url="https://www.example.com/image3.png" medium="image" width="640" height="424" />
+      <media:description>Example media description</media:description>
+    </item>
+    <item>
+      <title>Media description only</title>
+      <link>https://www.example.com/media-content-description-only</link>
+      <description></description>
+      <pubDate>Sun, 21 Apr 2019 19:48:50 +0200</pubDate>
+      <guid isPermaLink="true">https://www.example.com/media-content-description-only</guid>
+      <media:description>Example media description</media:description>
+    </item>
   </channel>
 </rss>

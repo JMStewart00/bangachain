@@ -1,6 +1,6 @@
+
 ***
-***
-# <a name="formatters"> </a>SPLIDE FORMATTERS
+## <a name="formatters"> </a>SPLIDE FORMATTERS
 
 Adds a field display formatter to allow you to display field content using
 Splide slider. The module doesn't require Field UI to be enabled by default
@@ -8,7 +8,7 @@ Splide slider. The module doesn't require Field UI to be enabled by default
 to use to setup your display settings.
 
 
-## SUPPORTED FIELDS
+### SUPPORTED FIELDS
 All is applicable only to multi-value fields. Ignored for single value.
 
 * Image
@@ -17,7 +17,7 @@ All is applicable only to multi-value fields. Ignored for single value.
 * [Paragraphs](https://drupal.org/project/paragraphs)
 
 
-## USAGE
+### USAGE
 Manage the fields on any entity (e.g.: node of type Article):
 
 [Article display](/admin/structure/types/manage/article/display)
@@ -40,13 +40,13 @@ Further work is required like everything else, but the ease of field composition
 is there without too much custom code, except for CSS which is normal for any
 site building.
 
-## OPTIONSET
+### OPTIONSET
 To create your option sets, go to:
 
 [Splide UI](/admin/config/media/splide)
 
 
-## SLIDE LAYOUT
+### SLIDE LAYOUT
 The slide layout option depends on at least a skin selected. No skin, just DIY.
 Core image field support several caption placements/ layout that affect the
 entire slides uniformly.

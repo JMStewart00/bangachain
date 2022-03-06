@@ -1,12 +1,14 @@
 
-# <a name="top"> </a>CONTENTS OF THIS FILE
+## <a name="top"> </a>CONTENTS OF THIS FILE
 
  * [Introduction](#introduction)
+ * [Upgrading from 1.x](https://www.drupal.org/project/blazy#blazy-upgrade)
  * [Requirements](#requirements)
  * [Recommended modules](#recommended-modules)
  * [Installation](#installation)
  * [Installing libraries via Composer](#composer)
  * [Configuration](#configuration)
+ * [Lightboxes](#lightboxes)
  * [Features](#features)
  * [Updating](#updating)
  * [Troubleshooting](#troubleshooting)
@@ -19,7 +21,7 @@
 
 
 ***
-# <a name="introduction"></a>INTRODUCTION
+## <a name="introduction"></a>INTRODUCTION
 Provides integration with bLazy and or Intersection Observer API, or browser
 native lazy loading to lazy load and multi-serve images to save bandwidth and
 server requests. The user will have faster load times and save data usage if
@@ -28,33 +30,34 @@ they don't browse the whole page.
 Check out [project home](https://www.drupal.org/project/blazy) for most updated
 info.
 
-
 ***
-# <a name="requirements"> </a>REQUIREMENTS
+## <a name="requirements"> </a>REQUIREMENTS
 Core modules:  
 1. Media  
 2. Filter
 
-## Applicable for Blazy module <= 2.5:
+### Applicable for Blazy module <= 2.5:
 The bLazy library is forked at Blazy 2.6, and no longer required from now on,
 see [#3257511](https://drupal.org/node/3257511).
 Any references to bLazy library is no longer relevant for forked version at 2.6.  
+
 * [Download bLazy](https://github.com/dinbror/blazy)  
-* Extract it as is, rename **blazy-master** to **blazy**, so the assets are:
+* Extract it as is, rename **blazy-master** to **blazy**, so the assets are:  
 
   + **/libraries/blazy/blazy.js**
   + **/libraries/blazy/blazy.min.js**
 
 ***
-# <a name="recommended-modules"> </a>RECOMMENDED MODULES
+## <a name="recommended-modules"> </a>RECOMMENDED MODULES
 For better admin help page, either way will do:  
+
 * [Markdown](https://www.drupal.org/project/markdown)  
 * `composer require league/commonmark`  
 
 To make reading this README a breeze at [Blazy help](/admin/help/blazy_ui)
 
 
-## MODULES THAT INTEGRATE WITH OR REQUIRE BLAZY
+### MODULES THAT INTEGRATE WITH OR REQUIRE BLAZY
 * [Ajaxin](https://www.drupal.org/project/ajaxin)
 * [Intersection Observer](https://www.drupal.org/project/io)
 * [Blazy PhotoSwipe](https://www.drupal.org/project/blazy_photoswipe)
@@ -103,12 +106,12 @@ Currently, of course, not perfect, but have been proven to play nice with at
 least 7 lightboxes, and likely more.
 
 
-## SIMILAR MODULES
+### SIMILAR MODULES
 [Lazyloader](https://www.drupal.org/project/lazyloader)
 
 
 ***
-# <a name="installation"> </a>INSTALLATION
+## <a name="installation"> </a>INSTALLATION
 1. **MANUAL:**
 
    Install the module as usual, more info can be found on:
@@ -121,7 +124,7 @@ least 7 lightboxes, and likely more.
 
 
 ***
-# <a name="configuration"> </a>CONFIGURATION
+## <a name="configuration"> </a>CONFIGURATION
 Visit the following to configure and make use of Blazy:
 
 1. `/admin/config/media/blazy`
@@ -160,6 +163,7 @@ etc., try the following:
   supportive lightbox in the format **blazy--LIGHTBOX-gallery**, e.g.:
   + **blazy--colorbox-gallery**
   + **blazy--intense-gallery**
+  + **blazy--mfp-gallery** (Magnific Popup)
   + **blazy--photobox-gallery**
   + **blazy--photoswipe-gallery**
   + **blazy--slick-lightbox-gallery**
@@ -188,15 +192,39 @@ is a standalone output from Views so to use field template in this case.
 
 Check out the relevant sub-module docs for details.
 
+***
+## <a name="lightboxes"> </a>LIGHTBOXES
+All lightbox integrations are optional. Meaning if the relevant modules and or
+libraries are not present, nothing will show up under `Media switch` option.  
+
+Clear cache if they do not appear as options due to being permanently cached.
+
+Most lightboxes, not all, supports (responsive) image, (local|remote) video.
+Magnific Popup supports picture.
+Splidebox supports AJAX contents.
+
+* Colorbox, PhotoSwipe, etc. requires both modules and their libraries present.
+* Photobox, Magnific Popup, requires only libraries to be present:  
+  + `/libraries/photobox/photobox/jquery.photobox.js`
+  + `/libraries/magnific-popup/dist/jquery.magnific-popup.min.js`  
+  The reason for no modules are being required because no special settings, nor
+  re-usable options to bother provided by them. Aside from the fact, Blazy has
+  its own loader aka initializer for advanced features like multimedia (remote
+  |local video), or (responsive|picture) image, fieldable captions, etc. which
+  are not supported by these modules.
 
 ***
-# <a name="features"> </a>FEATURES
+## <a name="features"> </a>FEATURES
 * Works absurdly fine at IE9 for Blazy 2.6.
 * Works without JavaScript within/without JavaScript browsers.
 * Works with AMP, or static/ archived sites, e.g.: Tome, HTTrack, etc.
+* Supports modern Native lazyload since [incubation](https://drupal.org/node/3104542)
+  before Firefox or core had it, or old `data-[src|srcset]` since eons. Must be
+  noted very clearly due to some thought Blazy was retarded from core.
 * Supports Image, Responsive image, (local|remote|iframe) videos, DIV either
   inline, fields, views, or within lightboxes.
-* Lightboxes: Colorbox, Splidebox, PhotoSwipe, etc. with multimedia lightboxes.
+* Lightboxes: Colorbox, Magnific Popup, Splidebox, PhotoSwipe, etc. with
+  multimedia lightboxes.
 * Multi-serving lazyloaded images, including multi-breakpoint CSS backgrounds.
 * Field formatters: Blazy with Media integration.
 * Blazy Grid formatter for Image, Media and Text with multi-value:
@@ -211,14 +239,14 @@ Check out the relevant sub-module docs for details.
   formatter, or its supporting modules.
 
 
-## OPTIONAL FEATURES
+### OPTIONAL FEATURES
 * Views fields for File Entity and Media integration, see
   [Slick Browser](https://www.drupal.org/project/slick_browser).
 * Views style plugin `Blazy Grid` for CSS3 Columns, Grid Foundation, Flexbox,
   and Native Grid.
 
 ***
-# <a name="maintainers"> </a>MAINTAINERS/CREDITS
+## <a name="maintainers"> </a>MAINTAINERS/CREDITS
 * [Gaus Surahman](https://www.drupal.org/user/159062)
 * [geek-merlin](https://www.drupal.org/u/geek-merlin)
 * [sun](https://www.drupal.org/u/sun)

@@ -51,13 +51,6 @@ base:
     - blazy/dblazy
     - splide/splide
 
-nav:
-  version: VERSION
-  js:
-    js/splide.nav.min.js: { minified: true }
-  dependencies:
-    - splide/base
-
 load:
   version: VERSION
   js:
@@ -69,6 +62,13 @@ vanilla:
   version: VERSION
   js:
     js/splide.vanilla.min.js: { weight: -0.003, minified: true }
+  dependencies:
+    - splide/base
+
+nav:
+  version: VERSION
+  js:
+    js/splide.nav.min.js: { weight: -0.002, minified: true }
   dependencies:
     - splide/base
 

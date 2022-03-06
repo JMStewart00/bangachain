@@ -9,8 +9,8 @@ dependencies:
     - node.type.team_member
   module:
     - node
-label: 'Team Member Update'
 id: team_member_update
+label: 'Team Member Update'
 description: ''
 help: ''
 import_period: -1
@@ -35,19 +35,23 @@ processor_configuration:
   expire: -1
   owner_feed_author: false
   owner_id: 41
+  insert_new: 1
 custom_sources:
   name:
     value: name
     label: name
     machine_name: name
+    type: csv
   team:
     value: team
     label: team
     machine_name: team
+    type: csv
   pdga_number:
     value: pdga_number
     label: pdga_number
     machine_name: pdga_number
+    type: csv
 mappings:
   -
     target: title

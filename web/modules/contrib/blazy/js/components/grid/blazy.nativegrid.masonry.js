@@ -8,32 +8,40 @@
  * Below is the cheap version of GridStack.
  */
 
-(function ($, Drupal, _win) {
+(function ($, Drupal, _doc) {
 
   'use strict';
 
+  var _context = _doc;
   var _id = 'block-nativegrid';
-  var _masonry = 'is-b-masonry';
-  var _mounted = _masonry + '--on';
-  var _element = '.' + _id + '.' + _masonry + ':not(.' + _mounted + ')';
+  var _idOnce = 'b-masonry';
+  var _isMasonry = 'is-' + _idOnce;
+  var _isUnload = 'is-b-unload';
+  var _element = '.' + _id + '.' + _isMasonry;
+  var _unload = false;
 
   Drupal.blazy = Drupal.blazy || {};
 
   var _opts = {
+    $el: null,
     gap: 15,
     height: 15,
     rows: 10
   };
+
+  var _heights = [];
 
   /**
    * Applies the correct span to each grid item.
    *
    * @param {HTMLElement|Event} el
    *   The item HTML element, or event object on blazy.done.
-   * @param {in|undefiued} i
-   *   The element index, or undefined for a resize event.
+   * @param {int} i
+   *   The element index.
+   * @param {bool} isResized
+   *   If the resize event is triggered.
    */
-  function processItem(el, i) {
+  function processItem(el, i, isResized) {
     var target = el.target;
     var box = 'target' in el ? $.closest(target, '.grid') : el;
 
@@ -50,6 +58,7 @@
 
       // Once setup, we rely on CSS to make it responsive.
       var layout = function () {
+        _heights.push($.outerHeight(cn, true));
         var rect = $.rect(cn);
         var span = Math.ceil((rect.height + _opts.gap) / (_opts.height + _opts.gap));
 
@@ -57,10 +66,14 @@
         box.style.gridRowEnd = 'span ' + span;
 
         $.addClass(box, 'is-b-grid');
+        setTimeout(function () {
+          cn.style.minHeight = '';
+          $.addClass(box, 'is-b-layout');
+        }, _unload ? 600 : 200);
       };
 
-      if ($.isUnd(i)) {
-        _win.setTimeout(layout, 200);
+      if (isResized || _unload) {
+        setTimeout(layout, _unload ? 300 : 200);
       }
       else {
         layout();
@@ -92,16 +105,34 @@
       }
 
       if (items.length) {
+        if (_unload) {
+          $.each(items, function (item, i) {
+            var cn = $.find(item, '.grid__content');
+            if (cn && _heights[i]) {
+              cn.style.minHeight = _heights[i] + 'px';
+            }
+          });
+        }
+
         // Process on page load.
         $.each(items, processItem);
 
         // Process on resize.
-        Drupal.blazy.checkResize(items, processItem, elm, processItem);
+        if (!_unload) {
+          Drupal.blazy.checkResize(items, processItem, elm, processItem);
+        }
+
       }
     };
 
-    _win.setTimeout(init, 100);
-    $.addClass(elm, _mounted);
+    setTimeout(init, _unload ? 110 : 0);
+    _opts.$el = elm;
+
+    // $.addClass(elm, _isMounted);
+    if (_unload) {
+      $.addClass(elm, _isUnload);
+    }
+    _unload = false;
   }
 
   /**
@@ -112,10 +143,18 @@
   Drupal.behaviors.blazyNativeGrid = {
     attach: function (context) {
 
-      context = $.context(context);
+      _context = $.context(context);
 
-      $.once(process, _element, context);
+      $.once(process, _idOnce, _element, _context);
+
+    },
+    detach: function (context, setting, trigger) {
+      _unload = trigger === 'unload';
+      if (_unload) {
+        $.once.removeSafely(_idOnce, _element, _context);
+      }
     }
+
   };
 
-}(dBlazy, Drupal, this));
+}(dBlazy, Drupal, this.document));

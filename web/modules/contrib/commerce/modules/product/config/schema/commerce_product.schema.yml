@@ -65,7 +65,14 @@ commerce_product.commerce_product_type.*:
       label: 'Description'
     variationType:
       type: string
-      label: 'Variation type'
+      label: 'Legacy Variation type will be removed in 3.x'
+    variationTypes:
+      type: sequence
+      label: 'Variation types'
+      orderby: value
+      sequence:
+        type: string
+        label: 'Variation type'
     multipleVariations:
       type: boolean
       label: 'Allow each product to have multiple variations'

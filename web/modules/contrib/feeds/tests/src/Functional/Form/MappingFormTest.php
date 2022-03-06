@@ -13,7 +13,7 @@ class MappingFormTest extends FeedsBrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'feeds',
     'node',
     'user',
@@ -39,14 +39,166 @@ class MappingFormTest extends FeedsBrowserTestBase {
     // Now try to map to a new source called 'title'. This shouldn't be allowed
     // because that source name already exists on the feed type.
     $edit = [
-      'mappings[2][map][value][select]' => '__new',
-      'mappings[2][map][value][__new][value]' => 'title',
-      'mappings[2][map][value][__new][machine_name]' => 'title',
+      'mappings[2][map][value][select]' => 'custom__csv',
+      'mappings[2][map][value][custom__csv][value]' => 'title',
+      'mappings[2][map][value][custom__csv][machine_name]' => 'title',
     ];
     $this->drupalPostForm(NULL, $edit, 'Save');
 
     // Assert that the double source name is detected.
     $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
+  }
+
+  /**
+   * Tests adding a CSV source for the CSV parser.
+   */
+  public function testAddCsvSource() {
+    // Create a feed type for CSV with zero mappings.
+    $feed_type = $this->createFeedTypeForCsv([], [
+      'mappings' => [],
+    ]);
+
+    // Add a new target.
+    $edit = [
+      'add_target' => 'title',
+    ];
+    $this->drupalGet('/admin/structure/feeds/manage/' . $feed_type->id() . '/mapping');
+    $this->submitForm($edit, 'Save');
+
+    // Create a new CSV source and map that.
+    $edit = [
+      'mappings[0][map][value][select]' => 'custom__csv',
+      'mappings[0][map][value][custom__csv][value]' => 'title',
+      'mappings[0][map][value][custom__csv][machine_name]' => 'title',
+    ];
+    $this->submitForm($edit, 'Save');
+
+    // Reload feed type and assert that a custom source of type "csv" was added.
+    $feed_type = $this->reloadEntity($feed_type);
+    $expected = [
+      'title' => [
+        'value' => 'title',
+        'label' => 'title',
+        'type' => 'csv',
+        'machine_name' => 'title',
+      ],
+    ];
+    $this->assertEquals($expected, $feed_type->getCustomSources());
+  }
+
+  /**
+   * Tests adding a blank source for the RSS parser.
+   */
+  public function testAddBlankSource() {
+    // Create a feed type for RSS with zero mappings.
+    $feed_type = $this->createFeedType([
+      'mappings' => [],
+    ]);
+
+    // Add a new target.
+    $edit = [
+      'add_target' => 'title',
+    ];
+    $this->drupalGet('/admin/structure/feeds/manage/' . $feed_type->id() . '/mapping');
+    $this->submitForm($edit, 'Save');
+
+    // Create a new blank source and map that.
+    $edit = [
+      'mappings[0][map][value][select]' => 'custom__blank',
+      'mappings[0][map][value][custom__blank][value]' => 'title',
+      'mappings[0][map][value][custom__blank][machine_name]' => 'title',
+    ];
+    $this->submitForm($edit, 'Save');
+
+    // Reload feed type and assert that a custom source of type "blank" was
+    // added.
+    $feed_type = $this->reloadEntity($feed_type);
+    $expected = [
+      'title' => [
+        'value' => 'title',
+        'label' => 'title',
+        'type' => 'blank',
+        'machine_name' => 'title',
+      ],
+    ];
+    $this->assertEquals($expected, $feed_type->getCustomSources());
+  }
+
+  /**
+   * Tests adding a blank source for a parser that does not extend ParserBase.
+   */
+  public function testAddBlankSourceForBasicParser() {
+    // Create a feed type with the parser "Parser with mapping form".
+    // That parser does not extend \Drupal\feeds\Feeds\Parser\ParserBase.
+    $feed_type = $this->createFeedType([
+      'parser' => 'parser_with_mapping_form',
+      'mappings' => [],
+    ]);
+
+    // Add a new target and set field specific for this parser.
+    $edit = [
+      'dummy' => 'dummyValue',
+      'add_target' => 'title',
+    ];
+    $this->drupalGet('/admin/structure/feeds/manage/' . $feed_type->id() . '/mapping');
+    $this->submitForm($edit, 'Save');
+
+    // Create a new blank source and map that.
+    $edit = [
+      'mappings[0][map][value][select]' => 'custom__blank',
+      'mappings[0][map][value][custom__blank][value]' => 'title',
+      'mappings[0][map][value][custom__blank][machine_name]' => 'title',
+    ];
+    $this->submitForm($edit, 'Save');
+
+    // Reload feed type and assert that a custom source of type "blank" was
+    // added.
+    $feed_type = $this->reloadEntity($feed_type);
+    $expected = [
+      'title' => [
+        'value' => 'title',
+        'label' => 'title',
+        'type' => 'blank',
+        'machine_name' => 'title',
+      ],
+    ];
+    $this->assertEquals($expected, $feed_type->getCustomSources());
+  }
+
+  /**
+   * Tests that validation handlers on custom sources are ran.
+   */
+  public function testAddCustomSourceValidation() {
+    // Create a feed type with the parser "Parser with Foo Source", because for
+    // that parser the custom source type "Foo" is available.
+    $feed_type = $this->createFeedType([
+      'parser' => 'parser_with_foo_source',
+      'mappings' => [],
+    ]);
+
+    // Add a new target.
+    $edit = [
+      'add_target' => 'title',
+    ];
+    $this->drupalGet('/admin/structure/feeds/manage/' . $feed_type->id() . '/mapping');
+    $this->submitForm($edit, 'Save');
+
+    // Try to map a source of type "Foo" to the title. Give it a value that
+    // triggers a validation error.
+    $edit = [
+      'mappings[0][map][value][select]' => 'custom__foo',
+      'mappings[0][map][value][custom__foo][value]' => 'title',
+      'mappings[0][map][value][custom__foo][machine_name]' => 'title',
+      'mappings[0][map][value][custom__foo][proptext]' => 'Illegal value',
+    ];
+    $this->submitForm($edit, 'Save');
+
+    // Assert that an error message is displayed.
+    $this->assertSession()->pageTextContains('The textfield contains "Illegal value".');
+
+    // Reload feed type and assert that no custom sources were added.
+    $feed_type = $this->reloadEntity($feed_type);
+    $this->assertEquals([], $feed_type->getCustomSources());
   }
 
   /**
@@ -84,7 +236,7 @@ class MappingFormTest extends FeedsBrowserTestBase {
     ];
 
     $this->drupalPostForm('/admin/structure/feeds/manage/' . $feed_type->id() . '/mapping', $edit, 'Save');
-    $this->assertText('Invalid value.');
+    $this->assertSession()->responseContains('Invalid value.');
 
     // Assert that the dummy value was *not* saved for the parser.
     $feed_type = $this->reloadEntity($feed_type);

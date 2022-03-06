@@ -11,7 +11,7 @@ use Drupal\filter\Plugin\FilterBase;
 use Drupal\filter\Render\FilteredMarkup;
 use Drupal\blazy\Blazy;
 use Drupal\blazy\BlazyDefault;
-use Drupal\blazy\BlazyFile;
+use Drupal\blazy\Media\BlazyFile;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -50,7 +50,7 @@ abstract class BlazyFilterBase extends FilterBase implements BlazyFilterInterfac
   /**
    * The blazy oembed service.
    *
-   * @var \Drupal\blazy\BlazyOEmbedInterface
+   * @var \Drupal\blazy\Media\BlazyOEmbedInterface
    */
   protected $blazyOembed;
 
@@ -88,7 +88,7 @@ abstract class BlazyFilterBase extends FilterBase implements BlazyFilterInterfac
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     $instance = new static($configuration, $plugin_id, $plugin_definition);
 
-    $instance->root = $instance->root ?? $container->getParameter('app.root');
+    $instance->root = $instance->root ?? Blazy::root($container);
     $instance->entityFieldManager = $instance->entityFieldManager ?? $container->get('entity_field.manager');
     $instance->filterManager = $instance->filterManager ?? $container->get('plugin.manager.filter');
     $instance->blazyAdmin = $instance->blazyAdmin ?? $container->get('blazy.admin');
@@ -381,6 +381,9 @@ abstract class BlazyFilterBase extends FilterBase implements BlazyFilterInterfac
     $settings['width'] = $node->getAttribute('width');
     $settings['height'] = $node->getAttribute('height');
     $settings['media_switch'] = empty($settings['media_switch']) ? $this->settings['media_switch'] : $settings['media_switch'];
+
+    // Checks for [Responsive] image styles at individual items.
+    BlazyFile::imageStyles($settings, TRUE);
   }
 
   /**

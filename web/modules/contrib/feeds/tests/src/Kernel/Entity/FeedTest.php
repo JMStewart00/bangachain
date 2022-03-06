@@ -143,7 +143,12 @@ class FeedTest extends FeedsKernelTestBase {
    * @covers ::getQueuedTime
    */
   public function testStartCronImport() {
-    $this->installSchema('system', ['key_value_expire']);
+    // @todo Remove installSchema() when Drupal 9.0 is no longer supported.
+    // https://www.drupal.org/node/3143286
+    if (version_compare(\Drupal::VERSION, '9.1', '<')) {
+      // Install key/value expire schema.
+      $this->installSchema('system', ['key_value_expire']);
+    }
 
     $feed = $this->createFeed($this->feedType->id(), [
       'source' => $this->resourcesPath() . '/rss/googlenewstz.rss2',
@@ -165,7 +170,12 @@ class FeedTest extends FeedsKernelTestBase {
    * @covers ::startCronImport
    */
   public function testStartCronImportFailsOnLockedFeed() {
-    $this->installSchema('system', ['key_value_expire']);
+    // @todo Remove installSchema() when Drupal 9.0 is no longer supported.
+    // https://www.drupal.org/node/3143286
+    if (version_compare(\Drupal::VERSION, '9.1', '<')) {
+      // Install key/value expire schema.
+      $this->installSchema('system', ['key_value_expire']);
+    }
 
     $feed = $this->createFeed($this->feedType->id(), [
       'source' => $this->resourcesPath() . '/rss/googlenewstz.rss2',

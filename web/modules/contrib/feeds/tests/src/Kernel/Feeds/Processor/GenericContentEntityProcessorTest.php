@@ -15,7 +15,7 @@ class GenericContentEntityProcessorTest extends FeedsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'entity_test',
     'feeds',
     'field',

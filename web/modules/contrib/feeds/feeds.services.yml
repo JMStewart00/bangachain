@@ -11,6 +11,9 @@ services:
   plugin.manager.feeds.source:
     class: Drupal\feeds\Plugin\Type\FeedsPluginManager
     arguments: ['source', '@container.namespaces', '@cache.default', '@language_manager', '@module_handler']
+  plugin.manager.feeds.custom_source:
+    class: Drupal\feeds\Plugin\Type\FeedsPluginManager
+    arguments: ['custom_source', '@container.namespaces', '@cache.default', '@language_manager', '@module_handler']
   plugin.manager.feeds.target:
     class: Drupal\feeds\Plugin\Type\FeedsPluginManager
     arguments: ['target', '@container.namespaces', '@cache.default', '@language_manager', '@module_handler']

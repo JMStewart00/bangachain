@@ -28,14 +28,14 @@ function feeds_help($route_name, RouteMatchInterface $route_match) {
     case 'entity.feeds_feed_type.mapping':
       $doc_link = [
         '#type' => 'link',
-        '#url' => Url::fromUri('https://www.drupal.org/docs/8/modules/feeds/creating-and-editing-import-feeds#mapping'),
+        '#url' => Url::fromUri('https://www.drupal.org/docs/contributed-modules/feeds/creating-and-editing-import-feeds#mapping'),
         '#title' => t('Mapping documentation'),
         '#attributes' => [
           'target' => '_new',
         ],
       ];
 
-      return new FormattableMarkup('<p>@help1</p><p>@help2</p><p>@help3</p>', [
+      return new FormattableMarkup('<p>@help1</p><p>@help2 @help3</p><p>@help4</p>', [
         '@help1' => t('Define which elements of a single item of a feed (= %sources_label) map to which content pieces in Drupal (= %targets_label). To avoid importing duplicates, make sure that at least one definition has an %unique_target_label. An unique target means that a value for a target can only occur once. For example, only one item with the URL %example_url can exist.', [
           '%sources_label' => t('Sources'),
           '%targets_label' => t('Targets'),
@@ -45,7 +45,10 @@ function feeds_help($route_name, RouteMatchInterface $route_match) {
         '@help2' => t('On %read_only_label targets a value can only be set the first time.', [
           '%read_only_label' => t('Read only'),
         ]),
-        '@help3' => t('See the @doc_link for more information.', [
+        '@help3' => t('Blank sources can be used for tampering: see the <a href=":link" target="_blank">documentation</a>.', [
+          ':link' => 'https://www.drupal.org/docs/contributed-modules/feeds/feeds-howtos/how-to-use-blank-sources',
+        ]),
+        '@help4' => t('See the @doc_link for more information.', [
           '@doc_link' => \Drupal::service('renderer')->renderRoot($doc_link),
         ]),
       ]);
@@ -83,6 +86,7 @@ function feeds_help($route_name, RouteMatchInterface $route_match) {
  */
 function feeds_cron() {
   $ids = \Drupal::entityQuery('feeds_feed')
+    ->accessCheck(FALSE)
     ->condition('queued', 0)
     ->condition('next', \Drupal::time()->getRequestTime(), '<=')
     ->condition('next', -1, '<>')
@@ -99,7 +103,9 @@ function feeds_cron() {
 
   // Delete queued timestamp after 12 hours assuming the update has failed.
   $ids = \Drupal::entityQuery('feeds_feed')
+    ->accessCheck(FALSE)
     ->condition('queued', \Drupal::time()->getRequestTime() - (3600 * 12), '<')
+    ->condition('queued', 0, '<>')
     ->execute();
 
   foreach (Feed::loadMultiple($ids) as $feed) {

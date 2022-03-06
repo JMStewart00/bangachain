@@ -146,7 +146,7 @@ content:
     type: commerce_add_to_cart
     label: hidden
     settings:
-      combine: false
+      combine: true
     third_party_settings: {  }
     weight: 10
     region: content

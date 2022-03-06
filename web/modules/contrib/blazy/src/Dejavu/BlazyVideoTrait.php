@@ -2,6 +2,8 @@
 
 namespace Drupal\blazy\Dejavu;
 
+use Drupal\blazy\Blazy;
+
 /**
  * A Trait common for Media integration.
  *
@@ -9,7 +11,7 @@ namespace Drupal\blazy\Dejavu;
  * @see Drupal\slick_browser\SlickBrowser::widgetEntityBrowserFileFormAlter()
  * @see Drupal\slick_browser\Plugin\EntityBrowser\FieldWidgetDisplay\...
  * @todo deprecated in blazy:8.x-2.0 and is removed from blazy:8.x-3.0. Use
- *   Drupal\blazy\BlazyOEmbed instead.
+ *   Drupal\blazy\Media\BlazyOEmbed instead.
  * @see https://www.drupal.org/node/3103018
  */
 trait BlazyVideoTrait {
@@ -17,7 +19,7 @@ trait BlazyVideoTrait {
   /**
    * The blazy oembed service.
    *
-   * @var \Drupal\blazy\BlazyOEmbedInterface
+   * @var \Drupal\blazy\Media\BlazyOEmbedInterface
    * @todo remove default null post Blazy 8.2.x full release.
    */
   protected $blazyOembed = NULL;
@@ -37,7 +39,7 @@ trait BlazyVideoTrait {
    */
   public function blazyOembed() {
     if (is_null($this->blazyOembed)) {
-      $this->blazyOembed = \Drupal::service('blazy.oembed');
+      $this->blazyOembed = Blazy::service('blazy.oembed');
     }
     return $this->blazyOembed;
   }
@@ -49,7 +51,7 @@ trait BlazyVideoTrait {
    */
   public function imageFactory() {
     if (is_null($this->imageFactory)) {
-      $this->imageFactory = \Drupal::service('image.factory');
+      $this->imageFactory = Blazy::service('image.factory');
     }
     return $this->imageFactory;
   }
@@ -88,7 +90,7 @@ trait BlazyVideoTrait {
    * @see https://www.drupal.org/node/3103018
    */
   public function getMediaItem(array &$data = [], $media = NULL) {
-    @trigger_error('getMediaItem is deprecated in blazy:8.x-2.0 and is removed from blazy:8.x-3.0. Use \Drupal\blazy\BlazyOEmbed::getMediaItem() instead. See https://www.drupal.org/node/3103018', E_USER_DEPRECATED);
+    @trigger_error('getMediaItem is deprecated in blazy:8.x-2.0 and is removed from blazy:8.x-3.0. Use \Drupal\blazy\Media\BlazyOEmbed::getMediaItem() instead. See https://www.drupal.org/node/3103018', E_USER_DEPRECATED);
     $this->blazyOembed()->getMediaItem($data, $media);
   }
 
@@ -110,7 +112,7 @@ trait BlazyVideoTrait {
    * @see https://www.drupal.org/node/3103018
    */
   public function buildVideo(array &$settings = [], $external_url = '') {
-    @trigger_error('buildVideo is deprecated in blazy:8.x-2.0 and is removed from blazy:8.x-3.0. Use \Drupal\blazy\BlazyOEmbed::build() instead. See https://www.drupal.org/node/3103018', E_USER_DEPRECATED);
+    @trigger_error('buildVideo is deprecated in blazy:8.x-2.0 and is removed from blazy:8.x-3.0. Use \Drupal\blazy\Media\BlazyOEmbed::build() instead. See https://www.drupal.org/node/3103018', E_USER_DEPRECATED);
     $settings['input_url'] = empty($settings['input_url']) ? $external_url : $settings['input_url'];
     return $this->blazyOembed()->build($settings);
   }

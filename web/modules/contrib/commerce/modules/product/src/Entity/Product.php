@@ -442,13 +442,13 @@ class Product extends CommerceContentEntityBase implements ProductInterface {
     /** @var \Drupal\commerce_product\Entity\ProductTypeInterface $product_type */
     $product_type = ProductType::load($bundle);
     if ($product_type) {
-      $variation_type_id = $product_type->getVariationTypeId();
+      $target_bundles = array_combine($product_type->getVariationTypeIds(), $product_type->getVariationTypeIds());
       // Restrict the variations field to the configured variation type.
       $fields['variations']->setSetting('handler_settings', [
-        'target_bundles' => [$variation_type_id => $variation_type_id],
+        'target_bundles' => $target_bundles,
       ]);
       $fields['default_variation']->setSetting('handler_settings', [
-        'target_bundles' => [$variation_type_id => $variation_type_id],
+        'target_bundles' => $target_bundles,
       ]);
     }
 

@@ -20,17 +20,26 @@ class FeedTypeAccessControlHandler extends EntityAccessControlHandler {
    * {@inheritdoc}
    */
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
-    if ($operation === 'delete') {
-      if ($entity->isNew()) {
-        return AccessResult::forbidden()->addCacheableDependency($entity);
-      }
+    switch ($operation) {
+      case 'view':
+        $has_perm = $account->hasPermission('administer feeds') || $account->hasPermission("view {$entity->id()} feeds");
+        return AccessResult::allowedIf($has_perm);
 
-      // The delete operation is not cacheable since the locked status can
-      // change in the background.
-      return AccessResult::allowedIf($account->hasPermission('administer feeds') && !$entity->isLocked())->addCacheableDependency(FALSE);
+        break;
+
+      case 'delete':
+        if ($entity->isNew()) {
+          return AccessResult::forbidden()->addCacheableDependency($entity);
+        }
+        // The delete operation is not cacheable since the locked status can
+        // change in the background.
+        return AccessResult::allowedIf($account->hasPermission('administer feeds') && !$entity->isLocked())->addCacheableDependency(FALSE);
+
+        break;
+
+      default:
+        return parent::checkAccess($entity, $operation, $account);
     }
-
-    return parent::checkAccess($entity, $operation, $account);
   }
 
 }

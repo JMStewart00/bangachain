@@ -149,10 +149,15 @@ class SystemEmailToUsersOfRoleTest extends RulesEntityIntegrationTestBase {
     $moderator = $this->prophesize(RoleInterface::class);
     $moderator->id()->willReturn('moderator');
 
+    // Use a language other than the site default.
+    $language = $this->prophesize(LanguageInterface::class);
+    $language->getId()->willReturn('da');
+
     $roles = [$recipient->reveal(), $moderator->reveal()];
     $this->action->setContextValue('roles', $roles)
       ->setContextValue('subject', 'subject')
-      ->setContextValue('message', 'hello');
+      ->setContextValue('message', 'hello')
+      ->setContextValue('language', $language->reveal());
 
     $params = [
       'subject' => 'subject',
@@ -166,7 +171,7 @@ class SystemEmailToUsersOfRoleTest extends RulesEntityIntegrationTestBase {
     $this->mailManager->mail(
       'rules', 'rules_action_mail_' . $this->action->getPluginId(),
       Argument::any(),
-      LanguageInterface::LANGCODE_SITE_DEFAULT,
+      $language->reveal()->getId(),
       $params,
       NULL
     )

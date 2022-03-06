@@ -78,7 +78,7 @@ class CsvParserTest extends ParserTestBase {
           ],
         ],
       ],
-    ]);
+    ], 'custom__csv');
 
     // Create a feed.
     $edit = [

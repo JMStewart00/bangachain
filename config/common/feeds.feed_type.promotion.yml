@@ -4,8 +4,8 @@ status: true
 dependencies:
   module:
     - commerce_promotion
-label: Promotion
 id: promotion
+label: Promotion
 description: ''
 help: ''
 import_period: -1
@@ -28,15 +28,18 @@ processor_configuration:
   expire: -1
   owner_feed_author: false
   owner_id: 0
+  insert_new: 1
 custom_sources:
   code:
     value: code
     label: code
     machine_name: code
+    type: csv
   promo_id:
     value: promo_id
     label: promo_id
     machine_name: promo_id
+    type: csv
 mappings:
   -
     target: code

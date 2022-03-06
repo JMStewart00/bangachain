@@ -3,7 +3,9 @@
 namespace Drupal\feeds\Plugin\Type\Target;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\feeds\Plugin\Type\ConfigurablePluginBase;
+use Drupal\Core\Plugin\PluginFormInterface;
+use Drupal\feeds\Plugin\Type\ConfigurablePluginTrait;
+use Drupal\feeds\Plugin\Type\PluginBase;
 
 /**
  * A base class for Feed targets.
@@ -19,7 +21,9 @@ use Drupal\feeds\Plugin\Type\ConfigurablePluginBase;
  * either you find FieldTargetBase not suitable or if you want to do something
  * else than storing data on a field on the entity.
  */
-abstract class TargetBase extends ConfigurablePluginBase implements TargetInterface {
+abstract class TargetBase extends PluginBase implements TargetInterface, PluginFormInterface {
+
+  use ConfigurablePluginTrait;
 
   /**
    * The target definition.

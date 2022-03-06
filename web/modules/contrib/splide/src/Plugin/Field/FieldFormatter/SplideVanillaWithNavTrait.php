@@ -4,6 +4,7 @@ namespace Drupal\splide\Plugin\Field\FieldFormatter;
 
 use Drupal\Component\Utility\Xss;
 use Drupal\blazy\BlazyDefault;
+// @todo replace at Blazy 2.7+ with use Drupal\blazy\Media\BlazyMedia;
 use Drupal\blazy\BlazyMedia;
 
 /**

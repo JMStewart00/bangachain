@@ -191,6 +191,7 @@ class MultipleCartMultipleVariationTypesTest extends CartBrowserTestBase {
       'id' => $id,
       'label' => $label,
       'variationType' => $variation_type->id(),
+      'variationTypes' => [],
     ]);
     $product_type->save();
   }

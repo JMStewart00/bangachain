@@ -2,6 +2,9 @@
 
 namespace Drupal\blazy;
 
+use Drupal\blazy\Media\BlazyFile;
+use Drupal\blazy\Media\BlazyResponsiveImage;
+
 /**
  * Provides common field formatter-related methods: Blazy, Slick.
  */
@@ -35,9 +38,11 @@ class BlazyFormatter extends BlazyManager implements BlazyFormatterInterface {
     $settings = &$build['settings'];
     $entity   = $items->getEntity();
 
+    $this->prepareData($build, $entity);
     $this->getCommonSettings($settings);
     $this->getEntitySettings($settings, $entity);
 
+    $blazies        = &$settings['blazies'];
     $count          = $items->count();
     $field          = $items->getFieldDefinition();
     $field_name     = $field->getName();
@@ -61,18 +66,11 @@ class BlazyFormatter extends BlazyManager implements BlazyFormatterInterface {
     $settings['count']        = $count;
     $settings['gallery_id']   = str_replace('_', '-', $gallery_id . '-' . $settings['media_switch']);
     $settings['id']           = $id;
-    $settings['use_field']    = !$settings['lightbox'] && ($settings['third_party']['linked_field']['linked'] ?? FALSE);
 
-    // Bail out if Vanilla mode is requested.
-    if (!empty($settings['vanilla'])) {
-      $settings = array_filter($settings);
-      return;
-    }
+    // Respects linked_field.module expectation.
+    $use_field = !$blazies->get('lightbox') && ($settings['third_party']['linked_field']['linked'] ?? FALSE);
 
-    // Lazy load types: blazy, and slick: ondemand, anticipated, progressive.
-    $settings['blazy'] = !empty($settings['blazy']) || !empty($settings['background']) || $settings['resimage'];
-    $settings['lazy']  = $settings['blazy'] ? 'blazy' : ($settings['lazy'] ?? '');
-    $settings['lazy']  = empty($settings['is_nojs']) ? $settings['lazy'] : '';
+    $blazies->set('use.field', $use_field);
   }
 
   /**
@@ -83,23 +81,18 @@ class BlazyFormatter extends BlazyManager implements BlazyFormatterInterface {
     $settings = &$build['settings'];
 
     // Pass first item to optimize sizes this time.
-    if ($item = ($items[0] ?? NULL)) {
-      $this->extractFirstItem($settings, $item, reset($entities));
+    if (!empty($items[0])) {
+      $this->uris($settings, $items, $entities);
     }
 
     // Sets dimensions once, if cropped, to reduce costs with ton of images.
     // This is less expensive than re-defining dimensions per image.
     if (!empty($settings['_uri'])) {
-      if (empty($settings['resimage'])) {
-        $this->setImageDimensions($settings);
+      if ($settings['blazies']->get('resimage.style')) {
+        BlazyResponsiveImage::dimensionsAndSources($settings, TRUE);
       }
-      elseif (!empty($settings['resimage'])) {
-        if (!empty($settings['preload'])) {
-          BlazyResponsiveImage::sources($settings);
-        }
-        if ($settings['ratio'] == 'fluid') {
-          BlazyResponsiveImage::dimensions($settings, TRUE);
-        }
+      else {
+        $this->setImageDimensions($settings);
       }
     }
 
@@ -117,22 +110,11 @@ class BlazyFormatter extends BlazyManager implements BlazyFormatterInterface {
   /**
    * {@inheritdoc}
    */
-  public function extractFirstItem(array &$settings, $item, $entity = NULL) {
-    if ($settings['field_type'] == 'image') {
-      $settings['_item'] = $item;
-      $settings['_uri'] = ($file = $item->entity) && empty($item->uri) ? $file->getFileUri() : $item->uri;
+  public function isCrop($style) {
+    if (!isset($this->isCrop[$style])) {
+      $this->isCrop[$style] = $this->cropStyles()[$style] ?? FALSE;
     }
-    elseif ($entity && $entity->hasField('thumbnail') && $image = $entity->get('thumbnail')->first()) {
-      if ($file = ($image->entity ?? NULL)) {
-        $settings['_item'] = $image;
-        $settings['_uri'] = $file->getFileUri();
-      }
-    }
-
-    // The first image dimensions to differ from individual item dimensions.
-    if (!empty($settings['_item'])) {
-      BlazyFile::imageDimensions($settings, $settings['_item'], TRUE);
-    }
+    return $this->isCrop[$style];
   }
 
   /**
@@ -156,6 +138,23 @@ class BlazyFormatter extends BlazyManager implements BlazyFormatterInterface {
   }
 
   /**
+   * Extract the first image item to build colorbox/zoom-like gallery.
+   *
+   * @todo move it into BlazyManagerBase if usable outside formatters.
+   */
+  protected function uris(array &$settings, $items, array $entities = []) {
+    if ($output = BlazyFile::urisFromField($settings, $items, $entities)) {
+      $settings['_uri'] = reset($output);
+    }
+
+    // The first image dimensions to differ from individual item dimensions.
+    // @todo merge it into BlazyFile::urisFromField to swap them all once.
+    if (!empty($settings['_item'])) {
+      BlazyFile::imageDimensions($settings, $settings['_item'], TRUE);
+    }
+  }
+
+  /**
    * Returns available image styles with crop in the name.
    */
   private function cropStyles() {
@@ -174,13 +173,12 @@ class BlazyFormatter extends BlazyManager implements BlazyFormatterInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Deprecated method.
+   *
+   * @deprecated in blazy:8.x-2.6 and is removed from blazy:3.0.0. Use
+   *   self::urisFromField() instead to also extract URIs for preload option.
+   * @see https://www.drupal.org/node/3103018
    */
-  public function isCrop($style) {
-    if (!isset($this->isCrop[$style])) {
-      $this->isCrop[$style] = $this->cropStyles()[$style] ?? FALSE;
-    }
-    return $this->isCrop[$style];
-  }
+  public function extractFirstItem(array &$settings, $item, $entity = NULL) {}
 
 }

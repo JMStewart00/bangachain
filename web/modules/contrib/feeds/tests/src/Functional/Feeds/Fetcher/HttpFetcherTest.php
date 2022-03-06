@@ -18,7 +18,7 @@ class HttpFetcherTest extends FeedsBrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'feeds',
     'node',
     'user',
@@ -108,15 +108,16 @@ class HttpFetcherTest extends FeedsBrowserTestBase {
    * Tests importing a RSS feed using the HTTP fetcher.
    */
   public function testHttpImport() {
-    $filepath = drupal_get_path('module', 'feeds') . '/tests/resources/rss/googlenewstz.rss2';
+    $filepath = $this->resourcesPath() . '/rss/googlenewstz.rss2';
 
     $feed = $this->createFeed($this->feedType->id(), [
       'source' => $this->resourcesUrl() . '/rss/googlenewstz.rss2',
     ]);
+
     $this->drupalGet('feed/' . $feed->id());
     $this->clickLink(t('Import'));
     $this->drupalPostForm(NULL, [], t('Import'));
-    $this->assertText('Created 6');
+    $this->assertSession()->pageTextContains('Created 6');
     $this->assertNodeCount(6);
 
     $xml = new \SimpleXMLElement($filepath, 0, TRUE);
@@ -148,12 +149,12 @@ class HttpFetcherTest extends FeedsBrowserTestBase {
 
     // Test cache.
     $this->drupalPostForm('feed/' . $feed->id() . '/import', [], t('Import'));
-    $this->assertText('The feed has not been updated.');
+    $this->assertSession()->pageTextContains('The feed has not been updated.');
 
     // Import again.
     \Drupal::cache('feeds_download')->deleteAll();
     $this->drupalPostForm('feed/' . $feed->id() . '/import', [], t('Import'));
-    $this->assertText('There are no new');
+    $this->assertSession()->pageTextContains('There are no new');
 
     // Test force-import.
     \Drupal::cache('feeds_download')->deleteAll();
@@ -164,13 +165,13 @@ class HttpFetcherTest extends FeedsBrowserTestBase {
     $this->feedType->save();
     $this->drupalPostForm('feed/' . $feed->id() . '/import', [], t('Import'));
     $this->assertNodeCount(6);
-    $this->assertText('Updated 6');
+    $this->assertSession()->pageTextContains('Updated 6');
 
     // Delete items.
     $this->clickLink(t('Delete items'));
     $this->drupalPostForm(NULL, [], t('Delete items'));
     $this->assertNodeCount(0);
-    $this->assertText('Deleted 6');
+    $this->assertSession()->pageTextContains('Deleted 6');
   }
 
   /**
@@ -189,7 +190,7 @@ class HttpFetcherTest extends FeedsBrowserTestBase {
       'source' => $this->resourcesUrl() . '/rss/googlenewstz.rss2',
     ]);
     $this->batchImport($feed);
-    $this->assertText('Created 6');
+    $this->assertSession()->pageTextContains('Created 6');
     $this->assertNodeCount(6);
 
     // Assert that no cache entries were created.
@@ -230,12 +231,12 @@ class HttpFetcherTest extends FeedsBrowserTestBase {
       'source' => \Drupal::request()->getSchemeAndHttpHost() . '/testing/feeds/nodes.csv',
     ]);
     $this->batchImport($feed);
-    $this->assertText('Created 8');
+    $this->assertSession()->pageTextContains('Created 8');
     $this->assertNodeCount(8);
 
     // Import again.
     $this->batchImport($feed);
-    $this->assertText('There are no new');
+    $this->assertSession()->pageTextContains('There are no new');
 
     // Now change the source to test if the source is refetched.
     // - Items 1 and 4 changed.
@@ -243,7 +244,7 @@ class HttpFetcherTest extends FeedsBrowserTestBase {
     \Drupal::state()->set('feeds_test_nodes_last_modified', strtotime('Sun, 30 Mar 2016 10:19:55 GMT'));
 
     $this->batchImport($feed);
-    $this->assertText('Updated 2');
+    $this->assertSession()->pageTextContains('Updated 2');
   }
 
 }

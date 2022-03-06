@@ -104,8 +104,12 @@ class EntityProcessorBaseTest extends FeedsKernelTestBase {
 
     $this->state = new State();
 
-    // Install key/value expire schema.
-    $this->installSchema('system', ['key_value_expire']);
+    // @todo Remove installSchema() when Drupal 9.0 is no longer supported.
+    // https://www.drupal.org/node/3143286
+    if (version_compare(\Drupal::VERSION, '9.1', '<')) {
+      // Install key/value expire schema.
+      $this->installSchema('system', ['key_value_expire']);
+    }
   }
 
   /**

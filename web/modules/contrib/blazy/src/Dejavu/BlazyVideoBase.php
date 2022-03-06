@@ -4,6 +4,7 @@ namespace Drupal\blazy\Dejavu;
 
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\blazy\Blazy;
 use Drupal\blazy\BlazyDefault;
 
 @trigger_error('The ' . __NAMESPACE__ . '\BlazyVideoBase is deprecated in blazy:8.x-2.0 and is removed from blazy:8.x-3.0. Use \Drupal\blazy\Plugin\Field\FieldFormatter\BlazyMediaFormatterBase instead. See https://www.drupal.org/node/3103018', E_USER_DEPRECATED);
@@ -66,10 +67,7 @@ abstract class BlazyVideoBase extends FormatterBase {
    * Returns the optional VEF service to avoid dependency for optional plugins.
    */
   protected function vefProviderManager() {
-    if (function_exists('video_embed_field_theme')) {
-      return \Drupal::service('video_embed_field.provider_manager');
-    }
-    return FALSE;
+    return Blazy::service('video_embed_field.provider_manager');
   }
 
 }

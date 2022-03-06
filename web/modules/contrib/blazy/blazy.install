@@ -30,6 +30,13 @@ function blazy_requirements($phase) {
 }
 
 /**
+ * Implements hook_uninstall().
+ */
+function blazy_uninstall() {
+  blazy_filter_cleanup('blazy');
+}
+
+/**
  * Added new services blazy.oembed and blazy.entity.
  */
 function blazy_update_8201() {

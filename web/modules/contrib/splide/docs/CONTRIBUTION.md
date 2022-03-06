@@ -1,6 +1,5 @@
-***
-***
 
+***
 ## <a name="contribution"></a>SUBMITTING PATCHES OR ISSUES
 Please use the provided issue template to help you explain better, and to help
 us understand better your bug reports, or patches as needed.

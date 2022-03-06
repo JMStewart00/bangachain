@@ -45,6 +45,18 @@ function template_preprocess_blazy(&$variables) {
 }
 
 /**
+ * Overrides variables for image.html.twig templates.
+ *
+ * @todo remove when core makes `loading` attribute optional.
+ */
+function blazy_preprocess_image(&$variables) {
+  $attributes = &$variables['attributes'];
+  if (isset($attributes['data-b-unloading'])) {
+    unset($attributes['loading'], $attributes['data-b-unloading']);
+  }
+}
+
+/**
  * Overrides variables for responsive-image.html.twig templates.
  */
 function blazy_preprocess_responsive_image(&$variables) {
@@ -109,8 +121,8 @@ function blazy_config_schema_info_alter(array &$definitions) {
  * Implements hook_library_info_alter().
  */
 function blazy_library_info_alter(&$libraries, $extension) {
-  $debounce = $extension === 'core' && isset($libraries['drupal.debounce']);
-  if ($extension === 'blazy' || $extension === 'media'  || $debounce) {
+  $core = $extension === 'core' && (isset($libraries['once']) || isset($libraries['drupal.debounce']));
+  if ($extension === 'blazy' || $extension === 'media' || $core) {
     BlazyAlter::libraryInfoAlter($libraries, $extension);
   }
 }
@@ -168,15 +180,50 @@ function blazy_parse_markdown($string) {
  * Provides a wrapper to replace deprecated libraries_get_path() at ease.
  */
 function blazy_libraries_get_path($name, $base_path = FALSE) {
-  $function = 'libraries_get_path';
-  if (\Drupal::hasService('library.libraries_directory_file_finder')) {
-    return \Drupal::service('library.libraries_directory_file_finder')->find($name);
-  }
-  elseif (is_callable($function)) {
-    return $function($name, $base_path);
+  if ($finder = Blazy::service('library.libraries_directory_file_finder')) {
+    return $finder->find($name);
   }
 
-  return FALSE;
+  $function = 'libraries_get_path';
+  return is_callable($function) ? $function($name, $base_path) : FALSE;
+}
+
+/**
+ * Cleans out unclean module filter references.
+ *
+ * @todo remove when core filter takes care of its own plugins removal cleanly.
+ */
+function blazy_filter_cleanup($module = 'blazy') {
+  $config_factory = \Drupal::configFactory();
+  $config_storage = \Drupal::service('config.storage');
+
+  $filter = "filters.{$module}_filter";
+
+  // Removes unclean [module]_filter references, see #3257390.
+  foreach ($config_storage->listAll('filter.format') as $config_name) {
+    $config = $config_factory->getEditable($config_name);
+    $plugin = $config->get($filter);
+
+    if ($plugin) {
+      $dependencies = $config->get('dependencies');
+      $modules = array_diff($dependencies['module'], [$module]);
+
+      $config
+        ->clear($filter)
+        ->set('dependencies.module', $modules)
+        ->save(TRUE);
+    }
+  }
+
+  // Just to be safe and sure, reset filter_formats cache, etc.
+  if (function_exists('drupal_static_reset')) {
+    drupal_static_reset('filter_formats');
+  }
+
+  \Drupal::entityTypeManager()->getStorage('filter_format')->resetCache();
+
+  // Clear plugin manager caches.
+  \Drupal::getContainer()->get('plugin.cache_clearer')->clearCachedDefinitions();
 }
 
 /**

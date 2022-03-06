@@ -6,13 +6,13 @@
  * and has good replacements like PhotoSwipe, Splidebox, Slick Lightbox, etc.
  */
 
-(function ($, Drupal) {
+(function ($, Drupal, _doc) {
 
   'use strict';
 
-  var _mounted = 'litebox--on';
-  var _element = '[data-photobox-gallery]:not(.' + _mounted + ')';
-  var _context = document;
+  var _context = _doc;
+  var _idOnce = 'b-photobox';
+  var _element = '[data-photobox-gallery]';
 
   /**
    * Blazy Photobox utility functions.
@@ -39,8 +39,6 @@
       thumb: '> [data-thumb]',
       thumbAttr: 'data-thumb'
     }, callback);
-
-    $.addClass(box, _mounted);
   }
 
   /**
@@ -63,8 +61,14 @@
         };
       }
 
-      $.once(process, _element, _context);
+      $.once(process, _idOnce, _element, _context);
+
+    },
+    detach: function (context, setting, trigger) {
+      if (trigger === 'unload') {
+        $.once.removeSafely(_idOnce, _element, _context);
+      }
     }
   };
 
-}(dBlazy, Drupal));
+}(dBlazy, Drupal, this.document));

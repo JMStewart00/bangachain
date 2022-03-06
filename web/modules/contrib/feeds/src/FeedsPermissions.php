@@ -61,26 +61,48 @@ class FeedsPermissions {
       "view $id feeds" => [
         'title' => $this->t('%name: View feeds', $args),
       ],
+      "view own $id feeds" => [
+        'title' => $this->t('%name: View own feeds', $args),
+      ],
       "create $id feeds" => [
         'title' => $this->t('%name: Create new feeds', $args),
       ],
       "update $id feeds" => [
         'title' => $this->t('%name: Update existing feeds', $args),
       ],
+      "update own $id feeds" => [
+        'title' => $this->t('%name: Update own existing feeds', $args),
+      ],
       "delete $id feeds" => [
         'title' => $this->t('%name: Delete feeds', $args),
+      ],
+      "delete own $id feeds" => [
+        'title' => $this->t('%name: Delete own feeds', $args),
       ],
       "import $id feeds" => [
         'title' => $this->t('%name: Import feeds', $args),
       ],
+      "import own $id feeds" => [
+        'title' => $this->t('%name: Import own feeds', $args),
+      ],
       "schedule_import $id feeds" => [
         'title' => $this->t('%name: Import feeds in background', $args),
+      ],
+      "schedule_import own $id feeds" => [
+        'title' => $this->t('%name: Import own feeds in background', $args),
       ],
       "clear $id feeds" => [
         'title' => $this->t('%name: Delete feed items', $args),
       ],
+      "clear own $id feeds" => [
+        'title' => $this->t('%name: Delete own feed items', $args),
+      ],
       "unlock $id feeds" => [
         'title' => $this->t('%name: Unlock feeds', $args),
+        'description' => $this->t('If a feed importation breaks for some reason, users with this permission can unlock it.'),
+      ],
+      "unlock own $id feeds" => [
+        'title' => $this->t('%name: Unlock own feeds', $args),
         'description' => $this->t('If a feed importation breaks for some reason, users with this permission can unlock it.'),
       ],
     ];

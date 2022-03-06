@@ -1,5 +1,8 @@
 <h3 id="splide">Splide</h3>
-<p>Create a slideshow/ carousel with a shortcode. Pay attention to attributes,
+<p>If you copy paste the lines here into CKEditor, be sure to view CKEditor
+source and remove the surrounding <code>&lt;code&gt;...&lt;/code&gt;</code>.
+<br />
+Create a slideshow/ carousel with a shortcode. Pay attention to attributes,
 slashes, single and double quotes:</p>
 <ol>
   <li><b>Basic</b>, with inline HTML: <br>

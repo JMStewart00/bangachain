@@ -3,20 +3,21 @@
  * Provides admin utilities.
  */
 
-(function ($, Drupal, _d) {
+(function ($, _d, Drupal, _doc) {
 
   'use strict';
 
+  var _context = _doc;
   var _desc = 'description';
-  var _descMounted = _desc + '--on';
-  var _vanillaOn = 'form--vanilla-on';
-  var _elTootip = '.' + _desc + ':not(.' + _descMounted + '), .form-item__' + _desc + ':not(.' + _descMounted + ')';
   var _checkbox = 'form-checkbox';
-  var _checkboxMounted = _checkbox + '--on';
-  var _elCheckbox = '.' + _checkbox + ':not(.' + _checkboxMounted + ')';
+  var _idTooltip = 'b-' + _desc;
+  var _idCheckbox = 'b-' + _checkbox;
+  var _idForm = 'b-form';
+  var _vanillaOn = 'form--vanilla-on';
+  var _elTootip = '.' + _desc + ', .form-item__' + _desc;
+  var _elCheckbox = '.' + _checkbox;
   var _form = 'form--slick';
-  var _formMounted = _form + '--on';
-  var _elForm = '.' + _form + ':not(.' + _formMounted + ')';
+  var _elForm = '.' + _form;
   var _elFormItem = '.form-item';
   var _elExpandable = '.js-expandable';
   var _elHint = '.b-hint';
@@ -118,8 +119,6 @@
     t.on('blur', _elExpandable, function () {
       $(this).parent().removeClass(_isFocused);
     });
-
-    t.addClass(_formMounted);
   }
 
   /**
@@ -139,8 +138,6 @@
     if (!$tip.siblings(_elHint).length) {
       $tip.closest(_elFormItem).append('<span class="b-hint">?</span>');
     }
-
-    $tip.addClass(_descMounted);
   }
 
   /**
@@ -151,10 +148,10 @@
    */
   function blazyCheckbox(elm) {
     var $elm = $(elm);
+
     if (!$elm.next('.field-suffix').length) {
       $elm.after('<span class="field-suffix"></span>');
     }
-    $elm.addClass(_checkboxMounted);
   }
 
   /**
@@ -165,12 +162,19 @@
   Drupal.behaviors.blazyAdmin = {
     attach: function (context) {
 
-      context = _d.context(context);
+      _context = _d.context(context);
 
-      _d.once(blazyTooltip, _elTootip, context);
-      _d.once(blazyCheckbox, _elCheckbox, context);
-      _d.once(blazyForm, _elForm, context);
+      _d.once(blazyTooltip, _idTooltip, _elTootip, _context);
+      _d.once(blazyCheckbox, _idCheckbox, _elCheckbox, _context);
+      _d.once(blazyForm, _idForm, _elForm, _context);
+    },
+    detach: function (context, setting, trigger) {
+      if (trigger === 'unload') {
+        _d.once.removeSafely(_idTooltip, _elTootip, _context);
+        _d.once.removeSafely(_idCheckbox, _elCheckbox, _context);
+        _d.once.removeSafely(_idForm, _elForm, _context);
+      }
     }
   };
 
-})(jQuery, Drupal, dBlazy);
+})(jQuery, dBlazy, Drupal, this.document);

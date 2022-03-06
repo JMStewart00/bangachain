@@ -1,6 +1,5 @@
 
 ***
-***
 ##  <a name="paragraphs"></a>SPLIDE PARAGRAPHS
 
 Provides integration between Splide and Paragraphs.

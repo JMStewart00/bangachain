@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\feeds\Functional;
 
+use Drupal\Component\Utility\Xss;
 use Drupal\feeds\Event\FeedsEvents;
 use Drupal\feeds\Event\ProcessEvent;
 use Drupal\feeds\FeedTypeInterface;
@@ -65,7 +66,7 @@ class UpdateNonExistentTest extends FeedsBrowserTestBase {
 
     // Reload feed and assert that 6 nodes have been created.
     $feed = $this->reloadFeed($feed);
-    $this->assertText('Created 6 Article items.');
+    $this->assertSession()->responseContains('Created 6 Article items.');
     static::assertEquals(6, $feed->getItemCount());
     $this->assertNodeCount(6);
 
@@ -100,7 +101,7 @@ class UpdateNonExistentTest extends FeedsBrowserTestBase {
     $feed->save();
     $this->batchImport($feed);
     $node = $this->reloadEntity($node);
-    $this->assertText('Updated 1 Article.');
+    $this->assertSession()->responseContains('Updated 1 Article.');
     static::assertEquals('Egypt, Hamas exchange fire on Gaza frontier, 1 dead - Reuters', $node->getTitle());
   }
 
@@ -126,7 +127,7 @@ class UpdateNonExistentTest extends FeedsBrowserTestBase {
 
     // Assert that 6 nodes have been created.
     $feed = $this->reloadFeed($feed);
-    $this->assertText('Created 6 Article items.');
+    $this->assertSession()->responseContains('Created 6 Article items.');
     static::assertEquals(6, $feed->getItemCount());
     $this->assertNodeCount(6);
 
@@ -137,7 +138,7 @@ class UpdateNonExistentTest extends FeedsBrowserTestBase {
 
     // Assert that one node is removed.
     $feed = $this->reloadFeed($feed);
-    $this->assertText('Cleaned 1 Article.');
+    $this->assertSession()->responseContains('Cleaned 1 Article.');
     static::assertEquals(5, $feed->getItemCount());
     $this->assertNodeCount(5);
 
@@ -146,7 +147,7 @@ class UpdateNonExistentTest extends FeedsBrowserTestBase {
     $feed->save();
     $this->batchImport($feed);
     $feed = $this->reloadFeed($feed);
-    $this->assertText('Created 1 Article.');
+    $this->assertSession()->responseContains('Created 1 Article.');
     static::assertEquals(6, $feed->getItemCount());
     $this->assertNodeCount(6);
   }
@@ -350,7 +351,7 @@ class UpdateNonExistentTest extends FeedsBrowserTestBase {
 
     // Reload feed and assert that 6 nodes have been created.
     $feed = $this->reloadFeed($feed);
-    $this->assertText('Created 6 Article items.');
+    $this->assertSession()->responseContains('Created 6 Article items.');
     static::assertEquals(6, $feed->getItemCount());
     $this->assertNodeCount(6);
 
@@ -360,11 +361,13 @@ class UpdateNonExistentTest extends FeedsBrowserTestBase {
     $this->batchImport($feed);
 
     // Assert that cleaning failed.
-    $this->assertText('Cleaning Egypt, Hamas exchange fire on Gaza frontier, 1 dead - Reuters failed because of non-existing action plugin foo.');
+    $page_text = Xss::filter($this->getSession()->getPage()->getContent(), []);
+    $this->assertStringContainsString('Cleaning Egypt, Hamas exchange fire on Gaza frontier, 1 dead - Reuters failed because of non-existing action plugin foo.', $page_text);
 
     // Try to import again and assert that the same error message appears.
     $this->batchImport($feed);
-    $this->assertText('Cleaning Egypt, Hamas exchange fire on Gaza frontier, 1 dead - Reuters failed because of non-existing action plugin foo.');
+    $page_text = Xss::filter($this->getSession()->getPage()->getContent(), []);
+    $this->assertStringContainsString('Cleaning Egypt, Hamas exchange fire on Gaza frontier, 1 dead - Reuters failed because of non-existing action plugin foo.', $page_text);
   }
 
   /**

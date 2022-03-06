@@ -3,6 +3,7 @@
 namespace Drupal\blazy;
 
 use Drupal\Component\Utility\Html;
+use Drupal\blazy\Media\BlazyFile;
 
 /**
  * Provides internal Blazy utilities, hardly re-usable outside blazy.module.
@@ -67,15 +68,58 @@ class BlazyUtil {
   }
 
   /**
-   * Checks if extension should not use image style: apng svg gif, etc.
+   * Build out the blur image.
    */
-  public static function unstyled(array $settings): bool {
-    $extensions = ['svg'];
-    if (isset($settings['unstyled_extensions']) && $unstyled = $settings['unstyled_extensions']) {
-      $extensions = array_merge($extensions, array_map('trim', explode(' ', mb_strtolower($unstyled))));
-      $extensions = array_unique($extensions);
+  public static function blur(array &$element, array &$attributes, array &$settings) {
+    $blazies = &$settings['blazies'];
+    if (!$blazies->get('is.unstyled')) {
+      $blur = [
+        '#theme' => 'image',
+        '#uri' => $settings['placeholder_ui'] ?: $blazies->get('ui.placeholder'),
+        '#attributes' => [
+          'class' => ['b-lazy', 'b-blur', 'b-blur--tmp'],
+          'data-src' => $settings['placeholder_fx'],
+          'loading' => 'lazy',
+          'decoding' => 'async',
+        ],
+      ];
+
+      // Reset as already stored.
+      unset($settings['placeholder_fx']);
+      $element['#preface']['blur'] = $blur;
+
+      if (($settings['width'] ?? 0) > 980) {
+        $attributes['class'][] = 'media--fx-lg';
+      }
     }
-    return isset($settings['extension']) && in_array($settings['extension'], $extensions);
+  }
+
+  /**
+   * Collects the first found Blazy formatter settings within Views fields.
+   */
+  public static function isBlazyFormatter(array &$settings, array $item = []) {
+    $blazy = $item['settings'];
+    if (!isset($settings['blazies'])) {
+      $settings += BlazyDefault::htmlSettings();
+    }
+
+    // Merge the first found (Responsive) image data.
+    $formatter_blazies = $blazy['blazies'] ?? NULL;
+    if ($formatter_blazies && $formatter_blazies instanceof BlazySettings) {
+      $blazies = &$settings['blazies'];
+
+      $settings['blazies'] = $blazies->merge($formatter_blazies->storage());
+      $settings['_dimensions'] = !empty($blazies->get('ratios'));
+    }
+
+    $cherries = BlazyDefault::cherrySettings() + ['uri' => ''];
+    foreach ($cherries as $key => $value) {
+      $fallback = $settings[$key] ?? $value;
+      $settings[$key] = isset($blazy[$key]) && empty($fallback) ? $blazy[$key] : $fallback;
+    }
+
+    $settings['_uri'] = empty($settings['_uri']) ? $settings['uri'] : $settings['_uri'];
+    unset($settings['uri']);
   }
 
   /**

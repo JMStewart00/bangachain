@@ -1,29 +1,29 @@
 
 ***
-# <a name="issue-template"></a>ISSUE TEMPLATE
+## <a name="issue-template"></a>ISSUE TEMPLATE
 
-## Please describe the issue in crystal-clear sentences:
+### Please describe the issue in crystal-clear sentences:
 (Steps to reproduce, if it is a bug/ support report.)
 
 
-## Library versions:
+### Library versions:
 (Blazy, Slick, etc.)
 
 
-## Module versions, including its-submodules relevant to this issue:
+### Module versions, including its-submodules relevant to this issue:
 (Blazy, Slick, Slick Views, etc. Ignore any irrelevant accordingly.)
 
 
-## Default active theme:
+### Default active theme:
 (Responsive/ Bartik, custom.)
 
 
-## Press F12 at any browser, and post the console output, if any error:
+### Press F12 at any browser, and post the console output, if any error:
 (Ignore if you don't see no evil.)
 
 
 
-## Delete this line and anything below when submitting issue. This is just FYI:
+### Delete this line and anything below when submitting issue. This is just FYI:
 This is just a generic catch-all issue template to help you explain better, and
 to help us understand your issue better in a shortest possible time.
 Be more specific, of course. Feel free to ignore or delete any irrelevant step,

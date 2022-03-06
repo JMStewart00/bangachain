@@ -19,7 +19,7 @@ class FeedsUninstallTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['feeds'];
+  protected static $modules = ['feeds'];
 
   /**
    * Tests module uninstallation.

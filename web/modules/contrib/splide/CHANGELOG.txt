@@ -1,4 +1,9 @@
 
+Splide 1.0.2-dev, 2022-02-08
+----------------------------
+- Issue #3262982 by gausarts, trickfun: [PHP8] array_intersect() does not accept
+  unknown named parameters.
+
 Splide 1.0.0-dev, 2022-02-05
 ----------------------------
 - Issue #3262034 by Grimreaper, gausarts: Support Auto Scroll plugin.

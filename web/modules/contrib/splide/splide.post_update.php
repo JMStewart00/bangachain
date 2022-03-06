@@ -64,3 +64,10 @@ function splide_post_update_change_height_ratio_type() {
 function splide_post_add_pagination_tab_options() {
   // Empty block to clear cache.
 }
+
+/**
+ * Fixed for D10 `app.root` service removal.
+ */
+function splide_post_d10_app_root_service_removal() {
+  // Empty block to clear cache.
+}

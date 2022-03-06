@@ -82,7 +82,7 @@
     var ioObserver;
     var roObserver;
     var observe = function (observer) {
-      if (observer && elms.length) {
+      if (observer && elms && elms.length) {
         $.each(elms, function (entry) {
           observer.observe(entry);
         });

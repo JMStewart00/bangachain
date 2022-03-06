@@ -3,11 +3,13 @@
  * Provides Filter module integration.
  */
 
-(function ($, Drupal) {
+(function ($, Drupal, _doc) {
 
   'use strict';
 
+  var _context = _doc;
   var _id = 'blazy';
+  var _idOnce = 'b-filter';
   var _wrapper = 'media-wrapper--' + _id;
   var _element = '.' + _wrapper + ':not(.grid .' + _wrapper + ')';
   var _data = 'data-';
@@ -51,10 +53,15 @@
   Drupal.behaviors.blazyFilter = {
     attach: function (context) {
 
-      context = $.context(context);
+      _context = $.context(context);
 
-      $.once(process, _element, context);
+      $.once(process, _idOnce, _element, _context);
+    },
+    detach: function (context, setting, trigger) {
+      if (trigger === 'unload') {
+        $.once.removeSafely(_idOnce, _element, _context);
+      }
     }
   };
 
-})(dBlazy, Drupal);
+})(dBlazy, Drupal, this.document);

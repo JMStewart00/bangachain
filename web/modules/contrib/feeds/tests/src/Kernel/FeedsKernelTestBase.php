@@ -21,7 +21,7 @@ abstract class FeedsKernelTestBase extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'field',
     'node',
     'feeds',

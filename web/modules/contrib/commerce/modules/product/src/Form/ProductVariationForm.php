@@ -24,10 +24,10 @@ class ProductVariationForm extends ContentEntityForm {
     else {
       /** @var \Drupal\commerce_product\Entity\ProductInterface $product */
       $product = $route_match->getParameter('commerce_product');
-      /** @var \Drupal\commerce_product\Entity\ProductTypeInterface $product_type */
-      $product_type = $this->entityTypeManager->getStorage('commerce_product_type')->load($product->bundle());
+      /** @var \Drupal\commerce_product\Entity\ProductVariationTypeInterface $product_variation_type */
+      $product_variation_type = $route_match->getParameter('commerce_product_variation_type');
       $values = [
-        'type' => $product_type->getVariationTypeId(),
+        'type' => $product_variation_type->id(),
         'product_id' => $product->id(),
       ];
       $entity = $this->entityTypeManager->getStorage('commerce_product_variation')->create($values);

@@ -19,7 +19,7 @@ class FeedsInstallTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [];
+  protected static $modules = [];
 
   /**
    * Module handler to ensure installed modules.

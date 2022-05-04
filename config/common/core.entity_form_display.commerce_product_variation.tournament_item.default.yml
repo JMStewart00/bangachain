@@ -1,0 +1,93 @@
+uuid: 4ea43c13-3d5b-4d8f-ba5e-525b08ed82f4
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_variation_type.tournament_item
+    - field.field.commerce_product_variation.tournament_item.feeds_item
+    - field.field.commerce_product_variation.tournament_item.field_bin
+    - field.field.commerce_product_variation.tournament_item.field_stock
+    - field.field.commerce_product_variation.tournament_item.field_vendor_cost
+  module:
+    - commerce_bulk
+    - commerce_price
+    - commerce_stock_field
+id: commerce_product_variation.tournament_item.default
+targetEntityType: commerce_product_variation
+bundle: tournament_item
+mode: default
+content:
+  'Loyalty points offered':
+    type: number_decimal
+    weight: 91
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  commerce_stock_always_in_stock:
+    type: boolean_checkbox
+    weight: 4
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_bin:
+    type: number
+    weight: 92
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_stock:
+    type: commerce_stock_level_simple_transaction
+    weight: 5
+    region: content
+    settings:
+      step: '1'
+      custom_transaction_note: false
+      default_transaction_note: 'Transaction issued by stock level field.'
+    third_party_settings: {  }
+  field_vendor_cost:
+    type: number
+    weight: 93
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  list_price:
+    type: commerce_list_price
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  price:
+    type: commerce_price_default
+    weight: 3
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  sku:
+    type: commerce_bulk_sku
+    weight: 0
+    region: content
+    settings:
+      custom_label: ''
+      uniqid_enabled: true
+      more_entropy: false
+      hide: false
+      prefix: ''
+      suffix: ''
+      size: 60
+      placeholder: ''
+      maximum: 500
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 6
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+hidden:
+  created: true
+  feeds_item: true
+  uid: true

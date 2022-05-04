@@ -1,0 +1,23 @@
+uuid: b29c9bc7-3c81-42e7-a821-962ddaf34bcf
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_variation_type.tournament_item
+    - field.storage.commerce_product_variation.feeds_item
+  module:
+    - feeds
+id: commerce_product_variation.tournament_item.feeds_item
+field_name: feeds_item
+entity_type: commerce_product_variation
+bundle: tournament_item
+label: 'Feeds item'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:feeds_feed'
+  handler_settings: {  }
+field_type: feeds_item

@@ -1,0 +1,23 @@
+uuid: 8dddbcb6-6f0a-47ff-b71e-7fecee976911
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_variation_type.tournament_item
+    - field.storage.commerce_product_variation.field_bin
+id: commerce_product_variation.tournament_item.field_bin
+field_name: field_bin
+entity_type: commerce_product_variation
+bundle: tournament_item
+label: Bin
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

@@ -1,0 +1,23 @@
+uuid: 77544e3f-40e8-43b0-b6d6-53f0e2097b61
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_variation_type.tournament_item
+    - field.storage.commerce_product_variation.field_vendor_cost
+id: commerce_product_variation.tournament_item.field_vendor_cost
+field_name: field_vendor_cost
+entity_type: commerce_product_variation
+bundle: tournament_item
+label: 'Vendor Cost'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: decimal

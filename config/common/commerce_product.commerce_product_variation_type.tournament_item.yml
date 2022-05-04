@@ -1,0 +1,18 @@
+uuid: 2fb9f12d-c2b8-402b-a01d-28a0877ba588
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_autosku
+third_party_settings:
+  commerce_autosku:
+    mode: optional
+    plugin: token
+    configuration:
+      pattern: '[random:number]'
+id: tournament_item
+label: 'Tournament Item'
+traits: {  }
+locked: false
+orderItemType: default
+generateTitle: true

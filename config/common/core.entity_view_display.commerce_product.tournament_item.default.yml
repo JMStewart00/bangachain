@@ -1,0 +1,44 @@
+uuid: 2c3b4a18-d63e-4de0-b49e-fa07c14a2326
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.tournament_item
+    - field.field.commerce_product.tournament_item.field_brand
+  module:
+    - commerce_product
+id: commerce_product.tournament_item.default
+targetEntityType: commerce_product
+bundle: tournament_item
+mode: default
+content:
+  field_brand:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 11
+    region: content
+  title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: -5
+    region: content
+  variations:
+    type: commerce_add_to_cart
+    label: above
+    settings:
+      combine: true
+    third_party_settings: {  }
+    weight: 10
+    region: content
+hidden:
+  add_to_cart_link: true
+  created: true
+  search_api_excerpt: true
+  stores: true
+  uid: true

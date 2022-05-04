@@ -16,8 +16,8 @@ dependencies:
     - commerce_feeds
     - commerce_product
     - soft4net_commerce_feeds
-id: disc_import
 label: 'Disc Import'
+id: disc_import
 description: ''
 help: ''
 import_period: -1
@@ -109,6 +109,11 @@ custom_sources:
     label: stock
     machine_name: stock
     type: csv
+  shipping_weight:
+    value: shipping_weight
+    label: shipping_weight
+    machine_name: shipping_weight
+    type: csv
 mappings:
   -
     target: product_id
@@ -183,7 +188,7 @@ mappings:
   -
     target: weight
     map:
-      number: weight
+      number: shipping_weight
     settings:
       unit: g
   -

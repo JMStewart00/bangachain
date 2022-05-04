@@ -1,0 +1,4 @@
+services:
+  field_updater:
+    class: Drupal\integer_to_decimal\Service\FieldUpdaterService
+    arguments: ['@database', '@entity_type.manager', '@config.factory', '@messenger']

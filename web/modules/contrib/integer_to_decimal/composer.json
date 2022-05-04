@@ -1,0 +1,14 @@
+{
+	"name": "drupal/integer_to_decimal",
+	"type": "drupal-module",
+	"description": "Allows site builders update node fields of type integer with any data associated to them to type decimal.",
+	"homepage": "https://www.drupal.org/project/integer_to_decimal",
+	"license": "GPL-2.0-or-later",
+	"require": {
+	},
+	"authors": [{
+		"name": "Michael Mwebaze",
+		"homepage": "https://www.drupal.org/user/3201071"
+	}],
+	"keywords": ["drupal", "integer_to_decimal", "site administration", "integer to decimal"]
+}

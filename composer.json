@@ -194,6 +194,7 @@
         "drupal/image_style_warmer": "^1.1",
         "drupal/imageapi_optimize": "^4.0",
         "drupal/imageapi_optimize_webp": "^2.0@beta",
+        "drupal/integer_to_decimal": "^2.0",
         "drupal/jquery_ui_accordion": "^1.0",
         "drupal/jquery_ui_tooltip": "^1.0",
         "drupal/jquery_ui_touch_punch": "^1.0",

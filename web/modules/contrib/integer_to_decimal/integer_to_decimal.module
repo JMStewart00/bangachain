@@ -1,0 +1,102 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\EntityForm;
+use Drupal\integer_to_decimal\Util\EntityFromUri;
+
+/**
+ * Implements hook_form_alter().
+ */
+function integer_to_decimal_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form_object = $form_state->getFormObject();
+
+  if ($form_object instanceof EntityForm && $form_id == 'field_storage_config_edit_form') {
+    $entity = $form_object->getEntity();
+    $hasData = $entity->hasData();
+
+
+    $fieldType = $entity->getType();
+
+    if ($fieldType == 'integer' && $hasData) {
+
+      $precisionNumbers = range(10, 32);
+      $precision = [];
+      foreach ($precisionNumbers as $precisionNumber) {
+        $precision[$precisionNumber] = t((string) $precisionNumber);
+      }
+      $scaleNumbers = range(0, 10);
+      $scale = [];
+      foreach ($scaleNumbers as $scaleNumber) {
+        $scale[$scaleNumber] = t((string) $scaleNumber);
+      }
+
+      $form['field_updater_settings'] = [
+        '#type' => 'fieldset',
+        '#title' => 'Precison settings for conversion from Integer to decimal.',
+      ];
+
+      $bundles = $entity->getBundles();
+      $entity_type = $entity->getTargetEntityTypeId();
+
+      $form['field_updater_settings']['entity_type'] = [
+        '#type' => 'hidden',
+        '#value' => $entity_type,
+      ];
+
+      $form['field_updater_settings']['bundles'] = [
+        '#type' => 'hidden',
+        '#value' => serialize($bundles),
+      ];
+
+      $form['field_updater_settings']['convert'] = [
+        '#type' => 'checkbox',
+        '#title' => t('Enable integer to decimal conversion'),
+      ];
+      $form['field_updater_settings']['precision'] = [
+        '#type' => 'select',
+        '#title' => t('Precison'),
+        '#options' => $precision,
+        '#states' => [
+          'visible' => [
+            ':input[name="convert"]' => ['checked' => TRUE],
+          ],
+        ],
+      ];
+      $form['field_updater_settings']['scale'] = [
+        '#type' => 'select',
+        '#title' => t('Scale'),
+        '#options' => $scale,
+        '#states' => [
+          'visible' => [
+            ':input[name="convert"]' => ['checked' => TRUE],
+          ],
+        ],
+      ];
+      $form['actions']['submit']['#submit'][] = 'integer_to_decimal_field_storage_config_edit_form';
+    }
+  }
+}
+
+/**
+ * Implements hook_form_submit().
+ */
+function integer_to_decimal_field_storage_config_edit_form(array $form, FormStateInterface $form_state) {
+
+  if ($form_state->getValue('convert')) {
+
+    $form_object = $form_state->getFormObject();
+    $entity = $form_object->getEntity();
+    $config = \Drupal::configFactory();
+    $data = $config->getEditable('field.storage.' . $entity->id())
+      ->getRawData();
+
+    $entity_type = $data['entity_type'];
+    $field_name = $data['field_name'];
+    $precision = $form_state->getValue('precision');
+    $scale = $form_state->getValue('scale');
+    $bundles = unserialize($form_state->getValue('bundles'));
+
+    $fieldUpdaterService = Drupal::service('field_updater');
+    $fieldUpdaterService->fieldUpdater($field_name, 'decimal',$entity_type, $bundles, $precision, $scale);
+  }
+}

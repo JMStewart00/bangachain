@@ -19,7 +19,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '2f4fe2a7b9bb7af31389e77ac8a7de855e6a690f',
+    'reference' => 'd32f8c0f525711ce86cb30aa8916d98354755e25',
     'name' => 'oomphinc/drupal-scaffold',
   ),
   'versions' => 
@@ -1611,6 +1611,15 @@ private static $installed = array (
         0 => '9.3.7',
       ),
     ),
+    'drupal/integer_to_decimal' => 
+    array (
+      'pretty_version' => '2.0.0',
+      'version' => '2.0.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '2.0.0',
+    ),
     'drupal/jquery_ui' => 
     array (
       'pretty_version' => '1.4.0',
@@ -2816,7 +2825,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '2f4fe2a7b9bb7af31389e77ac8a7de855e6a690f',
+      'reference' => 'd32f8c0f525711ce86cb30aa8916d98354755e25',
     ),
     'orno/di' => 
     array (

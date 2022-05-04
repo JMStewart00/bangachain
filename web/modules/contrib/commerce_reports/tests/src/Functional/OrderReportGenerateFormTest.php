@@ -32,7 +32,7 @@ class OrderReportGenerateFormTest extends CommerceBrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'views',
     'path',
     'entity_reference_revisions',
@@ -125,7 +125,7 @@ class OrderReportGenerateFormTest extends CommerceBrowserTestBase {
    */
   public function testGenerateOrderReports() {
     $this->assertEquals(self::ORDER_COUNT, count($this->orders));
-    $report_count = (self::ORDER_COUNT * 2)/3;
+    $report_count = (self::ORDER_COUNT * 2) / 3;
     $this->drupalGet('/admin/commerce/config/reports/generate-reports');
     $this->assertSession()->statusCodeEquals(200);
 
@@ -150,7 +150,7 @@ class OrderReportGenerateFormTest extends CommerceBrowserTestBase {
    */
   public function testGenerateAllReports() {
     $this->assertEquals(self::ORDER_COUNT, count($this->orders));
-    $report_count = (self::ORDER_COUNT * 2)/3;
+    $report_count = (self::ORDER_COUNT * 2) / 3;
     $this->drupalGet('/admin/commerce/config/reports/generate-reports');
 
     // Check the integrity of the form and set values.

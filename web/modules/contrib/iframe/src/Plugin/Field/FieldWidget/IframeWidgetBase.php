@@ -20,6 +20,7 @@ class IframeWidgetBase extends WidgetBase {
   public $allowedAttributes = [
     'title' => 1,
     'url' => 1,
+    'headerlevel' => 1,
     'width' => 1,
     'height' => 1,
     'tokensupport' => 1,
@@ -32,6 +33,7 @@ class IframeWidgetBase extends WidgetBase {
     return [
         'width' => '',
         'height' => '',
+        'headerlevel' => '3',
         'class' => '',
         'expose_class' => 0,
         'frameborder' => '0',
@@ -92,6 +94,19 @@ class IframeWidgetBase extends WidgetBase {
       '#description' => self::getSizedescription(),
       '#maxlength' => 4,
       '#size' => 4,
+    ];
+    $element['headerlevel'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Header Level'),
+      '#options' => [
+        '1' => $this->t('h1'),
+        '2' => $this->t('h2'),
+        '3' => $this->t('h3'),
+        '4' => $this->t('h4'),
+      ],
+      // 0
+      '#default_value' => $settings['headerlevel'],
+      '#description' => $this->t('Header level for accessibility, defaults to "h3".'),
     ];
     $element['class'] = [
       '#type' => 'textfield',
@@ -178,6 +193,7 @@ class IframeWidgetBase extends WidgetBase {
 
     /* summary on the "manage display" page, valid for one content type */
     $summary = [];
+    $summary[] = $this->t('Iframe default header level: h@level', ['@level' => $settings['headerlevel']]);
     $summary[] = $this->t('Iframe default width: @width', ['@width' => $settings['width']]);
     $summary[] = $this->t('Iframe default height: @height', ['@height' => $settings['height']]);
     $summary[] = $this->t('Iframe default frameborder: @frameborder', ['@frameborder' => $settings['frameborder']]);

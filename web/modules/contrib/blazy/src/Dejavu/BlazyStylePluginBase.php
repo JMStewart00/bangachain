@@ -3,6 +3,7 @@
 namespace Drupal\blazy\Dejavu;
 
 use Drupal\views\Plugin\views\style\StylePluginBase;
+use Drupal\blazy\Blazy;
 use Drupal\blazy\BlazyManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -49,7 +50,10 @@ abstract class BlazyStylePluginBase extends StylePluginBase {
    */
   public function buildElement(array &$element, $row, $index) {
     $settings = &$element['settings'];
-    $item_id = empty($settings['item_id']) ? 'box' : $settings['item_id'];
+    $blazies = $settings['blazies'];
+    $item_id = $blazies->get('item.id') ?: 'box';
+
+    $this->reset($settings);
 
     // Add main image fields if so configured.
     if (!empty($settings['image'])) {
@@ -66,6 +70,13 @@ abstract class BlazyStylePluginBase extends StylePluginBase {
     if (!empty($settings['layout'])) {
       $this->getLayout($settings, $index);
     }
+  }
+
+  /**
+   * Renew settings per item.
+   */
+  protected function reset(array &$settings) {
+    return Blazy::reset($settings);
   }
 
 }

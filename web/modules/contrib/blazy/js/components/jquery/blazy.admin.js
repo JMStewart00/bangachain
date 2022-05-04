@@ -14,6 +14,7 @@
   var _idCheckbox = 'b-' + _checkbox;
   var _idForm = 'b-form';
   var _vanillaOn = 'form--vanilla-on';
+  var _vanillaOff = 'form--vanilla-off';
   var _elTootip = '.' + _desc + ', .form-item__' + _desc;
   var _elCheckbox = '.' + _checkbox;
   var _form = 'form--slick';
@@ -39,20 +40,34 @@
   function blazyForm(form) {
     var t = $(form);
 
+    function cleanSwitch(el) {
+      el.removeClass(function (index, css) {
+        return (css.match(/(^|\s)form--media-switch-\S+/g) || []).join(' ');
+      });
+    }
+
     $('.details-legend-prefix', t).removeClass('element-invisible');
 
     t[$('.' + _checkbox + '--vanilla', t).prop(_checked) ? _addClass : _removeClass](_vanillaOn);
 
     t.on(_click, '.' + _checkbox, function () {
       var $input = $(this);
-      $input[$input.prop(_checked) ? _addClass : _removeClass]('on');
+      var checked = $input.prop(_checked);
+
+      $input[checked ? _addClass : _removeClass]('on');
 
       if ($input.hasClass(_checkbox + '--vanilla')) {
-        t[$input.prop(_checked) ? _addClass : _removeClass](_vanillaOn);
+        t[checked ? _addClass : _removeClass](_vanillaOn);
+        t[checked ? _removeClass : _addClass](_vanillaOff);
+
+        if (checked) {
+          cleanSwitch(t);
+          $('select[name$="[media_switch]"]', t).val('');
+        }
       }
     });
 
-    $('select[name$="[style]"]', t).on(_change, function () {
+    $('select[name$="[style]"]', t).off(_change).on(_change, function () {
       var $select = $(this);
       var value = $select.val();
 
@@ -71,25 +86,32 @@
       }
     }).change();
 
-    $('select[name$="[grid]"]', t).on(_change, function () {
+    $('input[name$="[grid]"]', t).off(_change).on(_change, function () {
       var $select = $(this);
+      var value = $select.val();
 
-      t[$select.val() === '' ? _removeClass : _addClass]('form--grid-on');
+      t[value === '' ? _removeClass : _addClass]('form--grid-on');
     }).change();
 
-    $('select[name$="[responsive_image_style]"]', t).on(_change, function () {
+    t.on(_click, 'input[name$="[override]"]', function () {
+      var $input = $(this);
+      var checked = $input.prop(_checked);
+
+      t[checked ? _addClass : _removeClass]('form--override-on');
+    });
+
+    $('select[name$="[responsive_image_style]"]', t).off(_change).on(_change, function () {
       var $select = $(this);
       t[$select.val() === '' ? _removeClass : _addClass]('form--responsive-image-on');
     }).change();
 
-    $('select[name$="[media_switch]"]', t).on(_change, function () {
+    $('select[name$="[media_switch]"]', t).off(_change).on(_change, function () {
       var $select = $(this);
       var value = $select.val();
 
-      t.removeClass(function (index, css) {
-        return (css.match(/(^|\s)form--media-switch-\S+/g) || []).join(' ');
-      });
+      cleanSwitch(t);
 
+      t[value === '' ? _removeClass : _addClass]('form--media-switch-on');
       t[value === '' ? _removeClass : _addClass]('form--media-switch-' + value);
       var nobox = (value === '' || value === 'content' || value === 'media' || value === 'rendered');
       t[nobox ? _removeClass : _addClass]('form--media-switch-lightbox');
@@ -112,11 +134,11 @@
       $(this).closest('.' + _isSelected).removeClass(_isSelected);
     });
 
-    t.on('focus', _elExpandable, function () {
+    t.off('focus').on('focus', _elExpandable, function () {
       $(this).parent().addClass(_isFocused);
     });
 
-    t.on('blur', _elExpandable, function () {
+    t.off('blur').on('blur', _elExpandable, function () {
       $(this).parent().removeClass(_isFocused);
     });
   }

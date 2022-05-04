@@ -5,7 +5,6 @@ namespace Drupal\commerce_payment\Form;
 use Drupal\commerce\InlineFormManager;
 use Drupal\commerce_payment\PaymentOption;
 use Drupal\commerce_payment\PaymentOptionsBuilderInterface;
-use Drupal\commerce_payment\Plugin\Commerce\PaymentGateway\OffsitePaymentGatewayInterface;
 use Drupal\commerce_payment\Plugin\Commerce\PaymentGateway\SupportsStoredPaymentMethodsInterface;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
@@ -136,7 +135,7 @@ class PaymentAddForm extends FormBase implements ContainerInjectionInterface {
     // Allow on-site and manual payment gateways.
     $payment_gateways = array_filter($payment_gateways, function ($payment_gateway) {
       /** @var \Drupal\commerce_payment\Entity\PaymentGateway $payment_gateway */
-      return !($payment_gateway->getPlugin() instanceof OffsitePaymentGatewayInterface);
+      return $payment_gateway->getPlugin()->hasFormClass('add-payment');
     });
     // @todo Move this check to the access handler.
     if (count($payment_gateways) < 1) {

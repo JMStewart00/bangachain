@@ -7,9 +7,10 @@
 
 use Drupal\Core\Url;
 use Drupal\Core\Utility\UpdateException;
-use SquareConnect\Api\OAuthApi;
-use SquareConnect\ApiException;
-use SquareConnect\Model\ObtainTokenRequest;
+use Square\Environment;
+use Square\Exceptions\ApiException;
+use Square\Models\ObtainTokenRequest;
+use Drupal\commerce_square\ErrorHelper;
 
 /**
  * Permission scope has changed and OAuth token needs to be regenerated.
@@ -17,7 +18,8 @@ use SquareConnect\Model\ObtainTokenRequest;
 function commerce_square_post_update_oauth_token_warning() {
   $messenger = \Drupal::messenger();
   $messenger->addWarning(t('The Square integration requires the ORDERS_WRITE permission to add purchase details for orders sent to Square. You must <a href=":link">reauthorize with Square</a>', [
-    // Url generation is odd in the update kernel, see https://www.drupal.org/project/drupal/issues/2956953.
+    // Url generation is odd in the update kernel,
+    // see https://www.drupal.org/project/drupal/issues/2956953.
     ':link' => Url::fromRoute('commerce_square.settings', [], ['base_url' => ''])->toString(),
   ]));
 }
@@ -29,24 +31,37 @@ function commerce_square_post_update_oauth_token_migration() {
   $messenger = \Drupal::messenger();
   $state = \Drupal::state();
   $connect = \Drupal::getContainer()->get('commerce_square.connect');
-  $client = $connect->getClient('production');
+  $client = $connect->getClient(Environment::PRODUCTION);
 
   try {
-    $oauth_api = new OAuthApi($client);
-    $obtain_token_request = new ObtainTokenRequest();
-    $obtain_token_request->setClientId($connect->getAppId('production'));
-    $obtain_token_request->setClientSecret($connect->getAppSecret());
-    $obtain_token_request->setGrantType('migration_token');
-    $obtain_token_request->setMigrationToken($connect->getAccessToken('production'));
+    $oauth_api = $client->getOAuthApi();
 
-    $token_response = $oauth_api->obtainToken($obtain_token_request);
+    // Obtain token request.
+    $obtain_token_request = new ObtainTokenRequest(
+      $connect->getAppId(Environment::PRODUCTION),
+      $connect->getAppSecret(),
+      'migration_token'
+    );
+    $obtain_token_request->setMigrationToken($connect->getAccessToken(Environment::PRODUCTION));
+    $api_response = $oauth_api->obtainToken($obtain_token_request);
 
-    $state->setMultiple([
-      'commerce_square.production_access_token' => $token_response->getAccessToken(),
-      'commerce_square.production_access_token_expiry' => strtotime($token_response->getExpiresAt()),
-      'commerce_square.production_refresh_token' => $token_response->getRefreshToken(),
-    ]);
-    $messenger->addStatus(t('Commerce Square Connect OAuth access token has been migrated'));
+    if ($api_response->isSuccess()) {
+      $token_response = $api_response->getResult();
+      $state->setMultiple([
+        'commerce_square.production_access_token' => $token_response->getAccessToken(),
+        'commerce_square.production_access_token_expiry' => strtotime($token_response->getExpiresAt()),
+        'commerce_square.production_refresh_token' => $token_response->getRefreshToken(),
+      ]);
+      $messenger->addStatus(t('Commerce Square Connect OAuth access token has been migrated'));
+    }
+    else {
+      throw ErrorHelper::convertException(
+        new ApiException(
+          $api_response->getBody(),
+          $api_response->getRequest()
+        )
+      );
+    }
   }
   catch (ApiException $e) {
     $respone_body = $e->getResponseBody();

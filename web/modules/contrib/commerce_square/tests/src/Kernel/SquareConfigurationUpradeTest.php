@@ -12,7 +12,10 @@ use Drupal\Tests\commerce\Kernel\CommerceKernelTestBase;
  */
 class SquareConfigurationUpradeTest extends CommerceKernelTestBase {
 
-  public static $modules = [
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
     'entity_reference_revisions',
     'profile',
     'state_machine',

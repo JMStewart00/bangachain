@@ -33,7 +33,7 @@ class IframeAsurlwithuriFormatter extends IframeDefaultFormatter {
       $linktext = $item->url;
       $elements[$delta] = [
         '#markup' => Link::fromTextAndUrl($linktext, Url::fromUri($item->url, ['title' => $item->title]))->toString(),
-        '#allowed_tags' => ['iframe', 'a', 'h3'],
+        '#allowed_tags' => ['iframe', 'a', 'h1', 'h2', 'h3', 'h4'],
       ];
     }
     return $elements;

@@ -91,12 +91,32 @@ class ProductVariationFieldRenderer implements ProductVariationFieldRendererInte
    */
   protected function prepareForAjax(array $rendered_field, $field_name, ProductVariationInterface $variation) {
     $ajax_class = $this->buildAjaxReplacementClass($field_name, $variation);
-    $rendered_field['#attributes']['class'][] = $ajax_class;
-    $rendered_field['#ajax_replace_class'] = $ajax_class;
-    // Ensure that a <div> is rendered even if the field is empty, to allow
-    // field replacement to work when the variation changes.
-    if (!Element::children($rendered_field)) {
-      $rendered_field['#type'] = 'container';
+    // Lazy built fields cannot have attributes, but we cannot change the order
+    // of the render array either, because that breaks templates. For now, only
+    // wrap lazy built fields in an additional container.
+    // See https://www.drupal.org/project/commerce/issues/3120117.
+    if (isset($rendered_field['#lazy_builder'])) {
+      $rendered_field = [
+        '#type' => 'container',
+        '#weight' => $rendered_field['#weight'],
+        '#attributes' => ['class' => [$ajax_class]],
+        '#ajax_replace_class' => $ajax_class,
+        'rendered_field' => $rendered_field,
+      ];
+    }
+    else {
+      $rendered_field['#attributes']['class'][] = $ajax_class;
+      $rendered_field['#ajax_replace_class'] = $ajax_class;
+      // If this renders a view, we can return here. Views have no visible
+      // children and will have its type replaced by 'container' otherwise.
+      if (isset($rendered_field['#type']) && $rendered_field['#type'] == 'view') {
+        return $rendered_field;
+      }
+      // Ensure that a <div> is rendered even if the field is empty, to allow
+      // field replacement to work when the variation changes.
+      if (!Element::children($rendered_field)) {
+        $rendered_field['#type'] = 'container';
+      }
     }
 
     return $rendered_field;

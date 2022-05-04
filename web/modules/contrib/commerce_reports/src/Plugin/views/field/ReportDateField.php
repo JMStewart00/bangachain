@@ -106,7 +106,7 @@ class ReportDateField extends EntityField {
         $this->dateFormatString = $this->options['settings']['custom_date_format'];
       }
       else {
-        /* @var \Drupal\Core\Datetime\DateFormatInterface $formatter */
+        /** @var \Drupal\Core\Datetime\DateFormatInterface $formatter */
         $formatter = $this->entityTypeManager->getStorage('date_format')->load($this->dateFormat);
         $this->dateFormatString = $formatter->getPattern();
       }

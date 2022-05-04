@@ -86,9 +86,12 @@ class BlazyViews extends StylePluginBase {
    * Overrides StylePluginBase::render().
    */
   public function render() {
-    $settings              = $this->buildSettings();
-    $settings['item_id']   = 'content';
-    $settings['namespace'] = 'blazy';
+    $settings = $this->buildSettings();
+    $blazies = $settings['blazies'];
+
+    $blazies->set('namespace', 'blazy')
+      ->set('item.id', 'content')
+      ->set('is.grid', TRUE);
 
     $elements = [];
     foreach ($this->renderGrouping($this->view->result, $settings['grouping']) as $rows) {
@@ -100,7 +103,10 @@ class BlazyViews extends StylePluginBase {
       }
 
       // Supports Blazy multi-breakpoint images if using Blazy formatter.
-      $settings['first_image'] = isset($rows[0]) ? $this->getFirstImage($rows[0]) : [];
+      if ($data = $this->getFirstImage($rows[0] ?? NULL)) {
+        $blazies->set('first.data', $data);
+      }
+
       $build = ['items' => $items, 'settings' => $settings];
       $elements = $this->blazyManager->build($build);
 

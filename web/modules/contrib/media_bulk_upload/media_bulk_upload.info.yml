@@ -9,7 +9,7 @@ dependencies:
   - drupal:dropzonejs
 configure: entity.media_bulk_config.collection
 
-# Information added by Drupal.org packaging script on 2020-06-16
-version: '8.x-1.0-alpha27'
+# Information added by Drupal.org packaging script on 2022-04-06
+version: '8.x-1.0-alpha28'
 project: 'media_bulk_upload'
-datestamp: 1592297814
+datestamp: 1649248961

@@ -69,7 +69,7 @@ class EmailSender implements EmailSenderInterface {
     ];
     // @todo Figure out how to get the langcode generically.
     $params = [
-      'id' => 'commerce_email',
+      'id' => 'commerce_email_' . $email->id(),
       'from' => $this->replaceTokens($email->getFrom(), $entity),
       'cc' => $this->replaceTokens($email->getCc(), $entity),
       'bcc' => $this->replaceTokens($email->getBcc(), $entity),

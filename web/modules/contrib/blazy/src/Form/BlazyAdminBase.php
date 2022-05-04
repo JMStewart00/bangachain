@@ -14,6 +14,7 @@ use Drupal\Component\Utility\Unicode;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\blazy\BlazyDefault;
 use Drupal\blazy\BlazyManagerInterface;
+use Drupal\blazy\Utility\Path;
 
 /**
  * A base for blazy admin integration to have re-usable methods in one place.
@@ -136,7 +137,9 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
    * Returns shared form elements across field formatter and Views.
    */
   public function openingForm(array &$form, &$definition = []) {
-    $this->blazyManager->getModuleHandler()->alter('blazy_form_element_definition', $definition);
+    $this->blazyManager
+      ->getModuleHandler()
+      ->alter('blazy_form_element_definition', $definition);
 
     // Display style: column, plain static grid, slick grid, slick carousel.
     // https://drafts.csswg.org/css-multicol
@@ -294,14 +297,6 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
    * Returns shared ending form elements across field formatter and Views.
    */
   public function closingForm(array &$form, $definition = []) {
-    if (isset($definition['current_view_mode'])) {
-      $form['current_view_mode'] = [
-        '#type'          => 'hidden',
-        '#default_value' => $definition['current_view_mode'] ?? '_custom',
-        '#weight'        => 120,
-      ];
-    }
-
     $this->finalizeForm($form, $definition);
   }
 
@@ -335,7 +330,7 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
         ],
       ];
 
-      $loadings = ['auto', 'eager', 'unlazy'];
+      $loadings = ['auto', 'defer', 'eager', 'unlazy'];
       $sliders = in_array($namespace, ['slick', 'splide']);
       if (!empty($definitions['slider']) || $sliders) {
         $loadings[] = 'slider';
@@ -346,8 +341,9 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
         '#options'      => array_combine($loadings, $loadings),
         '#empty_option' => $this->t('lazy'),
         '#weight'       => -111,
-        '#description'  => $this->t("Decide the `loading` attribute affected by the above fold aka onscreen critical contents. <ul><li>`lazy`, the default: defers loading below fold or offscreen images and iframes until users scroll near them.</li><li>`auto`: browser determines whether or not to lazily load. Only if uncertain about the above fold boundaries given different devices. </li><li>`eager`: loads right away. Similar effect like without `loading`, included for completeness. Good for above fold.</li><li>`unlazy`: explicitly removes loading attribute enforced by core. Also removes old `data-[SRC|SRCSET|LAZY]` if `No JavaScript` is disabled. Best for the above fold.</li><li>`slider`, if applicable: will `unlazy` the first visible, and leave the rest lazyloaded. Best for sliders (one visible at a time), not carousels (multiple visible slides at once).</li></ul><b>Note</b>: lazy loading images/ iframes for the above fold is anti-pattern, avoid, <a href=':url' target='_blank'>read more</a>.", [
+        '#description'  => $this->t("Decide the `loading` attribute affected by the above fold aka onscreen critical contents. <ul><li>`lazy`, the default: defers loading below fold or offscreen images and iframes until users scroll near them.</li><li>`auto`: browser determines whether or not to lazily load. Only if uncertain about the above fold boundaries given different devices. </li><li>`eager`: loads right away. Similar effect like without `loading`, included for completeness. Good for above fold.</li><li>`defer`: trigger native lazy after the first row is loaded. Will disable global `No JavaScript: lazy` option on this particular field, <a href=':defer'>read more</a>.</li><li>`unlazy`: explicitly removes loading attribute enforced by core. Also removes old `data-[SRC|SRCSET|LAZY]` if `No JavaScript` is disabled. Best for the above fold.</li><li>`slider`, if applicable: will `unlazy` the first visible, and leave the rest lazyloaded. Best for sliders (one visible at a time), not carousels (multiple visible slides at once).</li></ul><b>Note</b>: lazy loading images/ iframes for the above fold is anti-pattern, avoid, <a href=':url' target='_blank'>read more</a>.", [
           ':url' => 'https://www.drupal.org/node/3262724',
+          ':defer' => 'https://drupal.org/node/3120696',
         ]),
         '#wrapper_attributes' => [
           'class' => [
@@ -441,7 +437,7 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
           '#title'        => $this->t('Aspect ratio'),
           '#options'      => array_combine($ratio, $ratio),
           '#empty_option' => $this->t('- None -'),
-          '#description'  => $this->t('Aspect ratio to get consistently responsive images and iframes. Coupled with Image style. And to fix layout reflow and excessive height issues. <a href="@dimensions" target="_blank">Image styles and video dimensions</a> must <a href="@follow" target="_blank">follow the aspect ratio</a>. If not, images will be distorted. Use fixed ratio (non-fluid) to avoid JS works, or if it fails Responsive image. Fixed ratio means, all images from mobile to desktop use the same aspect ratio. Fluid means dimensions are calculated and JS works are attempted to fix aspect ratio. <a href="@link" target="_blank">Learn more</a>, or leave empty to DIY (such as using CSS mediaquery), or when working with multi-image-style plugin like GridStack.', [
+          '#description'  => $this->t('Aspect ratio to get consistently responsive images and iframes. Coupled with Image style. And to fix layout reflow, excessive height issues, whitespace below images, collapsed container, no-js users, etc. <a href="@dimensions" target="_blank">Image styles and video dimensions</a> must <a href="@follow" target="_blank">follow the aspect ratio</a>. If not, images will be distorted. <a href="@link" target="_blank">Learn more</a>. <ul><li><b>Fixed ratio:</b> all images use the same aspect ratio mobile up. Use it to avoid JS works, or if it fails Responsive image. </li><li><b>Fluid:</b> aka dynamic, dimensions are calculated and JS works are attempted to fix it.</li><li><b>Leave empty:</b> to DIY (such as using CSS mediaquery), or when working with multi-image-style plugin like GridStack.</li></ul>', [
             '@dimensions'  => '//size43.com/jqueryVideoTool.html',
             '@follow'      => '//en.wikipedia.org/wiki/Aspect_ratio_%28image%29',
             '@link'        => '//www.smashingmagazine.com/2014/02/27/making-embedded-content-work-in-responsive-design/',
@@ -597,12 +593,16 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
     $admin_css = $admin_css ?: $this->blazyManager->configLoad('admin_css', 'blazy.settings');
     $excludes = ['details', 'fieldset', 'hidden', 'markup', 'item', 'table'];
     $selects = ['cache', 'optionset', 'view_mode'];
-    $current_route_name = $this->blazyManager->getRouteName();
 
-    // Disable the admin css in the layout builder, to
-    // avoid conflicts with the active frontend theme.
-    if ($admin_css && !empty($current_route_name)) {
-      $admin_css = !str_starts_with($current_route_name, "layout_builder.");
+    // Disable the admin css in the layout builder, to avoid conflicts with
+    // the active frontend theme.
+    // @todo recheck str_starts_with for PHP7. No errors at PHP7.4, last time.
+    if ($admin_css && $router = Path::routeMatch()) {
+      $route_name = $router->getRouteName();
+
+      if (!empty($route_name)) {
+        $admin_css = mb_strpos($route_name, 'layout_builder.') === FALSE;
+      }
     }
 
     $this->blazyManager->getModuleHandler()->alter('blazy_form_element', $form, $definition);
@@ -788,6 +788,7 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
   protected function getState($state, array $definition = []) {
     $lightboxes = [];
 
+    // @fixme this appears to be broken at some point of Drupal.
     foreach ($this->blazyManager->getLightboxes() as $key => $lightbox) {
       $lightboxes[$key]['value'] = $lightbox;
     }
@@ -806,7 +807,7 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
       static::STATE_LIGHTBOX_CUSTOM => [
         'visible' => [
           'select[name$="[box_caption]"]' => ['value' => 'custom'],
-          'select[name*="[media_switch]"]' => $lightboxes,
+          // @fixme 'select[name*="[media_switch]"]' => $lightboxes,
         ],
       ],
       static::STATE_IFRAME_ENABLED => [

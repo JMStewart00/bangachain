@@ -9,7 +9,7 @@ dependencies:
     - commerce_order
     - commerce_price
 id: commerce_checkout_order_summary
-label: 'Checkout Order Summary'
+label: 'Checkout order summary'
 module: views
 description: ''
 tag: commerce_order_summary

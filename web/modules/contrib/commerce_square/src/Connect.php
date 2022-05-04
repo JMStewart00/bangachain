@@ -4,8 +4,8 @@ namespace Drupal\commerce_square;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\State\StateInterface;
-use SquareConnect\ApiClient;
-use SquareConnect\Configuration;
+use Square\SquareClient;
+use Square\Environment;
 
 /**
  * Represents the Connect application for Square.
@@ -68,11 +68,11 @@ class Connect {
    * @return string
    *   The application ID.
    */
-  public function getAppId($mode) {
-    if ($mode == 'production') {
+  public function getAppId(string $mode) {
+    if ($mode == Environment::PRODUCTION) {
       return $this->settings->get('production_app_id');
-
     }
+
     return $this->settings->get('sandbox_app_id');
   }
 
@@ -85,10 +85,11 @@ class Connect {
    * @return string
    *   The access token.
    */
-  public function getAccessToken($mode) {
-    if ($mode == 'production') {
+  public function getAccessToken(string $mode) {
+    if ($mode == Environment::PRODUCTION) {
       return $this->state->get('commerce_square.production_access_token');
     }
+
     return $this->settings->get('sandbox_access_token');
   }
 
@@ -101,10 +102,11 @@ class Connect {
    * @return string
    *   The refresh token.
    */
-  public function getRefreshToken($mode) {
-    if ($mode === 'production') {
+  public function getRefreshToken(string $mode) {
+    if ($mode === Environment::PRODUCTION) {
       return $this->state->get('commerce_square.production_refresh_token');
     }
+
     return '';
   }
 
@@ -117,8 +119,8 @@ class Connect {
    * @return int
    *   The expiration timestamp. Or -1 if sandbox.
    */
-  public function getAccessTokenExpiration($mode) {
-    if ($mode == 'production') {
+  public function getAccessTokenExpiration(string $mode) {
+    if ($mode == Environment::PRODUCTION) {
       return $this->state->get('commerce_square.production_access_token_expiry');
     }
 
@@ -131,16 +133,14 @@ class Connect {
    * @param string $mode
    *   The mode.
    *
-   * @return \SquareConnect\ApiClient
+   * @return \Square\SquareClient
    *   A configured API client for the Connect application.
    */
-  public function getClient($mode) {
-    $config = new Configuration();
-    if ($mode === 'sandbox') {
-      $config->setHost('https://connect.squareupsandbox.com');
-    }
-    $config->setAccessToken($this->getAccessToken($mode));
-    return new ApiClient($config);
+  public function getClient(string $mode) {
+    return new SquareClient([
+      'accessToken' => $this->getAccessToken($mode),
+      'environment' => $mode,
+    ]);
   }
 
 }

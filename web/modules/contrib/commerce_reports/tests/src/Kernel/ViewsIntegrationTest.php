@@ -14,7 +14,7 @@ class ViewsIntegrationTest extends CommerceKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'path',
     'entity_reference_revisions',
     'profile',
@@ -24,6 +24,9 @@ class ViewsIntegrationTest extends CommerceKernelTestBase {
     'views',
   ];
 
+  /**
+   * Tests the views data.
+   */
   public function testViewsData() {
     $views_data = $this->container->get('views.views_data')->getAll();
 

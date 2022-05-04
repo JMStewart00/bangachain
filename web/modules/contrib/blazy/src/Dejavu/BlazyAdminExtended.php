@@ -95,6 +95,7 @@ class BlazyAdminExtended extends BlazyAdminFormatterBase implements BlazyAdminIn
       ];
     }
 
+    // Allows empty options to raise awareness of this option.
     if (isset($definition['classes'])) {
       $form['class'] = [
         '#type'        => 'select',

@@ -1,3 +1,4 @@
-css/components/blazy.colorbox.css
-css/components/blazy.flex.css
-css/components/blazy.nativegrid.css
+css/components/box/blazy.colorbox.css
+css/components/grid/blazy.flex.css
+css/components/grid/blazy.nativegrid.css
+css/components/grid/blazy.nativegrid.masonry.css

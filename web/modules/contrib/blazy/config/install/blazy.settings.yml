@@ -6,6 +6,9 @@ nojs:
   promise: '0'
   raf: '0'
 fx: ''
+blur_client: false
+blur_storage: false
+blur_minwidth: 0
 noscript: false
 responsive_image: false
 one_pixel: true

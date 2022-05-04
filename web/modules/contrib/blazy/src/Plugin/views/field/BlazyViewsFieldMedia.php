@@ -18,20 +18,25 @@ class BlazyViewsFieldMedia extends BlazyViewsFieldPluginBase {
     /** @var \Drupal\media_entity\Entity\Media $media */
     $media = $values->_entity;
 
-    $data['settings'] = $this->mergedViewsSettings();
-    $data['settings']['delta'] = $values->index;
-    $this->mergedSettings = $data['settings'];
+    $settings = $this->mergedViewsSettings();
+    $settings['delta'] = $values->index;
+
+    $data['settings'] = $this->mergedSettings = $settings;
+    $data['entity'] = $media;
+    $data['fallback'] = $media->label();
 
     // Pass results to \Drupal\blazy\BlazyEntity.
-    return $this->blazyEntity->build($data, $media, $media->label());
+    return $this->blazyEntity->build($data);
   }
 
   /**
-   * Defines the scope for the form elements.
+   * {@inheritdoc}
    */
-  public function getScopedFormElements() {
-    return ['multimedia' => TRUE, 'view_mode' => 'default']
-      + parent::getScopedFormElements();
+  protected function getPluginScopes(): array {
+    return [
+      'multimedia' => TRUE,
+      'view_mode' => 'default',
+    ] + parent::getPluginScopes();
   }
 
 }

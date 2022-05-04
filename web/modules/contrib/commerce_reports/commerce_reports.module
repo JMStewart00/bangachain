@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Provides reporting capabilities for Commerce.
+ */
+
 use Drupal\commerce_reports\Plugin\views\field\PriceNumericField;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\views\Plugin\views\field\NumericField;
@@ -81,7 +86,7 @@ function commerce_reports_views_pre_build(ViewExecutable $view) {
       // Determine if this is a price field being aggregated.
       $intersect_test = array_intersect([
         $field_plugin->field . '_number',
-        $field_plugin->field . '_currency_code'
+        $field_plugin->field . '_currency_code',
       ], $field_plugin->additional_fields);
 
       if (!empty($intersect_test)) {

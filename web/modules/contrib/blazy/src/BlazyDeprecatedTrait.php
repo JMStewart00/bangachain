@@ -28,6 +28,7 @@ trait BlazyDeprecatedTrait {
       'provider'    => 'blazy',
     ];
 
+    // @todo re-check if to keep it as this can be useful for SickBrowser EB.
     $info['blazy_file'] = $common + [
       'id'          => 'blazy_file',
       'label'       => new TranslatableMarkup('Blazy Image with VEF (deprecated)'),

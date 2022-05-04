@@ -14,7 +14,10 @@ use Drupal\Tests\commerce\Kernel\CommerceKernelTestBase;
  */
 class ReportQueryBuilderTest extends CommerceKernelTestBase {
 
-  public static $modules = [
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
     'entity_reference_revisions',
     'profile',
     'state_machine',

@@ -7,6 +7,8 @@
 
   'use strict';
 
+  var _dataSrc = 'data-src';
+
   /**
    * Updates CSS background with multi-breakpoint images.
    *
@@ -27,6 +29,9 @@
 
         if (url) {
           el.style.backgroundImage = 'url("' + url + '")';
+          if ($.hasAttr(el, _dataSrc)) {
+            $.removeAttr(el, _dataSrc);
+          }
         }
       }
     };
@@ -37,7 +42,7 @@
   $.bgUrl = function (el, winData) {
     var data = $.parse($.attr(el, 'data-b-bg'));
 
-    if (data) {
+    if (!$.isEmpty(data)) {
       var _bg = $.activeWidth(data, winData);
       if (_bg && _bg !== 'undefined') {
         var _ratio = _bg.ratio;
@@ -50,7 +55,7 @@
         return _bg.src;
       }
     }
-    return '';
+    return $.attr(el, _dataSrc);
   };
 
   $.bg = bg;

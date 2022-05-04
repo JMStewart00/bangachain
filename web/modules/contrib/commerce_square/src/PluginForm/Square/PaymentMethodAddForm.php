@@ -6,11 +6,29 @@ use Drupal\address\Plugin\Field\FieldType\AddressItem;
 use Drupal\commerce_order\Plugin\Commerce\InlineForm\CustomerProfile;
 use Drupal\commerce_payment\PluginForm\PaymentMethodAddForm as BasePaymentMethodAddForm;
 use Drupal\Core\Form\FormStateInterface;
+use Square\Environment;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Payment method add form for Square.
  */
 class PaymentMethodAddForm extends BasePaymentMethodAddForm {
+
+  /**
+   * The 'commerce_square.settings' config.
+   *
+   * @var \Drupal\Core\Config\Config
+   */
+  protected $config;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    $instance = parent::create($container);
+    $instance->config = $container->get('config.factory')->get('commerce_square.settings');
+    return $instance;
+  }
 
   /**
    * {@inheritdoc}
@@ -30,6 +48,7 @@ class PaymentMethodAddForm extends BasePaymentMethodAddForm {
         $form['#attached']['drupalSettings']['commerceSquare']['customerPostalCode'] = $postalCode;
       }
     }
+
     return $form;
   }
 
@@ -40,12 +59,11 @@ class PaymentMethodAddForm extends BasePaymentMethodAddForm {
     /** @var \Drupal\commerce_square\Plugin\Commerce\PaymentGateway\Square $plugin */
     $plugin = $this->plugin;
     $configuration = $plugin->getConfiguration();
-    $config = \Drupal::config('commerce_square.settings');
-    $api_mode = ($configuration['mode'] == 'test') ? 'sandbox' : 'production';
+    $api_mode = ($configuration['mode'] == 'test') ? Environment::SANDBOX : Environment::PRODUCTION;
 
     $element['#attached']['library'][] = 'commerce_square/form';
     $element['#attached']['drupalSettings']['commerceSquare'] = [
-      'applicationId' => $config->get($api_mode . '_app_id'),
+      'applicationId' => $this->config->get($api_mode . '_app_id'),
       'apiMode' => $api_mode,
       'drupalSelector' => 'edit-' . str_replace('_', '-', implode('-', $element['#parents'])),
     ];
@@ -71,6 +89,22 @@ class PaymentMethodAddForm extends BasePaymentMethodAddForm {
       '#type' => 'hidden',
       '#attributes' => ['class' => ['square-exp-year']],
     ];
+
+    // Display credit card logos in checkout form.
+    if ($plugin->getConfiguration()['enable_credit_card_icons']) {
+      $element['#attached']['library'][] = 'commerce_square/credit_card_icons';
+      $element['#attached']['library'][] = 'commerce_payment/payment_method_icons';
+
+      $supported_credit_cards = [];
+      foreach ($plugin->getCreditCardTypes() as $credit_card) {
+        $supported_credit_cards[] = $credit_card->getId();
+      }
+
+      $element['credit_card_logos'] = [
+        '#theme' => 'commerce_square_credit_card_logos',
+        '#credit_cards' => $supported_credit_cards,
+      ];
+    }
 
     $element['number'] = [
       '#type' => 'item',

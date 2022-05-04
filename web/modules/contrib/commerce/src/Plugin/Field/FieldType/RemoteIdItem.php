@@ -15,7 +15,7 @@ use Drupal\Core\TypedData\DataDefinition;
  *   description = @Translation("Stores remote IDs."),
  *   category = @Translation("Commerce"),
  *   default_widget = "",
- *   default_formatter = "",
+ *   default_formatter = "commerce_remote_id_default",
  *   list_class = "\Drupal\commerce\Plugin\Field\FieldType\RemoteIdFieldItemList",
  * )
  */

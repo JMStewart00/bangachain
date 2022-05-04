@@ -2,7 +2,7 @@
 
 namespace Drupal\commerce_square;
 
-use SquareConnect\Model\ChargeRequest;
+use Square\Models\ChargeRequest;
 
 /**
  * Adds integration_id support to the ChargeRequest API object.
@@ -11,25 +11,35 @@ use SquareConnect\Model\ChargeRequest;
  */
 final class IntegrationChargeRequest extends ChargeRequest {
 
+  /**
+   * The swagger types.
+   *
+   * @var string[]
+   */
   public static $swaggerTypes = [
     'idempotency_key' => 'string',
-    'amount_money' => '\SquareConnect\Model\Money',
+    'amount_money' => '\Square\Models\Money',
     'card_nonce' => 'string',
     'customer_card_id' => 'string',
     'delay_capture' => 'bool',
     'reference_id' => 'string',
     'note' => 'string',
     'customer_id' => 'string',
-    'billing_address' => '\SquareConnect\Model\Address',
-    'shipping_address' => '\SquareConnect\Model\Address',
+    'billing_address' => '\Square\Models\Address',
+    'shipping_address' => '\Square\Models\Address',
     'buyer_email_address' => 'string',
     'order_id' => 'string',
-    'additional_recipients' => '\SquareConnect\Model\AdditionalRecipient[]',
+    'additional_recipients' => '\Square\Models\AdditionalRecipient[]',
     'verification_token' => 'string',
     // Override addition.
     'integration_id' => 'string',
   ];
 
+  /**
+   * The attributes map.
+   *
+   * @var string[]
+   */
   public static $attributeMap = [
     'idempotency_key' => 'idempotency_key',
     'amount_money' => 'amount_money',
@@ -49,6 +59,11 @@ final class IntegrationChargeRequest extends ChargeRequest {
     'integration_id' => 'integration_id',
   ];
 
+  /**
+   * An array of setters.
+   *
+   * @var string[]
+   */
   public static $setters = [
     'idempotency_key' => 'setIdempotencyKey',
     'amount_money' => 'setAmountMoney',
@@ -68,6 +83,11 @@ final class IntegrationChargeRequest extends ChargeRequest {
     'integration_id' => 'setIntegrationId',
   ];
 
+  /**
+   * An array of getters.
+   *
+   * @var string[]
+   */
   public static $getters = [
     'idempotency_key' => 'getIdempotencyKey',
     'amount_money' => 'getAmountMoney',
@@ -92,7 +112,7 @@ final class IntegrationChargeRequest extends ChargeRequest {
    *
    * @var string
    */
-  protected $integration_id;
+  protected $integrationId;
 
   /**
    * Set the integration ID.
@@ -101,7 +121,7 @@ final class IntegrationChargeRequest extends ChargeRequest {
    *   The integration ID.
    */
   public function setIntegrationId($integration_id) {
-    $this->integration_id = $integration_id;
+    $this->integrationId = $integration_id;
   }
 
   /**
@@ -111,7 +131,7 @@ final class IntegrationChargeRequest extends ChargeRequest {
    *   The integration ID.
    */
   public function getIntegrationId() {
-    return $this->integration_id;
+    return $this->integrationId;
   }
 
 }

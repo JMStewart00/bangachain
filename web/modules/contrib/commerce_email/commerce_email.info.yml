@@ -1,6 +1,6 @@
 name: Commerce Email
 type: module
-description: 'Provides a UI for defining Commerce emails.'
+description: 'Provides a UI for defining emails to send in response to various Drupal Commerce events.'
 package: Commerce (contrib)
 core_version_requirement: ^8.9 || ^9
 dependencies:

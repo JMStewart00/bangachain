@@ -2,13 +2,14 @@
 
 namespace Drupal\blazy\Plugin\Field\FieldFormatter;
 
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\field\FieldConfigInterface;
 use Drupal\file\Plugin\Field\FieldFormatter\FileFormatterBase;
 use Drupal\blazy\BlazyDefault;
-use Drupal\blazy\Dejavu\BlazyDependenciesTrait;
+use Drupal\blazy\Field\BlazyDependenciesTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -26,8 +27,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 abstract class BlazyFileFormatterBase extends FileFormatterBase {
 
-  use BlazyFormatterTrait;
-  use BlazyFormatterViewTrait;
+  use BlazyFormatterTrait {
+    getScopedFormElements as traitGetScopedFormElements;
+  }
   use BlazyDependenciesTrait;
 
   /**
@@ -48,7 +50,7 @@ abstract class BlazyFileFormatterBase extends FileFormatterBase {
   /**
    * Build individual item if so configured such as for file ER goodness.
    */
-  public function buildElement(array &$build, $entity) {
+  public function buildElement(array &$element, $entity) {
     // Do nothing.
   }
 
@@ -66,10 +68,59 @@ abstract class BlazyFileFormatterBase extends FileFormatterBase {
   }
 
   /**
-   * Defines the scope for the form elements.
+   * Returns the Blazy elements, also for sub-modules to re-use.
    */
-  public function getScopedFormElements() {
-    $multiple = $this->fieldDefinition->getFieldStorageDefinition()->isMultiple();
+  protected function getElements(array &$build, $files, $caption_id = 'captions'): array {
+    $elements = [];
+    foreach ($files as $delta => $file) {
+      /** @var Drupal\image\Plugin\Field\FieldType\ImageItem $item */
+      $item  = $file->_referringItem;
+      $sets  = $build['settings'];
+      $blazy = $sets['blazies']->reset($sets);
+      $uri   = $sets['uri'] = $file->getFileUri();
+
+      // @todo update tests and move it out of here.
+      $blazy->set('delta', $delta)
+        ->set('media.type', 'image')
+        ->set('image.uri', $uri);
+
+      $element = ['item' => $item, 'settings' => $sets];
+
+      // Build individual element.
+      $this->buildElement($element, $file);
+
+      // Build captions if so configured.
+      if ($caption_id) {
+        $this->buildCaptions($element, $caption_id);
+      }
+
+      // Image with grid, responsive image, lazyLoad, and lightbox supports.
+      $elements[] = $element;
+    }
+    return $elements;
+  }
+
+  /**
+   * Builds the captions.
+   */
+  protected function buildCaptions(array &$element, $caption_id): void {
+    $settings = $element['settings'];
+    if (!empty($settings['caption']) && $item = ($element['item'] ?? NULL)) {
+      foreach ($settings['caption'] as $caption) {
+        if ($content = ($item->{$caption} ?? NULL)) {
+          $element[$caption_id][$caption] = [
+            '#markup' => Xss::filterAdmin($content),
+          ];
+        }
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getPluginScopes(): array {
+    $multiple = $this->isMultiple();
     $captions = ['title' => $this->t('Title'), 'alt' => $this->t('Alt')];
 
     return [
@@ -81,7 +132,16 @@ abstract class BlazyFileFormatterBase extends FileFormatterBase {
       'media_switch_form' => TRUE,
       'style'             => $multiple,
       'thumbnail_style'   => TRUE,
-    ] + $this->getCommonScopedFormElements();
+    ];
+  }
+
+  /**
+   * Returns TRUE if a multi-value field.
+   */
+  protected function isMultiple(): bool {
+    return $this->fieldDefinition
+      ->getFieldStorageDefinition()
+      ->isMultiple();
   }
 
   /**
@@ -110,7 +170,7 @@ abstract class BlazyFileFormatterBase extends FileFormatterBase {
       if (empty($default_image['uuid']) && $this->fieldDefinition instanceof FieldConfigInterface) {
         $default_image = $this->fieldDefinition->getFieldStorageDefinition()->getSetting('default_image');
       }
-      if (!empty($default_image['uuid']) && $file = $this->formatter->getEntityRepository()->loadEntityByUuid('file', $default_image['uuid'])) {
+      if (!empty($default_image['uuid']) && $file = $this->formatter->loadByUuid($default_image['uuid'], 'file')) {
         // Clone the FieldItemList into a runtime-only object for the formatter,
         // so that the fallback image can be rendered without affecting the
         // field values in the entity being rendered.

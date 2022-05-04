@@ -1,9 +1,10 @@
 services:
   commerce_reports.order_placed_subscriber:
     class: Drupal\commerce_reports\EventSubscriber\OrderPlacedEventSubscriber
-    arguments: ['@state', '@commerce_reports.order_report_generator']
+    arguments: ['@commerce_reports.order_report_generator']
     tags:
       - { name: event_subscriber }
+      - { name: needs_destruction }
 
   commerce_reports.query_builder:
     class: Drupal\commerce_reports\ReportQueryBuilder

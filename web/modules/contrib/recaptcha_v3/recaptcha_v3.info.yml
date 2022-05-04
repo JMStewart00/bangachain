@@ -8,7 +8,7 @@ configure: recaptcha_v3.settings
 dependencies:
   - captcha:captcha
 
-# Information added by Drupal.org packaging script on 2021-01-08
-version: '8.x-1.4'
+# Information added by Drupal.org packaging script on 2022-04-22
+version: '8.x-1.6'
 project: 'recaptcha_v3'
-datestamp: 1610128899
+datestamp: 1650598819

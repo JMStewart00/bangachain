@@ -2,7 +2,6 @@ name: 'Views Aggregator Test Views'
 type: module
 description: 'Provides views for Views Aggregator Plus tests.'
 package: Testing
-core_version_requirement: ^8 || ^9
 project: 'views_aggregator'
 dependencies:
   - drupal:views

@@ -91,6 +91,10 @@ class FontAwesomeIconMedia extends MediaSourceBase {
         $srcFolder = 'duotone';
         break;
 
+      case 'fat':
+        $srcFolder = 'thin';
+        break;
+
       case 'fak':
         $srcFolder = 'kit';
         break;

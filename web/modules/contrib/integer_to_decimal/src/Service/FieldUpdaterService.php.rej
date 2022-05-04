@@ -1,0 +1,86 @@
+--- src/Service/FieldUpdaterService.php
++++ src/Service/FieldUpdaterService.php
+@@ -58,13 +58,27 @@ class FieldUpdaterService implements FieldUpdaterServiceInterface {
+    * {@inheritdoc}
+    *
+    */
+-  public function fieldUpdater($field, $type, $bundle, $precision, $scale) {
++  public function fieldUpdater($field, $type, $entity_type, $bundles, $precision, $scale) {
+     $database = $this->connection;
+     $existingData = [];
+-    $tables = [
+-      "node_revision__{$field}",
+-      "node__{$field}",
+-    ];
++    $tables = [];
++
++    $entity_manager = $entity_manager = \Drupal::getContainer()->get('entity.manager');
++    // Get an instance of Drupal\Core\Entity\Sql\DefaultTableMapping class
++    $table_mapping = $entity_manager->getStorage('node')->getTableMapping();
++    $storage_definitions = $entity_manager->getFieldStorageDefinitions($entity_type);
++    $data_table = $table_mapping->getDedicatedDataTableName($storage_definitions[$field]);
++    if ($data_table) {
++      $tables[] = $data_table;
++    }
++    $revision_table = $table_mapping->getDedicatedRevisionTableName($storage_definitions[$field]);
++    if ($revision_table) {
++      $tables[] = $revision_table;
++    }
++
++    if (empty($tables)) {
++      return;
++    }
+ 
+     $settings = [
+       'precision' => $precision,
+@@ -79,18 +93,20 @@ class FieldUpdaterService implements FieldUpdaterServiceInterface {
+ 
+       $database->truncate($table)->execute();
+     }
+-    $config = $this->configFactory->getEditable('field.storage.node.' . $field);
++    $config = $this->configFactory->getEditable('field.storage.' . $entity_type . '.' . $field);
+     $config->set('settings', $settings)
+       ->set('type', 'decimal')->save();
+ 
+-    $fieldStorage = FieldStorageConfig::loadByName('node', $field);
++    $fieldStorage = FieldStorageConfig::loadByName($entity_type, $field);
+     $fieldStorage->set('settings', $settings)
+       ->set('type', 'decimal');
+     $fieldStorage->save();
+ 
+-    $fieldConfig = FieldConfig::loadByName('node', $bundle, $field);
+-    $fieldConfig->set('field_type', 'decimal')->save();
+-    $this->entityTypeManager->clearCachedDefinitions();
++    foreach ($bundles as $bundle) {
++      $fieldConfig = FieldConfig::loadByName($entity_type, $bundle, $field);
++      $fieldConfig->set('field_type', 'decimal')->save();
++      $this->entityTypeManager->clearCachedDefinitions();
++    }
+ 
+     // Restore the data.
+     foreach ($tables as $table) {
+@@ -103,14 +119,16 @@ class FieldUpdaterService implements FieldUpdaterServiceInterface {
+       $insert_query->execute();
+     }
+ 
+-    $this->entityTypeManager->getStorage('entity_form_display')
+-      ->load('node' . '.' . $bundle . '.' . 'default')
+-      ->setComponent($field, ['region' => 'content'])->save();
+-    $this->entityTypeManager->getStorage('entity_view_display')
+-      ->load('node' . '.' . $bundle . '.' . 'default')
+-      ->setComponent($field, ['region' => 'content'])->save();
++    foreach ($bundles as $bundle) {
++      $this->entityTypeManager->getStorage('entity_form_display')
++        ->load($entity_type . '.' . $bundle . '.' . 'default')
++        ->setComponent($field, ['region' => 'content'])->save();
++      $this->entityTypeManager->getStorage('entity_view_display')
++        ->load($entity_type . '.' . $bundle . '.' . 'default')
++        ->setComponent($field, ['region' => 'content'])->save();
+ 
+-    $this->entityTypeManager->clearCachedDefinitions();
+-    $this->messenger->addMessage($this->t('Successfully converted from integer to decimal.'));
++      $this->entityTypeManager->clearCachedDefinitions();
++      $this->messenger->addMessage($this->t('Successfully converted from integer to decimal.'));
++    }
+   }
+-}+}

@@ -50,22 +50,53 @@ class BlazySettings implements \Countable {
     if (empty($key)) {
       return $this->storage;
     }
-    else {
-      $parts = array_map('trim', explode('.', $key));
-      if (count($parts) == 1) {
-        return $this->storage[$key] ?? $default_value;
-      }
-      else {
-        $value = NestedArray::getValue($this->storage, $parts, $key_exists);
-        return $key_exists ? $value : $default_value;
-      }
+
+    $parts = array_map('trim', explode('.', $key));
+    if (count($parts) == 1) {
+      return $this->storage[$key] ?? $default_value;
     }
+    else {
+      $value = NestedArray::getValue($this->storage, $parts, $key_exists);
+      return $key_exists ? $value : $default_value;
+    }
+  }
+
+  /**
+   * Returns values from a key.
+   *
+   * @param string $key
+   *   The storage key.
+   * @param string $default_value
+   *   The storage default_value.
+   *
+   * @return mixed
+   *   Normally bool, but can be mixed values (array, string, bool, null, etc.).
+   */
+  public function is($key, $default_value = NULL) {
+    return $this->get('is.' . $key, $default_value);
+  }
+
+  /**
+   * Returns TRUE if a feature identified by the key was processed.
+   *
+   * To verify if the expected workflow is by-passed when the key was missing.
+   *
+   * @param string $key
+   *   The storage key.
+   * @param string $default_value
+   *   The storage default_value.
+   *
+   * @return mixed
+   *   Normally bool, but can be mixed values (array, string, bool, null, etc.).
+   */
+  public function was($key, $default_value = NULL) {
+    return $this->get('was.' . $key, $default_value);
   }
 
   /**
    * Sets values for a key.
    */
-  public function set($key, $value = NULL): self {
+  public function set($key, $value = NULL, $merge = FALSE): self {
     if (is_array($key) && !isset($value)) {
       foreach ($key as $k => $v) {
         $this->storage[$k] = $v;
@@ -74,6 +105,11 @@ class BlazySettings implements \Countable {
     }
 
     $parts = array_map('trim', explode('.', $key));
+
+    if (is_array($value) && $merge) {
+      $value = array_merge((array) $this->get($key, []), $value);
+    }
+
     if (count($parts) == 1) {
       $this->storage[$key] = $value;
     }
@@ -113,10 +149,100 @@ class BlazySettings implements \Countable {
   }
 
   /**
+   * Removes item from this.
+   *
+   * @param string $key
+   *   The key to unset.
+   *
+   * @return $this
+   *   The configuration object.
+   */
+  public function unset($key) {
+    $parts = array_map('trim', explode('.', $key));
+    if (count($parts) == 1) {
+      unset($this->storage[$key]);
+    }
+    else {
+      NestedArray::unsetValue($this->storage, $parts);
+    }
+    return $this;
+  }
+
+  /**
+   * Check if a config by its key exists.
+   *
+   * @param string $key
+   *   The key to check.
+   * @param object $group
+   *   The BlazySettings as sub-key to check for.
+   *
+   * @return bool
+   *   True if found.
+   */
+  public function isset($key, $group = NULL) {
+    $found = FALSE;
+    $parts = array_map('trim', explode('.', $key));
+    if (count($parts) == 1) {
+      if ($group) {
+        $found = isset($group->storage()[$key]);
+      }
+      else {
+        $found = isset($this->storage[$key]);
+      }
+    }
+    else {
+      $found = NestedArray::keyExists($parts, $this->storage);
+    }
+    return $found;
+  }
+
+  /**
+   * Reset or renew the BlazySettings object.
+   *
+   * @param array $settings
+   *   The settings to reset/ renew the instance.
+   * @param bool $filter
+   *   A flag to filter out settings.
+   *
+   * @return \Drupal\blazy\BlazySettings
+   *   The new BlazySettings instance.
+   */
+  public function reset(array &$settings, $filter = FALSE): BlazySettings {
+    $data = $this->storage;
+
+    if ($filter) {
+      $data = array_filter($data);
+    }
+
+    if ($this->is('debug')) {
+      $this->rksort($data);
+    }
+
+    $instance = new BlazySettings($data);
+    $settings['blazies'] = $instance;
+    return $instance;
+  }
+
+  /**
    * Returns the whole array.
    */
   public function storage(): array {
     return $this->storage;
+  }
+
+  /**
+   * Sorts recursively.
+   */
+  private function rksort(&$a): bool {
+    if (!is_array($a)) {
+      return FALSE;
+    }
+
+    ksort($a);
+    foreach ($a as $k => $v) {
+      $this->rksort($a[$k]);
+    }
+    return TRUE;
   }
 
 }

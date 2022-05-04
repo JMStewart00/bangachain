@@ -203,7 +203,7 @@ class AddToCartForm extends ContentEntityForm implements AddToCartFormInterface 
     // If the product references variations of a different type, fallback
     // to using the title widget as the attributes widget cannot properly
     // work.
-    if ($component['type'] === 'commerce_product_variation_attributes') {
+    if ($component && $component['type'] === 'commerce_product_variation_attributes') {
       $product = $form_state->get('product');
       /** @var \Drupal\commerce_product\ProductVariationStorageInterface $product_variation_storage */
       $product_variation_storage = $this->entityTypeManager->getStorage('commerce_product_variation');

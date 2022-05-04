@@ -21,7 +21,7 @@ button.link,
   }
 
   &:active {
-    color: var(--colorGinPrimaryHover);
+    color: var(--colorGinPrimaryActive);
   }
 }
 
@@ -35,7 +35,7 @@ button.link,
   }
 
   &:active {
-    border-color: var(--colorGinPrimaryHover);
+    border-color: var(--colorGinPrimaryActive);
   }
 }
 

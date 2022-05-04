@@ -9,3 +9,8 @@ form:
     - core/drupal
     - core/drupalSettings
     - core/jquery
+credit_card_icons:
+  version: VERSION
+  css:
+    theme:
+      css/commerce_square.credit_card_icons.css: {}

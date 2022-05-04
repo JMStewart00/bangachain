@@ -106,6 +106,11 @@ class ProductVariationTitleWidget extends ProductVariationWidgetBase implements 
       '#wrapper_id' => $wrapper_id,
       '#prefix' => '<div id="' . $wrapper_id . '">',
       '#suffix' => '</div>',
+      '#attached' => [
+        'library' => [
+          'commerce_product/update_product_url',
+        ],
+      ],
     ];
     // If an operation caused the form to rebuild, select the variation from
     // the user's current input.

@@ -66,7 +66,14 @@ Assumed, untested, fine with combo IO + `decoding` checks before blur spits.
 
 Shortly we are in the right direction to cope with Native vs. `data-[SRC]`.
 See `bio.js ::natively` for more contextual info.  
-[?] Todo recheck IF wrong so to put back https://drupal.org/node/3120696.
+[x] Todo recheck IF wrong so to put back https://drupal.org/node/3120696.
+
+**UPDATE 2022-03-03**: The above is almost not wrong as proven by no `b-loaded`
+class and no `blur` is triggered earlier, but 8000px threshold rules. Meaning
+the image is immediately requested 8000px before entering viewport.
+Added back a delay to only lazy load once the first found is loaded at field
+formatter level via `Loading priority: defer`, see
+[#3120696](https://drupal.org/node/3120696)
 
 ### ANIMATE.CSS INTEGRATION
 Blazy container (`.media`) can be animated using
@@ -93,13 +100,15 @@ To replace **Blur** effect with `animate.css` thingies, implements two things:
 function MYTHEME_preprocess_blazy(&$variables) {
   $settings = &$variables['settings'];
   $attributes = &$variables['attributes'];
+  $blazies = &$settings['blazies'];
 
   // Be sure to limit the scope, only animate for particular conditions.
-  if ($settings['entity_id'] == 123
-    && $settings['field_name'] == 'field_media_animated')  {
+  if ($blazies->get('entity.id') == 123
+    && $blazies->get('field.name') == 'field_media_animated')  {
+    $fx = $blazies->get('fx');
 
-    // This was taken care of by feeding $settings['fx'], or hard-coded here.
-    $attributes['data-animation'] = 'wobble';
+    // This was taken care of by feeding $fx, or hard-coded here.
+    $attributes['data-animation'] = $fx ?: 'wobble';
 
     // The following can be defined manually.
     $attributes['data-animation-duration'] = '3s';

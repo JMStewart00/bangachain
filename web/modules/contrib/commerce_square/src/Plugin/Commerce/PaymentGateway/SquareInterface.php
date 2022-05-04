@@ -14,10 +14,8 @@ interface SquareInterface extends OnsitePaymentGatewayInterface, SupportsAuthori
   /**
    * Gets a configured API client.
    *
-   * @return \SquareConnect\ApiClient
+   * @return \Square\SquareClient
    *   The API client.
-   *
-   * @deprecated Use \Drupal\commerce_square\Connect::getClient
    */
   public function getApiClient();
 

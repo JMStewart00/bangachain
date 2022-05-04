@@ -37,10 +37,19 @@
   min-height: 30px;
 }
 
+/* Hide for non-js users. */
+.is-b-loading:not(.is-b-loaded)::before {
+  display: none;
+}
+
+/* Core drupal.init.js provides this .js class for free as long as loaded. */
+.js .is-b-loading:not(.is-b-loaded)::before {
+  display: block;
+}
+
 /* Prevents costly double animations when Blur is enabled. */
 .is-b-loading:not(.is-b-loaded):not([data-animation])::before {
   content: '';
-  display: block;
   width: 30px;
   height: 30px;
   max-width: 30px;

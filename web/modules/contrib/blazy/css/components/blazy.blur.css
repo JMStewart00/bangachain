@@ -70,7 +70,10 @@ Ugly, but nobody except devs pressing F12 at browsers. */
 .media.is-b-animated .b-blur,
 /* Blur animation needs extra works for IEs, not supported, disabled. */
 .media.is-b-loaded .b-blur.is-b-ie {
-  display: none;
+  /* display: none; */
+  /* To minimize abrupt hiding, safe since it is absolute by default. */
+  opacity: 0;
+  z-index: -1;
 }
 
 /* Supports reduced motion. */
@@ -85,7 +88,7 @@ Ugly, but nobody except devs pressing F12 at browsers. */
     animation-iteration-count: 1 !important; /* csslint allow: known-properties, important */
   }
 
-  .media--fx-lg .b-blur.b-loaded {
+  .media--fx-lg.is-b-loaded .b-blur {
     filter: blur(1px);
     opacity: .9;
   }

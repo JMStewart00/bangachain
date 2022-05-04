@@ -14,5 +14,6 @@ recaptcha_v3:
     js/recaptcha_v3.js: { weight: 0 }
   dependencies:
     - core/drupal
-    - core/jquery.once
+    - core/jquery
+    - core/once
     - recaptcha_v3/google.recaptcha

@@ -30,7 +30,7 @@ class PromotionReportTest extends CommerceKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'entity_reference_revisions',
     'profile',
     'state_machine',
@@ -151,7 +151,7 @@ class PromotionReportTest extends CommerceKernelTestBase {
     $this->order->save();
     $this->assertEquals(2, count($this->order->getItems()));
 
-    // Testing order without adjustments
+    // Testing order without adjustments.
     $report_type_plugin->generateReports($this->order);
 
     /** @var \Drupal\commerce_reports\Entity\OrderReport[] $order_reports */

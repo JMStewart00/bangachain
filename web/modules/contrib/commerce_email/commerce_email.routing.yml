@@ -1,0 +1,11 @@
+entity.commerce_email.test_form:
+  path: '/admin/commerce/config/emails/{commerce_email}/test'
+  defaults:
+    _form: '\Drupal\commerce_email\Form\TestEmailForm'
+    _title: 'Test email'
+  options:
+    parameters:
+      commerce_email:
+        type: entity:commerce_email
+  requirements:
+    _permission: 'administer commerce_email'

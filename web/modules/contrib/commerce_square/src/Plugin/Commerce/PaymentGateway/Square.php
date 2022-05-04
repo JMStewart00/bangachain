@@ -2,31 +2,25 @@
 
 namespace Drupal\commerce_square\Plugin\Commerce\PaymentGateway;
 
-use Drupal\commerce_square\Connect;
-use Drupal\commerce_square\IntegrationChargeRequest;
-use Drupal\Component\Datetime\TimeInterface;
 use Drupal\commerce_payment\Exception\HardDeclineException;
 use Drupal\commerce_price\Price;
 use Drupal\commerce_square\ErrorHelper;
 use Drupal\commerce_payment\Entity\PaymentInterface;
 use Drupal\commerce_payment\Entity\PaymentMethodInterface;
-use Drupal\commerce_payment\PaymentMethodTypeManager;
-use Drupal\commerce_payment\PaymentTypeManager;
 use Drupal\commerce_payment\Plugin\Commerce\PaymentGateway\OnsitePaymentGatewayBase;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
-use SquareConnect\Api\LocationsApi;
-use SquareConnect\Api\OrdersApi;
-use SquareConnect\Api\TransactionsApi;
-use SquareConnect\ApiException;
-use SquareConnect\Model\Address;
-use SquareConnect\Model\CreateOrderRequest;
-use SquareConnect\Model\CreateOrderRequestDiscount;
-use SquareConnect\Model\CreateRefundRequest;
-use SquareConnect\Model\Money;
-use SquareConnect\Model\Order;
-use SquareConnect\Model\OrderLineItem;
+use Square\Environment;
+use Square\Exceptions\ApiException;
+use Square\Models\Address;
+use Square\Models\CreateOrderRequest;
+use Square\Models\CreatePaymentRequest;
+use Square\Models\Money;
+use Square\Models\Order;
+use Square\Models\OrderLineItem;
+use Square\Models\OrderLineItemDiscount;
+use Square\Models\RefundPaymentRequest;
+use Square\Models\CompletePaymentRequest;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Url;
 
@@ -40,10 +34,20 @@ use Drupal\Core\Url;
  *   forms = {
  *     "add-payment-method" = "Drupal\commerce_square\PluginForm\Square\PaymentMethodAddForm",
  *   },
+ *   modes = {
+ *     "test" = @Translation("Sandbox"),
+ *     "live" = @Translation("Production"),
+ *   },
  *   js_library = "commerce_square/form",
  *   payment_method_types = {"credit_card"},
  *   credit_card_types = {
- *     "amex", "dinersclub", "discover", "jcb", "mastercard", "visa",
+ *     "amex",
+ *     "dinersclub",
+ *     "discover",
+ *     "jcb",
+ *     "mastercard",
+ *     "visa",
+ *     "unionpay",
  *   },
  * )
  */
@@ -59,27 +63,10 @@ class Square extends OnsitePaymentGatewayBase implements SquareInterface {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, PaymentTypeManager $payment_type_manager, PaymentMethodTypeManager $payment_method_type_manager, TimeInterface $time, Connect $connect) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $payment_type_manager, $payment_method_type_manager, $time);
-    $this->pluginDefinition['modes']['test'] = $this->t('Sandbox');
-    $this->pluginDefinition['modes']['live'] = $this->t('Production');
-    $this->connect = $connect;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity_type.manager'),
-      $container->get('plugin.manager.commerce_payment_type'),
-      $container->get('plugin.manager.commerce_payment_method_type'),
-      $container->get('datetime.time'),
-      $container->get('commerce_square.connect')
-    );
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    $instance->connect = $container->get('commerce_square.connect');
+    return $instance;
   }
 
   /**
@@ -89,6 +76,7 @@ class Square extends OnsitePaymentGatewayBase implements SquareInterface {
     $default_configuration = [
       'test_location_id' => '',
       'live_location_id' => '',
+      'enable_credit_card_icons' => TRUE,
     ];
     return $default_configuration + parent::defaultConfiguration();
   }
@@ -99,7 +87,7 @@ class Square extends OnsitePaymentGatewayBase implements SquareInterface {
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildConfigurationForm($form, $form_state);
 
-    if (empty($this->connect->getAppId('sandbox')) && empty($this->connect->getAccessToken('sandbox'))) {
+    if (empty($this->connect->getAppId(Environment::SANDBOX)) && empty($this->connect->getAccessToken(Environment::SANDBOX))) {
       $this->messenger()->addError($this->t('Square has not been configured, please go to :link', [
         ':link' => Link::fromTextAndUrl($this->t('the settings form'), Url::fromRoute('commerce_square.settings')),
       ]));
@@ -120,24 +108,43 @@ class Square extends OnsitePaymentGatewayBase implements SquareInterface {
         '#required' => TRUE,
       ];
 
-      $api_mode = $mode === 'test' ? 'sandbox' : 'production';
+      $api_mode = $mode === 'test' ? Environment::SANDBOX : Environment::PRODUCTION;
       $client = $this->connect->getClient($api_mode);
-      $location_api = new LocationsApi($client);
+
+      $success = TRUE;
       try {
-        $locations = $location_api->listLocations();
-        $location_options = $locations->getLocations();
+        $locations_api = $client->getLocationsApi();
+        $api_response = $locations_api->listLocations();
+
+        if ($api_response->isError()) {
+          $success = FALSE;
+        }
+      }
+      catch (\Exception $e) {
+        $success = FALSE;
+      }
+
+      if ($success) {
+        $locations_response = $api_response->getResult();
+        $location_options = $locations_response->getLocations();
         $options = [];
         foreach ($location_options as $location_option) {
           $options[$location_option->getId()] = $location_option->getName();
         }
         $form[$mode][$mode . '_location_id']['#options'] = $options;
       }
-      catch (\Exception $e) {
+      else {
         $form[$mode][$mode . '_location_id']['#disabled'] = TRUE;
         $form[$mode][$mode . '_location_id']['#options'] = ['_none' => 'Not configured'];
       }
-
     }
+
+    $form['enable_credit_card_icons'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Enable Credit Card Icons'),
+      '#description' => $this->t('Enabling this setting will display credit card icons in the payment section during checkout.'),
+      '#default_value' => $this->configuration['enable_credit_card_icons'],
+    ];
 
     return $form;
   }
@@ -163,13 +170,14 @@ class Square extends OnsitePaymentGatewayBase implements SquareInterface {
     foreach (array_keys($this->getSupportedModes()) as $mode) {
       $this->configuration[$mode . '_location_id'] = $values[$mode][$mode . '_location_id'];
     }
+    $this->configuration['enable_credit_card_icons'] = $values['enable_credit_card_icons'];
   }
 
   /**
    * {@inheritdoc}
    */
   public function getApiClient() {
-    $api_mode = ($this->getMode() == 'test') ? 'sandbox' : 'production';
+    $api_mode = $this->getMode() == 'test' ? Environment::SANDBOX : Environment::PRODUCTION;
     return $this->connect->getClient($api_mode);
   }
 
@@ -182,43 +190,40 @@ class Square extends OnsitePaymentGatewayBase implements SquareInterface {
     $this->assertPaymentMethod($payment_method);
 
     $paid_amount = $payment->getAmount();
-    $rounder = \Drupal::getContainer()->get('commerce_price.rounder');
-    /** @var \Drupal\commerce_price\Price $paid_amount */
-    $paid_amount = $rounder->round($paid_amount);
     $currency = $paid_amount->getCurrencyCode();
 
     // Square only accepts integers and not floats.
-    // @see https://docs.connect.squareup.com/api/connect/v2/#workingwithmonetaryamounts
-    $square_total_amount = $this->toMinorUnits($paid_amount);
+    // @see https://developer.squareup.com/docs/build-basics/common-data-types/working-with-monetary-amounts
+    $square_total_amount = $this->minorUnitsConverter->toMinorUnits($paid_amount);
+
+    // Total amount of money.
+    $square_total_money = new Money();
+    $square_total_money->setCurrency($currency);
+    $square_total_money->setAmount($square_total_amount);
 
     $billing = $payment_method->getBillingProfile();
     /** @var \Drupal\address\Plugin\Field\FieldType\AddressItem $address */
     $address = $billing->get('address')->first();
 
     $mode = $this->getMode();
-    $order = new Order();
+    $order = new Order($this->configuration[$mode . '_location_id']);
     $order->setReferenceId($payment->getOrderId());
-    $order->setLocationId($this->configuration[$mode . '_location_id']);
 
     $line_items = [];
     $line_item_total = 0;
     foreach ($payment->getOrder()->getItems() as $item) {
-      $line_item = new OrderLineItem();
-
+      $line_item = new OrderLineItem($item->getQuantity());
       $base_price_money = new Money();
-      $square_amount = $this->toMinorUnits($rounder->round($item->getUnitPrice()));
+      $square_amount = $this->minorUnitsConverter->toMinorUnits($item->getUnitPrice());
       $base_price_money->setAmount($square_amount);
       $base_price_money->setCurrency($currency);
       $line_item->setBasePriceMoney($base_price_money);
-
-      $square_amount = $this->toMinorUnits($rounder->round($item->getTotalPrice()));
-
       $line_item->setName($item->getTitle());
-      // Quantity needs to be a string integer.
-      $line_item->setQuantity((string) (int) $item->getQuantity());
+      $square_amount = $this->minorUnitsConverter->toMinorUnits($item->getTotalPrice());
       $line_item_total += $square_amount;
       $line_items[] = $line_item;
     }
+
     // Square requires the order total to match the payment amount.
     if ($line_item_total != $square_total_amount) {
       $diff = $square_total_amount - $line_item_total;
@@ -226,89 +231,97 @@ class Square extends OnsitePaymentGatewayBase implements SquareInterface {
         $discount_money = new Money();
         $discount_money->setCurrency($currency);
         $discount_money->setAmount(-$diff);
-
-        $discount = new CreateOrderRequestDiscount();
+        $discount = new OrderLineItemDiscount();
         $discount->setAmountMoney($discount_money);
         $discount->setName('Adjustments');
       }
       else {
-        $line_item = new OrderLineItem();
+        $line_item = new OrderLineItem("1");
         $total_money = new Money();
-
-        $total_money->setAmount((int) $diff);
+        $total_money->setAmount($diff);
         $total_money->setCurrency($currency);
-
         $line_item->setBasePriceMoney($total_money);
         $line_item->setName('Adjustments');
-        $line_item->setQuantity("1");
         $line_items[] = $line_item;
       }
     }
+
     $order->setLineItems($line_items);
     if (isset($discount)) {
       $order->setDiscounts([$discount]);
     }
 
-    // @todo integration_id is not supported by the SDK.
-    // @see https://github.com/square/connect-php-sdk/issues/94
-    $charge_request = new IntegrationChargeRequest();
-    $charge_request->setAmountMoney(new Money([
-      'amount' => $square_total_amount,
-      'currency' => $currency,
-    ]));
-    if ($mode === 'live') {
-      $charge_request->setIntegrationId('sqi_b6ff0cd7acc14f7ab24200041d066ba6');
-    }
-    $charge_request->setDelayCapture(!$capture);
-    $charge_request->setCardNonce($payment_method->getRemoteId());
-    $charge_request->setIdempotencyKey(uniqid('', TRUE));
-    $charge_request->setBuyerEmailAddress($payment->getOrder()->getEmail());
-    $charge_request->setBillingAddress(new Address([
-      'address_line_1' => $address->getAddressLine1(),
-      'address_line_2' => $address->getAddressLine2(),
-      'locality' => $address->getLocality(),
-      'sublocality' => $address->getDependentLocality(),
-      'administrative_district_level_1' => $address->getAdministrativeArea(),
-      'postal_code' => $address->getPostalCode(),
-      'country' => $address->getCountryCode(),
-      'first_name' => $address->getGivenName(),
-      'last_name' => $address->getFamilyName(),
-      'organization' => $address->getOrganization(),
-    ]));
+    // Billing address.
+    $billing_address = new Address();
+    $billing_address->setAddressLine1($address->getAddressLine1());
+    $billing_address->setAddressLine2($address->getAddressLine2());
+    $billing_address->setLocality($address->getLocality());
+    $billing_address->setSublocality($address->getDependentLocality());
+    $billing_address->setAdministrativeDistrictLevel1($address->getAdministrativeArea());
+    $billing_address->setPostalCode($address->getPostalCode());
+    $billing_address->setCountry($address->getCountryCode());
 
     try {
       $api_client = $this->getApiClient();
-      // Create order.
+      // Create order request.
       $order_request = new CreateOrderRequest();
       $order_request->setIdempotencyKey(uniqid($payment->getOrderId() . '-', TRUE));
       $order_request->setOrder($order);
-
-      $orders_api = new OrdersApi($api_client);
-      $result = $orders_api->createOrder($this->configuration[$mode . '_location_id'], $order_request);
-      $charge_request->setOrderId($result->getOrder()->getId());
-
-      $transactions_api = new TransactionsApi($api_client);
-      $result = $transactions_api->charge($this->configuration[$mode . '_location_id'], $charge_request);
+      // Create order.
+      $orders_api = $api_client->getOrdersApi();
+      $orders_api_request = $orders_api->createOrder($order_request);
+      if ($orders_api_request->isSuccess()) {
+        $order_response = $orders_api_request->getResult();
+        // Create payment request.
+        $payment_request = new CreatePaymentRequest(
+          $payment_method->getRemoteId(),
+          uniqid('', TRUE),
+          $square_total_money
+        );
+        $payment_request->setOrderId($order_response->getOrder()->getId());
+        $payment_request->setAutocomplete($capture);
+        $payment_request->setIdempotencyKey(uniqid('', TRUE));
+        $payment_request->setBuyerEmailAddress($payment->getOrder()->getEmail());
+        $payment_request->setBillingAddress($billing_address);
+        // Create payment.
+        $payment_api = $api_client->getPaymentsApi();
+        $payment_api_request = $payment_api->createPayment($payment_request);
+        if ($payment_api_request->isSuccess()) {
+          $payment_response = $payment_api_request->getResult();
+          $next_state = $capture ? 'completed' : 'authorization';
+          $payment->setState($next_state);
+          $payment->setRemoteId($payment_response->getPayment()->getId());
+          $payment->setAuthorizedTime($payment_response->getPayment()->getCreatedAt());
+          if ($capture) {
+            $payment->setCompletedTime($payment_response->getPayment()->getCreatedAt());
+          }
+          else {
+            $expires = $this->time->getRequestTime() + (3600 * 24 * 6) - 5;
+            $payment->setExpiresTime($expires);
+          }
+          $payment->save();
+        }
+        else {
+          throw ErrorHelper::convertException(
+            new ApiException(
+              $payment_api_request->getBody(),
+              $payment_api_request->getRequest()
+            )
+          );
+        }
+      }
+      else {
+        throw ErrorHelper::convertException(
+          new ApiException(
+            $orders_api_request->getBody(),
+            $orders_api_request->getRequest()
+          )
+        );
+      }
     }
     catch (ApiException $e) {
       throw ErrorHelper::convertException($e);
     }
-
-    $transaction = $result->getTransaction();
-    $tender = $transaction->getTenders()[0];
-
-    $next_state = $capture ? 'completed' : 'authorization';
-    $payment->setState($next_state);
-    $payment->setRemoteId($transaction->getId() . '|' . $tender->getId());
-    $payment->setAuthorizedTime($transaction->getCreatedAt());
-    if ($capture) {
-      $payment->setCompletedTime($result->getTransaction()->getCreatedAt());
-    }
-    else {
-      $expires = $this->time->getRequestTime() + (3600 * 24 * 6) - 5;
-      $payment->setExpiresTime($expires);
-    }
-    $payment->save();
   }
 
   /**
@@ -356,29 +369,31 @@ class Square extends OnsitePaymentGatewayBase implements SquareInterface {
    */
   public function capturePayment(PaymentInterface $payment, Price $amount = NULL) {
     $this->assertPaymentState($payment, ['authorization']);
-
     $amount = $amount ?: $payment->getAmount();
-    // Square only accepts integers and not floats.
-    // @see https://docs.connect.squareup.com/api/connect/v2/#workingwithmonetaryamounts
-    list($transaction_id, $tender_id) = explode('|', $payment->getRemoteId());
 
-    $mode = $this->getMode();
     try {
-      $transaction_api = new TransactionsApi($this->getApiClient());
-      $result = $transaction_api->captureTransaction(
-        $this->configuration[$mode . '_location_id'],
-        $transaction_id
-      );
+      $api_client = $this->getApiClient();
+      $payment_api = $api_client->getPaymentsApi();
+      $body = new CompletePaymentRequest();
+      $payment_api_request = $payment_api->completePayment($payment->getRemoteId(), $body);
+      if ($payment_api_request->isSuccess()) {
+        $payment->setState('completed');
+        $payment->setAmount($amount);
+        $payment->setCompletedTime($this->time->getRequestTime());
+        $payment->save();
+      }
+      else {
+        throw ErrorHelper::convertException(
+          new ApiException(
+            $payment_api_request->getBody(),
+            $payment_api_request->getRequest()
+          )
+        );
+      }
     }
     catch (ApiException $e) {
       throw ErrorHelper::convertException($e);
     }
-
-    $payment->setState('completed');
-    $payment->setAmount($amount);
-    $payment->setCompletedTime($this->time->getRequestTime());
-    $payment->save();
-
   }
 
   /**
@@ -387,20 +402,26 @@ class Square extends OnsitePaymentGatewayBase implements SquareInterface {
   public function voidPayment(PaymentInterface $payment) {
     $this->assertPaymentState($payment, ['authorization']);
 
-    list($transaction_id, $tender_id) = explode('|', $payment->getRemoteId());
-    $mode = $this->getMode();
     try {
-      $transaction_api = new TransactionsApi($this->getApiClient());
-      $result = $transaction_api->voidTransaction(
-        $this->configuration[$mode . '_location_id'],
-        $transaction_id
-      );
+      $api_client = $this->getApiClient();
+      $payment_api = $api_client->getPaymentsApi();
+      $payment_api_request = $payment_api->cancelPayment($payment->getRemoteId());
+      if ($payment_api_request->isSuccess()) {
+        $payment->setState('authorization_voided');
+        $payment->save();
+      }
+      else {
+        throw ErrorHelper::convertException(
+          new ApiException(
+            $payment_api_request->getBody(),
+            $payment_api_request->getRequest()
+          )
+        );
+      }
     }
     catch (ApiException $e) {
       throw ErrorHelper::convertException($e);
     }
-    $payment->setState('authorization_voided');
-    $payment->save();
   }
 
   /**
@@ -411,44 +432,48 @@ class Square extends OnsitePaymentGatewayBase implements SquareInterface {
 
     $amount = $amount ?: $payment->getAmount();
     // Square only accepts integers and not floats.
-    // @see https://docs.connect.squareup.com/api/connect/v2/#workingwithmonetaryamounts
-    $square_amount = $this->toMinorUnits($amount);
-
-    list($transaction_id, $tender_id) = explode('|', $payment->getRemoteId());
-    $refund_request = new CreateRefundRequest([
-      'idempotency_key' => uniqid(),
-      'tender_id' => $tender_id,
-      'amount_money' => new Money([
-        'amount' => $square_amount,
-        'currency' => $amount->getCurrencyCode(),
-      ]),
-      'reason' => (string) $this->t('Refunded through store backend'),
-    ]);
-
-    $mode = $this->getMode();
+    // @see https://developer.squareup.com/docs/build-basics/common-data-types/working-with-monetary-amounts
+    $square_amount = $this->minorUnitsConverter->toMinorUnits($amount);
+    // Total amount of money.
+    $amount_money = new Money();
+    $amount_money->setAmount($square_amount);
+    $amount_money->setCurrency($amount->getCurrencyCode());
+    // Refund payment request.
+    $refund_request = new RefundPaymentRequest(
+      uniqid('', TRUE),
+      $amount_money,
+    );
+    $refund_request->setReason((string) $this->t('Refunded through store backend'));
+    $refund_request->setPaymentId($payment->getRemoteId());
     try {
-      $transaction_api = new TransactionsApi($this->getApiClient());
-      $result = $transaction_api->createRefund(
-        $this->configuration[$mode . '_location_id'],
-        $transaction_id,
-        $refund_request
-      );
+      $api_client = $this->getApiClient();
+      $payment_api = $api_client->getRefundsApi();
+      $payment_api_request = $payment_api->refundPayment($refund_request);
+      if ($payment_api_request->isSuccess()) {
+        $old_refunded_amount = $payment->getRefundedAmount();
+        $new_refunded_amount = $old_refunded_amount->add($amount);
+        if ($new_refunded_amount->lessThan($payment->getAmount())) {
+          $payment->setState('partially_refunded');
+        }
+        else {
+          $payment->setState('refunded');
+        }
+
+        $payment->setRefundedAmount($new_refunded_amount);
+        $payment->save();
+      }
+      else {
+        throw ErrorHelper::convertException(
+          new ApiException(
+            $payment_api_request->getBody(),
+            $payment_api_request->getRequest()
+          )
+        );
+      }
     }
     catch (ApiException $e) {
       throw ErrorHelper::convertException($e);
     }
-
-    $old_refunded_amount = $payment->getRefundedAmount();
-    $new_refunded_amount = $old_refunded_amount->add($amount);
-    if ($new_refunded_amount->lessThan($payment->getAmount())) {
-      $payment->setState('partially_refunded');
-    }
-    else {
-      $payment->setState('refunded');
-    }
-
-    $payment->setRefundedAmount($new_refunded_amount);
-    $payment->save();
   }
 
   /**
@@ -460,7 +485,7 @@ class Square extends OnsitePaymentGatewayBase implements SquareInterface {
    * @return string
    *   The Commerce credit card type.
    */
-  protected function mapCreditCardType($card_type) {
+  protected function mapCreditCardType(string $card_type) {
     $map = [
       'AMERICAN_EXPRESS' => 'amex',
       'CHINA_UNIONPAY' => 'unionpay',

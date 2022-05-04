@@ -145,17 +145,17 @@ function _fontawesome_modify_library(array &$libraries, $librarySuffix, $type, $
  */
 function _fontawesome_unparse_url(array $parsed) {
   $get = function ($key) use ($parsed) {
-    return isset($parsed[$key]) ? $parsed[$key] : NULL;
+    return isset($parsed[$key]) ? $parsed[$key] : '';
   };
 
   $pass = $get('pass');
   $user = $get('user');
-  $userinfo = $pass !== NULL ? "$user:$pass" : $user;
+  $userinfo = ($pass !== '' ? "$user:$pass" : $user);
   $port = $get('port');
   $scheme = $get('scheme');
   $query = $get('query');
   $fragment = $get('fragment');
-  $authority = ($userinfo !== NULL ? "$userinfo@" : '') . $get('host') . ($port ? ":$port" : '');
+  $authority = ($userinfo !== '' ? "$userinfo@" : '') . $get('host') . (strlen($port) ? ":$port" : '');
 
   return (strlen($scheme) ? "$scheme:" : '') . (strlen($authority) ? "//$authority" : '') . $get('path') . (strlen($query) ? "?$query" : '') . (strlen($fragment) ? "#$fragment" : '');
 }
@@ -249,6 +249,7 @@ function fontawesome_page_attachments(array &$page) {
     'use_light_file' => is_null($configuration_settings->get('use_light_file')) === TRUE ? TRUE : $configuration_settings->get('use_light_file'),
     'use_brands_file' => is_null($configuration_settings->get('use_brands_file')) === TRUE ? TRUE : $configuration_settings->get('use_brands_file'),
     'use_duotone_file' => is_null($configuration_settings->get('use_duotone_file')) === TRUE ? TRUE : $configuration_settings->get('use_duotone_file'),
+    'use_thin_file' => is_null($configuration_settings->get('use_thin_file')) === TRUE ? TRUE : $configuration_settings->get('use_thin_file'),
   ];
 
   // First check if we're using everything.
@@ -272,6 +273,9 @@ function fontawesome_page_attachments(array &$page) {
     }
     if ($activeFiles['use_duotone_file']) {
       $page['#attached']['library'][] = 'fontawesome/fontawesome.' . $configuration_settings->get('method') . '.duotone';
+    }
+    if ($activeFiles['use_thin_file']) {
+      $page['#attached']['library'][] = 'fontawesome/fontawesome.' . $configuration_settings->get('method') . '.thin';
     }
   }
 
@@ -422,7 +426,7 @@ function fontawesome_entity_presave(EntityInterface $entity) {
           foreach ($fields as $field) {
             // Find and replace SVG strings with original icon HTML.
             $fieldValue = $field->getValue();
-            $fieldValue['value'] = preg_replace('%<svg .*?class="svg-inline--fa.*?<\/svg><!--\s?(<span.*?<\/span>).*\s?-->%', '$1', $fieldValue['value']);
+            $fieldValue['value'] = preg_replace('%<svg .*?class="svg-inline--fa.*?<\/svg><!--\s?(<(span|i).*?<\/(span|i)>).*\s?-->%', '$1', $fieldValue['value']);
             $field->setValue($fieldValue);
           }
         }

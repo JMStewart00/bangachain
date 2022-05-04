@@ -10,8 +10,8 @@ use Drupal\editor\Entity\Editor;
 use Drupal\blazy\Blazy;
 use Drupal\blazy\BlazyAlter;
 use Drupal\blazy\BlazyDefault;
-use Drupal\blazy\BlazyTheme;
-use Drupal\blazy\BlazyViews;
+use Drupal\blazy\Theme\BlazyTheme;
+use Drupal\blazy\Theme\BlazyViews;
 use Drupal\blazy\Utility\BlazyMarkdown;
 
 /**
@@ -85,7 +85,8 @@ function blazy_preprocess_media_oembed_iframe(array &$variables) {
  * Implements hook_preprocess_field().
  */
 function blazy_preprocess_field(array &$variables) {
-  if (isset($variables['element']['#blazy']) || !empty($variables['element']['#third_party_settings']['blazy']['blazy'])) {
+  if (isset($variables['element']['#blazy'])
+    || !empty($variables['element']['#third_party_settings']['blazy']['blazy'])) {
     BlazyTheme::field($variables);
   }
 }
@@ -94,7 +95,8 @@ function blazy_preprocess_field(array &$variables) {
  * Implements hook_preprocess_views_view().
  */
 function blazy_preprocess_views_view(array &$variables) {
-  if (!empty($variables['css_class']) && strpos($variables['css_class'], 'blazy--') !== FALSE) {
+  if (!empty($variables['css_class'])
+    && strpos($variables['css_class'], 'blazy--') !== FALSE) {
     if ($lightboxes = blazy()->getLightboxes()) {
       BlazyViews::preprocessViewsView($variables, $lightboxes);
     }
@@ -180,12 +182,7 @@ function blazy_parse_markdown($string) {
  * Provides a wrapper to replace deprecated libraries_get_path() at ease.
  */
 function blazy_libraries_get_path($name, $base_path = FALSE) {
-  if ($finder = Blazy::service('library.libraries_directory_file_finder')) {
-    return $finder->find($name);
-  }
-
-  $function = 'libraries_get_path';
-  return is_callable($function) ? $function($name, $base_path) : FALSE;
+  return Blazy::getLibrariesPath($name, $base_path);
 }
 
 /**
@@ -202,9 +199,8 @@ function blazy_filter_cleanup($module = 'blazy') {
   // Removes unclean [module]_filter references, see #3257390.
   foreach ($config_storage->listAll('filter.format') as $config_name) {
     $config = $config_factory->getEditable($config_name);
-    $plugin = $config->get($filter);
 
-    if ($plugin) {
+    if ($plugin = $config->get($filter)) {
       $dependencies = $config->get('dependencies');
       $modules = array_diff($dependencies['module'], [$module]);
 
@@ -220,7 +216,7 @@ function blazy_filter_cleanup($module = 'blazy') {
     drupal_static_reset('filter_formats');
   }
 
-  \Drupal::entityTypeManager()->getStorage('filter_format')->resetCache();
+  blazy()->getStorage('filter_format')->resetCache();
 
   // Clear plugin manager caches.
   \Drupal::getContainer()->get('plugin.cache_clearer')->clearCachedDefinitions();

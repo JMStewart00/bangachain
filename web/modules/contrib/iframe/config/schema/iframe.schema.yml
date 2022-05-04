@@ -9,6 +9,10 @@ iframe.field.schema:
       type: label
       label: Title
       nullable: true
+    headerlevel:
+      type: string
+      label: 'Header Level'
+      nullable: true
     class:
       type: string
       label: Class

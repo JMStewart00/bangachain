@@ -1,0 +1,11 @@
+--- src/Plugin/views/field/ReportDateField.php
++++ src/Plugin/views/field/ReportDateField.php
+@@ -172,7 +172,7 @@ class ReportDateField extends EntityField {
+     else {
+       // Render date values from SQL result.
+       $alias = $this->aliases[$this->definition['field_name']];
+-      return [['rendered' => $values->{$alias}]];
++      return [['rendered' => ['#plain_text' => $values->{$alias}]]];
+     }
+ 
+     // Code from parent function.

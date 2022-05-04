@@ -1670,16 +1670,25 @@ class CommerceSmartImporerService extends ControllerBase {
 
     $values = [];
     foreach ($entity->get($field_definition['machine_names'])->getValue() as $item) {
+      if (!isset($item['target_id'])) {
+        continue;
+      }
       $entity = $this->entityTypeManager()->getStorage($field_definition['field_settings']['target_type'])->load($item['target_id']);
       if (!$entity) {
         continue;
       }
-      // TODO: Rewrite this to use entity key label instead of hard coding it.
-      if ($entity->hasField('name')) {
-        $values[] = $entity->getName();
+
+      if ($entity->getEntityType()->hasKey('label')) {
+        $field_name = $entity->getEntityType()->getKey('label');
+        $definition = $entity->getFieldDefinition($field_name);
+        $property = $definition->getFieldStorageDefinition()->getMainPropertyName();
+        $values[] = $entity->get($field_name)->$property;
+      }
+      elseif ($entity->hasField('name')) {
+        $values[] = $entity->get('name')->value;
       }
       elseif ($entity->hasField('title')) {
-        $values[] = $entity->getTitle();
+        $values[] = $entity->get('title')->value;
       }
     }
     $values = implode('|', $values);

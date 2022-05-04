@@ -18,7 +18,7 @@ class OrderReportTest extends CommerceKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'entity_reference_revisions',
     'profile',
     'state_machine',

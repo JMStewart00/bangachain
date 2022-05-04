@@ -141,6 +141,28 @@ function commerce_store_update_8206() {
     ->setTranslatable(TRUE);
 
   foreach ($storage_definitions as $name => $definition) {
+    // If the content_translation module already provides base fields holding
+    // the created/changed time of the translation, take the initial values from
+    // those fields.
+    $content_translation_field_name = "content_translation_$name";
+    $has_content_translation_field = $definition_update_manager
+      ->getFieldStorageDefinition($content_translation_field_name, 'commerce_store');
+    if ($has_content_translation_field) {
+      $definition->setInitialValueFromField($content_translation_field_name);
+    }
     $definition_update_manager->installFieldStorageDefinition($name, 'commerce_store', 'commerce_store', $definition);
+  }
+}
+
+/**
+ * Uninstall the created / changed fields added by content_translation.
+ */
+function commerce_store_update_8207() {
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+
+  foreach (['content_translation_created', 'content_translation_changed'] as $field_name) {
+    if ($field_storage_definition = $definition_update_manager->getFieldStorageDefinition($field_name, 'commerce_store')) {
+      $definition_update_manager->uninstallFieldStorageDefinition($field_storage_definition);
+    }
   }
 }

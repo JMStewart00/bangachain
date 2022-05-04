@@ -5,11 +5,10 @@ namespace Drupal\commerce_reports\Form;
 use Drupal\commerce_reports\ReportTypeManager;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Profides a form for bulk generating order reports.
+ * Provides a form for bulk generating order reports.
  */
 class OrderReportGenerateForm extends FormBase {
 
@@ -60,7 +59,7 @@ class OrderReportGenerateForm extends FormBase {
     $plugin_types = $this->reportTypeManager->getDefinitions();
     $plugin_options = [];
     foreach ($plugin_types as $plugin_id => $plugin_definition) {
-      $plugin_options[$plugin_id] = $plugin_definition['label']; 
+      $plugin_options[$plugin_id] = $plugin_definition['label'];
     }
     asort($plugin_options);
     $form['plugin_id'] = [
@@ -82,13 +81,12 @@ class OrderReportGenerateForm extends FormBase {
     return $form;
   }
 
-
   /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state->getValues();
-    $plugin_id = $values['plugin_id'];  	
+    $plugin_id = $values['plugin_id'];
     $batch = [
       'title' => $this->t('Generating reports'),
       'progress_message' => '',
@@ -107,10 +105,12 @@ class OrderReportGenerateForm extends FormBase {
   /**
    * Processes the batch and generates the order reports.
    *
+   * @param string $plugin_id
+   *   The plugin ID.
    * @param array $context
    *   The batch context information.
    */
-  public static function processBatch($plugin_id, array &$context) {
+  public static function processBatch(string $plugin_id, array &$context) {
     $order_storage = \Drupal::entityTypeManager()->getStorage('commerce_order');
 
     // Initialization.

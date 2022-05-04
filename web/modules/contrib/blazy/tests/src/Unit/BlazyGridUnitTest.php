@@ -5,10 +5,10 @@ namespace Drupal\Tests\blazy\Unit;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Tests\blazy\Traits\BlazyUnitTestTrait;
 use Drupal\blazy\BlazyDefault;
-use Drupal\blazy\BlazyGrid;
+use Drupal\blazy\Theme\Grid;
 
 /**
- * @coversDefaultClass \Drupal\blazy\BlazyGrid
+ * @coversDefaultClass \Drupal\blazy\Theme\Grid
  *
  * @group blazy
  */
@@ -17,7 +17,7 @@ class BlazyGridUnitTest extends UnitTestCase {
   use BlazyUnitTestTrait;
 
   /**
-   * Tests \Drupal\blazy\BlazyGrid::build().
+   * Tests \Drupal\blazy\Theme\Grid::build().
    *
    * @covers ::build
    */
@@ -36,7 +36,7 @@ class BlazyGridUnitTest extends UnitTestCase {
       $items[] = ['#markup' => '<img src="/core/misc/druplicon.png" alt="thumbnail ' . $key . '">'];
     }
 
-    $element = BlazyGrid::build($items, $settings);
+    $element = Grid::build($items, $settings);
     $this->assertEquals('item_list', $element['#theme']);
   }
 

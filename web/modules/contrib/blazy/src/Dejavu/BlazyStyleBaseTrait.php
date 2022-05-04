@@ -57,39 +57,52 @@ trait BlazyStyleBaseTrait {
     $view_name = $view->storage->id();
     $view_mode = $view->current_display;
     $plugin_id = $this->getPluginId();
-    $instance  = str_replace('_', '-', "{$view_name}-{$view_mode}");
+    $display   = $view->style_plugin->displayHandler->getPluginId();
+    $instance  = str_replace('_', '-', "{$view_name}-{$display}-{$view_mode}");
     $id        = empty($settings['id']) ? '' : $settings['id'];
     $id        = Blazy::getHtmlId("{$plugin_id}-views-{$instance}", $id);
-    $settings += [
-      'cache_metadata' => [
-        'keys' => [$id, $view_mode, $count],
-      ],
-    ] + BlazyDefault::lazySettings();
+    $settings += BlazyDefault::lazySettings();
 
+    $this->blazyManager()->preSettings($settings);
     $this->prepareSettings($settings);
+    $blazies = $settings['blazies'];
 
     // Prepare needed settings to work with.
-    $settings['check_blazy']       = TRUE;
-    $settings['id']                = $id;
-    $settings['cache_tags']        = $view->getCacheTags();
-    $settings['count']             = $count;
-    $settings['current_view_mode'] = $view_mode;
-    $settings['instance_id']       = $instance;
-    $settings['multiple']          = TRUE;
-    $settings['plugin_id']         = $settings['view_plugin_id'] = $plugin_id;
-    $settings['view_name']         = $view_name;
-    $settings['view_display']      = $view->style_plugin->displayHandler->getPluginId();
-    $settings['_views']            = TRUE;
+    // @todo convert some to blazies, and remove these after sub-modules.
+    $settings['id']           = $id;
+    $settings['count']        = $count;
+    $settings['instance_id']  = $instance;
+    $settings['multiple']     = TRUE;
+    $settings['plugin_id']    = $settings['view_plugin_id'] = $plugin_id;
+    $settings['view_name']    = $view_name;
+    $settings['view_display'] = $display;
+
+    $view_info = [
+      'display'     => $display,
+      'instance_id' => $instance,
+      'name'        => $view_name,
+      'plugin_id'   => $plugin_id,
+      'view_mode'   => $view_mode,
+      'is_view'     => TRUE,
+    ];
+
+    $blazies->set('cache.keys', [$id, $view_mode, $count], TRUE)
+      ->set('cache.tags', $view->getCacheTags() ?: [], TRUE)
+      ->set('count', $count)
+      ->set('css.id', $id)
+      ->set('is.multiple', TRUE)
+      ->set('is.views', TRUE)
+      ->set('use.ajax', $view->ajaxEnabled())
+      ->set('view', $view_info, TRUE);
 
     if (!empty($this->htmlSettings)) {
       $settings = NestedArray::mergeDeep($settings, $this->htmlSettings);
     }
 
-    $this->blazyManager()->getCommonSettings($settings);
-    $blazies = &$settings['blazies'];
-    $blazies->set('use.ajax', $view->ajaxEnabled());
+    $this->blazyManager()->postSettings($settings);
 
     $this->blazyManager()->getModuleHandler()->alter('blazy_settings_views', $settings, $view);
+    $this->blazyManager()->postSettingsAlter($settings);
     return $settings;
   }
 

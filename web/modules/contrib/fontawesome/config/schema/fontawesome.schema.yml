@@ -41,6 +41,9 @@ fontawesome.settings:
     use_duotone_file:
       type: boolean
       label: 'Use the Font Awesome duotone icons file'
+    use_thin_file:
+      type: boolean
+      label: 'Use the Font Awesome thin icons file'
     external_svg_integrity:
       type: string
       label: 'Integrity value of the external CDN for Font Awesome'

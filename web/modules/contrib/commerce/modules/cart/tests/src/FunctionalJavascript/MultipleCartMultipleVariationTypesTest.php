@@ -166,7 +166,7 @@ class MultipleCartMultipleVariationTypesTest extends CartWebDriverTestBase {
           [
             'type' => 'colors',
             'attribute_color' => $this->colorAttributes['blue']->id(),
-          ]
+          ],
         ],
       ],
     ];

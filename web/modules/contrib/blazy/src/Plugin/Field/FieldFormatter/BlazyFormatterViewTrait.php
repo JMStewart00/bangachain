@@ -5,17 +5,37 @@ namespace Drupal\blazy\Plugin\Field\FieldFormatter;
 use Drupal\Core\Field\FieldItemListInterface;
 
 /**
- * A Trait common for all blazy formatters.
+ * A Trait common for all blazy, including its sub-modules, formatters.
+ *
+ * Since 2.9 this can replace and remove sub-module FormatterViewTrait anytime
+ * for Media or Entity related formatters. For basic texts, use
+ * self::baseViewElements() instead to by-pass
+ * theme_[blazy|slick|splide|gridstack|mason|etc.]() routines.
  */
 trait BlazyFormatterViewTrait {
 
+  // Import once for very minimal difference.
+  use BlazyFormatterViewBaseTrait;
+
   /**
-   * Returns similar view elements.
+   * Returns similar view elements across sub-modules.
    */
-  public function commonViewElements(FieldItemListInterface $items, $langcode, array $entities = [], array $settings = []) {
+  protected function commonViewElements(
+    FieldItemListInterface $items,
+    $langcode,
+    array $entities = [],
+    array $settings = []
+  ) {
+    // Early opt-out if the field is empty.
+    if ($items->isEmpty()) {
+      return [];
+    }
+
     // Collects specific settings to this formatter.
-    $settings = array_merge($this->buildSettings(), $settings);
-    $settings['langcode'] = $langcode;
+    $defaults = $this->buildSettings();
+    $settings = $settings ? array_merge($defaults, $settings) : $defaults;
+
+    $this->preSettings($settings, $langcode);
 
     // Build the settings.
     $build = ['settings' => $settings];
@@ -32,7 +52,10 @@ trait BlazyFormatterViewTrait {
     $this->formatter->postBuildElements($build, $items, $entities);
 
     // Pass to manager for easy updates to all Blazy formatters.
-    return $this->formatter->build($build);
+    $output = $this->manager->build($build);
+
+    // Return without field markup, if not so configured, else field.html.twig.
+    return empty($settings['use_theme_field']) ? $output : [$output];
   }
 
 }

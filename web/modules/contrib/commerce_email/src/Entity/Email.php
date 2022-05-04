@@ -251,7 +251,7 @@ class Email extends ConfigEntityBase implements EmailInterface {
    * {@inheritdoc}
    */
   public function getBcc() {
-    return $this->cc;
+    return $this->bcc;
   }
 
   /**

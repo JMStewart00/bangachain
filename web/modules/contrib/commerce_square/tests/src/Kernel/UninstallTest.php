@@ -11,7 +11,10 @@ use Drupal\KernelTests\KernelTestBase;
  */
 class UninstallTest extends KernelTestBase {
 
-  public static $modules = [
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
     'system',
     'commerce_square',
     'commerce_number_pattern',

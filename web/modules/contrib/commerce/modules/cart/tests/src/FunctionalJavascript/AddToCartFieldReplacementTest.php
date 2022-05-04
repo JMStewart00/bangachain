@@ -178,6 +178,7 @@ class AddToCartFieldReplacementTest extends CartWebDriverTestBase {
     $this->assertSession()->fieldValueEquals('purchased_entity[0][variation]', $this->firstVariation->id());
     $page->selectFieldOption('purchased_entity[0][variation]', $this->secondVariation->id());
     $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertEquals('v=' . $this->secondVariation->id(), parse_url($this->getSession()->getCurrentUrl(), PHP_URL_QUERY));
 
     $this->assertSession()->elementExists('css', $price_field_selector);
     $this->assertSession()->elementExists('css', $integer_field_selector);
@@ -186,6 +187,7 @@ class AddToCartFieldReplacementTest extends CartWebDriverTestBase {
 
     $page->selectFieldOption('purchased_entity[0][variation]', $this->firstVariation->id());
     $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertEquals('v=' . $this->firstVariation->id(), parse_url($this->getSession()->getCurrentUrl(), PHP_URL_QUERY));
     $this->assertSession()->elementExists('css', $price_field_selector);
     $this->assertSession()->elementExists('css', $integer_field_selector);
     $this->assertSession()->elementTextContains('css', $price_field_selector . ' .field__item', $first_variation_price);

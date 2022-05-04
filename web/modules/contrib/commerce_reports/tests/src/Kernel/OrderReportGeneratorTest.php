@@ -20,7 +20,7 @@ class OrderReportGeneratorTest extends CommerceKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'path',
     'entity_reference_revisions',
     'profile',
@@ -289,6 +289,7 @@ class OrderReportGeneratorTest extends CommerceKernelTestBase {
     ]);
     $order_item->save();
     $order->addItem($order_item);
+    $order->setRefreshState(Order::REFRESH_SKIP);
     $order->save();
 
     // Set the state to 'completed' for the order.

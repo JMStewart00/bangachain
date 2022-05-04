@@ -3,3 +3,9 @@ entity.media_bulk_config.collection:
   description: 'Configure media bulk upload forms.'
   parent: system.admin_config_media
   route_name: entity.media_bulk_config.collection
+entity.media_bulk.collection:
+  title: 'Bulk Media Upload'
+  route_name: media_bulk_upload.list
+  description: 'Bulk upload media content'
+  parent: system.admin_content
+  weight: 100

@@ -72,12 +72,10 @@ class ProductTypeForm extends CommerceBundleEntityFormBase {
     // @todo Clean up once https://www.drupal.org/node/2318187 is fixed.
     if (in_array($this->operation, ['add', 'duplicate'])) {
       $product = $this->entityTypeManager->getStorage('commerce_product')->create(['type' => $product_type->uuid()]);
-      $products_exist = FALSE;
     }
     else {
       $storage = $this->entityTypeManager->getStorage('commerce_product');
       $product = $storage->create(['type' => $product_type->id()]);
-      $products_exist = $storage->getQuery()->accessCheck(FALSE)->condition('type', $product_type->id())->execute();
     }
     $form_state->set('original_entity', $this->entity->createDuplicate());
 
@@ -130,10 +128,6 @@ class ProductTypeForm extends CommerceBundleEntityFormBase {
       ],
       '#required' => !$product_type->isNew(),
     ];
-    if ($products_exist) {
-      $form['variations']['variationTypes']['#disabled'] = TRUE;
-      $form['variations']['variationTypes']['#description'] = $this->t('Products exist for this product type, you can no longer edit this setting.');
-    }
     $form['variations']['multipleVariations'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Allow each product to have multiple variations.'),

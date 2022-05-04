@@ -40,10 +40,22 @@ abstract class BlazyAdminFormatterBase extends BlazyAdminBase {
    */
   public function imageStyleForm(array &$form, $definition = []) {
     $is_responsive = function_exists('responsive_image_get_image_dimensions');
+    $field_type = $definition['field_type'] ?? '';
+    $plugin_id = $definition['plugin_id'] ?? '';
 
-    if (empty($definition['no_image_style'])) {
+    if (empty($definition['no_image_style'])
+      && strpos($plugin_id, '_text') === FALSE) {
       $base = $this->baseForm($definition);
-      foreach (['preload', 'loading', 'image_style'] as $key) {
+
+      // Excludes VEF which has no File API to work with.
+      $disabled = ($field_type && $field_type == 'video_embed_field')
+        || $plugin_id == 'blazy_vef_default';
+
+      if (!$disabled) {
+        $form['preload'] = $base['preload'];
+      }
+
+      foreach (['image_style', 'loading'] as $key) {
         $form[$key] = $base[$key];
       }
     }
@@ -155,8 +167,6 @@ abstract class BlazyAdminFormatterBase extends BlazyAdminBase {
     $image_styles = $this->getEntityAsOptions('image_style');
     $lightboxes   = $this->blazyManager->getLightboxes();
 
-    $excludes['current_view_mode'] = TRUE;
-
     if ($blazy) {
       $excludes['optionset'] = TRUE;
     }
@@ -201,7 +211,6 @@ abstract class BlazyAdminFormatterBase extends BlazyAdminBase {
    */
   public function getFieldOptions($target_bundles = [], $allowed_field_types = [], $entity_type = 'media', $target_type = '') {
     $options = [];
-    $storage = $this->blazyManager()->getEntityTypeManager()->getStorage('field_config');
 
     // Fix for Views UI not recognizing Media bundles, unlike Formatters.
     if (empty($target_bundles)) {
@@ -213,10 +222,10 @@ abstract class BlazyAdminFormatterBase extends BlazyAdminBase {
     $excludes = $this->getExcludedFieldOptions();
 
     foreach ($target_bundles as $bundle => $label) {
-      if ($fields = $storage->loadByProperties([
+      if ($fields = $this->blazyManager()->loadByProperties([
         'entity_type' => $entity_type,
         'bundle' => $bundle,
-      ])) {
+      ], 'field_config', FALSE)) {
         foreach ((array) $fields as $field) {
           if (in_array($field->getName(), $excludes)) {
             continue;
@@ -228,7 +237,8 @@ abstract class BlazyAdminFormatterBase extends BlazyAdminBase {
             $options[$field->getName()] = $field->getLabel();
           }
 
-          if (!empty($target_type) && ($field->getSetting('target_type') == $target_type)) {
+          if (!empty($target_type)
+            && ($field->getSetting('target_type') == $target_type)) {
             $options[$field->getName()] = $field->getLabel();
           }
         }
@@ -254,21 +264,6 @@ abstract class BlazyAdminFormatterBase extends BlazyAdminBase {
 
     $this->blazyManager->getModuleHandler()->alter('blazy_excluded_field_options', $excludes);
     return $excludes;
-  }
-
-  /**
-   * Return the field formatter settings summary.
-   *
-   * @deprecated in blazy:8.x-1.0 and is removed from blazy:8.x-2.0. Use
-   *   self::getSettingsSummary() instead.
-   * @see https://www.drupal.org/node/3103018
-   */
-  public function settingsSummary($plugin, $definition = []) {
-    @trigger_error('settingsSummary is deprecated in blazy:8.x-1.0 and is removed from blazy:8.x-2.0. Use \Drupal\blazy\BlazyAdminFormatterBase::getSettingsSummary() instead. See https://www.drupal.org/node/3103018', E_USER_DEPRECATED);
-    $definition = $definition ?? $plugin->getScopedFormElements();
-    $definition['settings'] = $definition['settings'] ?? $plugin->getSettings();
-
-    return $this->getSettingsSummary($definition);
   }
 
 }

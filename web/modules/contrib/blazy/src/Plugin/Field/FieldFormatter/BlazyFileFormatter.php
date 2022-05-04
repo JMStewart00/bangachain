@@ -12,6 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @deprecated in blazy:8.x-2.0 and is removed from blazy:8.x-3.0. Use
  *   \Drupal\blazy\Plugin\Field\FieldFormatter\BlazyMediaFormatter instead.
+ * @todo re-check if to keep it as this can be useful for SickBrowser EB.
  * @see https://www.drupal.org/node/3103018
  */
 class BlazyFileFormatter extends BlazyFormatterBlazy {
@@ -27,27 +28,18 @@ class BlazyFileFormatter extends BlazyFormatterBlazy {
   /**
    * {@inheritdoc}
    */
-  public function buildElement(array &$build, $entity) {
-    $settings = $build['settings'];
-    /** @var Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem $item */
-    // EntityReferenceItem provides $item->entity Drupal\file\Entity\File.
-    if ($item = $this->blazyOembed->getImageItem($entity)) {
-      $build['item'] = $item['item'];
-      $build['settings'] = array_merge($settings, $item['settings']);
-    }
-
-    $this->blazyOembed->getMediaItem($build, $entity);
+  public function buildElement(array &$element, $entity) {
+    $this->blazyOembed->build($element, $entity);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getScopedFormElements() {
+  protected function getPluginScopes(): array {
     return [
       'fieldable_form' => TRUE,
       'multimedia'     => TRUE,
-      'view_mode'      => $this->viewMode,
-    ] + parent::getScopedFormElements();
+    ] + parent::getPluginScopes();
   }
 
   /**

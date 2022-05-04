@@ -4,8 +4,8 @@ namespace Drupal\blazy\Plugin\Filter;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\blazy\Blazy;
-use Drupal\blazy\BlazyGrid;
-use Drupal\blazy\BlazyUtil;
+use Drupal\blazy\Theme\Grid;
+use Drupal\blazy\Theme\BlazyAttribute;
 
 /**
  * Provides shared filter utilities.
@@ -23,7 +23,7 @@ class BlazyFilterUtil {
    * Returns settings for attachments.
    */
   public static function attach(array $settings = []) {
-    $all = ['blazy' => TRUE, 'filter' => TRUE, 'ratio' => TRUE];
+    $all = ['blazy' => TRUE, 'filter' => TRUE, 'ratio' => TRUE] + $settings;
     $all['media_switch'] = $switch = $settings['media_switch'];
 
     if (!empty($settings[$switch])) {
@@ -46,7 +46,7 @@ class BlazyFilterUtil {
 
     $ini += strlen($start);
     $len = mb_strpos($string, $end, $ini) - $ini;
-    return trim(substr($string, $ini, $len));
+    return trim(substr($string, $ini, $len) ?: '');
   }
 
   /**
@@ -138,6 +138,60 @@ class BlazyFilterUtil {
   }
 
   /**
+   * Returns a valid node, excluding blur/ noscript images.
+   */
+  public static function getValidNode($children) {
+    $child = $children->item(0);
+    $class = $child->getAttribute('class');
+    $is_blur = $class && mb_strpos($class, 'b-blur') !== FALSE;
+    $is_bg = $class && mb_strpos($class, 'b-bg') !== FALSE;
+
+    if ($is_blur && !$is_bg) {
+      $child = $children->item(1) ?: $child;
+    }
+    return $child;
+  }
+
+  /**
+   * Returns a image/ iframe src.
+   *
+   * Checks if we have a valid file entity, not hard-coded image URL.
+   * Prioritize data-src for sub-module filters after Blazy.
+   */
+  public static function getValidSrc($node) {
+    $url = '';
+
+    // Prevents data URI from screwing up.
+    $func = function ($input) {
+      if ($input) {
+        $data_uri = mb_substr($input, 0, 10) === 'data:image';
+        if (!$data_uri) {
+          return $input;
+        }
+      }
+      return '';
+    };
+
+    foreach (['data-src', 'src'] as $key) {
+      $src = $node->getAttribute($key);
+      $check = $func($src);
+
+      if ($check) {
+        $url = $check;
+        break;
+      }
+    }
+
+    // If starts with 2 slashes, it is always external.
+    if ($url && mb_substr($url, 0, 2) === '//') {
+      // We need to query stored SRC for image dimensions, https is enforced.
+      $url = 'https:' . $url;
+    }
+
+    return $url;
+  }
+
+  /**
    * Returns DOMElement nodes expected to be grid, or slide items.
    */
   public static function getNodes(\DOMDocument $dom, $tag = '//grid') {
@@ -161,7 +215,7 @@ class BlazyFilterUtil {
         $attributes[$name] = ($name == 'class') ? [$value] : $value;
       }
     }
-    return $attributes ? BlazyUtil::sanitize($attributes) : [];
+    return $attributes ? BlazyAttribute::sanitize($attributes) : [];
   }
 
   /**
@@ -169,6 +223,7 @@ class BlazyFilterUtil {
    */
   public static function toGrid(\DOMElement $node, array &$settings) {
     if ($check = $node->getAttribute('grid')) {
+      $blazies = $settings['blazies'];
       [$settings['style'], $grid, $settings['visible_items']] = array_pad(array_map('trim', explode(":", $check, 3)), 3, NULL);
 
       if ($grid) {
@@ -178,14 +233,15 @@ class BlazyFilterUtil {
           $settings['grid'],
         ] = array_pad(array_map('trim', explode("-", $grid, 3)), 3, NULL);
 
-        $settings['_grid'] = !empty($settings['style']) && !empty($settings['grid']);
+        $settings['_grid'] = $is_grid = !empty($settings['style']) && !empty($settings['grid']);
+        $blazies->set('is.grid', $is_grid);
 
         if (!empty($settings['style'])) {
           // Babysits typo due to hardcoding. The expected is flex, not flexbox.
           if ($settings['style'] == 'flexbox') {
             $settings['style'] = 'flex';
           }
-          BlazyGrid::toNativeGrid($settings);
+          Grid::toNativeGrid($settings);
         }
       }
     }

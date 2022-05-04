@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * Contains install and update functions for Commerce Reports.
+ */
+
+/**
+ * Regenerate all order reports which have been duplicated.
+ */
+function commerce_reports_update_8001(&$sandbox) {
+
+  // Get all order ids with duplicate order reports.
+  $select = \Drupal::database()->select('commerce_order_report', 'r')
+    ->condition('type', 'order_report');
+  $select->addField('r', 'order_id');
+  $select->groupBy('order_id')->having('count(report_id) > 1');
+  $select->orderBy('created');
+  $order_ids = $select->execute()->fetchAllKeyed(0, 0);
+
+  if (!empty($order_ids)) {
+    // Regenerate the reports.
+    /** @var \Drupal\commerce_reports\OrderReportGeneratorInterface $order_report_generator */
+    $order_report_generator = \Drupal::service('commerce_reports.order_report_generator');
+    $order_report_generator->refreshReports($order_ids, 'order_report');
+  }
+}

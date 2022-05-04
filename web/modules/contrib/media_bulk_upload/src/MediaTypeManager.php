@@ -83,6 +83,7 @@ class MediaTypeManager implements MediaTypeManagerInterface {
    */
   private function processMediaTypeExtensions(MediaTypeInterface $mediaType) {
     foreach ($this->getMediaTypeExtensions($mediaType) as $extension) {
+      $extension = strtolower($extension);
       $this->mediaTypeExtensions[$extension][$mediaType->id()] = $mediaType;
     }
   }
@@ -127,6 +128,7 @@ class MediaTypeManager implements MediaTypeManagerInterface {
    * @throws \Exception
    */
   public function getMediaTypeIdsByFileExtension($extension) {
+    $extension = strtolower($extension);
     if (!isset($this->mediaTypeExtensions[$extension])) {
       throw new \Exception('No matching media type id for the given file.');
     }

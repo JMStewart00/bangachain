@@ -52,33 +52,35 @@
 {%
   set classes = [
     content ? 'media--rendered',
-    settings.bundle ? 'media--bundle--' ~ settings.bundle|clean_class,
     settings.namespace ? 'media--' ~ settings.namespace,
     settings.media_switch ? 'media--switch media--switch--' ~ settings.media_switch|clean_class,
-    settings.player ? 'media--player',
-    settings.ratio ? 'media--ratio media--ratio--' ~ settings.ratio,
-    settings.type ? 'media--' ~ settings.type,
+    blazies.is.player ? 'media--player',
+    blazies.media.bundle ? 'media--bundle--' ~ blazies.media.bundle|clean_class,
+    blazies.media.type ? 'media--' ~ blazies.media.type,
     blazies.resimage.id ? 'media--responsive',
+    settings.ratio ? 'media--ratio media--ratio--' ~ settings.ratio,
     settings.use_loading or blazies.use.loader ? 'is-b-loading',
     settings.classes ? settings.classes|join(' ')|clean_class,
   ]
 %}
 
-{% if settings.player %}
+{% if blazies.is.player %}
   {% set attributes = attributes.setAttribute('aria-live', 'polite') %}
 
+  {% set label = blazies.media.label %}
   {% set play_title = 'Load and play video.'|t %}
   {% set close_title = 'Stop and close video.'|t %}
-  {% if settings.accessible_title %}
-    {% set play_title = 'Load and play the video "@label".'|t({'@label': settings.accessible_title}) %}
-    {% set close_title = 'Stop and close the video "@label".'|t({'@label': settings.accessible_title}) %}
+
+  {% if label %}
+    {% set play_title = 'Load and play the video "@label".'|t({'@label': label}) %}
+    {% set close_title = 'Stop and close the video "@label".'|t({'@label': label}) %}
   {% endif %}
 
   {% set play_button_attributes = create_attribute({
     'aria-label': play_title,
     'class': ['media__icon', 'media__icon--play'],
-    'data-url': settings.embed_url,
-    'data-iframe-title': settings.accessible_title,
+    'data-url': blazies.media.embed_url,
+    'data-iframe-title': label,
     'title': play_title,
     'type': 'button'
   }) %}
@@ -93,7 +95,7 @@
 
 {% set player %}
   {% block blazy_player %}
-    {% if settings.player %}
+    {% if blazies.is.player %}
       <button{{ close_button_attributes }}></button>
       <button{{ play_button_attributes }}></button>
     {% else %}
@@ -123,7 +125,7 @@
 {% set blazy %}
   {% block blazy_content %}
     {% if media_attributes %}<div{{ media_attributes }}>{% endif %}
-      {% if url and not settings.player %}
+      {% if url and not blazies.is.player %}
         <a href="{{ url }}"{{ url_attributes }}>{{- media -}}</a>
 
         {# Allows fieldable captions with A tag, such as social share. #}
@@ -141,13 +143,14 @@
 
   {% if captions and captions.inline is defined %}
     {% block blazy_caption %}
-      <div{{ caption_attributes }}>
+      {% set caption_tag = captions.tag %}
+      <{{ caption_tag }}{{ caption_attributes }}>
         {% for caption in captions.inline %}
           {% if caption.content %}
             <{{ caption.tag }} {{ caption.attributes }}>{{- caption.content -}}</{{ caption.tag }}>
           {% endif %}
         {% endfor %}
-      </div>
+      </{{ caption_tag }}>
     {% endblock %}
   {% endif %}
 

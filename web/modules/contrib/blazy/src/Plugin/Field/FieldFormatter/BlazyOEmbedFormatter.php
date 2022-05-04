@@ -9,7 +9,7 @@ use Drupal\Core\Field\FormatterBase;
 use Drupal\media\Entity\MediaType;
 use Drupal\media\Plugin\media\Source\OEmbedInterface;
 use Drupal\blazy\BlazyDefault;
-use Drupal\blazy\Dejavu\BlazyDependenciesTrait;
+use Drupal\blazy\Field\BlazyDependenciesTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -32,7 +32,6 @@ class BlazyOEmbedFormatter extends FormatterBase {
 
   use BlazyDependenciesTrait;
   use BlazyFormatterTrait;
-  use BlazyFormatterViewTrait;
 
   /**
    * {@inheritdoc}
@@ -60,48 +59,39 @@ class BlazyOEmbedFormatter extends FormatterBase {
    * Build the blazy elements.
    */
   public function buildElements(array &$build, $items) {
-    $settings = $build['settings'];
-
-    // @todo remove check after another check.
-    if (!isset($settings['blazies'])) {
-      $settings += BlazyDefault::htmlSettings();
-    }
-
-    $blazies = &$settings['blazies'];
-    $lang = $blazies->get('current_language');
+    $settings   = &$build['settings'];
+    $blazies    = $settings['blazies'];
+    $field_name = $this->fieldDefinition->getName();
 
     foreach ($items as $delta => $item) {
-      $main_property = $item->getFieldDefinition()->getFieldStorageDefinition()->getMainPropertyName();
-      $value = trim($item->{$main_property});
+      $main_property = $item->getFieldDefinition()
+        ->getFieldStorageDefinition()
+        ->getMainPropertyName();
+
+      $value = $item->{$main_property};
 
       if (empty($value)) {
         continue;
       }
 
-      $settings['delta'] = $delta;
-      $settings['input_url'] = $value;
-      $image_item = NULL;
+      $blazies = $settings['blazies']->reset($settings);
+      $blazies->set('delta', $delta)
+        ->set('media.input_url', $value);
+
+      $data = ['item' => NULL, 'settings' => $settings];
 
       // Attempts to fetch media entity.
-      $media = $this->formatter->getEntityTypeManager()->getStorage('media')->loadByProperties([$settings['field_name'] => $value]);
+      $media = $this->formatter
+        ->loadByProperties([
+          $field_name => $value,
+        ], 'media', TRUE);
+
       if ($media = reset($media)) {
-        if ($media->hasTranslation($lang)) {
-          $media = $media->getTranslation($lang);
-        }
-
-        $data['settings'] = $settings;
-        $this->blazyOembed->getMediaItem($data, $media);
-
-        // Update data with local image.
-        $settings = array_merge($settings, $data['settings']);
-        $image_item = $data['item'] ?? NULL;
+        $this->blazyOembed->build($data, $media);
       }
 
-      $box = ['item' => $image_item, 'settings' => $settings];
-
       // Media OEmbed with lazyLoad and lightbox supports.
-      $build[$delta] = $this->formatter->getBlazy($box);
-      unset($box);
+      $build[$delta] = $this->formatter->getBlazy($data, $delta);
     }
   }
 
@@ -125,13 +115,13 @@ class BlazyOEmbedFormatter extends FormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function getScopedFormElements() {
+  protected function getPluginScopes(): array {
     return [
       'background'        => TRUE,
       'media_switch_form' => TRUE,
       'multimedia'        => TRUE,
       'responsive_image'  => FALSE,
-    ] + $this->getCommonScopedFormElements();
+    ];
   }
 
   /**

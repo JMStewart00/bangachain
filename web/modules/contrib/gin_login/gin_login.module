@@ -7,6 +7,7 @@
 
 use Drupal\Core\Url;
 use Drupal\user\UserInterface;
+use Drupal\gin\GinSettings;
 
 /**
  * Page_attachments_alter()
@@ -14,18 +15,9 @@ use Drupal\user\UserInterface;
 function gin_login_page_attachments_alter(&$page) {
   if (_gin_login__check_path()) {
     if (_gin_login_gin_is_active()) {
-      $theme = \Drupal::theme()->getActiveTheme()->getName();
-      // Get theme configs.
-      $darkmode = theme_get_setting('enable_darkmode', $theme);
-      $preset_accent_color = theme_get_setting('preset_accent_color', $theme);
-      $accent_color = theme_get_setting('accent_color', $theme);
-      $preset_focus_color = theme_get_setting('preset_focus_color', $theme);
-      $focus_color = theme_get_setting('focus_color', $theme);
-      $highcontrastmode = theme_get_setting('high_contrast_mode', $theme);
-
-      // Define darkmode class.
-      $darkmode_class = 'gin--dark-mode';
-      $highcontrastmode_class = 'gin--high-contrast-mode';
+      // Get Gin settings.
+      /** @var \Drupal\gin\GinSettings $settings */
+      $settings = \Drupal::classResolver(GinSettings::class);
 
       // Attach the init script.
       $page['#attached']['library'][] = 'gin/gin_init';
@@ -36,19 +28,20 @@ function gin_login_page_attachments_alter(&$page) {
       // Attach accent overrides CSS.
       $page['#attached']['library'][] = 'gin/gin_accent';
 
-      // Attach custom Gin overrides
+      // Attach custom Gin overrides.
       if (file_exists('public://gin-custom.css')) {
         $page['#attached']['library'][] = 'gin/gin_custom_css';
       }
+
       // Expose settings to JS.
-      $page['#attached']['drupalSettings']['gin']['darkmode'] = $darkmode;
-      $page['#attached']['drupalSettings']['gin']['darkmode_class'] = $darkmode_class;
-      $page['#attached']['drupalSettings']['gin']['preset_accent_color'] = $preset_accent_color;
-      $page['#attached']['drupalSettings']['gin']['accent_color'] = $accent_color;
-      $page['#attached']['drupalSettings']['gin']['preset_focus_color'] = $preset_focus_color;
-      $page['#attached']['drupalSettings']['gin']['focus_color'] = $focus_color;
-      $page['#attached']['drupalSettings']['gin']['highcontrastmode'] = $highcontrastmode;
-      $page['#attached']['drupalSettings']['gin']['highcontrastmode_class'] = $highcontrastmode_class;
+      $page['#attached']['drupalSettings']['gin']['darkmode'] = $settings->get('enable_darkmode');
+      $page['#attached']['drupalSettings']['gin']['darkmode_class'] = 'gin--dark-mode';
+      $page['#attached']['drupalSettings']['gin']['preset_accent_color'] = $settings->get('preset_accent_color');
+      $page['#attached']['drupalSettings']['gin']['accent_color'] = $settings->get('accent_color');
+      $page['#attached']['drupalSettings']['gin']['preset_focus_color'] = $settings->get('preset_focus_color');
+      $page['#attached']['drupalSettings']['gin']['focus_color'] = $settings->get('focus_color');
+      $page['#attached']['drupalSettings']['gin']['highcontrastmode'] = $settings->get('high_contrast_mode');
+      $page['#attached']['drupalSettings']['gin']['highcontrastmode_class'] = 'gin--high-contrast-mode';
     }
 
     // Check if path is available and we're at user level.
@@ -61,26 +54,23 @@ function gin_login_page_attachments_alter(&$page) {
  */
 function gin_login_preprocess_html(&$variables) {
   if (_gin_login__check_path() && _gin_login_gin_is_active()) {
-    $theme = \Drupal::theme()->getActiveTheme()->getName();
-    // Get theme darkmode config.
-    $darkmode = theme_get_setting('enable_darkmode', $theme);
-    $preset_accent_color = theme_get_setting('preset_accent_color', $theme);
-    $high_contrast_mode = theme_get_setting('high_contrast_mode', $theme);
-
-    // We need to check both because of backwards compatibility.
-    if ($darkmode === TRUE || $darkmode === 1) {
-      $variables['attributes']['class'][] = 'gin--dark-mode';
-    }
+    // Get Gin settings.
+    /** @var \Drupal\gin\GinSettings $settings */
+    $settings = \Drupal::classResolver(GinSettings::class);
 
     // Set accent color.
-    if ($preset_accent_color) {
-      $variables['attributes']['data-gin-accent'] = $preset_accent_color;
-    }
+    $variables['attributes']['data-gin-accent'] = $settings->get('preset_accent_color');
 
-    // High contast mode.
-    if ($high_contrast_mode === TRUE) {
+    // Set focus color.
+    $variables['attributes']['data-gin-focus'] = $settings->get('preset_focus_color');
+
+    // High contrast mode.
+    if ($settings->get('high_contrast_mode')) {
       $variables['attributes']['class'][] = 'gin--high-contrast-mode';
     }
+
+    // Add identification class to paths.
+    $variables['attributes']['class'][] = 'gin-login';
   }
 }
 
@@ -167,7 +157,7 @@ function gin_login_theme() {
  */
 function gin_login_css_alter(&$css, $assets) {
   // UPDATE THIS PATH TO YOUR MODULE'S CSS PATH.
-  $path = drupal_get_path('module', 'gin_login') . '/dist/css/gin_login.css';
+  $path = drupal_get_path('module', 'gin_login') . '/dist/css/login.css';
   if (isset($css[$path])) {
     // Use anything greater than 100 to have it load
     // after the theme as CSS_AGGREGATE_THEME is set to 100.
@@ -179,32 +169,28 @@ function gin_login_css_alter(&$css, $assets) {
  * Implements hook_preprocess_HOOK().
  */
 function gin_login_preprocess_ginlogin(&$variables) {
-  $theme = \Drupal::theme()->getActiveTheme()->getName();
-  $darkmode = theme_get_setting('enable_darkmode', $theme);
-  $useDefaultIcon = theme_get_setting('icon_default', $theme);
-  $ginIconPath = theme_get_setting('icon_path', $theme);
   $config = \Drupal::config('gin_login.settings');
+  $theme = \Drupal::theme()->getActiveTheme()->getName();
   $variables['site_name'] = \Drupal::config('system.site')->get('name');
+  $themeIconPath = theme_get_setting('icon_path', $theme);
+  $themeUseDefaultIcon = theme_get_setting('icon_default', $theme);
+  $darkmode = theme_get_setting('enable_darkmode', $theme);
 
-  if (!$darkmode) {
-    $default_logo = '/images/gin.svg';
-  }
-  else {
-    $default_logo = '/images/gin_darkmode.svg';
+  // #3258015: Make sure we're compatible with the new variant.
+  if ($themeUseDefaultIcon === NULL) {
+    $themeIconPath = theme_get_setting('logo.path', $theme);
+    $themeUseDefaultIcon = theme_get_setting('logo.use_default', $theme);
   }
 
-  if (!$useDefaultIcon && !empty($ginIconPath)) {
-    $variables['logo'] = file_create_url($ginIconPath);
+  if (!$themeUseDefaultIcon && !empty($themeIconPath)) {
+    $variables['icon_path'] = file_create_url($themeIconPath);
   }
-  else {
-    $defaultLogo = drupal_get_path('module', 'gin_login') . $default_logo;
-    $variables['logo'] = file_create_url($defaultLogo);
-  }
+
   $configData = $config->get();
 
   if ($configData['logo']['use_default'] == "0") {
     if (isset($configData['logo']['path']) && !empty($configData['logo']['path'])) {
-      $variables['logo'] = file_create_url($configData['logo']['path']);
+      $variables['icon_path'] = file_create_url($configData['logo']['path']);
     }
   }
 

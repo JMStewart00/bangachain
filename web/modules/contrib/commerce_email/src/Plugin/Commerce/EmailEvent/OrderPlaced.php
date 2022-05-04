@@ -3,7 +3,7 @@
 namespace Drupal\commerce_email\Plugin\Commerce\EmailEvent;
 
 use Drupal\state_machine\Event\WorkflowTransitionEvent;
-use Symfony\Component\EventDispatcher\Event;
+use Drupal\Component\EventDispatcher\Event;
 
 /**
  * Provides the OrderPlaced email event.

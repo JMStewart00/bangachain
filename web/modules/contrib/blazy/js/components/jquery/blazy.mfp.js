@@ -29,10 +29,83 @@
    *   The [data-mfp-gallery] container HTML element.
    */
   function process(box) {
+    var elms = $.findAll(box, _trigger);
+    var items = build(elms);
+    var $box = $(box);
 
-    init(box);
+    function prepare() {
+      $box.magnificPopup({
+        items: items,
+        gallery: {
+          enabled: elms.length > 1,
+          navigateByImgClick: true,
+          tCounter: '%curr%/%total%'
+        },
+        preloader: true,
+        callbacks: {
+          beforeClose: function () {
+            var currItem = this.currItem;
+            if (currItem && currItem.inlineElement) {
+              attach(currItem.inlineElement[0]);
+            }
+          },
+          change: function () {
+            checkImage(this, true);
+          },
+          open: function () {
+            var $wrap = this.wrap;
+            if ($wrap && $wrap.length) {
 
-    // $.addClass(box, _mounted);
+              // FOUC fix.
+              setTimeout(function () {
+                $.addClass($wrap[0], 'mfp-on');
+              }, 100);
+            }
+          }
+        },
+
+        // This class is for CSS animation below.
+        mainClass: 'mfp-with-zoom',
+
+        // Zoom requires anything which has image: (local|remote) video, etc.
+        // @todo figure out to disable zoom when having plain HTML or AJAX.
+        zoom: {
+          enabled: _canZoom,
+          duration: 300,
+          easing: 'ease-in-out',
+
+          // The "opener" function should return the element from which popup
+          // will be zoomed in and to which popup will be scaled down
+          // By default it looks for an image tag:
+          opener: function (openerElement) {
+            checkImage(this);
+            // openerElement is the element on which popup was initialized, in
+            // this case its <a> tag you don't need to add "opener" option if
+            // this code matches your needs, it's default one.
+            // @fixme only works at first launch, not when zoom-close repeated.
+            return _jq(_elClicked || openerElement.data.el);
+          }
+        }
+      });
+    }
+
+    prepare();
+
+    $.on(box, 'click', _trigger, function (e) {
+      var el = _elClicked = e.target;
+
+      // Supports Blazy Grid, Splide/ Slick, GridStack/Mason galleries.
+      // @todo add options to avoid guessing.
+      _index = $.index(el, ['.box', '.grid', '.field__item', 'li', '.slide']);
+
+      setTimeout(function () {
+        _mp = $.magnificPopup.instance;
+
+        if (_mp) {
+          _mp.goTo(_index);
+        }
+      });
+    }, false);
   }
 
   function build(elms) {
@@ -95,86 +168,6 @@
       items.push(item);
     });
     return items;
-  }
-
-  function init(box) {
-    var elms = $.findAll(box, _trigger);
-    var items = build(elms);
-    var $box = $(box);
-
-    function prepare() {
-      $box.magnificPopup({
-        items: items,
-        gallery: {
-          enabled: elms.length > 1,
-          navigateByImgClick: true,
-          tCounter: '%curr%/%total%'
-        },
-        preloader: true,
-        callbacks: {
-          beforeClose: function () {
-            var currItem = this.currItem;
-            if (currItem && currItem.inlineElement) {
-              attach(currItem.inlineElement[0]);
-            }
-          },
-          change: function () {
-            checkImage(this, true);
-          },
-          open: function () {
-            var $wrap = this.wrap;
-            if ($wrap && $wrap.length) {
-
-              // FOUC fix.
-              setTimeout(function () {
-                $.addClass($wrap[0], 'mfp-on');
-              }, 100);
-            }
-          }
-        },
-
-        // This class is for CSS animation below.
-        mainClass: 'mfp-with-zoom',
-
-        // Zoom requires anything which has image: (local|remote) video, etc.
-        // @todo figure out to disable zoom when having plain HTML or AJAX.
-        zoom: {
-          enabled: _canZoom,
-          duration: 300,
-          easing: 'ease-in-out',
-
-          // The "opener" function should return the element from which popup
-          // will be zoomed in and to which popup will be scaled down
-          // By default it looks for an image tag:
-          opener: function (openerElement) {
-            checkImage(this);
-            // openerElement is the element on which popup was initialized, in
-            // this case its <a> tag you don't need to add "opener" option if
-            // this code matches your needs, it's default one.
-            // @fixme only works at first launch, not when zom-close repeated.
-            return _jq(_elClicked || openerElement.data.el);
-          }
-        }
-      });
-    }
-
-    prepare();
-
-    $.on(box, 'click', _trigger, function (e) {
-      var el = _elClicked = e.target;
-
-      // Supports Blazy Grid, Splide/ Slick, GridStack/Mason galleries.
-      // @todo add options to avoid guessing.
-      _index = $.index(el, ['.box', '.grid', '.field__item', 'li', '.slide']);
-
-      setTimeout(function () {
-        _mp = $.magnificPopup.instance;
-
-        if (_mp) {
-          _mp.goTo(_index);
-        }
-      });
-    }, false);
   }
 
   function counter(text) {

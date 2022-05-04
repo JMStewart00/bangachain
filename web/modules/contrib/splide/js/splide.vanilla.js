@@ -8,9 +8,10 @@
   'use strict';
 
   var _id = 'splide';
+  var _idOnce = 'splide-vanilla';
   var _vid = _id + '--vanilla';
   var _mounted = 'is-sv-mounted';
-  var _element = '.' + _vid + ':not(.' + _mounted + '):not(.' + _id + '--default)';
+  var _element = '.' + _vid + ':not(.' + _id + '--default)';
 
   /**
    * Splide utility functions.
@@ -18,12 +19,12 @@
    * @param {HTMLElement} elm
    *   The .splide--vanilla HTML element.
    */
-  function doVanilla(elm) {
-    var track = elm.querySelector('.splide__track');
+  function process(elm) {
+    var track = $.find(elm, '.splide__track');
 
     // Prevents theme_item_list() CSS rules from screwing up.
-    if (track !== null) {
-      track.classList.remove('item-list');
+    if ($.isElm(track)) {
+      $.removeClass(track, 'item-list');
     }
 
     var instance = new Splide(elm);
@@ -31,7 +32,7 @@
     _ds.initListeners(instance);
 
     // Main display with navigation is deferred at splide.nav.min.js.
-    if (!elm.classList.contains('splide--main')) {
+    if (!$.hasClass(elm, 'splide--main')) {
       instance.mount(_ds.extensions || {});
     }
 
@@ -40,7 +41,7 @@
       elm.splide = instance;
     }
 
-    elm.classList.add(_mounted);
+    $.addClass(elm, _mounted);
   }
 
   /**
@@ -51,12 +52,13 @@
   Drupal.behaviors.splideVanilla = {
     attach: function (context) {
 
-      // @todo replace by dBlazy.context post Blazy:2.6+.
-      context = _ds.context(context);
+      context = $.context(context);
 
-      var elms = context.querySelectorAll(_element);
-      if (elms.length) {
-        $.once($.forEach(elms, doVanilla));
+      $.once(process, _idOnce, _element, context);
+    },
+    detach: function (context, setting, trigger) {
+      if (trigger === 'unload') {
+        $.once.removeSafely(_idOnce, _element, context);
       }
     }
   };

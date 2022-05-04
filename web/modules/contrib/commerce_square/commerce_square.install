@@ -6,8 +6,8 @@
  */
 
 use Drupal\Core\Url;
-use SquareConnect\Api\LocationsApi;
-use SquareConnect\ApiException;
+use Square\Exceptions\ApiException;
+use Square\Environment;
 
 /**
  * @file
@@ -20,9 +20,9 @@ use SquareConnect\ApiException;
 function commerce_square_requirements($phase) {
   $requirements = [];
   if ($phase == 'install') {
-    if (!class_exists('\SquareConnect\ApiClient')) {
+    if (!class_exists('\Square\SquareClient')) {
       $requirements['commerce_square_library'] = [
-        'description' => t('Commerce Square requires the square/connect library.'),
+        'description' => t('Commerce Square requires the square/square library.'),
         'severity' => REQUIREMENT_ERROR,
       ];
     }
@@ -43,17 +43,29 @@ function commerce_square_requirements($phase) {
   }
   elseif ($phase === 'runtime') {
     $connect = \Drupal::getContainer()->get('commerce_square.connect');
-    $client = $connect->getClient('production');
-    $locations_api = new LocationsApi($client);
+    $client = $connect->getClient(Environment::PRODUCTION);
+
+    $success = TRUE;
     try {
-      $locations_api->listLocations();
+      $locations_api = $client->getLocationsApi();
+      $api_response = $locations_api->listLocations();
+
+      if ($api_response->isError()) {
+        $success = FALSE;
+      }
+    }
+    catch (ApiException $e) {
+      $success = FALSE;
+    }
+
+    if ($success) {
       $requirements['commerce_square_authentication'] = [
         'title' => t('Commerce Square Connect'),
         'description' => t('Square Connect OAuth is connected.'),
         'severity' => REQUIREMENT_OK,
       ];
     }
-    catch (ApiException $e) {
+    else {
       $requirements['commerce_square_authentication'] = [
         'title' => t('Commerce Square Connect'),
         'description' => t('Square Connect OAuth access token is not valid. Please reconnect by submitting the <a href=":url">Square settings form</a>.', [
@@ -77,7 +89,6 @@ function commerce_square_uninstall() {
     'commerce_square.production_access_token_expiry',
     'commerce_square.production_refresh_token',
   ]);
-
 }
 
 /**
@@ -110,7 +121,6 @@ function commerce_square_update_8001() {
     unset($configuration['live_access_token']);
     unset($configuration['live_access_token_expiry']);
   }
-
 }
 
 /**
@@ -125,4 +135,22 @@ function commerce_square_update_8002() {
   $config->clear('production_access_token');
   $config->clear('production_access_token_expiry');
   $config->save();
+}
+
+/**
+ * Disables credit card icon settings on existing payment gateways.
+ */
+function commerce_square_update_8003() {
+  $payment_gateways = \Drupal::entityTypeManager()
+    ->getStorage('commerce_payment_gateway')
+    ->loadMultiple();
+
+  foreach ($payment_gateways as $payment_gateway) {
+    if ($payment_gateway->getPluginId() == 'square') {
+      $configuration = $payment_gateway->getPluginConfiguration();
+      $configuration['enable_credit_card_icons'] = FALSE;
+      $payment_gateway->setPluginConfiguration($configuration);
+      $payment_gateway->save();
+    }
+  }
 }

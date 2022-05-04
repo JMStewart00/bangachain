@@ -3,13 +3,14 @@
  * Provides Splide loader.
  */
 
-(function ($, Drupal, drupalSettings, _ds, _win) {
+(function ($, Drupal, drupalSettings, _ds, _win, _doc) {
 
   'use strict';
 
   var _id = 'splide';
+  var _idOnce = _id;
   var _mounted = 'is-mounted';
-  var _element = '.' + _id + '--default:not(.' + _mounted + '):not(.' + _id + '--vanilla)';
+  var _element = '.' + _id + '--default:not(.' + _id + '--vanilla)';
   var _lazyImg = 'img[data-' + _id + '-lazy]';
   var _defaults = drupalSettings.splide || {};
 
@@ -27,13 +28,15 @@
      *
      * @param {HTMLElement} elm
      *   The .splide HTML element.
+     * @param {undefined|object|int} opts
+     *   The options, default to index or undefined.
      *
      * @return {Splide}
      *   The Splide instance.
      */
-    init: function (elm) {
+    init: function (elm, opts) {
       if (!elm.splide) {
-        elm.splide = doSplide(elm);
+        elm.splide = doSplide(elm, opts);
       }
       return elm.splide;
     }
@@ -45,14 +48,16 @@
    *
    * @param {HTMLElement} elm
    *   The .splide HTML element.
+   * @param {undefined|object|int} opts
+   *   The options, default to index or undefined.
    *
    * @return {Splide}
    *   The Splide instance.
    */
-  function doSplide(elm) {
-    var d = elm.getAttribute('data-' + _id);
-    var s = d ? $.parse(d) : false;
-    var o = $.extend({}, _defaults, s || {});
+  function doSplide(elm, opts) {
+    var d = $.attr(elm, 'data-' + _id);
+    var s = $.parse(d);
+    var o = $.extend({}, _defaults, s, $.isObj(opts) ? opts : {});
     var r = o.breakpoints;
     var e = _defaults.extras ? _defaults.extras : _defaults;
     var isSplide = o.lazyLoad !== 'blazy';
@@ -62,7 +67,7 @@
 
     if (r) {
       for (b in r) {
-        if (Object.prototype.hasOwnProperty.call(r, b)) {
+        if ($.hasProp(r, b)) {
           var breakpoint = r[b];
           if (!breakpoint.destroy) {
             r[b] = $.extend({}, e, breakpoint);
@@ -73,12 +78,12 @@
 
     if (isSplide) {
       // @todo remove, built-in lazyLoad doesn't work when SRC available.
-      var imgs = elm.querySelector(_lazyImg) === null ? [] : elm.querySelectorAll(_lazyImg);
+      var imgs = $.findAll(elm, _lazyImg);
       if (imgs.length) {
-        $.forEach(imgs, function (img) {
-          img.removeAttribute('src');
+        $.each(imgs, function (img) {
+          $.removeAttr(img, 'src');
           // Splide has its own splide__spinner, remove Blazy one.
-          _ds.unloading(img);
+          $.unloading(img);
         });
       }
     }
@@ -89,8 +94,6 @@
     function beforeInit() {
       _ds.initExtensions();
       _ds.initListeners(instance);
-
-      randomize();
     }
 
     /**
@@ -100,9 +103,9 @@
       // Arrow down jumper.
       $.on(elm, 'click', '.' + _id + '__arrow--down', function (e) {
         e.preventDefault();
-        var tg = e.target.getAttribute('data-target');
-        var el = tg ? document.querySelector(tg) : null;
-        if (el !== null) {
+        var tg = $.attr(e.target, 'data-target');
+        var el = tg ? $.find(_doc, tg) : null;
+        if ($.isElm(el)) {
           _win.scroll({
             top: el.offsetTop,
             behavior: 'smooth'
@@ -116,15 +119,14 @@
      */
     function randomize() {
       if (o.randomize) {
-        var list = elm.querySelector('.' + _id + '__list');
-        if (list !== null && list.children !== null) {
+        var list = $.find(elm, '.' + _id + '__list');
+        if ($.isElm(list) && list.children) {
           var len = list.children.length;
 
           if (len) {
             var rand = Math.floor(Math.random() * len);
-            if (s && (rand >= 0 && rand < len)) {
-              o.start = s.start = rand;
-              elm.dataset.splide = JSON.stringify(s);
+            if (rand >= 0 && rand < len) {
+              o.start = rand;
             }
           }
         }
@@ -132,12 +134,13 @@
     }
 
     // Build the Splide.
+    randomize();
     instance = new Splide(elm, o);
 
     beforeInit();
 
     // Main display with navigation is deferred at splide.nav.min.js.
-    if (!elm.classList.contains(_id + '--main')) {
+    if (!$.hasClass(elm, _id + '--main')) {
       var fx = o.type ? _ds.getTransition(o.type) : null;
       instance.mount(_ds.extensions || {}, fx);
     }
@@ -152,7 +155,7 @@
     }
 
     // Add helper class for arrow visibility as they are outside slider.
-    elm.classList.add(_mounted);
+    $.addClass(elm, _mounted);
     return instance;
   }
 
@@ -164,14 +167,15 @@
   Drupal.behaviors.splide = {
     attach: function (context) {
 
-      // @todo replace by dBlazy.context post Blazy:2.6+.
-      context = _ds.context(context);
+      context = $.context(context);
 
-      var elms = context.querySelectorAll(_element);
-      if (elms.length) {
-        $.once($.forEach(elms, _ds.init));
+      $.once(_ds.init, _idOnce, _element, context);
+    },
+    detach: function (context, setting, trigger) {
+      if (trigger === 'unload') {
+        $.once.removeSafely(_idOnce, _element, context);
       }
     }
   };
 
-})(dBlazy, Drupal, drupalSettings, dSplide, this);
+})(dBlazy, Drupal, drupalSettings, dSplide, this, this.document);

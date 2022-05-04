@@ -2,8 +2,13 @@
 
 namespace Drupal\Tests\blazy\FunctionalJavascript;
 
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\Render\RenderContext;
 use Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver;
 use Drupal\filter\Entity\FilterFormat;
+use Drupal\filter\FilterPluginCollection;
+use Drupal\filter\FilterProcessResult;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\blazy\Blazy;
 use Drupal\blazy\BlazyDefault;
@@ -85,15 +90,8 @@ class BlazyFilterJavaScriptTest extends WebDriverTestBase {
    */
   public function testFilterDisplay() {
     $image_path = $this->getImagePath(TRUE);
-
-    // Prevents execessive width with aspect ratio.
     $settings = BlazyDefault::htmlSettings();
-    $settings['extra_text'] = '<div style="width: 640px;">';
-    $settings['extra_text'] .= '<img data-unblazy src="' . $this->url . '" width="320" height="320" />';
-    $settings['extra_text'] .= '<iframe src="https://www.youtube.com/watch?v=uny9kbh4iOEd" width="640" height="360"></iframe>';
-    $settings['extra_text'] .= '<img src="' . $this->url . '" width="320" height="320" />';
-    $settings['extra_text'] .= '<img src="https://www.drupal.org/files/project-images/slick-carousel-drupal.png" width="215" height="162" />';
-    $settings['extra_text'] .= '</div>';
+    $settings['extra_text'] = $text = $this->dummyText();
 
     $this->setUpContentTypeTest($this->bundle);
     $this->setUpContentWithItems($this->bundle, $settings);
@@ -124,12 +122,107 @@ class BlazyFilterJavaScriptTest extends WebDriverTestBase {
     $this->assertSession()->elementNotContains('css', '.media-wrapper--blazy', 'data-unblazy');
 
     // Verifies that one of the images is there once loaded.
-    $result = $this->assertSession()->waitForElement('css', '.b-loaded');
-    $this->assertNotEmpty($result);
+    $loaded = $this->assertSession()->waitForElement('css', '.b-loaded');
+    $this->assertNotEmpty($loaded);
 
     // Capture the loaded moment.
     // The screenshots are at sites/default/files/simpletest/blazy.
     $this->createScreenshot($image_path . '/3_blazy_filter_loaded.png');
+
+    // Verifies the library is loaded.
+    ['result' => $result, 'html' => $html] = $this->applyFilter($text);
+    $this->assertNotSame($html, $text);
+    $attachments = $result->getAttachments();
+    $this->assertContains('blazy/filter', $attachments['library']);
+    $this->assertArrayHasKey('blazy', $attachments['drupalSettings']);
+
+    // Check external image item from resource relevant to BlazyFilter.
+    // Too risky when the video is removed causing false positive.
+    // $settings['input_url'] = 'https://www.youtube.com/watch?v=uny9kbh4iOEd';
+    // $item = $this->blazyOembed->build($settings);
+    // $this->assertNotEmpty($item);
+  }
+
+  /**
+   * Applies the `@Filter=blazy_fiter` filter to text, pipes to raw content.
+   *
+   * @param string $text
+   *   The text string to be filtered.
+   * @param string $identifier
+   *   The any text which identifies this filter.
+   * @param string $langcode
+   *   The language code of the text to be filtered.
+   *
+   * @return \Drupal\filter\FilterProcessResult
+   *   The filtered text, wrapped in a FilterProcessResult object, and possibly
+   *   with associated assets, cacheability metadata and placeholders.
+   */
+  protected function applyFilter($text, $identifier = 'media-wrapper--blazy', $langcode = 'en') {
+    $this->assertStringNotContainsString($identifier, $text);
+    $result = $this->processText($text, $langcode);
+    $html = $result->getProcessedText();
+    $this->assertStringContainsString($identifier, $html);
+
+    return ['result' => $result, 'html' => $html];
+  }
+
+  /**
+   * Processes text through the provided filters, taken from media embed.
+   *
+   * @param string $text
+   *   The text string to be filtered.
+   * @param string $langcode
+   *   The language code of the text to be filtered.
+   * @param string[] $filter_ids
+   *   (optional) The filter plugin IDs to apply to the given text, in the order
+   *   they are being requested to be executed.
+   *
+   * @return \Drupal\filter\FilterProcessResult
+   *   The filtered text, wrapped in a FilterProcessResult object, and possibly
+   *   with associated assets, cacheability metadata and placeholders.
+   *
+   * @see \Drupal\filter\Element\ProcessedText::preRenderText()
+   */
+  protected function processText($text, $langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED, array $filter_ids = ['blazy_filter']) {
+    $manager = $this->container->get('plugin.manager.filter');
+    $bag = new FilterPluginCollection($manager, []);
+    $filters = [];
+    foreach ($filter_ids as $filter_id) {
+      $filters[] = $bag->get($filter_id);
+    }
+
+    $render_context = new RenderContext();
+    /** @var \Drupal\filter\FilterProcessResult $filter_result */
+    $filter_result = $this->container->get('renderer')->executeInRenderContext($render_context, function () use ($text, $filters, $langcode) {
+      $metadata = new BubbleableMetadata();
+      foreach ($filters as $filter) {
+        /** @var \Drupal\filter\FilterProcessResult $result */
+        $result = $filter->process($text, $langcode);
+        $metadata = $metadata->merge($result);
+        $text = $result->getProcessedText();
+      }
+      return (new FilterProcessResult($text))->merge($metadata);
+    });
+    if (!$render_context->isEmpty()) {
+      $filter_result = $filter_result->merge($render_context->pop());
+    }
+    return $filter_result;
+  }
+
+  /**
+   * Returns a dummy text.
+   */
+  protected function dummyText(): string {
+    $uuid = $this->dummyItem->uuid();
+    $text = '<div style="width: 640px;">';
+    $text .= '<img data-unblazy src="' . $this->url . '" width="320" height="320" />';
+    $text .= '<iframe src="https://www.youtube.com/watch?v=uny9kbh4iOEd" width="640" height="360"></iframe>';
+    $text .= '<img src="' . $this->url . '" width="320" height="320" />';
+    $text .= '<img src="' . $this->dummyUrl . '" width="320" height="320" data-entity-type="file" data-entity-uuid="' . $uuid . '"/>';
+    $text .= '<img src="https://www.drupal.org/files/project-images/slick-carousel-drupal.png" width="215" height="162" />';
+    $text .= '</div>';
+
+    return $text;
   }
 
 }

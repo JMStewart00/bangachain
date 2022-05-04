@@ -3,7 +3,7 @@
 namespace Drupal\commerce_email\Plugin\Commerce\EmailEvent;
 
 use Drupal\commerce_order\Event\OrderEvent;
-use Symfony\Component\EventDispatcher\Event;
+use Drupal\Component\EventDispatcher\Event;
 
 /**
  * Provides the OrderPaid email event.

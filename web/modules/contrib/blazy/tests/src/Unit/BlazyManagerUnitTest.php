@@ -206,25 +206,3 @@ if (!function_exists('blazy_test_theme')) {
   }
 
 }
-
-if (!function_exists('colorbox_theme')) {
-
-  /**
-   * Dummy function.
-   */
-  function colorbox_theme() {
-    // Empty block to satisfy coder.
-  }
-
-}
-
-if (!function_exists('photobox_theme')) {
-
-  /**
-   * Dummy function.
-   */
-  function photobox_theme() {
-    // Empty block to satisfy coder.
-  }
-
-}

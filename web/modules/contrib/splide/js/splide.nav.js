@@ -8,8 +8,9 @@
   'use strict';
 
   var _id = 'splide-wrapper';
+  var _idOnce = _id;
   var _mounted = 'is-sw-mounted';
-  var _element = '.' + _id + ':not(.' + _mounted + ')';
+  var _element = '.' + _id;
 
   /**
    * Splide wrapper utility functions.
@@ -17,16 +18,16 @@
    * @param {HTMLElement} elm
    *   The .splide-wrapper HTML element.
    */
-  function doWrapper(elm) {
+  function process(elm) {
     // Respects nested.
-    var main = elm.querySelectorAll('.splide--main');
-    var nav = elm.querySelectorAll('.splide--nav');
+    var main = $.findAll(elm, '.splide--main');
+    var nav = $.findAll(elm, '.splide--nav');
     if (!main.length || !nav.length) {
       return;
     }
 
     var ok = false;
-    var valid = typeof main[0] !== 'undefined' && 'splide' in main[0];
+    var valid = !$.isUnd(main[0]) && 'splide' in main[0];
 
     if (valid) {
       var splide = main[0].splide;
@@ -34,7 +35,7 @@
       var extensions = _ds.extensions || {};
       var fx = o.type ? _ds.getTransition(o.type) : null;
 
-      if (typeof nav[0] === 'undefined') {
+      if ($.isUnd(nav[0])) {
         splide.mount(extensions, fx);
       }
       else {
@@ -47,7 +48,7 @@
 
     // Ensures sitewide option with improper synching doesn't screw up.
     if (ok) {
-      elm.classList.add(_mounted);
+      $.addClass(elm, _mounted);
     }
   }
 
@@ -59,12 +60,13 @@
   Drupal.behaviors.splideNav = {
     attach: function (context) {
 
-      // @todo replace by dBlazy.context post Blazy:2.6+.
-      context = _ds.context(context);
+      context = $.context(context);
 
-      var elms = context.querySelectorAll(_element);
-      if (elms.length) {
-        $.once($.forEach(elms, doWrapper));
+      $.once(process, _idOnce, _element, context);
+    },
+    detach: function (context, setting, trigger) {
+      if (trigger === 'unload') {
+        $.once.removeSafely(_idOnce, _element, context);
       }
     }
   };

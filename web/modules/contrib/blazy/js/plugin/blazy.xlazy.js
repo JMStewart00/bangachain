@@ -16,6 +16,7 @@
   var _erCounted = 0;
   var _isVisibleClass = 'is-b-visible';
   var _data = 'data-';
+  var _dataAnimation = _data + 'animation';
   var _src = 'src';
   var _srcSet = 'srcset';
   var _imgSources = [_srcSet, _src];
@@ -145,7 +146,8 @@
 
     _erCounted = me[ok ? 'success' : 'error'](el, status, parent, opts);
 
-    if (ok) {
+    // Native may already remove `data-[SRC|SRCSET]` early on, except BG/Video.
+    if (ok && $.hasAttr(el, _data + _src)) {
       $.removeAttr(el, _imgSources, _data);
     }
 
@@ -176,6 +178,14 @@
       winData: winData,
       entries: elms
     });
+  };
+
+  $.aniElement = function (el) {
+    var an = $.closest(el, '[' + _dataAnimation + ']');
+    if ($.hasAttr(el, _dataAnimation) && !$.isElm(an)) {
+      an = el;
+    }
+    return an;
   };
 
 })(dBlazy, this, this.document);

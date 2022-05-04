@@ -26,7 +26,7 @@ class ResponseSubscriber implements EventSubscriberInterface {
    *   The event to process.
    */
   public function onResponse(ResponseEvent $event) {
-    if (!$event->isMasterRequest()) {
+    if (!$event->isMainRequest()) {
       return;
     }
     $response = $event->getResponse();

@@ -48,10 +48,10 @@ class ProductDefaultVariationEvent extends EventBase {
   /**
    * Set the default product variation.
    *
-   * @param \Drupal\commerce_product\Entity\ProductVariationInterface $default_variation
+   * @param \Drupal\commerce_product\Entity\ProductVariationInterface|null $default_variation
    *   The variation.
    */
-  public function setDefaultVariation(ProductVariationInterface $default_variation) {
+  public function setDefaultVariation(?ProductVariationInterface $default_variation) {
     $this->defaultVariation = $default_variation;
   }
 

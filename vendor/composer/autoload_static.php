@@ -48,9 +48,9 @@ class ComposerStaticInit3d80e700841ab59d16fa8cf88fa4b442
         '952683d815ff0a7bf322b93c0be7e4e4' => __DIR__ . '/..' . '/chi-teck/drupal-code-generator/src/bootstrap.php',
         '801c31d8ed748cfa537fa45402288c95' => __DIR__ . '/..' . '/psy/psysh/src/functions.php',
         '9e4824c5afbdc1482b6025ce3d4dfde8' => __DIR__ . '/..' . '/league/csv/src/functions_include.php',
+        '2d0bd6b7e257b7230c706e6559d6a87b' => __DIR__ . '/..' . '/mglaman/phpstan-drupal/drupal-phpunit-hack.php',
         '979dffec6fa5205cabd2c2cd1e9e6b3a' => __DIR__ . '/..' . '/algolia/algoliasearch-client-php/src/Http/Psr7/functions.php',
         '6783aef8c489bbc166eee2536fe605d5' => __DIR__ . '/..' . '/algolia/algoliasearch-client-php/src/functions.php',
-        '2d0bd6b7e257b7230c706e6559d6a87b' => __DIR__ . '/..' . '/mglaman/phpstan-drupal/drupal-phpunit-hack.php',
         '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
     );
 
@@ -70,6 +70,10 @@ class ComposerStaticInit3d80e700841ab59d16fa8cf88fa4b442
         'c' => 
         array (
             'cweagans\\Composer\\' => 18,
+        ),
+        'a' => 
+        array (
+            'apimatic\\jsonmapper\\' => 20,
         ),
         'W' => 
         array (
@@ -122,7 +126,7 @@ class ComposerStaticInit3d80e700841ab59d16fa8cf88fa4b442
             'Symfony\\Cmf\\Component\\Routing\\' => 30,
             'Symfony\\Bridge\\PsrHttpMessage\\' => 30,
             'Symfony\\Bridge\\PhpUnit\\' => 23,
-            'SquareConnect\\' => 14,
+            'Square\\' => 7,
             'SlevomatCodingStandard\\' => 23,
             'SensioLabs\\Security\\' => 20,
             'SelfUpdate\\' => 11,
@@ -269,6 +273,10 @@ class ComposerStaticInit3d80e700841ab59d16fa8cf88fa4b442
         'cweagans\\Composer\\' => 
         array (
             0 => __DIR__ . '/..' . '/cweagans/composer-patches/src',
+        ),
+        'apimatic\\jsonmapper\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/apimatic/jsonmapper/src',
         ),
         'Webmozart\\PathUtil\\' => 
         array (
@@ -430,9 +438,9 @@ class ComposerStaticInit3d80e700841ab59d16fa8cf88fa4b442
         array (
             0 => __DIR__ . '/..' . '/symfony/phpunit-bridge',
         ),
-        'SquareConnect\\' => 
+        'Square\\' => 
         array (
-            0 => __DIR__ . '/..' . '/square/connect/lib',
+            0 => __DIR__ . '/..' . '/square/square/src',
         ),
         'SlevomatCodingStandard\\' => 
         array (
@@ -787,6 +795,13 @@ class ComposerStaticInit3d80e700841ab59d16fa8cf88fa4b442
     );
 
     public static $prefixesPsr0 = array (
+        'U' => 
+        array (
+            'Unirest\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/apimatic/unirest-php/src',
+            ),
+        ),
         'T' => 
         array (
             'Twig_' => 

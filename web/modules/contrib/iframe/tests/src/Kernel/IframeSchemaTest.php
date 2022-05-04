@@ -61,6 +61,7 @@ class IframeSchemaTest extends EntityKernelTestBase {
     $field->setDefaultValue([
       [
         'title' => 'Iframe title',
+        'headerlevel' => '3',
         'class' => 'iframe-class',
         'height' => '768',
         'width' => '1024',
@@ -92,6 +93,7 @@ class IframeSchemaTest extends EntityKernelTestBase {
       'settings' => [
         'width' => '1024',
         'height' => '768',
+        'headerlevel' => '3',
         'class' => 'iframe-class',
         'expose_class' => 0,
         'frameborder' => '0',
@@ -132,6 +134,7 @@ class IframeSchemaTest extends EntityKernelTestBase {
       'settings' => [
         'width' => '1024',
         'height' => '768',
+        'headerlevel' => '3',
         'class' => 'iframe-class',
         'expose_class' => 0,
         'frameborder' => '0',
@@ -162,6 +165,7 @@ class IframeSchemaTest extends EntityKernelTestBase {
       'settings' => [
         'url' => '',
         'title' => '',
+        'headerlevel' => '3',
         'width' => '',
         'height' => '',
         'class' => '',
@@ -206,6 +210,7 @@ class IframeSchemaTest extends EntityKernelTestBase {
       'settings' => [
         'url' => '',
         'title' => '',
+        'headerlevel' => '3',
         'width' => '',
         'height' => '',
         'class' => '',
@@ -228,6 +233,7 @@ class IframeSchemaTest extends EntityKernelTestBase {
       'settings' => [
         'url' => '',
         'title' => '',
+        'headerlevel' => '3',
         'width' => '',
         'height' => '',
         'class' => '',

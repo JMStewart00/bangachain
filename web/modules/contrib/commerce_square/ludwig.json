@@ -1,8 +1,8 @@
 {
     "require": {
-        "square/connect": {
-            "version" : "v2.20190925.0",
-            "url": "https://github.com/square/connect-php-sdk/archive/release/2.20190925.0.zip"
+        "square/square-php-sdk": {
+            "version" : "17.2.0.20220216",
+            "url": "https://github.com/square/square-php-sdk/archive/refs/tags/17.2.0.20220216.zip"
         }
     }
 }

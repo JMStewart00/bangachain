@@ -67,8 +67,9 @@
   transition-delay: 0s;
 }
 
+/* Ensures to not conflict with blazy.media.css. */
 .media:hover .media__icon--litebox,
-.media--switch .media__image {
+a .media--switch img.media__element {
   opacity: 1;
   visibility: visible;
 }

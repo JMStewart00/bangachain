@@ -4,7 +4,6 @@ namespace Drupal\blazy\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\blazy\Dejavu\BlazyVideoBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -13,14 +12,18 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Plugin implementation of the 'Blazy Video' to get VEF videos.
  *
+ * This file is no longer used nor needed, and will be removed at 3.x.
+ * VEF will continue working via BlazyOEmbed instead.
+ *
+ * BVEF can take over this file to be compat with Blazy 3.x rather than keeping
+ * 1.x debris. Also to adopt core OEmbed security features at ease.
+ *
  * @todo remove prior to full release. This means Slick Video which depends
  * on VEF is deprecated for main Slick at Blazy 8.2.x with core Media only.
  * @todo make is useful for local video instead?
- * @todo remove ContainerFactoryPluginInterface since D8.8 has it by default.
  */
-class BlazyVideoFormatter extends BlazyVideoBase implements ContainerFactoryPluginInterface {
+class BlazyVideoFormatter extends BlazyVideoBase {
 
-  use BlazyFormatterTrait;
   use BlazyFormatterViewTrait;
 
   /**
@@ -42,46 +45,65 @@ class BlazyVideoFormatter extends BlazyVideoBase implements ContainerFactoryPlug
    * Build the blazy elements.
    */
   public function buildElements(array &$build, $items) {
-    $settings = $build['settings'];
-    $settings['bundle'] = 'remote_video';
-    $settings['media_source'] = 'video_embed_field';
-    $vef = $this->vefProviderManager();
+    $settings = &$build['settings'];
+    $blazies  = $settings['blazies'];
+    $entity   = $items->getEntity();
 
-    if (!$vef) {
+    if (!($vef = $this->vefProviderManager())) {
       return;
     }
 
-    foreach ($items as $delta => $item) {
-      $settings['input_url'] = strip_tags($item->value);
-      $settings['delta'] = $delta;
+    // @todo remove $settings after being migrated into $blazies.
+    $settings['bundle'] = 'remote_video';
+    $settings['media_source'] = 'video_embed_field';
 
-      if (empty($settings['input_url']) || !($provider = $vef->loadProviderFromInput($settings['input_url']))) {
+    // Update the settings, hard-coded, terracota.
+    $blazies->set('media.bundle', 'remote_video')
+      ->set('media.source', 'video_embed_field');
+
+    foreach ($items as $delta => $item) {
+      $input = strip_tags($item->value);
+
+      if (empty($input) || !($provider = $vef->loadProviderFromInput($input))) {
         continue;
       }
 
       // Ensures thumbnail is available.
       $provider->downloadThumbnail();
-      $settings['uri'] = $provider->getLocalThumbnailUri();
+      $settings['uri'] = $uri = $provider->getLocalThumbnailUri();
 
-      $this->blazyOembed->build($settings);
+      $blazy = $blazies->reset($settings);
+      $blazy->set('delta', $delta)
+        ->set('image.uri', $uri)
+        ->set('media.input_url', $input);
 
-      $box = ['item' => $item, 'settings' => $settings];
+      /*
+      // Too risky, but if you got lucky.
+      // if ($medias = $this->blazyManager->loadByProperties([
+      // 'field_media_oembed_video.value' => $input,
+      // ], 'media', TRUE)) {
+      // if ($media = reset($medias)) {
+      // $entity = $media;
+      // }
+      // }
+       */
+      $data = ['item' => NULL, 'settings' => $settings];
+      $this->blazyOembed->build($data, $entity);
 
       // Image with responsive image, lazyLoad, and lightbox supports.
-      $build[$delta] = $this->formatter->getBlazy($box);
-      unset($box);
+      $build[$delta] = $this->formatter->getBlazy($data, $delta);
+      unset($data);
     }
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getScopedFormElements() {
+  protected function getPluginScopes(): array {
     return [
       'fieldable_form' => TRUE,
       'multimedia'     => TRUE,
-      'view_mode'      => $this->viewMode,
-    ] + parent::getScopedFormElements();
+    ] + parent::getPluginScopes();
   }
 
   /**

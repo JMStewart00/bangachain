@@ -107,7 +107,7 @@
   .block-nativegrid.is-b-native .grid picture,
   .block-nativegrid.is-b-native .grid video,
   .block-nativegrid.is-b-native .grid .media,
-  .block-nativegrid.is-b-native .grid .media__image,
+  .block-nativegrid.is-b-native .grid img.media__element,
   .block-nativegrid.is-b-native .grid .slide__media {
     height: inherit;
     /* Aspect ratio is irrelevant for gapless grid.*/

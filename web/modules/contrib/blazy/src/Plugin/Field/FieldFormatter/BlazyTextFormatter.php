@@ -26,56 +26,43 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class BlazyTextFormatter extends FormatterBase {
 
   use BlazyFormatterTrait;
+  use BlazyFormatterViewBaseTrait;
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    /**
-     * @var \Drupal\blazy\Plugin\Field\FieldFormatter\BlazyTextFormatter
-     */
     $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
-    $instance->formatter = $container->get('blazy.manager');
-
-    return $instance;
+    return self::injectServices($instance, $container, 'text');
   }
 
   /**
    * {@inheritdoc}
    */
   public static function defaultSettings() {
-    return BlazyDefault::baseSettings() + BlazyDefault::gridSettings();
+    return BlazyDefault::textSettings();
   }
 
   /**
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
-    // Early opt-out if the field is empty.
-    if ($items->isEmpty()) {
-      return [];
-    }
+    return $this->baseViewElements($items, $langcode);
+  }
 
-    // Build the settings.
-    $settings             = $this->buildSettings();
-    $settings['lazy']     = FALSE;
-    $settings['langcode'] = $langcode;
-    $settings['_grid']    = $settings['_unblazy'] = TRUE;
+  /**
+   * Build the grid text elements.
+   */
+  public function buildElements(array &$build, $items) {
+    $settings = &$build['settings'];
+    $blazies  = $settings['blazies'];
 
-    // The ProcessedText element already handles cache context & tag bubbling.
-    // @see \Drupal\filter\Element\ProcessedText::preRenderText()
-    $build = ['settings' => $settings];
-    foreach ($items as $item) {
-      $build[] = [
-        '#type'     => 'processed_text',
-        '#text'     => $item->value,
-        '#format'   => $item->format,
-        '#langcode' => $item->getLangcode(),
-      ];
-    }
+    $blazies->set('is.grid', TRUE)
+      ->set('is.unblazy', TRUE)
+      ->set('is.text', TRUE)
+      ->set('lazy', []);
 
-    // Pass to manager for easy updates to all Blazy formatters.
-    return $this->formatter->build($build);
+    $build += $this->getElements($items);
   }
 
   /**
@@ -88,9 +75,33 @@ class BlazyTextFormatter extends FormatterBase {
   }
 
   /**
-   * Defines the scope for the form elements.
+   * Returns the Blazy elements, also for sub-modules to re-use.
    */
-  public function getScopedFormElements() {
+  protected function getElements($items): array {
+    $elements = [];
+    // The ProcessedText element already handles cache context & tag bubbling.
+    // @see \Drupal\filter\Element\ProcessedText::preRenderText()
+    foreach ($items as $item) {
+      if (empty($item->value)) {
+        continue;
+      }
+
+      $element = [
+        '#type'     => 'processed_text',
+        '#text'     => $item->value,
+        '#format'   => $item->format,
+        '#langcode' => $item->getLangcode(),
+      ];
+
+      $elements[] = $element;
+    }
+    return $elements;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getPluginScopes(): array {
     return [
       'grid_form'        => TRUE,
       'grid_required'    => TRUE,
@@ -98,7 +109,7 @@ class BlazyTextFormatter extends FormatterBase {
       'no_layouts'       => TRUE,
       'responsive_image' => FALSE,
       'style'            => TRUE,
-    ] + $this->getCommonScopedFormElements();
+    ];
   }
 
   /**

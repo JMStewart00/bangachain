@@ -73,6 +73,10 @@ Field Settings
 7. Token support can be set to "no tokens allowed",
    "tokens only in title field", or "tokens for title and URL field".
    The Token module must be enabled for some of this functionality.
+8. Header level - for accessibily:
+   The iframe title defaults to an h3. Depending on where this appears in the site,
+   this might be the incorrect heading level to maintain proper accessible header
+   navigation (if its the first header fo the site it should be a h1).
 
 
 MAINTAINERS

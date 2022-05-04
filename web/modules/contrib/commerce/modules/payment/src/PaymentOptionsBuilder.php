@@ -89,9 +89,9 @@ class PaymentOptionsBuilder implements PaymentOptionsBuilderInterface {
       }
     }
 
-    // 3) Add options to create new stored payment methods of supported types.
     $payment_method_type_counts = [];
-    // Count how many new payment method options will be built per gateway.
+    // Count how many new payment method options will be built per gateway
+    // with payment methods.
     foreach ($payment_gateways_with_payment_methods as $payment_gateway) {
       $payment_method_types = $payment_gateway->getPlugin()->getPaymentMethodTypes();
 
@@ -105,41 +105,40 @@ class PaymentOptionsBuilder implements PaymentOptionsBuilderInterface {
       }
     }
 
-    foreach ($payment_gateways_with_payment_methods as $payment_gateway) {
-      $payment_gateway_plugin = $payment_gateway->getPlugin();
-      $payment_method_types = $payment_gateway_plugin->getPaymentMethodTypes();
+    foreach ($payment_gateways as $payment_gateway_id => $payment_gateway) {
+      // 3) Add options to create new stored payment methods of supported types.
+      if (isset($payment_gateways_with_payment_methods[$payment_gateway_id])) {
+        $payment_gateway_plugin = $payment_gateway->getPlugin();
+        $payment_method_types = $payment_gateway_plugin->getPaymentMethodTypes();
 
-      foreach ($payment_method_types as $payment_method_type_id => $payment_method_type) {
-        $option_id = 'new--' . $payment_method_type_id . '--' . $payment_gateway->id();
-        $option_label = $payment_method_type->getCreateLabel();
-        // If there is more than one option for this payment method type,
-        // append the payment gateway label to avoid duplicate option labels.
-        if ($payment_method_type_counts[$payment_method_type_id] > 1) {
-          $option_label = $this->t('@payment_method_label (@payment_gateway_label)', [
-            '@payment_method_label' => $payment_method_type->getCreateLabel(),
-            '@payment_gateway_label' => $payment_gateway_plugin->getDisplayLabel(),
+        foreach ($payment_method_types as $payment_method_type_id => $payment_method_type) {
+          $option_id = 'new--' . $payment_method_type_id . '--' . $payment_gateway->id();
+          $option_label = $payment_method_type->getCreateLabel();
+          // If there is more than one option for this payment method type,
+          // append the payment gateway label to avoid duplicate option labels.
+          if ($payment_method_type_counts[$payment_method_type_id] > 1) {
+            $option_label = $this->t('@payment_method_label (@payment_gateway_label)', [
+              '@payment_method_label' => $payment_method_type->getCreateLabel(),
+              '@payment_gateway_label' => $payment_gateway_plugin->getDisplayLabel(),
+            ]);
+          }
+
+          $options[$option_id] = new PaymentOption([
+            'id' => $option_id,
+            'label' => $option_label,
+            'payment_gateway_id' => $payment_gateway->id(),
+            'payment_method_type_id' => $payment_method_type_id,
           ]);
         }
-
-        $options[$option_id] = new PaymentOption([
-          'id' => $option_id,
-          'label' => $option_label,
-          'payment_gateway_id' => $payment_gateway->id(),
-          'payment_method_type_id' => $payment_method_type_id,
+      }
+      // 4) Add options for the remaining gateways.
+      else {
+        $options[$payment_gateway_id] = new PaymentOption([
+          'id' => $payment_gateway_id,
+          'label' => $payment_gateway->getPlugin()->getDisplayLabel(),
+          'payment_gateway_id' => $payment_gateway_id,
         ]);
       }
-    }
-
-    // 4) Add options for the remaining gateways.
-    /** @var \Drupal\commerce_payment\Entity\PaymentGatewayInterface[] $other_payment_gateways */
-    $other_payment_gateways = array_diff_key($payment_gateways, $payment_gateways_with_payment_methods);
-    foreach ($other_payment_gateways as $payment_gateway) {
-      $payment_gateway_id = $payment_gateway->id();
-      $options[$payment_gateway_id] = new PaymentOption([
-        'id' => $payment_gateway_id,
-        'label' => $payment_gateway->getPlugin()->getDisplayLabel(),
-        'payment_gateway_id' => $payment_gateway_id,
-      ]);
     }
 
     return $options;

@@ -4,7 +4,7 @@ namespace Drupal\Tests\blazy\Kernel\Views;
 
 use Drupal\Core\Form\FormState;
 use Drupal\views\Views;
-use Drupal\blazy\BlazyViews;
+use Drupal\blazy\Theme\BlazyViews;
 
 /**
  * Test Blazy Views integration.

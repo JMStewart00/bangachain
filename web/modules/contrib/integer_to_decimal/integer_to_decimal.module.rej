@@ -1,0 +1,43 @@
+--- integer_to_decimal.module
++++ integer_to_decimal.module
+@@ -35,14 +35,17 @@ function integer_to_decimal_form_alter(&$form, FormStateInterface $form_state, $
+         '#title' => 'Precison settings for conversion from Integer to decimal.',
+       ];
+ 
+-      $form['field_updater_settings']['content_type'] = [
++      $bundles = $entity->getBundles();
++      $entity_type = $entity->getTargetEntityTypeId();
++
++      $form['field_updater_settings']['entity_type'] = [
+         '#type' => 'hidden',
+-        '#value' => EntityFromUri::currentUriEntity(),
++        '#value' => $entity_type,
+       ];
+ 
+-      $form['field_updater_settings']['field'] = [
++      $form['field_updater_settings']['bundles'] = [
+         '#type' => 'hidden',
+-        '#value' => EntityFromUri::currentUriField(),
++        '#value' => serialize($bundles),
+       ];
+ 
+       $form['field_updater_settings']['convert'] = [
+@@ -87,15 +90,13 @@ function integer_to_decimal_field_storage_config_edit_form(array $form, FormStat
+     $data = $config->getEditable('field.storage.' . $entity->id())
+       ->getRawData();
+ 
++    $entity_type = $data['entity_type'];
+     $field_name = $data['field_name'];
+-    $field = $form_state->getValue('field');
+     $precision = $form_state->getValue('precision');
+     $scale = $form_state->getValue('scale');
+-    $bundle = $form_state->getValue('content_type');
++    $bundles = unserialize($form_state->getValue('bundles'));
+ 
+     $fieldUpdaterService = Drupal::service('field_updater');
+-    $fieldUpdaterService->fieldUpdater($field_name, 'decimal', $bundle, $precision, $scale);
+-
+-    //Drupal::service('mess''Successfully converted from integer to decimal');
++    $fieldUpdaterService->fieldUpdater($field_name, 'decimal',$entity_type, $bundles, $precision, $scale);
+   }
+-}+}

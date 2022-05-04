@@ -117,7 +117,13 @@ button.media__icon--close {
   visibility: visible;
 }
 
+/* Ensures to not conflict with blazy.lightbox.css. */
+.media--player.is-playing img.media__element {
+  transition: opacity .4s, visibility .4s;
+}
+
 .media--switch.is-playing img,
+.media--switch.is-playing img.media__element,
 .media--switch.is-playing .media__icon--play,
 .media--switch.is-playing:hover .media__icon--play {
   opacity: 0;

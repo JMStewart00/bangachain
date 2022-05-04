@@ -198,6 +198,11 @@ function commerce_promotion_update_8208() {
     ->setLabel(t('Created'))
     ->setTranslatable(TRUE)
     ->setDescription(t('The time when the promotion was created.'));
+  $has_content_translation_field = $definition_update_manager
+    ->getFieldStorageDefinition('content_translation_created', 'commerce_promotion');
+  if ($has_content_translation_field) {
+    $created->setInitialValueFromField('content_translation_created');
+  }
   $definition_update_manager->installFieldStorageDefinition('created', 'commerce_promotion', 'commerce_promotion', $created);
 
   $changed = BaseFieldDefinition::create('changed')
@@ -205,17 +210,32 @@ function commerce_promotion_update_8208() {
     ->setTranslatable(TRUE)
     ->setDescription(t('The time when the promotion was last edited.'))
     ->setDisplayConfigurable('view', TRUE);
+  $has_content_translation_field = $definition_update_manager
+    ->getFieldStorageDefinition('content_translation_changed', 'commerce_promotion');
+  if ($has_content_translation_field) {
+    $created->setInitialValueFromField('content_translation_changed');
+  }
   $definition_update_manager->installFieldStorageDefinition('changed', 'commerce_promotion', 'commerce_promotion', $changed);
 
   $created = BaseFieldDefinition::create('created')
     ->setLabel(t('Created'))
     ->setDescription(t('The time when the coupon was created.'));
+  $has_content_translation_field = $definition_update_manager
+    ->getFieldStorageDefinition('content_translation_created', 'commerce_promotion_coupon');
+  if ($has_content_translation_field) {
+    $created->setInitialValueFromField('content_translation_created');
+  }
   $definition_update_manager->installFieldStorageDefinition('created', 'commerce_promotion_coupon', 'commerce_promotion', $created);
 
   $changed = BaseFieldDefinition::create('changed')
     ->setLabel(t('Changed'))
     ->setDescription(t('The time when the coupon was last edited.'))
     ->setDisplayConfigurable('view', TRUE);
+  $has_content_translation_field = $definition_update_manager
+    ->getFieldStorageDefinition('content_translation_changed', 'commerce_promotion_coupon');
+  if ($has_content_translation_field) {
+    $created->setInitialValueFromField('content_translation_changed');
+  }
   $definition_update_manager->installFieldStorageDefinition('changed', 'commerce_promotion_coupon', 'commerce_promotion', $changed);
 }
 
@@ -338,4 +358,19 @@ function commerce_promotion_update_8212() {
 
   $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
   $definition_update_manager->installFieldStorageDefinition('require_coupon', 'commerce_promotion', 'commerce_promotion', $definition);
+}
+
+/**
+ * Uninstall the created / changed fields added by content_translation.
+ */
+function commerce_promotion_update_8213() {
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+
+  foreach (['content_translation_created', 'content_translation_changed'] as $field_name) {
+    foreach (['commerce_promotion', 'commerce_promotion_coupon'] as $entity_type_id) {
+      if ($field_storage_definition = $definition_update_manager->getFieldStorageDefinition($field_name, $entity_type_id)) {
+        $definition_update_manager->uninstallFieldStorageDefinition($field_storage_definition);
+      }
+    }
+  }
 }

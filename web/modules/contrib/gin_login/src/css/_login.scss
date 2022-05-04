@@ -1,12 +1,37 @@
-body.path-user {
-  .user-form-page {
-    $breakpoint: 800px;
+body.gin-login {
+  $breakpoint: 800px;
 
+  .toolbar-icon-default {
+    text-indent: -999em;
+
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 32px;
+      height: 32px;
+      background-color: var(--colorGinText, #000);
+      mask-image: url(../../images/gin.svg);
+      mask-repeat: no-repeat;
+      mask-position: center center;
+      mask-size: 100% 100%;
+
+      @media (min-width: $breakpoint) {
+        width: 40px;
+        height: 40px;
+      }
+
+      &:hover {
+        background-color: var(--colorGinPrimary, #003cc5);
+      }
+    }
+  }
+
+  .user-form-page {
     display: flex;
     flex-wrap: wrap;
     min-height: 100vh;
     max-height: 100%;
-    background: var(--colorGinLayerBackground);
+    background: var(--colorGinLayerBackground, #fff);
 
     @media (min-width: $breakpoint) {
       flex-wrap: nowrap;
@@ -40,6 +65,7 @@ body.path-user {
       }
 
       img {
+        width: 100%;
         max-height: 40px;
       }
     }
@@ -69,6 +95,7 @@ body.path-user {
     &__page-title {
       font-size: 2rem;
       margin-top: 0;
+      margin-bottom: 1rem;
       width: 100%;
       max-width: 100%;
       text-overflow: unset;

@@ -84,6 +84,7 @@ class MediaBulkConfigForm extends EntityForm implements ContainerInjectionInterf
       '#default_value' => isset($media_types) ? $media_types : [],
       '#size' => 20,
       '#multiple' => TRUE,
+      '#required' => TRUE,
     ];
 
     $form['form_mode'] = [

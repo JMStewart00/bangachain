@@ -2,8 +2,9 @@
 
 namespace Drupal\Tests\blazy\Traits;
 
-use Drupal\Core\Cache\Cache;
 use Drupal\blazy\BlazyDefault;
+use Drupal\blazy\BlazyEntity;
+use Drupal\blazy\Traits\PluginScopesTrait;
 
 /**
  * A Trait common for Blazy Unit tests.
@@ -11,6 +12,7 @@ use Drupal\blazy\BlazyDefault;
 trait BlazyUnitTestTrait {
 
   use BlazyPropertiesTestTrait;
+  use PluginScopesTrait;
 
   /**
    * The formatter settings.
@@ -36,7 +38,11 @@ trait BlazyUnitTestTrait {
       'ratio'           => 'fluid',
       'caption'         => ['alt' => 'alt', 'title' => 'title'],
       'sizes'           => '100w',
-    ] + BlazyDefault::extendedSettings() + BlazyDefault::itemSettings() + $this->getDefaultFieldDefinition();
+    ] + BlazyDefault::extendedSettings()
+      + BlazyDefault::itemSettings()
+      + $this->getDefaultFieldDefinition();
+
+    BlazyEntity::settings($defaults, $this->entity);
 
     return empty($this->formatterSettings) ? $defaults : array_merge($defaults, $this->formatterSettings);
   }
@@ -79,11 +85,10 @@ trait BlazyUnitTestTrait {
    */
   protected function getDefaultFieldDefinition() {
     return [
-      'bundle'            => $this->bundle ?? 'bundle_test',
-      'current_view_mode' => 'default',
-      'entity_type'       => $this->entityType,
-      'field_name'        => $this->testFieldName,
-      'field_type'        => 'image',
+      'bundle'      => $this->bundle ?? 'bundle_test',
+      'entity_type' => $this->entityType,
+      'field_name'  => $this->testFieldName,
+      'field_type'  => 'image',
     ];
   }
 
@@ -93,15 +98,29 @@ trait BlazyUnitTestTrait {
    * @return array
    *   The default field formatter settings.
    */
-  protected function getDefaultFormatterDefinition() {
-    // @todo Will be replaced by `form` array below.
-    $deprecated = [
-      'grid_form'         => TRUE,
-      'image_style_form'  => TRUE,
-      'fieldable_form'    => TRUE,
-      'media_switch_form' => TRUE,
-    ];
+  public function getCommonScopedFormElements() {
+    return ['settings' => $this->getFormatterSettings()]
+      + $this->getDefaultFieldDefinition();
+  }
 
+  /**
+   * Defines the scope for the form elements.
+   *
+   * Since 2.10 sub-modules can forget this, and use self::getPluginScopes().
+   */
+  public function getScopedFormElements() {
+    $scopes = $this->getPluginScopes();
+
+    // @todo remove `$scopes +` at Blazy 3.x.
+    $definitions = $scopes + $this->getCommonScopedFormElements();
+    $definitions['scopes'] = $this->toPluginScopes($scopes);
+    return $definitions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getPluginScopes(): array {
     return [
       'background'        => TRUE,
       'box_captions'      => TRUE,
@@ -119,14 +138,11 @@ trait BlazyUnitTestTrait {
       'target_type'       => 'file',
       'titles'            => ['field_text' => 'Text'],
       'view_mode'         => 'default',
-      'settings'          => $this->getFormatterSettings(),
-      'form'              => [
-        'fieldable',
-        'grid',
-        'image_style',
-        'media_switch',
-      ],
-    ] + $deprecated + $this->getDefaultFieldDefinition();
+      'grid_form'         => TRUE,
+      'image_style_form'  => TRUE,
+      'fieldable_form'    => TRUE,
+      'media_switch_form' => TRUE,
+    ];
   }
 
   /**
@@ -157,8 +173,10 @@ trait BlazyUnitTestTrait {
    *   The field formatter settings.
    */
   protected function getFormatterDefinition() {
-    $defaults = $this->getDefaultFormatterDefinition();
-    return empty($this->formatterDefinition) ? $defaults : array_merge($defaults, $this->formatterDefinition);
+    $defaults = $this->getScopedFormElements();
+
+    return empty($this->formatterDefinition)
+      ? $defaults : array_merge($defaults, $this->formatterDefinition);
   }
 
   /**
@@ -178,28 +196,6 @@ trait BlazyUnitTestTrait {
   }
 
   /**
-   * Return dummy cache metadata.
-   */
-  protected function getCacheMetaData() {
-    $build = [];
-    $suffixes[] = 3;
-    foreach (['contexts', 'keys', 'tags'] as $key) {
-      if ($key == 'contexts') {
-        $cache = ['languages'];
-      }
-      elseif ($key == 'keys') {
-        $cache = ['blazy_image'];
-      }
-      elseif ($key == 'tags') {
-        $cache = Cache::buildTags('file:123', $suffixes, '.');
-      }
-
-      $build['cache_' . $key] = $cache;
-    }
-    return $build;
-  }
-
-  /**
    * Pre render Blazy image.
    *
    * @param array $build
@@ -209,10 +205,13 @@ trait BlazyUnitTestTrait {
    *   The pre_render element.
    */
   protected function doPreRenderImage(array $build = []) {
+    $settings = &$build['settings'];
+    $this->blazyManager->postSettings($settings);
+
     $image = $this->blazyManager->getBlazy($build);
 
-    $image['#build']['settings'] = array_merge($this->getCacheMetaData(), $build['settings']);
-    $image['#build']['item'] = $build['item'];
+    $image['#build']['item'] = empty($image['#build']['item'])
+      ? $build['item'] : $image['#build']['item'];
     return $this->blazyManager->preRenderBlazy($image);
   }
 

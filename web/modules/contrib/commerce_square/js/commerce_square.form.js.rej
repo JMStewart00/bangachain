@@ -1,0 +1,11 @@
+--- js/commerce_square.form.js
++++ js/commerce_square.form.js
+@@ -21,7 +21,7 @@
+   Drupal.behaviors.commerceSquareForm = {
+     attach: function (context) {
+       var settings = drupalSettings.commerceSquare;
+-      if (context === document) {
++      if (typeof settings !== 'undefined' && context === document || $('.square-form').length > 0) {
+         var script = document.createElement('script');
+         var scriptHostname = settings.apiMode === 'sandbox' ? 'squareupsandbox' : 'squareup';
+         script.src = 'https://js.' + scriptHostname + '.com/v2/paymentform';

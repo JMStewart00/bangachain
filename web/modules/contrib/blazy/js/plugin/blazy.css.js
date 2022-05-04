@@ -15,8 +15,7 @@
 
   'use strict';
 
-  var _oProto = Object.prototype;
-  var div = _win.createElement('div');
+  var div = $.create('div');
   var prefixedProps = {};
   var style = div.style;
   var vendorsPrefixes = ['webkit', 'moz', 'ms'];
@@ -132,7 +131,7 @@
     }
 
     for (var key in prop) {
-      if (_oProto.hasOwnProperty.call(key, key)) {
+      if ($.hasProp(prop, key)) {
         this.css(key, prop[key]);
       }
     }
@@ -160,7 +159,7 @@
     }
 
     for (var key in prop) {
-      if (_oProto.hasOwnProperty.call(key, key)) {
+      if ($.hasProp(prop, key)) {
         this.prop(key, prop[key]);
       }
     }

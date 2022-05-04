@@ -7,6 +7,9 @@ commerce_payment.commerce_payment_gateway.plugin.square:
     live_location_id:
       type: string
       label: 'Live Location ID'
+    enable_credit_card_icons:
+      type: boolean
+      label: 'Enable credit card icons'
 
 commerce_square.settings:
   type: config_object

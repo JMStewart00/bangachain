@@ -2,43 +2,18 @@
 
 namespace Drupal\blazy\Plugin\Filter;
 
-use Drupal\Component\Serialization\Json;
-use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\Xss;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\filter\Plugin\FilterBase;
-use Drupal\filter\Render\FilteredMarkup;
 use Drupal\blazy\Blazy;
 use Drupal\blazy\BlazyDefault;
 use Drupal\blazy\Media\BlazyFile;
+use Drupal\blazy\Media\BlazyImage;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides base filter class.
  */
-abstract class BlazyFilterBase extends FilterBase implements BlazyFilterInterface, ContainerFactoryPluginInterface {
-
-  /**
-   * The app root.
-   *
-   * @var string
-   */
-  protected $root;
-
-  /**
-   * The entity field manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
-   */
-  protected $entityFieldManager;
-
-  /**
-   * Filter manager.
-   *
-   * @var \Drupal\filter\FilterPluginManager
-   */
-  protected $filterManager;
+abstract class BlazyFilterBase extends TextFilterBase implements BlazyFilterInterface {
 
   /**
    * The blazy admin service.
@@ -55,45 +30,13 @@ abstract class BlazyFilterBase extends FilterBase implements BlazyFilterInterfac
   protected $blazyOembed;
 
   /**
-   * The blazy manager service.
-   *
-   * @var \Drupal\blazy\BlazyManagerInterface
-   */
-  protected $blazyManager;
-
-  /**
-   * The filter HTML plugin.
-   *
-   * @var \Drupal\filter\Plugin\Filter\FilterHtml
-   */
-  protected $htmlFilter;
-
-  /**
-   * The langcode.
-   *
-   * @var string
-   */
-  protected $langcode;
-
-  /**
-   * The result.
-   *
-   * @var \Drupal\filter\FilterProcessResult
-   */
-  protected $result;
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    $instance = new static($configuration, $plugin_id, $plugin_definition);
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
 
-    $instance->root = $instance->root ?? Blazy::root($container);
-    $instance->entityFieldManager = $instance->entityFieldManager ?? $container->get('entity_field.manager');
-    $instance->filterManager = $instance->filterManager ?? $container->get('plugin.manager.filter');
     $instance->blazyAdmin = $instance->blazyAdmin ?? $container->get('blazy.admin');
     $instance->blazyOembed = $instance->blazyOembed ?? $container->get('blazy.oembed');
-    $instance->blazyManager = $instance->blazyOembed->blazyManager();
 
     return $instance;
   }
@@ -101,46 +44,80 @@ abstract class BlazyFilterBase extends FilterBase implements BlazyFilterInterfac
   /**
    * {@inheritdoc}
    */
-  public function buildImageItem(array &$build, &$node) {
+  public function buildSettings($text) {
+    $settings = &$this->settings;
+    $settings += BlazyDefault::lazySettings();
+
+    Blazy::verify($settings);
+
+    $settings['plugin_id'] = $plugin_id = $this->getPluginId();
+    $settings['id'] = $id = BlazyFilterUtil::getId($plugin_id);
+
+    $definitions = $this->entityFieldManager->getFieldDefinitions('media', 'remote_video');
+    $is_media_library = $definitions && isset($definitions['field_media_oembed_video']);
+
+    $this->preSettings($settings, $text);
+    $this->blazyManager->preSettings($settings);
+
+    $blazies = $settings['blazies'];
+    $blazies->set('is.filter', TRUE)
+      ->set('is.media_library', $is_media_library)
+      ->set('is.unsafe', TRUE)
+      ->set('libs.filter', TRUE);
+
+    $this->postSettings($settings);
+    $this->blazyManager->postSettings($settings);
+
+    $blazies->set('lightbox.gallery_id', $id)
+      ->set('css.id', $id)
+      ->set('filter.plugin_id', $plugin_id);
+
+    return $settings;
+  }
+
+  /**
+   * Returns the faked image item for the image, uploaded or hard-coded.
+   *
+   * @param array $build
+   *   The content array being modified.
+   * @param object $node
+   *   The HTML DOM object.
+   * @param int $delta
+   *   The item index.
+   */
+  protected function buildImageItem(array &$build, &$node, $delta = 0) {
     $settings = &$build['settings'];
-    $item = NULL;
+    $blazies = $settings['blazies'];
+    $src = BlazyFilterUtil::getValidSrc($node);
 
-    // Checks if we have a valid file entity, not hard-coded image URL.
-    // Prioritize data-src for sub-module filters after Blazy.
-    $src = $node->getAttribute('data-src') ?: $node->getAttribute('src');
     if ($src) {
-      // Prevents data URI from screwing up.
-      $data_uri = mb_substr($src, 0, 10) === 'data:image';
-      if (!$data_uri) {
-        // If starts with 2 slashes, it is always external.
-        if (mb_substr($src, 0, 2) === '//') {
-          // We need to query stored SRC, https is enforced.
-          $src = 'https:' . $src;
+      if ($node->tagName == 'img') {
+        $this->getImageItemFromImageSrc($build, $node, $src);
+      }
+      elseif ($node->tagName == 'iframe') {
+        try {
+          // Prevents invalid video URL (404, etc.) from screwing up.
+          $this->getImageItemFromIframeSrc($build, $node, $src);
         }
-
-        if ($node->tagName == 'img') {
-          $item = $this->getImageItemFromImageSrc($settings, $node, $src);
-        }
-        elseif ($node->tagName == 'iframe') {
-          try {
-            // Prevents invalid video URL (404, etc.) from screwing up.
-            $item = $this->getImageItemFromIframeSrc($settings, $node, $src);
-          }
-          catch (\Exception $ignore) {
-            // Do nothing, likely local work without internet, or the site is
-            // down. No need to be chatty on this.
-          }
+        catch (\Exception $ignore) {
+          // Do nothing, likely local work without internet, or the site is
+          // down. No need to be chatty on this.
         }
       }
     }
 
+    $item = $build['item'] ?? NULL;
     if ($item) {
       $item->alt = $node->getAttribute('alt') ?: ($item->alt ?? '');
       $item->title = $node->getAttribute('title') ?: ($item->title ?? '');
 
       // Supports hard-coded image url without file API.
-      if (!empty($item->uri) && empty($item->width)) {
-        if ($data = @getimagesize($item->uri)) {
+      if ($uri = BlazyFile::uri($item)) {
+        $settings['uri'] = $uri;
+        $blazies->set('image.uri', $uri);
+
+        // @todo remove.
+        if (empty($item->width) && $data = @getimagesize($uri)) {
           [$item->width, $item->height] = $data;
         }
       }
@@ -153,6 +130,8 @@ abstract class BlazyFilterBase extends FilterBase implements BlazyFilterInterfac
    * {@inheritdoc}
    */
   public function buildImageCaption(array &$build, &$node) {
+    $settings = &$build['settings'];
+    $blazies = $settings['blazies'];
     $item = $this->getCaptionElement($node);
 
     // Sanitization was done by Caption filter when arriving here, as
@@ -167,54 +146,16 @@ abstract class BlazyFilterBase extends FilterBase implements BlazyFilterInterfac
           $build['captions']['alt'] = ['#markup' => $markup];
         }
 
-        if (isset($settings['box_caption']) && $settings['box_caption'] == 'inline') {
+        if (($settings['box_caption'] ?? '') == 'inline') {
           $settings['box_caption'] = $markup;
         }
+
+        $blazies->set('is.figcaption', TRUE);
 
         $this->cleanupImageCaption($build, $node, $item);
       }
     }
     return $item;
-  }
-
-  /**
-   * Prepares the blazy.
-   */
-  protected function prepareSettings(\DOMElement $node, array &$settings) {
-    if ($check = $node->getAttribute('settings')) {
-      $check = str_replace("'", '"', $check);
-      $check = Json::decode($check);
-      if ($check) {
-        $settings = array_merge($settings, $check);
-      }
-    }
-
-    BlazyFilterUtil::toGrid($node, $settings);
-  }
-
-  /**
-   * Render the output.
-   */
-  protected function render(\DOMElement $node, array $output) {
-    $dom = $node->ownerDocument;
-    $altered_html = $this->blazyManager->getRenderer()->render($output);
-
-    // Load the altered HTML into a new DOMDocument, retrieve element.
-    $updated_nodes = Html::load($altered_html)->getElementsByTagName('body')
-      ->item(0)
-      ->childNodes;
-
-    foreach ($updated_nodes as $updated_node) {
-      // Import the updated from the new DOMDocument into the original
-      // one, importing also the child nodes of the updated node.
-      $updated_node = $dom->importNode($updated_node, TRUE);
-      $node->parentNode->insertBefore($updated_node, $node);
-    }
-
-    // Finally, remove the original blazy node.
-    if ($node->parentNode) {
-      $node->parentNode->removeChild($node);
-    }
   }
 
   /**
@@ -229,6 +170,37 @@ abstract class BlazyFilterBase extends FilterBase implements BlazyFilterInterfac
   }
 
   /**
+   * Returns the fallback caption DOMElement for Splide/ Slick, etc.
+   */
+  protected function getCaptionFallback($node) {
+    $caption = NULL;
+
+    // @todo figure out better traversal with DOM.
+    if ($node->parentNode) {
+      $parent = $node->parentNode->parentNode;
+      if ($parent && $grandpa = $parent->parentNode) {
+        if ($grandpa->parentNode) {
+          $divs = $grandpa->parentNode->getElementsByTagName('div');
+        }
+        else {
+          $divs = $grandpa->getElementsByTagName('div');
+        }
+
+        if ($divs) {
+          foreach ($divs as $div) {
+            $class = $div->getAttribute('class');
+            if ($class == 'blazy__caption') {
+              $caption = $div;
+              break;
+            }
+          }
+        }
+      }
+    }
+    return $caption;
+  }
+
+  /**
    * Cleanups image caption.
    */
   protected function cleanupImageCaption(array &$build, &$node, &$item) {
@@ -238,110 +210,72 @@ abstract class BlazyFilterBase extends FilterBase implements BlazyFilterInterfac
   /**
    * {@inheritdoc}
    */
-  public function getImageItemFromImageSrc(array &$settings, $node, $src) {
-    $data['item'] = NULL;
-    $uuid = $node->hasAttribute('data-entity-uuid') ? $node->getAttribute('data-entity-uuid') : '';
+  public function getImageItemFromImageSrc(array &$build, $node, $src) {
+    $settings = &$build['settings'];
+    $blazies = $settings['blazies'];
+    // Attempts to get the correct URI with hard-coded URL if applicable.
+    $uri = $settings['uri'] = BlazyFile::buildUri($src);
+    $uuid = $node->getAttribute('data-entity-uuid');
+    $blazies->set('entity.uuid', $uuid);
+
+    $file = BlazyFile::item(NULL, $settings);
 
     // Uploaded image has UUID with file API.
-    if ($uuid && $file = $this->blazyManager->getEntityRepository()->loadEntityByUuid('file', $uuid)) {
-      $data = $this->blazyOembed->getImageItem($file);
-      if (isset($data['settings'])) {
-        $settings = array_merge($settings, $data['settings']);
-        $settings['entity_uuid'] = $uuid;
+    if (BlazyFile::isFile($file)) {
+      $uuid = $uuid ?: $file->uuid();
+
+      if ($item = BlazyImage::fromAny($file, $settings)) {
+        $blazies->set('entity.uuid', $uuid);
+        $build['item'] = $item;
       }
     }
     else {
       // Manually hard-coded image has no UUID, nor file API.
-      $settings['uri'] = $src;
+      // URI validity is not crucial, URL is the bare minimum for Blazy to work.
+      $settings['uri'] = $uri ?: $src;
 
-      // Attempts to get the correct URI with hard-coded URL if applicable.
-      if ($uri = BlazyFile::buildUri($src)) {
-        $settings['uri'] = $uri;
-        $data['item'] = Blazy::image($settings);
+      if ($uri) {
+        $build['item'] = BlazyImage::fake($settings);
       }
       else {
         // At least provide root URI to figure out image dimensions.
         $settings['uri_root'] = mb_substr($src, 0, 4) === 'http' ? $src : $this->root . $src;
       }
     }
-    return $data['item'];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getImageItemFromIframeSrc(array &$settings, &$node, $src) {
+  public function getImageItemFromIframeSrc(array &$build, &$node, $src) {
+    $settings = &$build['settings'];
+    $blazies = $settings['blazies'];
+
     // Iframe with data: alike scheme is a serious kidding, strip it earlier.
-    $settings['input_url'] = $src;
+    $blazies->set('media.input_url', $src);
     $this->blazyOembed->checkInputUrl($settings);
-    $data['item'] = NULL;
 
     // @todo figure out to not hard-code `field_media_oembed_video`.
-    if (!empty($settings['is_media_library'])) {
-      $media = $this->blazyManager->getEntityTypeManager()->getStorage('media')->loadByProperties(['field_media_oembed_video' => $settings['input_url']]);
+    $media = NULL;
+    if ($src && $blazies->is('media_library')) {
+      $media = $this->blazyManager->loadByProperties([
+        'field_media_oembed_video' => $src,
+      ], 'media', TRUE);
+
       $media = reset($media);
     }
 
-    // We have media entity.
-    if (isset($media) && $media) {
-      $data['settings'] = $settings;
-      $this->blazyOembed->getMediaItem($data, $media);
-
-      // Update data with local image.
-      $settings = array_merge($settings, $data['settings']);
-    }
-    // Attempts to build safe embed URL directly from oEmbed resource.
-    else {
-      $data['item'] = $this->blazyOembed->getExternalImageItem($settings);
-
-      // Runs after type, width and height set, if any, to not recheck them.
-      $this->blazyOembed->build($settings);
-    }
-    return $data['item'];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function buildSettings($text) {
-    $settings = $this->settings + BlazyDefault::lazySettings();
-    $definitions = $this->entityFieldManager->getFieldDefinitions('media', 'remote_video');
-
-    $settings['_check_protocol'] = TRUE;
-    $settings['plugin_id'] = $plugin_id = $this->getPluginId();
-    $settings['id'] = $settings['gallery_id'] = BlazyFilterUtil::getId($plugin_id);
-    $settings['is_media_library'] = $definitions && isset($definitions['field_media_oembed_video']);
-    $settings['_resimage'] = $this->blazyManager->getModuleHandler()->moduleExists('responsive_image');
-
-    if (isset($settings['hybrid_style']) && $style = $settings['hybrid_style']) {
-      if ($settings['_resimage']
-        && $settings['resimage'] = $this->blazyManager->entityLoad($style, 'responsive_image_style')) {
-        $settings['responsive_image_style'] = $style;
-      }
-      else {
-        $settings['image_style'] = $style;
-      }
-    }
-
-    if (!isset($this->htmlFilter)) {
-      $this->htmlFilter = $this->filterManager->createInstance('filter_html', [
-        'settings' => [
-          'allowed_html' => '<a href hreflang target rel> <em> <strong> <b> <i> <cite> <code> <br>',
-          'filter_html_help' => FALSE,
-          'filter_html_nofollow' => FALSE,
-        ],
-      ]);
-    }
-    $this->blazyManager->getCommonSettings($settings);
-    return $settings;
+    // Runs after type, width and height set, if any, to not recheck them.
+    $this->blazyOembed->build($build, $media);
   }
 
   /**
    * Provides the grid item attributes, and caption, if any.
    */
-  protected function buildItemAttributes(array &$build, $node) {
+  protected function buildItemAttributes(array &$build, $node, $delta = 0) {
     $sets = &$build['settings'];
-    $sets['_blazy_tag'] = TRUE;
+    $blazies = $sets['blazies'];
+    $blazies->set('is.blazy_tag', TRUE);
 
     if ($caption = $node->getAttribute('caption')) {
       $build['captions']['alt'] = ['#markup' => $this->filterHtml($caption)];
@@ -359,50 +293,69 @@ abstract class BlazyFilterBase extends FilterBase implements BlazyFilterInterfac
   }
 
   /**
-   * {@inheritdoc}
+   * Returns the item settings for the current $node.
+   *
+   * @param array $build
+   *   The settings being modified.
+   * @param object $node
+   *   The HTML DOM object.
+   * @param int $delta
+   *   The item index.
    */
-  public function buildItemSettings(array &$build, $node) {
+  protected function buildItemSettings(array &$build, $node, $delta = 0) {
     $settings = &$build['settings'];
+    $blazies = $settings['blazies'];
+
     // Set an image style based on node data properties.
     // See https://www.drupal.org/project/drupal/issues/2061377,
     // https://www.drupal.org/project/drupal/issues/2822389, and
     // https://www.drupal.org/project/inline_responsive_images.
-    $settings['uri'] = $settings['image_url'] = '';
-    if ($image_style = $node->getAttribute('data-image-style')) {
-      $settings['image_style'] = $image_style;
+    $update = FALSE;
+    if ($style = $node->getAttribute('data-image-style')) {
+      $update = TRUE;
+      $settings['image_style'] = $style;
     }
 
-    if (!empty($settings['_resimage'])
-      && $resimage_style = $node->getAttribute('data-responsive-image-style')) {
-      $settings['responsive_image_style'] = $resimage_style;
-      $settings['resimage'] = $this->blazyManager->entityLoad($resimage_style, 'responsive_image_style');
+    if ($blazies->is('resimage')
+      && $style = $node->getAttribute('data-responsive-image-style')) {
+      $update = TRUE;
+      $settings['responsive_image_style'] = $style;
     }
 
-    $settings['width'] = $node->getAttribute('width');
-    $settings['height'] = $node->getAttribute('height');
-    $settings['media_switch'] = empty($settings['media_switch']) ? $this->settings['media_switch'] : $settings['media_switch'];
+    foreach (['width', 'height'] as $key) {
+      if ($value = $node->getAttribute($key)) {
+        $settings[$key] = $value;
+        $blazies->set('image.' . $key, $value);
+      }
+    }
 
-    // Checks for [Responsive] image styles at individual items.
-    BlazyFile::imageStyles($settings, TRUE);
+    if ($update) {
+      $blazies->set('is.multistyle', TRUE);
+      // Checks for image styles at individual items, normally set at container.
+      // Responsive image is at item level due to requiring URI detection.
+      BlazyImage::styles($settings, TRUE);
+    }
   }
 
   /**
-   * Return sanitized caption, stolen from Filter caption.
+   * Build the individual item content.
+   *
+   * @param array $build
+   *   The content array being modified.
+   * @param object $node
+   *   The HTML DOM object.
+   * @param int $delta
+   *   The item index.
    */
-  protected function filterHtml($text) {
-    // Read the data-caption attribute's value, then delete it.
-    $caption = Html::escape($text);
+  protected function buildItemContent(array &$build, $node, $delta = 0) {
+    // Provides individual item settings.
+    $this->buildItemSettings($build, $node, $delta);
 
-    // Sanitize caption: decode HTML encoding, limit allowed HTML tags; only
-    // allow inline tags that are allowed by default, plus <br>.
-    $caption = Html::decodeEntities($caption);
-    $filtered_caption = $this->htmlFilter->process($caption, $this->langcode);
+    // Extracts image item from SRC attribute.
+    $this->buildImageItem($build, $node, $delta);
 
-    if (isset($this->result)) {
-      $this->result->addCacheableDependency($filtered_caption);
-    }
-
-    return FilteredMarkup::create($filtered_caption->getProcessedText());
+    // Extracts image caption if available.
+    $this->buildImageCaption($build, $node);
   }
 
   /**
@@ -429,7 +382,9 @@ abstract class BlazyFilterBase extends FilterBase implements BlazyFilterInterfac
       }
     }
 
-    $styles = $this->blazyAdmin->getResponsiveImageOptions() + $this->blazyAdmin->getEntityAsOptions('image_style');
+    $styles = $this->blazyAdmin->getResponsiveImageOptions()
+      + $this->blazyAdmin->getEntityAsOptions('image_style');
+
     $form['hybrid_style'] = [
       '#type' => 'select',
       '#title' => $this->t('(Responsive) image style'),
@@ -457,6 +412,16 @@ abstract class BlazyFilterBase extends FilterBase implements BlazyFilterInterfac
       '#default_value' => $this->settings['box_caption'] ?? '',
       '#description' => $this->t('Automatic will search for Alt text first, then Title text. <br>Image styles only work for uploaded images, not hand-coded ones. Caption filter will use <code>data-caption</code> normally managed by Caption filter.'),
     ];
+  }
+
+  /**
+   * Extracts setting from attributes.
+   *
+   * @todo deprecated at 2.9 and removed from 3.x. Use
+   * self::extractSettings() instead.
+   */
+  protected function prepareSettings(\DOMElement $node, array &$settings) {
+    $this->extractSettings($node, $settings);
   }
 
 }

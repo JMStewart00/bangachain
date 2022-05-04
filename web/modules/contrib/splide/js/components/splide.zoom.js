@@ -47,11 +47,17 @@
       var cw = el.dataset.sCw;
       var ch = el.dataset.sCh;
 
-      var eh = _ds.attr(el, 'height', oh);
-      var ew = _ds.attr(el, 'width', ow);
+      var eh = $.attr(el, 'height', oh);
+      var ew = $.attr(el, 'width', ow);
 
       el.style.width = (fit ? ew : cw) + 'px';
       el.style.height = (fit ? eh : ch) + 'px';
+
+      var picture = $.closest(el, 'picture');
+      if ($.isElm(picture)) {
+        picture.style.width = (fit ? ew : cw) + 'px';
+        picture.style.height = (fit ? eh : ch) + 'px';
+      }
     }
 
     return {
@@ -65,7 +71,7 @@
         }
 
         Splide.on('mounted.spz', function () {
-          _win.setTimeout(function () {
+          setTimeout(function () {
             me.wheelZoom();
           }, 500);
         });
@@ -80,8 +86,11 @@
         Splide.on('inactive.spz', function (slide) {
           me.currSlide = null;
           me.toogleClass(false);
-          var oldImg = slide.slide.querySelector('.' + _isZoomable);
-          me.scale(false, oldImg);
+          var oldImg = $.find(slide.slide, '.' + _isZoomable);
+
+          if ($.isElm(oldImg)) {
+            me.scale(false, oldImg);
+          }
         });
 
         me.dragon();
@@ -90,12 +99,12 @@
       wheelZoom: function () {
         var me = this;
 
-        _targets = root.querySelectorAll(zoomTarget);
+        _targets = $.findAll(root, zoomTarget);
 
         if (_targets.length) {
-          $.forEach(_targets, function (el) {
-            var img = el.querySelector('.' + _isZoomable);
-            if (img) {
+          $.each(_targets, function (el) {
+            var img = $.find(el, '.' + _isZoomable);
+            if ($.isElm(img)) {
               me.scale(false, img);
               me.bindWheel(el, true, me.zoom.bind(me));
             }
@@ -104,7 +113,7 @@
       },
 
       bindWheel: function (el, bind, callback) {
-        $[bind ? 'bindEvent' : 'unbindEvent'](el, 'wheel', callback, {
+        $[bind ? 'on' : 'off'](el, 'wheel', callback, {
           passive: true
         });
       },
@@ -156,11 +165,11 @@
 
       prepare: function () {
         var me = this;
-        var elms = _doc.querySelectorAll('.' + _isZoomable);
+        var elms = $.findAll(_doc, '.' + _isZoomable);
 
         if (elms.length) {
-          $.forEach(elms, function (el) {
-            if (el.complete) {
+          $.each(elms, function (el) {
+            if ($.isDecoded(el)) {
               me.fit(el);
             }
             else {
@@ -170,18 +179,18 @@
         }
 
         if (me.currSlide) {
-          _target = me.currSlide.slide.querySelector(zoomTarget);
-          if (_target !== null) {
-            _img = _target.querySelector('.' + _isZoomable);
+          _target = $.find(me.currSlide.slide, zoomTarget);
+          if ($.isElm(_target)) {
+            _img = $.find(_target, '.' + _isZoomable);
           }
         }
       },
 
       zoomRoot: function () {
-        if (_zoomRoot === null && zoomRoot) {
-          _zoomRoot = typeof zoomRoot === 'string' ? document.querySelector(zoomRoot) : zoomRoot;
+        if (!$.isElm(_zoomRoot) && zoomRoot) {
+          _zoomRoot = typeof zoomRoot === 'string' ? $.find(_doc, zoomRoot) : zoomRoot;
         }
-        return !_zoomRoot ? root : _zoomRoot;
+        return $.isElm(_zoomRoot) ? _zoomRoot : root;
       },
 
       zoom: function (e) {
@@ -223,7 +232,7 @@
           if (zoomScale && !fit) {
             var slide = $.closest(el, '.slide');
 
-            slide.classList.add(_isZoomable + '-slide');
+            $.addClass(slide, _isZoomable + '-slide');
 
             max = Math.min(
               parseInt(el.dataset.sNw, 0) / parseInt(el.dataset.sCw, 0),
@@ -238,8 +247,10 @@
           }
         }
 
-        if (_target && (!zooming || !me.isZoomed() || el === null)) {
-          _target.style.transform = 'translate(0px)';
+        if ($.isElm(_target)) {
+          if (!zooming || !me.isZoomed() || !$.isElm(el)) {
+            _target.style.transform = 'translate(0px)';
+          }
         }
       },
 
@@ -251,7 +262,7 @@
         }
 
         me.sizes();
-        if (me.isEmpty(_sizes) || !me.isValid()) {
+        if ($.isEmpty(_sizes) || !me.isValid()) {
           return;
         }
 
@@ -264,8 +275,8 @@
         e.preventDefault();
         e.stopPropagation();
 
-        var el = _target.querySelector('.' + _isZoomable);
-        var fit = el && parseInt(el.dataset.sFit, 0) === 1;
+        var el = $.isElm(_target) && $.find(_target, '.' + _isZoomable);
+        var fit = $.isElm(el) && parseInt(el.dataset.sFit, 0) === 1;
         var sy = Math.abs(_sizes.h - _sizes.ph) / 1.5;
         var delta = _ds.wheelDelta(e);
         var increment = sy * 0.5;
@@ -283,7 +294,7 @@
           pos.y = sy;
         }
 
-        if (_target && !fit) {
+        if ($.isElm(_target) && !fit) {
           // updateDim(el, false);
           _target.style.transform =
             'translate(' + pos.x + 'px,' + pos.y + 'px)';
@@ -332,9 +343,9 @@
         opts.dragClass = dragClass;
 
         var items = [];
-        $.forEach(Components.Elements.slides, function (slide) {
-          var item = slide.querySelector(zoomTarget);
-          if (item) {
+        $.each(Components.Elements.slides, function (slide) {
+          var item = $.find(slide, zoomTarget);
+          if ($.isElm(item)) {
             items.push(item);
           }
         });
@@ -369,7 +380,7 @@
             pos.y = dir === 'down' && pos.y > 0 ? sy : -sy;
           }
 
-          _win.setTimeout(function () {
+          setTimeout(function () {
             update('on');
             if (me.isZoomed()) {
               if (reset) {
@@ -399,7 +410,7 @@
       clicked: function (e) {
         var me = this;
 
-        if (e.target.classList.contains(_isZoomable)) {
+        if ($.hasClass(e.target, _isZoomable)) {
           me.unZoomed = false;
           scale = max;
           me.scale(!me.isZoomed(), e.target);
@@ -415,25 +426,17 @@
         return dims;
       },
 
-      isEmpty: function (obj) {
-        return (
-          obj &&
-          Object.keys(obj).length === 0 &&
-          Object.getPrototypeOf(obj) === Object.prototype
-        );
-      },
-
       isValid: function () {
         this.prepare();
-        return _target !== null;
+        return $.isElm(_target);
       },
 
       isZoomed: function () {
-        return zoomOn && this.zoomRoot().classList.contains(zoomClass);
+        return zoomOn && $.hasClass(this.zoomRoot(), zoomClass);
       },
 
       toogleClass: function (zoomIn) {
-        this.zoomRoot().classList[zoomIn ? 'add' : 'remove'](zoomClass);
+        $[zoomIn ? 'addClass' : 'removeClass'](this.zoomRoot(), zoomClass);
       },
 
       on: function () {

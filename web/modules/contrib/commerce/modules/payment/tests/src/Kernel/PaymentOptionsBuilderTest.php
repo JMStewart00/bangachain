@@ -63,6 +63,7 @@ class PaymentOptionsBuilderTest extends OrderKernelTestBase {
       'id' => 'onsite',
       'label' => 'On-site',
       'plugin' => 'example_onsite',
+      'weight' => 1,
     ]);
     $payment_gateway->save();
 
@@ -74,6 +75,7 @@ class PaymentOptionsBuilderTest extends OrderKernelTestBase {
         'redirect_method' => 'post',
         'payment_method_types' => ['credit_card'],
       ],
+      'weight' => 5,
     ]);
     $payment_gateway->save();
 
@@ -244,6 +246,26 @@ class PaymentOptionsBuilderTest extends OrderKernelTestBase {
     $this->assertEquals('cash_on_delivery', $options[4]->getPaymentGatewayId());
     $this->assertNull($options[4]->getPaymentMethodId());
     $this->assertNull($options[4]->getPaymentMethodTypeId());
+
+    // Change the weight of the offsite gateway to ensure that an offsite
+    // gateway can appear before a gateway that supports payment methods.
+    $payment_gateway = PaymentGateway::load('offsite');
+    $payment_gateway->setWeight(-5);
+    $payment_gateway->save();
+
+    $options = $this->paymentOptionsBuilder->buildOptions($this->order);
+    /** @var \Drupal\commerce_payment\PaymentOption[] $options */
+    $options = array_values($options);
+    $this->assertCount(5, $options);
+
+    // Offsite gateways.
+    $this->assertEquals('offsite', $options[2]->getId());
+    $this->assertEquals('Example', $options[2]->getLabel());
+    $this->assertEquals('offsite', $options[2]->getPaymentGatewayId());
+
+    $this->assertEquals('Credit card', $options[3]->getLabel());
+    $this->assertEquals('onsite', $options[3]->getPaymentGatewayId());
+    $this->assertEquals('credit_card', $options[3]->getPaymentMethodTypeId());
   }
 
   /**

@@ -8,7 +8,17 @@ namespace Drupal\blazy;
 interface BlazyFormatterInterface extends BlazyManagerInterface {
 
   /**
-   * Modifies the field formatter settings inherited by child elements.
+   * Modifies the field formatter base settings inherited by child elements.
+   *
+   * @param array $build
+   *   The array containing: field-related settings.
+   * @param object $items
+   *   The Drupal\Core\Field\FieldItemListInterface items.
+   */
+  public function fieldSettings(array &$build, $items);
+
+  /**
+   * Modifies the field formatter prepared settings inherited by child elements.
    *
    * @param array $build
    *   The array containing: settings, or potential optionset for extensions.
@@ -40,16 +50,5 @@ interface BlazyFormatterInterface extends BlazyManagerInterface {
    *   The optional entities array, not available for non-entities: text, image.
    */
   public function postBuildElements(array &$build, $items, array $entities = []);
-
-  /**
-   * Checks if an image style contains crop effect.
-   *
-   * @param string $style
-   *   The image style to check for.
-   *
-   * @return object|bool
-   *   Returns the image style instance if it contains crop effect, else FALSE.
-   */
-  public function isCrop($style);
 
 }

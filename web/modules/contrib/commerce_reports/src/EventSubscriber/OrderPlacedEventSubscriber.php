@@ -3,23 +3,14 @@
 namespace Drupal\commerce_reports\EventSubscriber;
 
 use Drupal\commerce_reports\OrderReportGeneratorInterface;
-use Drupal\Core\State\StateInterface;
+use Drupal\Core\DestructableInterface;
 use Drupal\state_machine\Event\WorkflowTransitionEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\PostResponseEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * Event subscriber to order placed transition event.
  */
-class OrderPlacedEventSubscriber implements EventSubscriberInterface {
-
-  /**
-   * The state key/value store.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
+class OrderPlacedEventSubscriber implements EventSubscriberInterface, DestructableInterface {
 
   /**
    * The order report generator.
@@ -29,68 +20,55 @@ class OrderPlacedEventSubscriber implements EventSubscriberInterface {
   protected $orderReportGenerator;
 
   /**
+   * Static cache of order IDS that were placed during this request.
+   *
+   * @var array
+   */
+  protected $orderIds = [];
+
+  /**
    * Constructs a new OrderPlacedEventSubscriber object.
    *
-   * @param \Drupal\Core\State\StateInterface $state
-   *   The state key/value store.
    * @param \Drupal\commerce_reports\OrderReportGeneratorInterface $order_report_generator
    *   The order report generator.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    */
-  public function __construct(StateInterface $state, OrderReportGeneratorInterface $order_report_generator) {
-    $this->state = $state;
+  public function __construct(OrderReportGeneratorInterface $order_report_generator) {
     $this->orderReportGenerator = $order_report_generator;
   }
 
   /**
    * Flags the order to have a report generated.
    *
-   * @todo come up with better flagging.
-   *
    * @param \Drupal\state_machine\Event\WorkflowTransitionEvent $event
    *   The workflow transition event.
    */
-  public function flagOrder(WorkflowTransitionEvent $event) {
+  public function onOrderPlace(WorkflowTransitionEvent $event) {
     $order = $event->getEntity();
-    $existing = $this->state->get('commerce_order_reports', []);
-    $existing[$order->id()] = $order->id();
-    $this->state->set('commerce_order_reports', $existing);
+    $this->orderIds[$order->id()] = $order->id();
   }
 
   /**
-   * Generates order reports once output flushed.
+   * Generates order reports on destruct.
    *
    * This creates the base order report populated with the bundle plugin ID,
    * order ID, and created timestamp from when the order was placed. Each
    * plugin then sets its values.
-   *
-   * @param \Symfony\Component\HttpKernel\Event\PostResponseEvent $event
-   *   The post response event.
-   *
-   * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function generateReports(PostResponseEvent $event) {
-    $order_ids = $this->state->get('commerce_order_reports', []);
-    if (empty($order_ids)) {
-      return;
+  public function destruct() {
+    if (!empty($this->orderIds)) {
+      $this->orderReportGenerator->generateReports($this->orderIds);
     }
-
-    $this->orderReportGenerator->refreshReports($order_ids);
-
-    // @todo this could lose data, possibly as its global state.
-    $this->state->set('commerce_order_reports', []);
   }
 
   /**
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
-    $events = [
-      'commerce_order.place.pre_transition' => 'flagOrder',
-      KernelEvents::TERMINATE => 'generateReports',
+    return [
+      'commerce_order.place.post_transition' => 'onOrderPlace',
     ];
-    return $events;
   }
 
 }

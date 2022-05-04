@@ -241,10 +241,13 @@ class ShippingMethod extends ContentEntityBase implements ShippingMethodInterfac
       /** @var \Drupal\commerce\Plugin\Commerce\Condition\ConditionInterface $condition */
       return $condition->getEntityTypeId() == 'commerce_shipment';
     });
-    $order_conditions = new ConditionGroup($order_conditions, $this->getConditionOperator());
-    $shipment_conditions = new ConditionGroup($shipment_conditions, $this->getConditionOperator());
+    $operator = $this->getConditionOperator();
+    $order_conditions = new ConditionGroup($order_conditions, $operator);
+    $shipment_conditions = new ConditionGroup($shipment_conditions, $operator);
 
-    return $order_conditions->evaluate($shipment->getOrder()) && $shipment_conditions->evaluate($shipment);
+    return $operator === 'OR'
+      ? $order_conditions->evaluate($shipment->getOrder()) || $shipment_conditions->evaluate($shipment)
+      : $order_conditions->evaluate($shipment->getOrder()) && $shipment_conditions->evaluate($shipment);
   }
 
   /**

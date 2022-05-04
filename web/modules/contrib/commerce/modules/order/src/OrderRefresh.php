@@ -175,7 +175,7 @@ class OrderRefresh implements OrderRefreshInterface {
         $order_item->setTitle($purchased_entity->getOrderItemTitle());
         if (!$order_item->isUnitPriceOverridden()) {
           $unit_price = $this->chainPriceResolver->resolve($purchased_entity, $order_item->getQuantity(), $context);
-          $order_item->setUnitPrice($unit_price);
+          $unit_price ? $order_item->setUnitPrice($unit_price) : $order_item->set('unit_price', NULL);
         }
       }
       // If the order refresh is running during order preSave(),

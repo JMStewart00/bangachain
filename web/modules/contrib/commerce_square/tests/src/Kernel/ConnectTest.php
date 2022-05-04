@@ -3,6 +3,7 @@
 namespace Drupal\Tests\commerce_square\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
+use Square\Environment;
 
 /**
  * Tests the Connect service to act as application configuration.
@@ -11,7 +12,10 @@ use Drupal\KernelTests\KernelTestBase;
  */
 class ConnectTest extends KernelTestBase {
 
-  public static $modules = [
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
     'commerce_square',
     'commerce_number_pattern',
   ];
@@ -19,7 +23,7 @@ class ConnectTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     $this->container->get('config.factory')
@@ -41,12 +45,12 @@ class ConnectTest extends KernelTestBase {
     $connect = $this->container->get('commerce_square.connect');
     $this->assertEquals('Testing', $connect->getAppName());
     $this->assertEquals('Test secret', $connect->getAppSecret());
-    $this->assertEquals('sandbox-sq0idp-nV_lBSwvmfIEF62s09z0-Q', $connect->getAppId('sandbox'));
-    $this->assertEquals('sandbox-sq0atb-uEZtx4_Qu36ff-kBTojVNw', $connect->getAccessToken('sandbox'));
-    $this->assertEquals(-1, $connect->getAccessTokenExpiration('sandbox'));
-    $this->assertEquals('live-sq0idp', $connect->getAppId('production'));
-    $this->assertEquals('TESTTOKEN', $connect->getAccessToken('production'));
-    $this->assertEquals($this->container->get('datetime.time')->getRequestTime(), $connect->getAccessTokenExpiration('production'));
+    $this->assertEquals('sandbox-sq0idp-nV_lBSwvmfIEF62s09z0-Q', $connect->getAppId(Environment::SANDBOX));
+    $this->assertEquals('sandbox-sq0atb-uEZtx4_Qu36ff-kBTojVNw', $connect->getAccessToken(Environment::SANDBOX));
+    $this->assertEquals(-1, $connect->getAccessTokenExpiration(Environment::SANDBOX));
+    $this->assertEquals('live-sq0idp', $connect->getAppId(Environment::PRODUCTION));
+    $this->assertEquals('TESTTOKEN', $connect->getAccessToken(Environment::PRODUCTION));
+    $this->assertEquals($this->container->get('datetime.time')->getRequestTime(), $connect->getAccessTokenExpiration(Environment::PRODUCTION));
   }
 
 }

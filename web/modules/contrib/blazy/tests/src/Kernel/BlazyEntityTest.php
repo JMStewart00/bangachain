@@ -39,7 +39,7 @@ class BlazyEntityTest extends BlazyKernelTestBase {
    * @param bool $expected
    *   The expected output.
    *
-   * @covers ::getEntityView
+   * @covers ::view
    * @dataProvider providerTestGetEntityView
    */
   public function testGetEntityView($entity, $fallback, $message, $expected) {
@@ -53,7 +53,7 @@ class BlazyEntityTest extends BlazyKernelTestBase {
       $entity = $this->testItem;
     }
 
-    $result = $this->blazyEntity->getEntityView($entity, [], $fallback);
+    $result = $this->blazyEntity->view($entity, [], $fallback);
     $this->assertSame($expected, !empty($result), $message);
   }
 

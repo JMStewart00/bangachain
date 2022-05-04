@@ -234,7 +234,7 @@
     }
 
     // Unlike ResizeObserver/ infinite pager, IntersectionObserver is done.
-    if (io && me.isLoaded(el) && !el.bloaded && opts.isMedia) {
+    if (io && me.isLoaded(el) && !el.bloaded && opts.isMedia && !revalidate) {
       io.unobserve(el);
       el.bloaded = true;
 

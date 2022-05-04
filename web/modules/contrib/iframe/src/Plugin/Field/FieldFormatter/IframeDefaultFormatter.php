@@ -27,6 +27,7 @@ class IframeDefaultFormatter extends FormatterBase {
     return [
       'url' => '',
       'title' => '',
+      'headerlevel' => '3',
       'width' => '',
       'height' => '',
       'class' => '',
@@ -128,6 +129,10 @@ class IframeDefaultFormatter extends FormatterBase {
     if (!empty($options['title']) && strpos($options['title'], '<') !== FALSE) {
       $options['title'] = strip_tags($options['title']);
     }
+    $headerlevel = 3; #default h3
+    if (isset($item->headerlevel) && $item->headerlevel >= 1 && $item->headerlevel <= 6) {
+      $headerlevel = (int)$item->headerlevel;
+    }
 
     // Policy attribute.
     $allow[] = 'accelerometer';
@@ -173,6 +178,7 @@ class IframeDefaultFormatter extends FormatterBase {
         '#attributes' => $drupal_attributes,
         '#text' => (isset($options['html']) && $options['html'] ? $text : new HtmlEscapedText($text)),
         '#style' => 'iframe#' . $htmlid . ' {' . $style . '}',
+        '#headerlevel' => $headerlevel,
       ];
       return $element;
     } catch (\Exception $excep) {

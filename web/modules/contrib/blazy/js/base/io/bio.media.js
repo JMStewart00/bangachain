@@ -44,7 +44,7 @@
   var _dataSrcset = _data + _srcSet;
   var _imgSources = [_srcSet, _src];
   var _erCounted = 0;
-  var _isNativeChecked = false;
+  var _isDeferChecked = false;
 
   // Inherits Bio prototype.
   var _super = Bio.prototype;
@@ -77,9 +77,14 @@
     var parent = el.parentNode;
     var isBg = $.isBg(el);
     var isPicture = $.equal(parent, 'picture');
-    var isImage = $.equal(el, 'img') && !isPicture;
+    var isImage = $.equal(el, 'img');
     var isVideo = $.equal(el, 'video');
     var isDataset = $.hasAttr(el, _dataSrc);
+
+    // Initializes blur, if any.
+    if ($.blur) {
+      $.blur(el);
+    }
 
     // PICTURE elements.
     if (isPicture) {
@@ -90,7 +95,7 @@
         $.mapAttr(el, _src, true);
       }
 
-      _erCounted = $.status(el, true, opts);
+      _erCounted = defer(me, el, true, opts);
     }
     // VIDEO elements.
     else if (isVideo) {
@@ -109,7 +114,7 @@
             $.mapAttr(el, _src, true);
           }
 
-          _erCounted = $.status(el, true, opts);
+          _erCounted = defer(me, el, true, opts);
         }
       }
     }
@@ -150,9 +155,11 @@
     var load = function (el, ok) {
       if (isBg && $.isFun($.bg)) {
         $.bg(el, winData);
+        _erCounted = $.status(el, ok, opts);
       }
-
-      _erCounted = $.status(el, ok, opts);
+      else {
+        _erCounted = defer(me, el, ok, opts);
+      }
     };
 
     preload();
@@ -182,6 +189,21 @@
     }
   };
 
+  // Applies the defer loading as per https://drupal.org/node/3120696.
+  function defer(me, el, status, opts) {
+    if (!_isDeferChecked) {
+      var elms = natively(me, 'defer');
+      if (elms) {
+        $.each(elms, function (elm) {
+          $.attr(elm, 'loading', 'lazy');
+        });
+      }
+      _isDeferChecked = true;
+    }
+
+    return $.status(el, status, opts);
+  }
+
   // Since bLazy, which has no supports for Native, is a fallback, it is easier
   // now to work with Native. No more need to hook into load event separately,
   // no deferred invocation till one loaded, no hijacking.
@@ -201,16 +223,20 @@
   // did which is more precise as suggested by the quote.
   // Assumed, untested, fine with combo IO + decoding checks before blur spits.
   // Shortly we are in the right direction to cope with Native vs. data-[SRC].
-  // @todo recheck IF wrong so to put back https://drupal.org/node/3120696.
-  function natively(me) {
+  // @done recheck IF wrong so to put back https://drupal.org/node/3120696.
+  // Almost not wrong, no blur nor `b-loaded` were added till intersected, but
+  // added a new `loading:defer` to solve 8000px threshold.
+  function natively(me, key) {
     var opts = me.options;
 
-    if (!$.isNativeLazy || _isNativeChecked) {
-      return;
+    if (!$.isNativeLazy) {
+      return [];
     }
 
     // ::findAll is already optimized with a single null check, no extra checks.
-    var dataset = $.selector(opts, '[data-src][loading]:not(.b-blur)');
+    // The `a` keyword found in `auto, eager, lazy`, not `defer`.
+    key = key || 'a';
+    var dataset = $.selector(opts, '[data-src][loading*="' + key + '"]:not(.b-blur)');
     var els = $.findAll(_doc, dataset);
 
     // We are here if `No JavaScript` is being disabled.
@@ -220,8 +246,7 @@
         // Also supports PICTURE which contains SOURCEs. Excluding VIDEO.
         .mapSource(false, true, false);
     }
-
-    _isNativeChecked = true;
+    return els;
   }
 
   // https://caniuse.com/dom-manip-convenience
@@ -250,6 +275,7 @@
   fn.prepare = function () {
     var me = this;
 
+    // @todo lock it back once AJAX-loaded contents fixed.
     natively(me);
 
     // Runs after native set to minimize works.

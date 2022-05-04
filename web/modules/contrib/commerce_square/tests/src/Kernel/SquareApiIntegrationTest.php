@@ -13,7 +13,7 @@ use Drupal\commerce_price\Price;
 use Drupal\commerce_square\Plugin\Commerce\PaymentGateway\Square;
 use Drupal\profile\Entity\Profile;
 use Drupal\Tests\commerce\Kernel\CommerceKernelTestBase;
-use SquareConnect\ApiClient;
+use Square\SquareClient;
 
 /**
  * Tests the Square SDK integration with Commerce.
@@ -25,7 +25,7 @@ class SquareApiIntegrationTest extends CommerceKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'profile',
     'entity_reference_revisions',
     'state_machine',
@@ -45,7 +45,7 @@ class SquareApiIntegrationTest extends CommerceKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     $this->installEntitySchema('profile');
@@ -89,7 +89,7 @@ class SquareApiIntegrationTest extends CommerceKernelTestBase {
   public function testGetApiClient() {
     $plugin = $this->gateway->getPlugin();
     $this->assertInstanceOf(Square::class, $plugin);
-    $this->assertInstanceOf(ApiClient::class, $plugin->getApiClient());
+    $this->assertInstanceOf(SquareClient::class, $plugin->getApiClient());
   }
 
   /**
@@ -107,7 +107,7 @@ class SquareApiIntegrationTest extends CommerceKernelTestBase {
   public function testCreatePaymentBadCvv() {
     $this->expectException(SoftDeclineException::class);
     $this->expectExceptionCode(0);
-    $this->expectExceptionMessage('Card verification code check failed.');
+    $this->expectExceptionMessage('Authorization error: \'CVV_FAILURE\'');
     /** @var \Drupal\commerce_square\Plugin\Commerce\PaymentGateway\SquareInterface $gateway_plugin */
     $gateway_plugin = $this->gateway->getPlugin();
     $gateway_plugin->createPayment($this->generateTestPayment('cnon:card-nonce-rejected-cvv'));
@@ -119,7 +119,7 @@ class SquareApiIntegrationTest extends CommerceKernelTestBase {
   public function testCreatePaymentBadPostalCode() {
     $this->expectException(SoftDeclineException::class);
     $this->expectExceptionCode(0);
-    $this->expectExceptionMessage('Postal code check failed.');
+    $this->expectExceptionMessage('Authorization error: \'ADDRESS_VERIFICATION_FAILURE\'');
     /** @var \Drupal\commerce_square\Plugin\Commerce\PaymentGateway\SquareInterface $gateway_plugin */
     $gateway_plugin = $this->gateway->getPlugin();
     $gateway_plugin->createPayment($this->generateTestPayment('cnon:card-nonce-rejected-postalcode'));
@@ -131,7 +131,7 @@ class SquareApiIntegrationTest extends CommerceKernelTestBase {
   public function testCreatePaymentBadExpiryDate() {
     $this->expectException(SoftDeclineException::class);
     $this->expectExceptionCode(0);
-    $this->expectExceptionMessage('Invalid card expiration date.');
+    $this->expectExceptionMessage('Authorization error: \'INVALID_EXPIRATION\'');
     /** @var \Drupal\commerce_square\Plugin\Commerce\PaymentGateway\SquareInterface $gateway_plugin */
     $gateway_plugin = $this->gateway->getPlugin();
     $gateway_plugin->createPayment($this->generateTestPayment('cnon:card-nonce-rejected-expiration'));
@@ -145,7 +145,7 @@ class SquareApiIntegrationTest extends CommerceKernelTestBase {
   public function testCreatePaymentDeclined() {
     $this->expectException(SoftDeclineException::class);
     $this->expectExceptionCode(0);
-    $this->expectExceptionMessage('Card declined.');
+    $this->expectExceptionMessage('Authorization error: \'GENERIC_DECLINE\'');
     /** @var \Drupal\commerce_square\Plugin\Commerce\PaymentGateway\SquareInterface $gateway_plugin */
     $gateway_plugin = $this->gateway->getPlugin();
     $gateway_plugin->createPayment($this->generateTestPayment('cnon:card-nonce-declined'));
@@ -157,7 +157,7 @@ class SquareApiIntegrationTest extends CommerceKernelTestBase {
   public function testCreatePaymentAlreadyUsed() {
     $this->expectException(SoftDeclineException::class);
     $this->expectExceptionCode(0);
-    $this->expectExceptionMessage('Card verification code check failed.');
+    $this->expectExceptionMessage('Authorization error: \'CVV_FAILURE\'');
     /** @var \Drupal\commerce_square\Plugin\Commerce\PaymentGateway\SquareInterface $gateway_plugin */
     $gateway_plugin = $this->gateway->getPlugin();
     $gateway_plugin->createPayment($this->generateTestPayment('cnon:card-nonce-rejected-cvv'));
@@ -219,8 +219,7 @@ class SquareApiIntegrationTest extends CommerceKernelTestBase {
     $payment_method = PaymentMethod::create([
       'type' => 'credit_card',
       'payment_gateway' => $this->gateway->id(),
-      // 01/10/2022
-      'expires' => '1641772800',
+      'expires' => '1804158057',
       'uid' => $user->id(),
       'remote_id' => $nonce,
     ]);

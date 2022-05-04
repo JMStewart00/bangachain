@@ -5,7 +5,7 @@ services:
 
   commerce_email.email_subscriber:
     class: Drupal\commerce_email\EventSubscriber\EmailSubscriber
-    arguments: ['@commerce_email.email_sender']
+    arguments: ['@commerce_email.email_sender', '@plugin.manager.commerce_email_event', '@event_dispatcher']
     tags:
       - { name: event_subscriber }
 

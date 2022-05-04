@@ -77,8 +77,8 @@ class BlazyViewsTest extends BlazyStylePluginBase {
    */
   public function render() {
     $settings = $this->buildSettings() + BlazyDefault::entitySettings();
+    $blazies = $settings['blazies'];
 
-    $settings['item_id']   = 'box';
     $settings['caption']   = array_filter($settings['caption']);
     $settings['namespace'] = 'blazy';
     $settings['ratio']     = '';
@@ -88,8 +88,9 @@ class BlazyViewsTest extends BlazyStylePluginBase {
       $items = $this->buildElements($settings, $rows);
 
       // Supports Blazy multi-breakpoint images if using Blazy formatter.
-      $settings['first_image'] = isset($rows[0]) ? $this->getFirstImage($rows[0]) : [];
-
+      if ($data = $this->getFirstImage($rows[0] ?? NULL)) {
+        $blazies->set('first.data', $data);
+      }
       $build = ['items' => $items, 'settings' => $settings];
       $elements = $this->blazyManager->build($build);
     }
@@ -101,9 +102,10 @@ class BlazyViewsTest extends BlazyStylePluginBase {
    * Returns blazy_test contents.
    */
   public function buildElements(array $settings, $rows) {
+    $blazies = $settings['blazies'];
     $build   = [];
     $view    = $this->view;
-    $item_id = $settings['item_id'];
+    $item_id = $blazies->get('item.id');
 
     foreach ($rows as $index => $row) {
       $view->row_index = $index;

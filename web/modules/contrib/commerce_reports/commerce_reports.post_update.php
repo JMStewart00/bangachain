@@ -15,7 +15,7 @@ function commerce_reports_post_update_add_permission_to_purchased_items_report(&
   $access = [
     'type' => 'perm',
     'options' => [
-      'perm' => 'access commerce reports'
+      'perm' => 'access commerce reports',
     ],
   ];
   $view->set('display.default.display_options.access', $access);

@@ -116,13 +116,13 @@ function commerce_order_field_formatter_info_alter(array &$info) {
 }
 
 /**
- * Implements hook_field_widget_form_alter().
+ * Implements hook_field_widget_single_element_form_alter().
  *
  * - Changes the label of the purchased_entity field to the label of the
  *   target type (e.g. 'Product variation').
  * - Forbids editing the purchased_entity once the order item is no longer new.
  */
-function commerce_order_field_widget_form_alter(&$element, FormStateInterface $form_state, $context) {
+function commerce_order_field_widget_single_element_form_alter(&$element, FormStateInterface $form_state, $context) {
   $field_definition = $context['items']->getFieldDefinition();
   $field_name = $field_definition->getName();
   $entity_type = $field_definition->getTargetEntityTypeId();
@@ -434,4 +434,14 @@ function commerce_order_theme_registry_alter(&$theme_registry) {
     'base_price' => NULL,
     'adjustments' => [],
   ];
+}
+
+/**
+ * Implements hook_field_group_content_element_keys_alter().
+ *
+ * Allow orders to render fields groups defined from Fields UI.
+ */
+function commerce_order_field_group_content_element_keys_alter(&$keys) {
+  $keys['commerce_order'] = 'order';
+  $keys['commerce_order_item'] = 'order_item';
 }

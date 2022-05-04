@@ -84,6 +84,7 @@ class ShipmentAdminTest extends CommerceWebDriverTestBase {
       'administer commerce_shipment_type',
       'access commerce_order overview',
       'administer commerce_payment_gateway',
+      'view commerce_product',
     ], parent::getAdministratorPermissions());
   }
 
@@ -119,6 +120,12 @@ class ShipmentAdminTest extends CommerceWebDriverTestBase {
         'number' => '7.99',
         'currency_code' => 'USD',
       ],
+    ]);
+    $this->createEntity('commerce_product', [
+      'title' => $this->randomMachineName(),
+      'type' => 'default',
+      'variations' => [$variation],
+      'stores' => [$this->store],
     ]);
     $order_item = $this->createEntity('commerce_order_item', [
       'title' => $this->randomMachineName(),

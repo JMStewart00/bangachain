@@ -10,7 +10,8 @@
     "Blazy": true,
     "dBlazy": true,
     "Bio": true,
-    "BioMedia": true
+    "BioMedia": true,
+    "cash": true
   },
   "rules": {
     "consistent-this": [0, "me"],

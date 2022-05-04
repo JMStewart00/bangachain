@@ -1,51 +1,35 @@
 const path = require('path');
-
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
-const globImporter = require('node-sass-glob-importer');
 const autoprefixer = require('autoprefixer');
-const MinifyPlugin = require('babel-minify-webpack-plugin');
-const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
-const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
+const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 
 module.exports = {
   entry: {
-    gin_login: ['./src/css/gin_login.scss'],
+    login: ['./src/css/login.scss'],
   },
   output: {
-    devtoolLineToLine: true,
-    path: path.resolve(__dirname, 'dist'),
-    chunkFilename: 'js/async/[name].chunk.js',
-    pathinfo: true,
     filename: 'js/[name].js',
+    chunkFilename: 'js/async/[name].chunk.js',
+    path: path.resolve(__dirname, 'dist'),
+    pathinfo: true,
   },
   module: {
-    rules: [{
-        test: /\.(config.js)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[path][name].[ext]',
-              outputPath: './'
-            }
-          }
-        ]
-      },
+    rules: [
       {
         test: /\.(png|jpe?g|gif|svg)$/,
+        type: 'javascript/auto',
         use: [{
             loader: 'file-loader',
             options: {
-              name: 'images/[name].[ext]?[hash]',
+              name: '[path][name].[ext]',
+              publicPath: (url, resourcePath, context) => {
+                const relativePath = path.relative(context, resourcePath);
+                return `../../${relativePath}`;
+              },
             },
-        }],
-      },
-      {
-        test: /modernizrrc\.js$/,
-        loader: 'expose-loader?Modernizr!webpack-modernizr-loader',
+          },
+        ],
       },
       {
         test: /\.js$/,
@@ -55,12 +39,12 @@ module.exports = {
         },
       },
       {
-        test: /\.(css|sass|scss)$/,
+        test: /\.(css|scss)$/,
         use: [
           {
             loader: MiniCssExtractPlugin.loader,
             options: {
-              publicPath: '../'
+              name: '[name].[ext]?[hash]',
             }
           },
           {
@@ -80,8 +64,12 @@ module.exports = {
           {
             loader: 'sass-loader',
             options: {
-              importer: globImporter(),
               sourceMap: false,
+              // Global SCSS imports:
+              additionalData: `
+                @use "sass:color";
+                @import "node_modules/breakpoint-sass/stylesheets/breakpoint";
+              `,
             },
           },
         ],
@@ -95,65 +83,12 @@ module.exports = {
     extensions: ['.js', '.json'],
   },
   plugins: [
-    new FriendlyErrorsWebpackPlugin(),
-    new FixStyleOnlyEntriesPlugin(),
-    new CleanWebpackPlugin(['dist'], {
-      root: path.resolve(__dirname),
+    new RemoveEmptyScriptsPlugin(),
+    new CleanWebpackPlugin({
+      cleanStaleWebpackAssets: false
     }),
     new MiniCssExtractPlugin({
-      filename: 'css/[name].css',
+      filename: "css/[name].css",
     }),
-    new MinifyPlugin({}, {
-      comments: false,
-      sourceMap: '',
-    }),
-    new BrowserSyncPlugin({
-      proxy: {
-        target: 'https://drupal.local',
-        proxyReq: [
-          function(proxyReq) {
-            proxyReq.setHeader('Cache-Control', 'no-cache, no-store');
-          }
-        ]
-      },
-      browser: 'chrome',
-      open: false,
-      https: false,
-      notify: true,
-      logConnections: true,
-      reloadOnRestart: true,
-      injectChanges: true,
-      online: true,
-      // reloadDelay: 500,
-      ghostMode: {
-        clicks: false,
-        forms: false,
-        scroll: false,
-      },
-      files: [
-       {
-         match: ['**/*.css', '**/*.js'],
-         fn: (event, file) => {
-           if (event == 'change') {
-             const bs = require("browser-sync").get("bs-webpack-plugin");
-             if (file.split('.').pop()=='js') {
-               bs.reload();
-             } else {
-               bs.stream();
-             }
-           }
-         }
-       }
-     ]
-    }, {
-      // prevent BrowserSync from reloading the page
-      // and let Webpack Dev Server take care of this
-      reload: false,
-      injectCss: true,
-      name: 'bs-webpack-plugin'
-    })
   ],
-  watchOptions: {
-    aggregateTimeout: 300,
-  }
 };

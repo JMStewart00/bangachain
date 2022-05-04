@@ -18,7 +18,7 @@ class ConfigureGatewayTest extends CommerceWebDriverTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_payment',
     'commerce_square',
   ];

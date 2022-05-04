@@ -1,4 +1,130 @@
 
+Blazy 8.x-2.0-dev, 2022-04-20
+-----------------------------
+- Fixed for Slick caption not visible anymore by stopopol (#3276156).
+
+Blazy 8.x-2.0-dev, 2022-04-14
+-----------------------------
+- Added Drupal\blazy\BlazyBase service for non-media methods for 3.x.
+- Fixed for Colorbox gallery ID regression.
+- Fixed for D10 access check explicit requirement (3201242).
+
+Blazy 8.x-2.0-dev, 2022-04-13
+-----------------------------
+- Fixed for Image title within Media regression: #3241415.
+- Issue #3274730 by gausarts, trickfun: Padding bottom under the image.
+
+Blazy 8.x-2.0-dev, 2022-04-07
+-----------------------------
+- Issue #3273663 by gausarts, vistree: Update to version > 2.6 breaks svg_image.
+
+Blazy 8.x-2.0-dev, 2022-04-05
+-----------------------------
+- Fixed for BVEF BC, lightbox gallery regression, etc.
+
+Blazy 8.x-2.0-dev, 2022-04-04
+-----------------------------
+- Fixed for thumbnail regression for sub-modules.
+
+Blazy 8.x-2.0-dev, 2022-04-03
+-----------------------------
+- Issue #3273186 by gausarts: Improve Main stage display at Paragraphs
+  integration.
+
+Blazy 8.x-2.0-dev, 2022-03-28
+-----------------------------
+- Moved some exclusive field formatters out into Blazy to prepare filters taste
+  like formatters.
+- Added optional client-side Blur.
+
+Blazy 8.x-2.0-dev, 2022-03-26
+-----------------------------
+- Issue #3210759 by gausarts, jlstrecker, aminorking: Generated SVG placeholder
+  dimensions are not using the responsive image style dimensions.
+- Prioritized custom Placeholder ('/blank.svg') to fix for Views rewrite
+  results to override Responsive image `data:image` which causes 404.
+- Prevents double-downloading the fallback image, enforced since 2.10, to
+  allow having non `data:image` as fallback image.
+
+Blazy 8.x-2.0-dev, 2022-03-25
+-----------------------------
+- Moved duplicate boilerplates at sub-modules into Blazy to avoid previous
+  mistakes like they were left behind from Blazy betterments with Loading
+  priority and No JavaScript: lazy option aka decoupled lazy loaders.
+- Disabled Blur and animation when not using Blazy, like Slick/ Splide own lazy
+  load since they require Blazy lazy load to function.
+- Fixed for missing a few options at sub-modules due to not being updated, yet.
+
+Blazy 8.x-2.0-dev, 2022-03-23
+-----------------------------
+- Regressions fixes: Vanilla view mode, random admin form item visibility when
+  core JS spit errors at View UI, etc.
+
+Blazy 8.x-2.0-dev, 2022-03-22
+-----------------------------
+- Added src/Media/Preloader.php.
+- Added src/Plugin/Field/FieldFormatter/BlazyFormatterViewBaseTrait.php.
+- Added src/Traits/PluginScopesTrait.php to reduce boilerplate at sub-modules.
+
+Blazy 8.x-2.0-dev, 2022-03-21
+-----------------------------
+- Fixed for multi-breakpoint background image regressions.
+- Fixed for Image formatter embedded within Blazy ecosystem regression.
+
+Blazy 8.x-2.0-dev, 2022-03-17
+-----------------------------
+- Moved field base formatters from Dejavu into Drupal\blazy\Field namespace.
+- Moved field operations from BlazyEntity into Drupal\blazy\Field\BlazyField.
+- Changed DIV to FIGCAPTION specific for BlazyFilter captions.
+- Added settings by container attributes for all blazy-related filters.
+- Moved internal BlazyGrid into Drupal\blazy\Theme namespace.
+- Moved internal BlazyLightbox into Drupal\blazy\Theme namespace.
+
+Blazy 8.x-2.0-dev, 2022-03-15
+-----------------------------
+- Fixed for empty bundles if formatters are accessed from Views UI, not Field
+  UI, causing failure to select like poster (local) video for the supported
+  lightboxes Splidebox, Blazy PhotoSwipe, etc. Specific for the poster image.
+- Moved internal BlazyViews Drupal\blazy\Theme namespace.
+- Moved internal BlazyLightbox into Drupal\blazy\Theme namespace.
+- Moved internal BlazyTheme into Drupal\blazy\Theme namespace.
+- Moved anything internal attributes from Blazy into BlazyAttribute.
+- Added Drupal\blazy\Theme\BlazyAttribute for anything internal attributes.
+
+Blazy 8.x-2.0-dev, 2022-03-12
+-----------------------------
+- Issue #3269222 by gausarts: Move more settings into BlazySettings for sanity.
+- Fixed for blur attributes regressions.
+- Changed BlazyOEmbed::build() arguments to DRY at sub-modules.
+- Moved basic image-related methods into BlazyImage.php for sanity.
+
+Blazy 8.x-2.0-dev, 2022-03-07
+-----------------------------
+- Issue #3268089 by gausarts, victoria-marina, hammerslammer, marciaibanez: Typo
+  in BlazyMedia.php
+
+Blazy 8.x-2.0-dev, 2022-03-01
+-----------------------------
+- Issue #3267769 by gausarts, ramirojoaquin, apaderno: CSS background, data-src
+  removed and style tag not created.
+
+Blazy 8.x-2.0-dev, 2022-03-01
+-----------------------------
+- Added `defer` loading as per [#3120696](https://drupal.org/node/3120696).
+
+Blazy 8.x-2.0-dev, 2022-02-28
+-----------------------------
+- Issue #3266748 by gausarts, xamount: padding-bottom not calculated correctly.
+
+Blazy 8.x-2.0-dev, 2022-02-26
+-----------------------------
+- Issue #3266482 by gausarts, demon326: After update to 2.7 images in views
+  load more (VIS) are not loaded.
+
+Blazy 8.x-2.0-dev, 2022-02-23
+-----------------------------
+- Issue #3265909 by fgm: Warning with PHP 8.1: Deprecated function: trim().
+
 Blazy 8.x-2.0-dev, 2022-02-20
 -----------------------------
 - Added core D9.2 webp client-side fallback for those who want to support old
@@ -320,7 +446,7 @@ Blazy 8.x-2.0-dev, 2020-05-08
 Blazy 8.x-2.0-dev, 2020-05-07
 -----------------------------
 - Issue #3134323 by timlie: Undefined index: fx in
-  Drupal\blazy\BlazyManagerBase->getCommonSettings().
+  Drupal\blazy\BlazyManagerBase->postSettings().
 - Issue #3133891 by prudloff: Error when adding a new text format.
 - Fixed for artifacts during loading with different animation than blur.
 

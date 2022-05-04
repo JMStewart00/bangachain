@@ -3,9 +3,16 @@
 namespace Drupal\blazy\Dejavu;
 
 use Drupal\blazy\Blazy;
+use Drupal\blazy\Media\BlazyImage;
 
 /**
  * A Trait common for Media integration.
+ *
+ * This file is no longer used nor needed, and will be removed at 3.x.
+ * VEF will continue working without this file via BlazyOEmbed instead.
+ *
+ * BVEF doesn't need this file, can adopt
+ * \Drupal\blazy\Plugin\Field\FieldFormatter\BlazyVideoFormatter instead.
  *
  * @see Drupal\blazy\Plugin\views\field\BlazyViewsFieldPluginBase
  * @see Drupal\slick_browser\SlickBrowser::widgetEntityBrowserFileFormAlter()
@@ -67,12 +74,14 @@ trait BlazyVideoTrait {
    *
    * @todo enable post RC before release release.
    * @todo deprecated in blazy:8.x-2.0 and is removed from blazy:8.x-3.0. Use
-   *   BlazyOEmbed::getImageItem() instead.
+   *   BlazyImage::fromAny() instead.
    * @see https://www.drupal.org/node/3103018
    */
   public function getImageItem($file) {
-    // @todo enable post release @trigger_error('getImageItem is deprecated in blazy:8.x-2.0 and is removed from blazy:8.x-3.0. Use \Drupal\blazy\BlazyOEmbed::getImageItem() instead. See https://www.drupal.org/node/3103018', E_USER_DEPRECATED);
-    return $this->blazyOembed()->getImageItem($file);
+    // @todo enable post release
+    // @trigger_error('getImageItem is deprecated in blazy:8.x-2.0 and is removed from blazy:8.x-3.0. Use \Drupal\blazy\Media\BlazyImage::fromAny() instead. See https://www.drupal.org/node/3103018', E_USER_DEPRECATED);
+    $item = BlazyImage::fromAny($file);
+    return $item ? ['item' => $item] : [];
   }
 
   /**
@@ -86,12 +95,12 @@ trait BlazyVideoTrait {
    * @todo remove post Blazy 8.2.x when blazy-plugins use core Media.
    *
    * @deprecated in blazy:8.x-2.0 and is removed from blazy:8.x-3.0. Use
-   *   BlazyOEmbed::getMediaItem() instead.
+   *   BlazyOEmbed::build() instead.
    * @see https://www.drupal.org/node/3103018
    */
   public function getMediaItem(array &$data = [], $media = NULL) {
-    @trigger_error('getMediaItem is deprecated in blazy:8.x-2.0 and is removed from blazy:8.x-3.0. Use \Drupal\blazy\Media\BlazyOEmbed::getMediaItem() instead. See https://www.drupal.org/node/3103018', E_USER_DEPRECATED);
-    $this->blazyOembed()->getMediaItem($data, $media);
+    @trigger_error('getMediaItem is deprecated in blazy:8.x-2.0 and is removed from blazy:8.x-3.0. Use \Drupal\blazy\Media\BlazyOEmbed::build() instead. See https://www.drupal.org/node/3103018', E_USER_DEPRECATED);
+    $this->blazyOembed()->build($data, $media);
   }
 
   /**

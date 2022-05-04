@@ -327,8 +327,7 @@
                 "Blank URL parameter import_name after uploading csv": "https://www.drupal.org/files/issues/2020-04-29/3115808.patch"
             },
             "drupal/commerce_square": {
-                "Zip Code not valid": "https://www.drupal.org/files/issues/2020-03-30/3123602-2.patch",
-                "Missing Input Fields": "https://www.drupal.org/files/issues/2019-11-08/3093086-1.patch"
+                "Zip Code not valid": "https://www.drupal.org/files/issues/2020-03-30/3123602-2.patch"
             },
             "drupal/commerce": {
                 "Promotion without coupons is always applied": "https://www.drupal.org/files/issues/promotion_without-2884888-12.patch"
@@ -350,10 +349,6 @@
                 "Gift cards not created when other items exist in the checkout before the gift card item": "https://git.drupalcode.org/project/commerce_giftcard/-/merge_requests/4.diff",
                 "Event for new giftcard purchase": "https://git.drupalcode.org/project/commerce_giftcard/-/merge_requests/2.diff",
                 "Don't allow payout on certain items": "./patches/commerce_giftcard_custom_patch_no_payout_allowed.patch"
-            },
-            "drupal/commerce_reports": {
-                "Order generation subscriber results in duplicates or missing report items": "https://www.drupal.org/files/issues/2021-10-08/3023518-14.patch",
-                "/project/commerce_reports/issues/3254973 - Drupal 9 Commerce Sales Report pages not loading": "https://www.drupal.org/files/issues/2021-12-18/3254973-4.patch"
             },
             "drupal/commerce_pos": {
                 "Auto set register to id of 1": "./patches/load-only-register-1b.patch"

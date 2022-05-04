@@ -1,7 +1,17 @@
 
 ***
 ## <a name="changes"></a>NOTABLE CHANGES
-* _Blazy 2.7_:
+* _Blazy 2.10_, 2022/04/16:
+  + Regression fixes for [Optimization](https://drupal.org/node/3257511).
+* _Blazy 2.9_, 2022/03/07:
+  + [#3268089](https://drupal.org/node/3268089), hotdamn fix.
+* _Blazy 2.8_, 2022/03/06:
+  + Added `defer` loading as per [#3120696](https://drupal.org/node/3120696).
+  + Regression fixes:
+    * blur, BG.
+    * [#3266748](https://drupal.org/node/3266748)
+    * [#3266482](https://drupal.org/node/3266482)
+* _Blazy 2.7_, 2022/02/20:
   + If you found these optimization-period releases still have oversight bugs,
     please lock it at Blazy 2.5 till the next hot fix releases. Kindly report
     any uncovered regressions, or issues for quick fixes. It is still a
@@ -18,7 +28,7 @@
   + Moved media-related classes/ services into `Drupal\blazy\Media` namespace.
   + Added Magnific Popup as decent replacement for Colorbox and Photobox.
   + [Hot fix](https://drupal.org/node/3263027) for D8 `app.root` compat.
-* _Blazy 2.6_:
+* _Blazy 2.6_, 2022/02/07:
   + [Preloading](https://drupal.org/node/3262804).
   + [Anti-pattern buffer](https://drupal.org/node/3262724).
   + Works absurdly fine at IE9 for core lazy functionality. Not fancy features

@@ -49,6 +49,7 @@ base:
     - core/drupalSettings
     # @todo min D9.2 - core/once
     - blazy/dblazy
+    - blazy/loading
     - splide/splide
 
 load:

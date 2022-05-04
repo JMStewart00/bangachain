@@ -20,6 +20,9 @@ class LogStorageSchema extends SqlContentEntityStorageSchema {
         'source_entity_id',
         'source_entity_type',
       ],
+      'created' => ['created'],
+      'category_id' => ['category_id'],
+      'template_id' => ['template_id'],
     ];
     return $schema;
   }

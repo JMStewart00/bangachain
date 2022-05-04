@@ -5,6 +5,15 @@ Like Drupal core, the Menu Block module allows you to create blocks of menu
 items. However, Menu Block's blocks are much more configurable than Drupal
 core's.
 
+INSTALLATION
+------------
+
+You must remove and re-add any existing menu blocks after installing this module.
+
+Currently the module has no effect on existing menu blocks,
+see issue: #2787677: Reconfigure core menu blocks to be menu_block blocks
+https://www.drupal.org/project/menu_block/issues/2787677
+
 
 ADDING MENU BLOCKS
 ------------------

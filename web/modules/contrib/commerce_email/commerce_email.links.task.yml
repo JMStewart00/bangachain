@@ -1,0 +1,6 @@
+entity.commerce_email.test_form:
+  title: 'Test email'
+  route_name: entity.commerce_email.test_form
+  base_route: 'entity.commerce_email.edit_form'
+  description: 'Test sending this email.'
+  weight: 50

@@ -9,7 +9,7 @@ dependencies:
 # Add a fake version so local drush and Git checkouts do not fail dependencies.
 # version: 1.x
 
-# Information added by Drupal.org packaging script on 2022-02-20
-version: '1.0.3'
+# Information added by Drupal.org packaging script on 2022-03-06
+version: '1.0.4'
 project: 'splide'
-datestamp: 1645369555
+datestamp: 1646578319

@@ -6,16 +6,25 @@ use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\blazy\Blazy;
 use Drupal\blazy\BlazyDefault;
+use Drupal\blazy\Plugin\Field\FieldFormatter\BlazyFormatterTrait;
 
 @trigger_error('The ' . __NAMESPACE__ . '\BlazyVideoBase is deprecated in blazy:8.x-2.0 and is removed from blazy:8.x-3.0. Use \Drupal\blazy\Plugin\Field\FieldFormatter\BlazyMediaFormatterBase instead. See https://www.drupal.org/node/3103018', E_USER_DEPRECATED);
 
 /**
  * Base class for blazy video embed field formatters.
  *
+ * This file is no longer used nor needed, and will be removed at 3.x.
+ * VEF will continue working via BlazyOEmbed instead.
+ *
+ * BVEF can take over this file to be compat with Blazy 3.x rather than keeping
+ * 1.x debris. Also to adopt core OEmbed security features at ease.
+ *
  * This means Slick Video which depends on VEF is deprecated for Slick Media
  * at Blazy 8.2.x with core Media only.
  */
 abstract class BlazyVideoBase extends FormatterBase {
+
+  use BlazyFormatterTrait;
 
   /**
    * {@inheritdoc}
@@ -40,24 +49,14 @@ abstract class BlazyVideoBase extends FormatterBase {
   }
 
   /**
-   * Defines the scope for the form elements.
+   * {@inheritdoc}
    */
-  public function getScopedFormElements() {
-    $field       = $this->fieldDefinition;
-    $entity_type = $field->getTargetEntityTypeId();
-    $target_type = $this->getFieldSetting('target_type');
-
+  protected function getPluginScopes(): array {
     return [
       'background'        => TRUE,
-      'current_view_mode' => $this->viewMode,
-      'entity_type'       => $entity_type,
-      'field_name'        => $this->fieldDefinition->getName(),
       'image_style_form'  => TRUE,
       'media_switch_form' => TRUE,
       'multimedia'        => TRUE,
-      'plugin_id'         => $this->getPluginId(),
-      'settings'          => $this->getSettings(),
-      'target_type'       => $target_type,
       'thumb_positions'   => TRUE,
       'nav'               => TRUE,
     ];

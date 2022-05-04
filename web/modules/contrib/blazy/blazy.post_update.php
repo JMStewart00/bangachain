@@ -138,3 +138,10 @@ function blazy_post_update_app_root() {
 function blazy_post_update_move_media_services_classes() {
   // Empty hook to clear caches.
 }
+
+/**
+ * Added \Drupal\blazy\BlazyBase service for non-media methods.
+ */
+function blazy_post_update_added_blazy_base_service() {
+  // Empty hook to clear caches.
+}

@@ -7,6 +7,7 @@
   'use strict';
 
   var commerceSquare;
+  var initialized;
 
   /**
    * Attaches the commerceSquareForm behavior.
@@ -21,7 +22,9 @@
   Drupal.behaviors.commerceSquareForm = {
     attach: function (context) {
       var settings = drupalSettings.commerceSquare;
-      if ((context === document) || $('.square-form').length > 0) {
+      // Ensure we initialize the script only once.
+      if (typeof settings !== 'undefined' && !initialized) {
+        initialized = true;
         var script = document.createElement('script');
         var scriptHostname = settings.apiMode === 'sandbox' ? 'squareupsandbox' : 'squareup';
         script.src = 'https://js.' + scriptHostname + '.com/v2/paymentform';

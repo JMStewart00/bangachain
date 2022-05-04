@@ -46,8 +46,8 @@
     var me = this;
     var o = instance.options;
     var append = function (prev, sel) {
-      var el = instance.root.querySelector(sel);
-      if (el !== null) {
+      var el = $.find(instance.root, sel);
+      if ($.isElm(el)) {
         prev.insertAdjacentElement('afterend', el);
       }
     };
@@ -70,11 +70,11 @@
       }, 100);
     });
 
-    instance.on('lazyload:loaded', me.unloading);
+    instance.on('lazyload:loaded', $.unloading);
 
     var listeners = me.listeners;
     if (listeners) {
-      $.forEach(listeners, function (listener) {
+      $.each(listeners, function (listener) {
         if (listener && typeof listener === 'function') {
           var fn = listener(instance, instance.Components, o);
           if ('mount' in fn) {
@@ -104,7 +104,7 @@
     var me = this;
     var fn = null;
     if (me.transitions.length) {
-      $.forEach(me.transitions, function (obj) {
+      $.each(me.transitions, function (obj) {
         if (obj.fn && (obj.type && obj.type === type)) {
           fn = obj.fn;
           return false;
@@ -133,8 +133,8 @@
 
   _ds.applyStyle = function (elm, styles) {
     if (elm) {
-      $.forEach(styles, function (value, prop) {
-        if (value !== null) {
+      $.each(styles, function (value, prop) {
+        if (!$.isNull(value)) {
           elm.style[prop] = value;
         }
       });
@@ -143,34 +143,34 @@
 
   _ds.checkSizes = function (img, parent) {
     var _sizes = {};
-    if (img === null || parent === null) {
+    if ($.isNull(img) || $.isNull(parent)) {
       return _sizes;
     }
 
     var recheck = function (e) {
-      var aw = img.getAttribute('width') || 0;
-      var ah = img.getAttribute('height') || 0;
+      var aw = $.attr(img, 'width') || 0;
+      var ah = $.attr(img, 'height') || 0;
       _sizes = {
         w: img.offsetWidth,
         h: img.offsetHeight,
-        nw: img.naturalWidth || parseInt(aw, 10),
-        nh: img.naturalHeight || parseInt(ah, 10),
-        aw: parseInt(aw, 10),
-        ah: parseInt(ah, 10),
+        nw: img.naturalWidth || parseInt(aw, 2),
+        nh: img.naturalHeight || parseInt(ah, 2),
+        aw: parseInt(aw, 2),
+        ah: parseInt(ah, 2),
         pw: parent.offsetWidth,
         ph: parent.offsetHeight
       };
 
       if (e) {
-        $.unbindEvent(img, 'load', recheck);
+        $.off(img, 'load.' + _id, recheck);
       }
     };
 
-    if (img.complete || img.getAttribute('data-src')) {
+    if ($.isDecoded(img) || $.attr(img, 'data-src')) {
       recheck();
     }
     else {
-      $.bindEvent(img, 'load', recheck);
+      $.on(img, 'load.' + _id, recheck);
     }
 
     return _sizes;
@@ -204,29 +204,17 @@
 
   // @todo remove for $.unloading post Blazy 2.3+.
   _ds.unloading = function (el) {
-    var loaders = [el, $.closest(el, '[class*="loading"]')];
-
-    $.forEach(loaders, function (loader) {
-      if (loader !== null) {
-        loader.className = loader.className.replace(/(\S+)loading/g, '');
-      }
-    });
+    $.unloading(el);
   };
 
   // @todo remove for $.attr post Blazy 2.3+.
   _ds.attr = function (el, attr, def) {
-    def = def || '';
-    return el && el.hasAttribute(attr) ? el.getAttribute(attr) : def;
+    return $.attr(el, attr, def);
   };
 
   // @todo remove for dBlazy.context post Blazy:2.6+.
   _ds.context = function (context) {
-    // Weirdo: context may be null after Colorbox close.
-    context = context || document;
-
-    // jQuery may pass its array as non-expected context identified by length.
-    context = 'length' in context ? context[0] : context;
-    return context instanceof HTMLDocument ? context : document;
+    return $.context(context);
   };
 
   return _ds;

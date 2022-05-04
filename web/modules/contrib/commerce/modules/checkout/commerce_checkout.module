@@ -6,6 +6,7 @@
  */
 
 use Drupal\commerce\EntityHelper;
+use Drupal\Component\Utility\Tags;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
@@ -165,8 +166,9 @@ function commerce_checkout_form_alter(&$form, FormStateInterface $form_state, $f
   if ($form_state->getFormObject() instanceof ViewsForm) {
     /** @var \Drupal\views\ViewExecutable $view */
     $view = reset($form_state->getBuildInfo()['args']);
+    $tags = Tags::explode($view->storage->get('tag'));
     // Only add the Checkout button if the cart form view has order items.
-    if ($view->storage->get('tag') == 'commerce_cart_form' && !empty($view->result)) {
+    if (in_array('commerce_cart_form', $tags, TRUE) && !empty($view->result)) {
       $form['actions']['checkout'] = [
         '#type' => 'submit',
         '#value' => t('Checkout'),

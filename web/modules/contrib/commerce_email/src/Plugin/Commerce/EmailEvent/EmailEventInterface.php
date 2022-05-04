@@ -3,7 +3,7 @@
 namespace Drupal\commerce_email\Plugin\Commerce\EmailEvent;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Drupal\Component\EventDispatcher\Event;
 
 /**
  * Defines the interface for email events.

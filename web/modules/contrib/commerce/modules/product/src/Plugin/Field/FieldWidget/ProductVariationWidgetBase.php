@@ -2,6 +2,7 @@
 
 namespace Drupal\commerce_product\Plugin\Field\FieldWidget;
 
+use Drupal\commerce_product\Ajax\UpdateProductUrlCommand;
 use Drupal\commerce_product\Entity\ProductInterface;
 use Drupal\commerce_product\Entity\ProductVariation;
 use Drupal\commerce_product\Event\ProductVariationAjaxChangeEvent;
@@ -125,6 +126,9 @@ abstract class ProductVariationWidgetBase extends WidgetBase implements Containe
     $variation_field_renderer = \Drupal::service('commerce_product.variation_field_renderer');
     $view_mode = $form_state->get('view_mode');
     $variation_field_renderer->replaceRenderedFields($response, $variation, $view_mode);
+    // Update Product URL to include variation query parameter.
+    $response->addCommand(new UpdateProductUrlCommand($variation->id()));
+
     // Allow modules to add arbitrary ajax commands to the response.
     $event = new ProductVariationAjaxChangeEvent($variation, $response, $view_mode);
     $event_dispatcher = \Drupal::service('event_dispatcher');

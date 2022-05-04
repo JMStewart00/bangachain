@@ -1,6 +1,6 @@
 # Everything is optional since 2.6. Nothing will be loaded when `No JavaScript`
 # lazy option is enabled, unless exceptions met.
-# Re-usable library, even for Ultimenu, or any module wish to have vanilla.
+# Re-usable library, even for Ultimenu, or any modules wish to have vanilla.
 # All dBlazy plugins should weight ~ -5.5 to be usable by blazy/drupal, etc.
 dblazy:
   js:
@@ -117,6 +117,7 @@ media:
     js/components/blazy.media.min.js: { minified: true }
   dependencies:
     - blazy/drupal
+    - blazy/dom
     - blazy/ratio
 
 oembed:
@@ -193,6 +194,7 @@ blazybox:
     js/components/box/blazy.blazybox.min.js: { minified: true }
   dependencies:
     - blazy/drupal
+    - blazy/dom
     - blazy/lightbox
 
 colorbox:

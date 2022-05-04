@@ -85,7 +85,8 @@ class BlazyAdminExtendedUnitTest extends UnitTestCase {
    */
   public function testBuildSettingsForm($id, $vanilla) {
     $form = [];
-    $definition = $this->getDefaulEntityFormatterDefinition() + $this->getDefaultFormatterDefinition();
+    $definition = $this->getDefaulEntityFormatterDefinition()
+      + $this->getScopedFormElements();
 
     $definition['settings'] += $this->getDefaultFields(TRUE);
     $definition['id'] = $id;

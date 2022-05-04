@@ -14,6 +14,8 @@
  * Warning! The percentage values are affected by :root--bnColGap. Adjust.
  * Percentage is used specific for Masonry due to numeric values 1~12 is broken
  * when being used on AJAX loaded contents like VIS, or IO infinite pager.
+ *
+ * @todo https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout/Masonry_Layout
  */
 
 /* csslint ignore:start */

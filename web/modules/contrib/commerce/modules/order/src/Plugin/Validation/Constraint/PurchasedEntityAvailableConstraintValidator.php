@@ -111,6 +111,7 @@ class PurchasedEntityAvailableConstraintValidator extends ConstraintValidator im
       if (!empty($availability_result->getReason())) {
         $this->context
           ->buildViolation($availability_result->getReason())
+          ->setCode($availability_result->getCode())
           ->addViolation();
       }
       else {

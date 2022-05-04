@@ -2,17 +2,83 @@
 
 namespace Drupal\commerce_square\Form;
 
+use Drupal\commerce_square\Connect;
+use Drupal\Core\Access\CsrfTokenGenerator;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\Core\Url;
-use SquareConnect\Api\OAuthApi;
-use SquareConnect\ApiException;
-use SquareConnect\Model\ObtainTokenRequest;
+use Square\Environment;
+use Square\Exceptions\ApiException;
+use Square\Models\ObtainTokenRequest;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\commerce_square\ErrorHelper;
+use Drupal\Core\State\State;
 
+/**
+ * Provides a configuration form for Square settings.
+ */
 class SquareSettings extends ConfigFormBase {
 
+  /**
+   * The state store.
+   *
+   * @var \Drupal\Core\State\State
+   */
+  protected $state;
+
+  /**
+   * The Connect application.
+   *
+   * @var \Drupal\commerce_square\Connect
+   */
+  protected $connect;
+
+  /**
+   * The csrf token generator.
+   *
+   * @var \Drupal\Core\Access\CsrfTokenGenerator
+   */
+  protected $csrfToken;
+
+  /**
+   * Constructs a new SquareSettings object.
+   *
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory.
+   * @param \Drupal\Core\State\State $state
+   *   The object State.
+   * @param \Drupal\commerce_square\Connect $connect
+   *   The Connect application.
+   * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token_generator
+   *   The CSRF token generator.
+   */
+  public function __construct(ConfigFactoryInterface $config_factory, State $state, Connect $connect, CsrfTokenGenerator $csrf_token_generator) {
+    parent::__construct($config_factory);
+    $this->state = $state;
+    $this->connect = $connect;
+    $this->csrfToken = $csrf_token_generator;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('config.factory'),
+      $container->get('state'),
+      $container->get('commerce_square.connect'),
+      $container->get('csrf_token')
+    );
+  }
+
+  /**
+   * Scope of the permissions for the request.
+   *
+   * @var array
+   */
   protected $permissionScope = [
     'MERCHANT_PROFILE_READ',
     'PAYMENTS_READ',
@@ -46,26 +112,35 @@ class SquareSettings extends ConfigFormBase {
     $code = $this->getRequest()->query->get('code');
     if (!empty($code)) {
       try {
-        /** @var \Drupal\commerce_square\Connect $connect */
-        $connect = \Drupal::service('commerce_square.connect');
-        $client = $connect->getClient('production');
-        $oauth_api = new OAuthApi($client);
-        $obtain_token_request = new ObtainTokenRequest();
-        $obtain_token_request
-          ->setClientId($config->get('production_app_id'))
-          ->setClientSecret($config->get('app_secret'))
-          ->setCode($code)
-          ->setGrantType('authorization_code');
-        $token_response = $oauth_api->obtainToken($obtain_token_request);
+        $client = $this->connect->getClient(Environment::PRODUCTION);
+        $oauth_api = $client->getOAuthApi();
 
-        $state = \Drupal::state();
-        $state->setMultiple([
-          'commerce_square.production_access_token' => $token_response->getAccessToken(),
-          'commerce_square.production_access_token_expiry' => strtotime($token_response->getExpiresAt()),
-          'commerce_square.production_refresh_token' => $token_response->getRefreshToken(),
-        ]);
-        $this->messenger()->addStatus($this->t('Your Drupal Commerce store and Square have been successfully connected.'));
+        // Obtain token request.
+        $obtain_token_request = new ObtainTokenRequest(
+          $config->get('production_app_id'),
+          $config->get('app_secret'),
+          'authorization_code'
+        );
+        $obtain_token_request->setCode($code);
+        $api_response = $oauth_api->obtainToken($obtain_token_request);
 
+        if ($api_response->isSuccess()) {
+          $token_response = $api_response->getResult();
+          $this->state->setMultiple([
+            'commerce_square.production_access_token' => $token_response->getAccessToken(),
+            'commerce_square.production_access_token_expiry' => strtotime($token_response->getExpiresAt()),
+            'commerce_square.production_refresh_token' => $token_response->getRefreshToken(),
+          ]);
+          $this->messenger()->addStatus($this->t('Your Drupal Commerce store and Square have been successfully connected.'));
+        }
+        else {
+          throw ErrorHelper::convertException(
+            new ApiException(
+              $api_response->getBody(),
+              $api_response->getRequest()
+            )
+          );
+        }
       }
       catch (ApiException $e) {
         $this->messenger()->addError($e->getResponseBody()->message);
@@ -165,7 +240,7 @@ class SquareSettings extends ConfigFormBase {
     $options = [
       'query' => [
         'client_id' => $config->get('production_app_id'),
-        'state' => \Drupal::csrfToken()->get(),
+        'state' => $this->csrfToken->get(),
         'scope' => implode(' ', $this->permissionScope),
       ],
     ];

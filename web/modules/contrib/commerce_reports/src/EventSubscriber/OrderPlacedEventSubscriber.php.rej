@@ -1,0 +1,24 @@
+--- src/EventSubscriber/OrderPlacedEventSubscriber.php
++++ src/EventSubscriber/OrderPlacedEventSubscriber.php
+@@ -54,7 +54,7 @@ class OrderPlacedEventSubscriber implements EventSubscriberInterface {
+   public function flagOrder(WorkflowTransitionEvent $event) {
+     $order = $event->getEntity();
+     $existing = $this->state->get('commerce_order_reports', []);
+-    $existing[] = $order->id();
++    $existing[$order->id()] = $order->id();
+     $this->state->set('commerce_order_reports', $existing);
+   }
+ 
+@@ -72,7 +72,11 @@ class OrderPlacedEventSubscriber implements EventSubscriberInterface {
+    */
+   public function generateReports(PostResponseEvent $event) {
+     $order_ids = $this->state->get('commerce_order_reports', []);
+-    $this->orderReportGenerator->generateReports($order_ids);
++    if (empty($order_ids)) {
++      return;
++    }
++
++    $this->orderReportGenerator->refreshReports($order_ids);
+ 
+     // @todo this could lose data, possibly as its global state.
+     $this->state->set('commerce_order_reports', []);

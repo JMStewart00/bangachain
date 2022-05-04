@@ -24,3 +24,16 @@ function media_bulk_upload_help($route_name, RouteMatchInterface $route_match) {
     default:
   }
 }
+
+/**
+ * Implements hook_menu_links_discovered_alter().
+ */
+function media_bulk_upload_menu_links_discovered_alter(&$links) {
+  if (isset($links['admin_toolbar_tools.extra_links:media_page'])) {
+    /*
+     * Add the menu link under the "Content" > "Media" menu item if the "Admin Toolbar Extra Tools" module is enabled.
+     * @see \Drupal\admin_toolbar_tools\Plugin\Derivative\ExtraLinks::getDerivativeDefinitions()
+     */
+    $links['entity.media_bulk.collection']['parent'] = 'admin_toolbar_tools.extra_links:media_page';
+  }
+}

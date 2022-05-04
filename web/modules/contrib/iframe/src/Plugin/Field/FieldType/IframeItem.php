@@ -15,7 +15,7 @@ use Drupal\Component\Utility\Random;
  * @FieldType(
  *   id = "iframe",
  *   label = @Translation("Iframe"),
- *   description = @Translation("The Iframe module defines an iframe field type for the Field module. Further definable are attributes for styling the iframe, like: URL, width, height, title, class, frameborder, scrolling and transparency."),
+ *   description = @Translation("The Iframe module defines an iframe field type for the Field module. Further definable are attributes for styling the iframe, like: URL, width, height, title, headerlevel, class, frameborder, scrolling and transparency."),
  *   default_widget = "iframe_urlwidthheight",
  *   default_formatter = "iframe_default"
  * )
@@ -28,6 +28,7 @@ class IframeItem extends FieldItemBase {
   public static function defaultFieldSettings() {
     return [
       'title' => NULL,
+      'headerlevel' => NULL,
       'class' => NULL,
       'height' => NULL,
       'width' => NULL,
@@ -49,6 +50,9 @@ class IframeItem extends FieldItemBase {
 
     $properties['title'] = DataDefinition::create('string')
       ->setLabel(t('Title text'));
+
+    $properties['headerlevel'] = DataDefinition::create('string')
+      ->setLabel(t('Header Level'));
 
     $properties['width'] = DataDefinition::create('string')
       ->setLabel(t('Width'));
@@ -98,6 +102,13 @@ class IframeItem extends FieldItemBase {
           'not null' => FALSE,
           'sortable' => TRUE,
           'default' => '',
+        ],
+        'headerlevel' => [
+          'description' => 'Header level for accessibility, defaults to "h3".',
+          'type' => 'int',
+          'size' => 'tiny',
+          'not null' => TRUE,
+          'default' => 3,
         ],
         'class' => [
           'description' => 'When output, this iframe will have this CSS class attribute. Multiple classes should be separated by spaces.',
@@ -177,6 +188,19 @@ class IframeItem extends FieldItemBase {
       '#title' => $this->t('CSS Class'),
       // ''
       '#default_value' => $settings['class'],
+    ];
+
+    $element['headerlevel'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Header Level'),
+      // '0'
+      '#default_value' => $settings['headerlevel'] ?? 3,
+      '#options' => [
+        '1' => $this->t('h1'),
+        '2' => $this->t('h2'),
+        '3' => $this->t('h3'),
+        '4' => $this->t('h4'),
+      ],
     ];
 
     $element['frameborder'] = [

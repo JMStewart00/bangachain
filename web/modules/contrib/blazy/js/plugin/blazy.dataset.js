@@ -38,7 +38,9 @@
 
           if ($.hasAttr(el, dataAttr)) {
             var value = $.attr(el, dataAttr);
-            $.attr(el, name, value);
+            if (value && value.length) {
+              $.attr(el, name, value);
+            }
 
             if (remove) {
               $.removeAttr(el, dataAttr);

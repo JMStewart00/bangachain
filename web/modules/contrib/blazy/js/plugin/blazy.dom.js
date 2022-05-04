@@ -21,6 +21,11 @@
 
   'use strict';
 
+  var _aProto = Array.prototype;
+  var _some = _aProto.some;
+  var _add = 'add';
+  var _remove = 'remove';
+  var _class = 'class';
   var _width = 'width';
   var _height = 'height';
   var _after = 'after';
@@ -46,7 +51,8 @@
       // @todo re-check common integer.
       var arr = [_width, _height, 'top', 'right', 'bottom', 'left'];
       var result = $.computeStyle(el, props);
-      return arr.indexOf(props) === -1 ? result : parseInt(result, 10);
+      var num = $.isNum(result) ? parseInt(result, 2) : result;
+      return arr.indexOf(props) === -1 ? result : num;
     }
 
     var chainCallback = function (el) {
@@ -54,7 +60,7 @@
         return _getter ? '' : me;
       }
 
-      var setVal = function (prop, val) {
+      var setVal = function (val, prop) {
         // Setter.
         if ($.isFun(val)) {
           val = val();
@@ -69,9 +75,7 @@
 
       // Passing a key-value pair object means setting multiple attributes once.
       if (_obj) {
-        $.each(props, function (val, prop) {
-          setVal(prop, val);
-        });
+        $.each(props, setVal);
       }
       // Since a css value null makes no sense, assumes nullify.
       else if ($.isNull(vals)) {
@@ -82,20 +86,13 @@
       else {
         // Else a setter.
         if ($.isStr(props)) {
-          setVal(props, vals);
+          setVal(vals, props);
         }
       }
     };
 
     return $.chain(els, chainCallback);
   }
-
-  $.css = css;
-
-  // @tdo multiple css values once.
-  $.fn.css = function (prop, val) {
-    return css(this, prop, val);
-  };
 
   function offset(el) {
     var rect = $.rect(el);
@@ -106,15 +103,13 @@
     };
   }
 
-  $.offset = offset;
-
-  $.width = function (el, val) {
+  function width(el, val) {
     return css(el, _width, val);
-  };
+  }
 
-  $.height = function (el, val) {
+  function height(el, val) {
     return css(el, _height, val);
-  };
+  }
 
   function outerDim(el, withMargin, prop) {
     var result = 0;
@@ -124,7 +119,7 @@
       if (withMargin) {
         var style = $.computeStyle(el);
         var margin = function (pos) {
-          return parseInt(style['margin' + pos], 10);
+          return parseInt(style['margin' + pos], 2);
         };
         if (prop === _uHeight) {
           result += margin(_uTop) + margin('Bottom');
@@ -137,13 +132,13 @@
     return result;
   }
 
-  $.outerWidth = function (el, withMargin) {
+  function outerWidth(el, withMargin) {
     return outerDim(el, withMargin, _uWidth);
-  };
+  }
 
-  $.outerHeight = function (el, withMargin) {
+  function outerHeight(el, withMargin) {
     return outerDim(el, withMargin, _uHeight);
-  };
+  }
 
   /**
    * Insert Element or string into a position relative to a target element.
@@ -176,34 +171,171 @@
     }
   }
 
-  $.after = function (target, el) {
+  function after(target, el) {
     insert(target, el, _after + _end);
-  };
+  }
 
   // Node.insertBefore(), similar to beforebegin, with different arguments.
-  $.before = function (target, el) {
+  function before(target, el) {
     insert(target, el, _before + _begin);
-  };
+  }
 
   // Node.appendChild(), same effect as beforeend.
-  $.append = function (target, el) {
+  function append(target, el) {
     insert(target, el, _before + _end);
-  };
+  }
 
-  $.prepend = function (target, el) {
+  function prepend(target, el) {
     insert(target, el, _after + _begin);
-  };
+  }
 
-  function clone(els) {
+  function clone(els, deep) {
+    if ($.isUnd(deep)) {
+      deep = true;
+    }
+
     var chainCallback = function (el) {
-      return $.isElm(el) && el.cloneNode(true);
+      return $.isElm(el) && el.cloneNode(deep);
     };
     return $.chain(els, chainCallback);
   }
 
-  $.clone = clone;
-  $.fn.clone = function () {
-    return clone(this);
+  var objs = {
+    // @todo multiple css values once.
+    css: function (prop, val) {
+      return css(this, prop, val);
+    },
+    hasAttr: function (name) {
+      var me = this;
+      return _some.call(me, function (el) {
+        return $.hasAttr(el, name);
+      });
+    },
+
+    attr: function (attr, defValue, withDefault) {
+      var me = this;
+      if ($.isNull(defValue)) {
+        return me.removeAttr(attr, withDefault);
+      }
+      return $.attr(me, attr, defValue, withDefault);
+    },
+    removeAttr: function (attr, prefix) {
+      return $.removeAttr(this, attr, prefix);
+    },
+    hasClass: function (name) {
+      var me = this;
+      return _some.call(me, function (el) {
+        return $.hasClass(el, name);
+      });
+    },
+    toggleClass: function (name, op) {
+      return $.toggleClass(this, name, op);
+    },
+    addClass: function (name) {
+      return this.toggleClass(name, _add);
+    },
+    removeClass: function (name) {
+      var me = this;
+      return arguments.length ? me.toggleClass(name, _remove) : me.attr(_class, '');
+    },
+    empty: function () {
+      return $.empty(this);
+    },
+    first: function (el) {
+      return $.isUnd(el) ? this[0] : el;
+    },
+    after: function (el) {
+      return after(this[0], el);
+    },
+    before: function (el) {
+      return before(this[0], el);
+    },
+    append: function (el) {
+      return append(this[0], el);
+    },
+    prepend: function (el) {
+      return prepend(this[0], el);
+    },
+    remove: function () {
+      this.each($.remove);
+    },
+    closest: function (selector) {
+      return $.closest(this[0], selector);
+    },
+    equal: function (selector) {
+      return $.equal(this[0], selector);
+    },
+    find: function (selector, asArray) {
+      return $.find(this[0], selector, asArray);
+    },
+    findAll: function (selector) {
+      return $.findAll(this[0], selector);
+      // @todo multiple sources for multiple targets.
+      // return this.each(function (el) {
+      // els.push(findAll(el, selector));
+      // });
+    },
+    clone: function (deep) {
+      return clone(this, deep);
+    },
+    computeStyle: function (prop) {
+      return $.computeStyle(this[0], prop);
+    },
+    offset: function () {
+      return offset(this[0]);
+    },
+    parent: function (selector) {
+      return $.parent(this[0], selector);
+    },
+    prev: function (selector) {
+      return $.prev(this[0], selector);
+    },
+    next: function (selector) {
+      return $.next(this[0], selector);
+    },
+    index: function (parents) {
+      return $.index(this[0], parents);
+    },
+    width: function (val) {
+      return width(this[0], val);
+    },
+    height: function (val) {
+      return height(this[0], val);
+    },
+    outerWidth: function (withMargin) {
+      return outerWidth(this[0], withMargin);
+    },
+    outerHeight: function (withMargin) {
+      return outerHeight(this[0], withMargin);
+    },
+    on: function (eventName, selector, cb, params, isCustom) {
+      return $.on(this, eventName, selector, cb, params, isCustom, _add);
+    },
+    off: function (eventName, selector, cb, params, isCustom) {
+      return $.off(this, eventName, selector, cb, params, isCustom, _remove);
+    },
+    one: function (eventName, cb, isCustom) {
+      return $.one(this, eventName, cb, isCustom);
+    },
+    trigger: function (eventName, details, param) {
+      return $.trigger(this, eventName, details, param);
+    }
   };
+
+  // Merge prototypes.
+  $.fn.extend(objs);
+
+  // @todo refactor and remove after migration:
+  $.css = css;
+  $.offset = offset;
+  $.clone = clone;
+  $.after = after;
+  $.before = before;
+  $.append = append;
+  $.prepend = prepend;
+  $.width = width;
+  $.height = height;
+  $.outerWidth = outerWidth;
+  $.outerHeight = outerHeight;
 
 })(dBlazy, this, this.document);

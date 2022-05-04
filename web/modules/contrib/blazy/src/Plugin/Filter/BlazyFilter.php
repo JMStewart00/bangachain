@@ -5,7 +5,9 @@ namespace Drupal\blazy\Plugin\Filter;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\filter\FilterProcessResult;
+use Drupal\blazy\BlazyDefault;
 use Drupal\blazy\Media\BlazyFile;
+use Drupal\blazy\Plugin\Filter\BlazyFilterUtil as Util;
 
 /**
  * Provides a filter to lazyload image, or iframe elements.
@@ -38,30 +40,34 @@ class BlazyFilter extends BlazyFilterBase {
     $this->result = $result = new FilterProcessResult($text);
     $this->langcode = $langcode;
 
-    $allowed_tags = array_values((array) $this->settings['filter_tags']);
     if (empty($text)) {
       return $result;
     }
 
+    $allowed_tags = array_values((array) $this->settings['filter_tags']);
     $attachments = $grid_items = $grid_nodes = [];
     $settings = $this->buildSettings($text);
+    $blazies = $settings['blazies'];
 
     if (stristr($text, '[blazy') !== FALSE) {
-      $text = BlazyFilterUtil::unwrap($text, 'blazy', 'item');
+      $text = Util::unwrap($text, 'blazy', 'item');
     }
 
     $dom = Html::load($text);
 
     // Works with individual images and or iframes.
     if (!empty($allowed_tags)) {
-      $nodes = BlazyFilterUtil::validNodes($dom, $allowed_tags, 'data-unblazy');
+      $nodes = Util::validNodes($dom, $allowed_tags, 'data-unblazy');
       if (count($nodes) > 0) {
         foreach ($nodes as $delta => $node) {
-          $settings['delta'] = $delta;
+          $sets = $settings;
+          $blazy = $blazies->reset($sets);
 
-          if ($output = $this->build($node, $settings)) {
-            // @todo remove deprecated too-catch-all _grid post Blazy 3.x.
-            if ($settings['_grid']) {
+          $blazy->set('delta', $delta);
+
+          if ($output = $this->build($node, $sets, $delta)) {
+            // @todo remove deprecated too-catch-all post Blazy 3.x.
+            if ($blazy->is('deprecated_grid')) {
               $grid_items[] = $output;
               $grid_nodes[] = $node;
             }
@@ -74,11 +80,15 @@ class BlazyFilter extends BlazyFilterBase {
     }
 
     // Works with grids and entities, not always images or iframes.
-    $nodes = BlazyFilterUtil::validNodes($dom, ['blazy']);
+    $nodes = Util::validNodes($dom, ['blazy']);
     if (count($nodes) > 0) {
       foreach ($nodes as $delta => $node) {
-        $settings['delta'] = $delta;
-        if ($output = $this->build($node, $settings)) {
+        $sets = $settings;
+        $blazy = $blazies->reset($sets);
+
+        $blazy->set('delta', $delta);
+
+        if ($output = $this->build($node, $sets, $delta)) {
           $this->render($node, $output);
         }
       }
@@ -86,10 +96,12 @@ class BlazyFilter extends BlazyFilterBase {
 
     // Builds the grids if so provided via [data-column], or [data-grid].
     // @todo deprecated for grid shortcode.
-    $this->buildGrid($settings, $grid_nodes, $grid_items);
+    if ($blazies->is('deprecated_grid')) {
+      $this->buildGrid($settings, $grid_nodes, $grid_items);
+    }
 
     // Adds the attachments.
-    $attach = BlazyFilterUtil::attach($settings);
+    $attach = Util::attach($settings);
     $attachments = $this->blazyManager->attach($attach);
 
     // Cleans up invalid, or moved nodes.
@@ -156,27 +168,28 @@ class BlazyFilter extends BlazyFilterBase {
   public function buildSettings($text) {
     $settings = parent::buildSettings($text);
 
-    // The data-grid and data-column are deprecated for [blazy] shortcode.
-    $settings['grid'] = stristr($text, 'data-grid') !== FALSE;
-    $settings['column'] = stristr($text, 'data-column') !== FALSE;
-    $settings['_grid'] = $settings['column'] || $settings['grid'];
-
     // Provides alter like formatters to modify at one go, even clumsy here.
     $build = ['settings' => $settings];
     $this->blazyManager->getModuleHandler()->alter('blazy_settings', $build, $this->settings);
-    return array_merge($settings, $build['settings']);
+
+    $settings = array_merge($settings, $build['settings']);
+    $this->blazyManager->postSettingsAlter($settings);
+    return $settings;
+
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildImageItem(array &$build, &$node) {
-    parent::buildImageItem($build, $node);
+  protected function buildImageItem(array &$build, &$node, $delta = 0) {
+    parent::buildImageItem($build, $node, $delta);
 
-    $item = $build['item'];
+    $item = $build['item'] ?? NULL;
     $settings = $build['settings'];
+    $blazies = $settings['blazies'];
 
-    if (!empty($settings['_grid']) || !empty($settings['no_item_container'])) {
+    // @todo remove deprecated too-catch-all grid for shortcode at 3.x+.
+    if ($blazies->is('grid') || !empty($settings['no_item_container'])) {
       return;
     }
 
@@ -226,27 +239,70 @@ class BlazyFilter extends BlazyFilterBase {
    */
   protected function cleanupImageCaption(array &$build, &$node, &$item) {
     $settings = &$build['settings'];
-    if (empty($settings['_blazy_tag'])) {
+    $blazies = $settings['blazies'];
+
+    if (!$blazies->is('blazy_tag')) {
       // Mark the FIGCAPTION for deletion because the caption moved into Blazy.
       $item->setAttribute('class', 'blazy-removed');
 
       // Marks figures for removal as its contents are moved into grids.
-      if ($settings['_grid']) {
+      // @todo remove deprecated too-catch-all grid for shortcode at 3.x+.
+      if ($blazies->is('grid') && $node->parentNode) {
         $node->parentNode->setAttribute('class', 'blazy-removed');
       }
     }
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function preSettings(array &$settings, $text) {
+    // @todo remove at 3.x or so.
+    $this->deprecatedGrid($settings, $text);
+
+    parent::preSettings($settings, $text);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function postSettings(array &$settings) {
+    $blazies = $settings['blazies'];
+    if ($style = ($settings['hybrid_style'] ?? NULL)) {
+      // @todo move it out of here due to requiring URI to determine style.
+      if ($blazies->is('resimage')) {
+        try {
+          if ($resimage = $this->blazyManager->entityLoad($style, 'responsive_image_style')) {
+            $settings['responsive_image_style'] = $style;
+            $blazies->set('resimage.style', $resimage);
+          }
+        }
+        catch (\Exception $ignore) {
+          // Likely SVG, etc. without dimensions.
+        }
+      }
+
+      if (empty($settings['responsive_image_style'])) {
+        $settings['image_style'] = $style;
+      }
+    }
+
+    parent::postSettings($settings);
+  }
+
+  /**
    * Build the blazy, the node might be grid, or direct img/ iframe.
    */
-  private function build(\DOMElement $node, array &$settings) {
+  private function build(\DOMElement $node, array &$settings, $delta = 0) {
+    $blazies = $settings['blazies'];
     if ($node->tagName == 'blazy') {
       $attribute = $node->getAttribute('data');
 
-      $settings['id'] = $settings['gallery_id'] = BlazyFilterUtil::getId($settings['plugin_id']);
-      $settings['_blazy_tag'] = TRUE;
-      $this->prepareSettings($node, $settings);
+      $blazies->set('is.blazy_tag', TRUE);
+
+      // Extract settings from attributes.
+      $blazies->set('was.initialized', FALSE);
+      $this->extractSettings($node, $settings);
 
       if (!empty($attribute) && mb_strpos($attribute, ":") !== FALSE) {
         return $this->byEntity($node, $settings, $attribute);
@@ -255,28 +311,32 @@ class BlazyFilter extends BlazyFilterBase {
       return $this->byDom($node, $settings);
     }
 
-    $build = ['settings' => $settings];
-    return $this->buildItem($build, $node);
+    $build = ['settings' => $settings, 'item' => NULL];
+    return $this->buildItem($build, $node, $delta);
   }
 
   /**
    * Build the blazy using the node ID and field_name.
    */
-  private function byEntity(\DOMElement $object, array $settings, $attribute) {
+  private function byEntity(\DOMElement $object, array &$settings, $attribute) {
     [$entity_type, $id, $field_name, $field_image] = array_pad(array_map('trim', explode(":", $attribute, 4)), 4, NULL);
     if (empty($field_name)) {
       return [];
     }
 
     $entity = $this->blazyManager->entityLoad($id, $entity_type);
-    $settings['entity_type_id'] = $entity_type;
-    $settings['entity_id'] = $id;
-    $settings['field_name'] = $field_name;
+    $blazies = $settings['blazies'];
+    $blazies->set('entity.id', $id)
+      ->set('entity.type_id', $entity_type)
+      ->set('field.name', $field_name);
+
     $settings['image'] = $field_image;
 
     if ($entity && $entity->hasField($field_name)) {
-      $settings['bundle'] = $entity->bundle();
+      $settings['bundle'] = $bundle = $entity->bundle();
       $list = $entity->get($field_name);
+
+      $blazies->set('entity.bundle', $bundle);
 
       if ($list) {
         $definition = $list->getFieldDefinition();
@@ -285,6 +345,8 @@ class BlazyFilter extends BlazyFilterBase {
         $handler = $field_settings['handler'] ?? NULL;
         $strings = ['link', 'string', 'string_long'];
         $texts = ['text', 'text_long', 'text_with_summary'];
+
+        $blazies->set('field.type', $field_type);
 
         $formatter = NULL;
         // @todo refine for main stage, etc.
@@ -319,13 +381,13 @@ class BlazyFilter extends BlazyFilterBase {
    * Build the blazy using the DOM lookups.
    */
   private function byDom(\DOMElement $object, array &$settings) {
-    $text = BlazyFilterUtil::getHtml($object);
+    $text = Util::getHtml($object);
     if (empty($text)) {
       return [];
     }
 
     $dom = Html::load($text);
-    $nodes = BlazyFilterUtil::getNodes($dom, '//item');
+    $nodes = Util::getNodes($dom, '//item');
     if ($nodes->length == 0) {
       return [];
     }
@@ -338,11 +400,10 @@ class BlazyFilter extends BlazyFilterBase {
       }
 
       $sets = $build['settings'];
-      $sets['delta'] = $delta;
-      $sets['thumbnail_uri'] = $node->getAttribute('data-thumb');
 
       $element = ['attributes' => [], 'item' => NULL, 'settings' => $sets];
-      $content = $this->buildItem($element, $node) ?: ['#markup' => $dom->saveHtml($node)];
+      $content = $this->buildItem($element, $node, $delta)
+        ?: ['#markup' => $dom->saveHtml($node)];
 
       $element['content'] = $content;
       unset($element['captions']);
@@ -356,19 +417,27 @@ class BlazyFilter extends BlazyFilterBase {
   /**
    * Build the individual item.
    */
-  private function buildItem(array &$build, $node) {
-    $media = NULL;
+  private function buildItem(array &$build, $node, $delta = 0) {
+    $media     = NULL;
+    $settings  = &$build['settings'];
+    $settings += BlazyDefault::itemSettings();
+    $blazies   = $settings['blazies']->reset($settings);
+    $tn_uri    = $node->getAttribute('data-thumb');
+
+    $blazies->set('delta', $delta)
+      ->set('thumbnail.uri', $tn_uri);
 
     // If using grid, node is grid item, else img or iframe.
     if ($node->tagName == 'item') {
-      $this->buildItemAttributes($build, $node);
-      $text = BlazyFilterUtil::getHtml($node);
+      $this->buildItemAttributes($build, $node, $delta);
+      $text = Util::getHtml($node);
 
       if (!empty($text)) {
         $dom = Html::load($text);
-        $items = BlazyFilterUtil::getNodes($dom, '//iframe | //img');
+        $items = Util::getNodes($dom, '//iframe | //img');
+
         if ($items->length > 0) {
-          $media = $items->item(0);
+          $media = Util::getValidNode($items);
         }
       }
     }
@@ -380,25 +449,23 @@ class BlazyFilter extends BlazyFilterBase {
       return [];
     }
 
-    // Provides individual item settings.
-    $this->buildItemSettings($build, $media);
-
-    // Extracts image item from SRC attribute.
-    $this->buildImageItem($build, $media);
-
-    // Extracts image caption if available.
-    $this->buildImageCaption($build, $media);
+    // Build item settings, image, and caption.
+    $this->buildItemContent($build, $media, $delta);
 
     // Marks invalid, unknown, missing IMG or IFRAME for removal.
     // Be sure to not affect external images, only strip missing local URI.
-    $uri = $build['settings']['uri'];
-    $missing = !empty($uri) && (BlazyFile::isValidUri($uri) && !is_file($uri));
+    $uri = $settings['uri'] ?? '';
+    $uri = $blazies->get('image.uri') ?: $uri;
+    $missing = FALSE;
+    if ($uri && !BlazyFile::isExternal($uri)) {
+      $missing = BlazyFile::isValidUri($uri) && !is_file($uri);
+    }
     if (empty($uri) || $missing) {
       $media->setAttribute('class', 'blazy-removed');
       return [];
     }
 
-    return $this->blazyManager->getBlazy($build);
+    return $this->blazyManager->getBlazy($build, $delta);
   }
 
   /**
@@ -411,7 +478,7 @@ class BlazyFilter extends BlazyFilterBase {
     $xpath = new \DOMXPath($dom);
     $nodes = $xpath->query("//*[contains(@class, 'blazy-removed')]");
     if ($nodes->length > 0) {
-      BlazyFilterUtil::removeNodes($nodes);
+      Util::removeNodes($nodes);
     }
   }
 
@@ -425,25 +492,31 @@ class BlazyFilter extends BlazyFilterBase {
    * @param array $grid_items
    *   The renderable array of blazy item.
    *
-   * @todo deprecate and remove for shortcodes at Blazy 3.x due to being
+   * @todo deprecate and remove for shortcodes at Blazy 4.x due to being
    * too catch-all, not selective like field formatters.
    */
   private function buildGrid(array &$settings, array $grid_nodes, array $grid_items = []) {
-    if (empty($settings['_grid']) || empty($grid_items[0])) {
+    $blazies = $settings['blazies'];
+
+    if (!$blazies->is('deprecated_grid') || empty($grid_items[0])) {
       return;
     }
 
-    $settings['_uri'] = $grid_items[0]['#build']['settings']['uri'] ?? '';
+    $settings['_uri'] = $uri = $grid_items[0]['#build']['settings']['uri'] ?? '';
+    $blazies->set('first.uri', $uri);
 
-    $first = $grid_nodes[0];
-    $dom = $first->ownerDocument;
-    $xpath = new \DOMXPath($dom);
-    $query = $settings['style'] = $settings['column'] ? 'column' : 'grid';
-    $grid = FALSE;
+    $first  = $grid_nodes[0];
+    $dom    = $first->ownerDocument;
+    $xpath  = new \DOMXPath($dom);
+    $column = ($settings['style'] ?? '') == 'column';
+    $query  = $column ? 'column' : 'grid';
+    $grid   = FALSE;
 
     // This is weird, variables not working for xpath?
     $node = $query == 'column' ? $xpath->query('//*[@data-column]') : $xpath->query('//*[@data-grid]');
-    if ($node->length > 0 && $node->item(0) && $node->item(0)->hasAttribute('data-' . $query)) {
+    if ($node->length > 0
+      && $node->item(0)
+      && $node->item(0)->hasAttribute('data-' . $query)) {
       $grid = $node->item(0)->getAttribute('data-' . $query);
     }
 
@@ -489,7 +562,27 @@ class BlazyFilter extends BlazyFilterBase {
       }
 
       // Cleanups old nodes already moved into grids.
-      BlazyFilterUtil::removeNodes($grid_nodes);
+      Util::removeNodes($grid_nodes);
+    }
+  }
+
+  /**
+   * Provides deprecated settings to be removed at 3.x or so.
+   *
+   * @todo remove deprecated too-catch-all grid for shortcode at 3.x+.
+   */
+  private function deprecatedGrid(array &$settings, $text) {
+    $blazies = $settings['blazies'];
+
+    // The data-grid and data-column are deprecated for [blazy] shortcode.
+    $grid = stristr($text, 'data-grid') !== FALSE;
+    $column = stristr($text, 'data-column') !== FALSE;
+
+    if ($column || $grid) {
+      $settings['style'] = $column ? 'column' : 'grid';
+
+      $blazies->set('is.grid', TRUE)
+        ->set('is.deprecated_grid', TRUE);
     }
   }
 

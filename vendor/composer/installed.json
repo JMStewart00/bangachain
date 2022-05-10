@@ -10414,7 +10414,7 @@
                     }
                 },
                 "patches_applied": {
-                    "/project/rules/issues/2471481 - Integrate Typed Data Widgets": "https://www.drupal.org/files/issues/2022-02-15/2471481-170.integrate-typed-data-widgets-no-tests.patch"
+                    "/project/rules/issues/2471481 - Integrate Typed Data Widgets": "https://www.drupal.org/files/issues/2022-03-04/2471481-174.integrate-typed-data-widgets.patch"
                 }
             },
             "installation-source": "source",

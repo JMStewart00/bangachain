@@ -27,7 +27,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *       label = @Translation("Path alias"),
  *       description = @Translation("Specify an alternative path by which this data can be accessed. For example, '/about' for an about page. Use an absolute path and do not add a trailing slash.")
  *     ),
- *     "language" = @ContextDefinition("entity:configurable_language",
+ *     "language" = @ContextDefinition("language_reference",
  *       label = @Translation("Language"),
  *       description = @Translation("If specified, the language for which the path alias applies."),
  *       options_provider = "\Drupal\rules\TypedData\Options\LanguageOptions",

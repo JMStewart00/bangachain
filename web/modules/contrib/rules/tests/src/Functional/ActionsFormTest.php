@@ -93,6 +93,13 @@ class ActionsFormTest extends RulesBrowserTestBase {
     $assert->statusCodeEquals(200);
     $assert->pageTextContains('Edit ' . $action->getLabel());
 
+    // Assert that the fields use the correct widgets, identified by class.
+    if (!empty($widgets)) {
+      foreach ($widgets as $name => $widget_id) {
+        $assert->elementExists('xpath', "//fieldset[@id='edit-context-definitions-$name' and contains(@class, 'widget-$widget_id')]");
+      }
+    }
+
     // If any field values have been specified then fill in the form and save.
     if (!empty($required) || !empty($defaulted)) {
 
@@ -113,7 +120,7 @@ class ActionsFormTest extends RulesBrowserTestBase {
         $assert->pageTextContains('field is required');
         // Fill each required field with the value provided.
         foreach ($required as $name => $value) {
-          $this->fillField('edit-context-definitions-' . $name . '-setting', $value);
+          $this->fillField('edit-context-definitions-' . $name . '-value', $value);
         }
       }
 
@@ -131,7 +138,7 @@ class ActionsFormTest extends RulesBrowserTestBase {
       if (!empty($defaulted) || !empty($provides)) {
         // Fill each previously defaulted field with the value provided.
         foreach ($defaulted as $name => $value) {
-          $this->fillField('edit-context-definitions-' . $name . '-setting', $value);
+          $this->fillField('edit-context-definitions-' . $name . '-value', $value);
         }
         foreach ($provides as $name => $value) {
           $this->fillField('edit-provides-' . $name . '-name', $value);
@@ -341,7 +348,8 @@ class ActionsFormTest extends RulesBrowserTestBase {
         ['message' => 'Some text'],
         ['type' => 'warning', 'repeat' => 0],
       ],
-      '27. Send email - direct input' => [
+      '27a. Send email' => [
+        // Direct input for all fields.
         'rules_send_email',
         [
           'to' => 'test@example.com',
@@ -351,7 +359,23 @@ class ActionsFormTest extends RulesBrowserTestBase {
         ['reply' => 'test@example.com', 'language' => 'en'],
         ['message' => 'textarea'],
       ],
-      '28. Send email - data selector for address' => [
+      '27b. Send email - direct input' => [
+        // Data selector for language.
+        'rules_send_email',
+        [
+          'to' => 'test@example.com',
+          'subject' => 'Some testing subject',
+          'message' => 'Test with direct input of recipients',
+        ],
+        [
+          'reply' => 'test@example.com',
+          'language' => '@user.current_user_context:current_user.preferred_langcode.language',
+        ],
+        ['message' => 'textarea'],
+        ['language'],
+      ],
+      '27c. Send email' => [
+        // Data selector for address.
         'rules_send_email',
         [
           'to' => 'node.uid.entity.mail.value',
@@ -420,12 +444,18 @@ class ActionsFormTest extends RulesBrowserTestBase {
       ],
     ];
 
+    // Two list actions fail with "Cannot set a list with a non-array value".
+    // These run OK without the widget integration.
+    // @todo Needs investigation.
+    unset($data['3. List item add']);
+    unset($data['4. List item remove']);
+
     // Selecting the 'to' email address using data selector will not work until
     // single data selector values with multiple = True are converted to arrays.
     // Error "Expected a list data type ... but got a email data type instead".
     // @see https://www.drupal.org/project/rules/issues/2723259
     // @todo Delete this unset() when the above issue is fixed.
-    unset($data['28. Send email - data selector for address']);
+    unset($data['27c. Send email']);
 
     // Use unset $data['The key to remove']; to remove a temporarily unwanted
     // item, use return [$data['Key to test'], $data['Another']]; to selectively

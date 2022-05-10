@@ -63,7 +63,13 @@ trait ContextFormTrait {
     // Derive the widget id using the context definition data type. Take only
     // the first word before : so that entity:user gives entity.
     $dataType = explode(':', $context_definition->getDataType())[0];
-    $widget_id = $context_definition->getWidgetId($dataType);
+    if (in_array($dataType, ['language', 'language_reference'])) {
+      // Language input in Rules forms are better without using a form widget.
+      $widget_id = ContextDefinitionInterface::DONT_USE_WIDGET;
+    }
+    else {
+      $widget_id = $context_definition->getWidgetId($dataType);
+    }
 
     if ($widget_id === ContextDefinitionInterface::BROKEN_WIDGET_ID) {
       // The datatype is unknown and/or the typed-data widget has not been coded
@@ -75,55 +81,73 @@ trait ContextFormTrait {
       ]));
     }
 
-    // Create the widget using the widget_id.
-    $widget = $this->getFormWidgetManager()->createInstance($widget_id);
-
-    $dataManager = $context_definition->getTypedDataManager();
-    $dataDefinition = $context_definition->getDataDefinition();
-    $typed_data = $dataManager->create($dataDefinition);
-
-    // Set default before building the form, so that widget->form() can use it.
-    $typed_data->setValue($default_value);
-
-    // Create the widget sub-form.
-    $sub_form = [];
-    $sub_form_state = SubformState::createForSubform($sub_form, $form, $form_state);
-    $widget_form = $widget->form($typed_data, $sub_form_state);
-
-    // Add the widget form into the full $form and save the widget_id.
-    $form['context_definitions'][$context_name] = $widget_form + [
-      '#widget_id' => $widget_id,
-    ];
-    // If mode is input (not selector) then add a widget class.
-    if ($mode == ContextDefinitionInterface::ASSIGNMENT_RESTRICTION_INPUT) {
-      $form['context_definitions'][$context_name]['#attributes']['class'][] = 'widget-' . str_replace('_', '-', $widget_id);
-    }
-
-    // Get the names of the data item input fields in the widget. Mostly there
-    // is only one input field and often it will be called 'value', but some
-    // datatypes, for example timespan, define two inputs. Remove all array keys
-    // that start with # and this will leave just the input field names.
-    // @todo Could this information be provided more easily, say by calling
-    // $widget->getInputNames() ?
-    $widget_input_names = array_keys($widget_form);
-    $widget_input_names = array_filter($widget_input_names, function ($k) {
-      return substr($k, 0, 1) !== '#';
-    });
-
-    if (isset($widget_form['#theme_wrappers']) && $widget_form['#theme_wrappers'][0] == 'fieldset') {
-      // @todo Is checking #theme_wrappers = fieldset the best way to do it?
-      // Should we count the number of input items? What if the widget had two
-      // or more inputs but was badly formed with no fieldset theme_wrapper?
-      $input_name = end($widget_input_names);
-    }
-    else {
-      // The widget form is simple, so we need to add more of the form here.
-      $form['context_definitions'][$context_name] += [
+    if ($widget_id == ContextDefinitionInterface::DONT_USE_WIDGET) {
+      $input_name = 'value';
+      $form['context_definitions'][$context_name] = [
         '#type' => 'fieldset',
         '#title' => $context_definition->getLabel(),
+        '#widget_id' => $widget_id,
       ];
-      $input_name = reset($widget_input_names);
-      $form['context_definitions'][$context_name][$input_name]['#title'] = $title;
+
+      $form['context_definitions'][$context_name][$input_name] = [
+        '#type' => 'textfield',
+        '#title' => $title,
+        '#description' => $context_definition->getDescription(),
+        '#required' => $context_definition->isRequired(),
+        '#default_value' => $default_value,
+      ];
+    }
+    else {
+      // Create the widget using the widget_id.
+      $widget = $this->getFormWidgetManager()->createInstance($widget_id);
+
+      $dataManager = $context_definition->getTypedDataManager();
+      $dataDefinition = $context_definition->getDataDefinition();
+      $typed_data = $dataManager->create($dataDefinition);
+
+      // Set default before building form, so that widget->form() can use it.
+      $typed_data->setValue($default_value);
+
+      // Create the widget sub-form.
+      $sub_form = [];
+      $sub_form_state = SubformState::createForSubform($sub_form, $form, $form_state);
+      $widget_form = $widget->form($typed_data, $sub_form_state);
+
+      // Add the widget form into the full $form and save the widget_id.
+      $form['context_definitions'][$context_name] = $widget_form + [
+        '#widget_id' => $widget_id,
+      ];
+      // If mode is input (not data-selector) then add a widget class.
+      if ($mode == ContextDefinitionInterface::ASSIGNMENT_RESTRICTION_INPUT) {
+        $form['context_definitions'][$context_name]['#attributes']['class'][] = 'widget-' . str_replace('_', '-', $widget_id);
+      }
+
+      // Get the names of the data item input fields in the widget. Mostly there
+      // is only one input field and often it will be called 'value', but some
+      // datatypes, for example timespan, define two inputs. Remove all array
+      // keys that start with # and this will leave just the input field names.
+      // @todo Could this information be provided more easily, say by calling
+      // $widget->getInputNames() ?
+      $widget_input_names = array_keys($widget_form);
+      $widget_input_names = array_filter($widget_input_names, function ($k) {
+        return substr($k, 0, 1) !== '#';
+      });
+
+      if (isset($widget_form['#theme_wrappers']) && $widget_form['#theme_wrappers'][0] == 'fieldset') {
+        // @todo Is checking #theme_wrappers = fieldset the best way to do it?
+        // Should we count the number of input items? What if the widget had two
+        // or more inputs but was badly formed with no fieldset theme_wrapper?
+        $input_name = end($widget_input_names);
+      }
+      else {
+        // The widget form is simple, so we need to add more of the form here.
+        $form['context_definitions'][$context_name] += [
+          '#type' => 'fieldset',
+          '#title' => $context_definition->getLabel(),
+        ];
+        $input_name = reset($widget_input_names);
+        $form['context_definitions'][$context_name][$input_name]['#title'] = $title;
+      }
     }
 
     // Extract the (last) element we have just added.
@@ -216,22 +240,25 @@ trait ContextFormTrait {
       foreach ($form_state->getValue('context_definitions') as $context_name => $value) {
         $context_definition = $context_definitions[$context_name];
 
-        if ($context_definition->isMultiple()) {
-          // Remove the switch button then get the input directly. This is not
-          // the right way. The problem is that Rules uses 'multiple = TRUE' for
+        $widget_id = $form['context_definitions'][$context_name]['#widget_id'];
+        if ($context_definition->isMultiple() || $widget_id == ContextDefinitionInterface::DONT_USE_WIDGET) {
+          // If the element does not use a Typed Data widget then get the input
+          // directly from $value. We also use this workaround when isMultiple()
+          // is set, because Rules uses 'multiple = TRUE' combined with a
           // textarea to allow multiple entry items. However, they have to be
           // in an array for the TypedData setValue to work without throwing
           // InvalidArgumentException: Cannot set a list with a non-array value.
-          // @todo Fix this.
+          // @todo This could be changed when issue 2847804 is complete.
           // @see https://www.drupal.org/project/typed_data/issues/2847804
+          // Remove the 'switch_button' then get the first value, whatever it is
+          // called. Use ?: to convert an empty string to NULL, this is
+          // necessary if the context is given by a data-selector.
           unset($value['switch_button']);
-          $input = reset($value);
+          $input = reset($value) ?: NULL;
         }
         else {
-          // Get the input the 'proper' way.
           // Create an instance of the widget that was used in this context so
           // that we can use extractFormValues() to get the entered data.
-          $widget_id = $form['context_definitions'][$context_name]['#widget_id'];
           $widget = $this->getFormWidgetManager()->createInstance($widget_id);
           $data = $context_definition->getTypedDataManager()
             ->create($context_definition->getDataDefinition());
@@ -240,11 +267,13 @@ trait ContextFormTrait {
           $input = $data->getValue();
         }
 
+        // If the context value has been supplied by a data-selector then store
+        // the mapped value.
         if ($form_state->get("context_$context_name") == ContextDefinitionInterface::ASSIGNMENT_RESTRICTION_SELECTOR) {
           $context_config->map($context_name, $input);
         }
         else {
-          // Not selector, so it must be input.
+          // Not data-selector, so it must be input.
           if ($context_definition->isMultiple()) {
             // Textareas should always have \r\n line breaks, but for more
             // robust parsing we should also accommodate just \n or just \r.

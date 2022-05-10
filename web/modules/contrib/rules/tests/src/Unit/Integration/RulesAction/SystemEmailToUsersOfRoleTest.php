@@ -50,6 +50,7 @@ class SystemEmailToUsersOfRoleTest extends RulesEntityIntegrationTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->enableModule('user');
+    $this->enableModule('typed_data');
 
     // Mock the logger.factory service, make it return the Rules logger channel,
     // and register it in the container.

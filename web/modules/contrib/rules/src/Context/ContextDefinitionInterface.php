@@ -28,6 +28,13 @@ interface ContextDefinitionInterface extends ContextDefinitionInterfaceCore {
   const BROKEN_WIDGET_ID = 'broken';
 
   /**
+   * Constant for "do not use a widget".
+   *
+   * @see ::getWidgetId()
+   */
+  const DONT_USE_WIDGET = 'do_not_use_a_widget';
+
+  /**
    * Determines if the context value is allowed to be NULL.
    *
    * @return bool

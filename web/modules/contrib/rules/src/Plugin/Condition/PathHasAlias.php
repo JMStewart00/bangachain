@@ -23,7 +23,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *       label = @Translation("Path"),
  *       description = @Translation("Specifies the existing path you wish to check. For example, '/node/28' or '/forum/1'.")
  *     ),
- *     "language" = @ContextDefinition("entity:configurable_language",
+ *     "language" = @ContextDefinition("language_reference",
  *       label = @Translation("Language"),
  *       description = @Translation("If specified, the language for which the URL alias applies."),
  *       options_provider = "\Drupal\rules\TypedData\Options\LanguageOptions",

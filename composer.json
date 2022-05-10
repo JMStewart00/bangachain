@@ -362,7 +362,7 @@
                 "Undefined Index: allowed_extensions AJAX error when creating feed types.": "https://www.drupal.org/files/issues/2019-02-06/3031019-undefined-index-ajax-2.patch"
             },
             "drupal/rules": {
-                "/project/rules/issues/2471481 - Integrate Typed Data Widgets": "https://www.drupal.org/files/issues/2022-02-15/2471481-170.integrate-typed-data-widgets-no-tests.patch"
+                "/project/rules/issues/2471481 - Integrate Typed Data Widgets": "https://www.drupal.org/files/issues/2022-03-04/2471481-174.integrate-typed-data-widgets.patch"
             },
             "drupal/easy_responsive_images": {
                 "Fix retina display issues": "./patches/easy_responsive_images_fix_retina_display_issues.patch"

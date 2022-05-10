@@ -83,7 +83,7 @@ class RulesComponentListBuilderTest extends RulesBrowserTestBase {
     $this->fillField('Condition', 'rules_user_is_blocked');
     $this->pressButton('Continue');
 
-    $this->fillField('context_definitions[user][setting]', '@user:current_user_context:current_user');
+    $this->fillField('context_definitions[user][value]', '@user:current_user_context:current_user');
     $this->pressButton('Save');
 
     $assert->statusCodeEquals(200);
@@ -104,7 +104,7 @@ class RulesComponentListBuilderTest extends RulesBrowserTestBase {
     $this->fillField('Condition', 'rules_user_is_blocked');
     $this->pressButton('Continue');
 
-    $this->fillField('context_definitions[user][setting]', '@user:current_user_context:current_user');
+    $this->fillField('context_definitions[user][value]', '@user:current_user_context:current_user');
     $this->pressButton('Save');
 
     /** @var \Drupal\Tests\WebAssert $assert */
@@ -198,9 +198,9 @@ class RulesComponentListBuilderTest extends RulesBrowserTestBase {
     $this->pressButton('Switch to data selection');
     $this->pressButton('Switch to the direct input mode');
 
-    $this->fillField('context_definitions[to][setting]', 'klausi@example.com');
-    $this->fillField('context_definitions[subject][setting]', 'subject');
-    $this->fillField('context_definitions[message][setting]', 'message');
+    $this->fillField('context_definitions[to][value]', 'klausi@example.com');
+    $this->fillField('context_definitions[subject][value]', 'subject');
+    $this->fillField('context_definitions[message][value]', 'message');
     $this->pressButton('Save');
 
     /** @var \Drupal\Tests\WebAssert $assert */

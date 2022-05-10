@@ -3,14 +3,14 @@
 namespace Drupal\Tests\rules\Unit\Integration\Condition;
 
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Tests\rules\Unit\Integration\RulesIntegrationTestBase;
+use Drupal\Tests\rules\Unit\Integration\RulesEntityIntegrationTestBase;
 use Drupal\path_alias\AliasManagerInterface;
 
 /**
  * @coversDefaultClass \Drupal\rules\Plugin\Condition\PathHasAlias
  * @group RulesCondition
  */
-class PathHasAliasTest extends RulesIntegrationTestBase {
+class PathHasAliasTest extends RulesEntityIntegrationTestBase {
 
   /**
    * The condition to be tested.

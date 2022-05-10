@@ -15,7 +15,7 @@ class ConfigureAndExecuteTest extends RulesBrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['rules'];
+  protected static $modules = ['rules', 'typed_data'];
 
   /**
    * We use the minimal profile because we want to test local action links.
@@ -116,16 +116,16 @@ class ConfigureAndExecuteTest extends RulesBrowserTestBase {
     $this->fillField('Condition', 'rules_data_comparison');
     $this->pressButton('Continue');
 
-    $this->fillField('context_definitions[data][setting]', 'node.title.0.value');
-    $this->fillField('context_definitions[value][setting]', 'Test title');
+    $this->fillField('context_definitions[data][value]', 'node.title.0.value');
+    $this->fillField('context_definitions[value][value]', 'Test title');
     $this->pressButton('Save');
 
     $this->clickLink('Add action');
     $this->fillField('Action', 'rules_system_message');
     $this->pressButton('Continue');
 
-    $this->fillField('context_definitions[message][setting]', 'Title matched "Test title"!');
-    $this->fillField('context_definitions[type][setting]', 'status');
+    $this->fillField('context_definitions[message][value]', 'Title matched "Test title"!');
+    $this->fillField('context_definitions[type][value]', 'status');
     $this->pressButton('Save');
 
     // One more save to permanently store the rule.
@@ -388,7 +388,7 @@ class ConfigureAndExecuteTest extends RulesBrowserTestBase {
     $message1updated = 'RULE ONE has a new message.';
     $this->drupalGet('admin/config/workflow/rules/reactions/edit/rule1');
     $this->clickLink('Edit', 1);
-    $this->fillField('context_definitions[message][setting]', $message1updated);
+    $this->fillField('context_definitions[message][value]', $message1updated);
     // Save the action then save the rule.
     $this->pressButton('Save');
     $this->pressButton('Save');
@@ -447,13 +447,14 @@ class ConfigureAndExecuteTest extends RulesBrowserTestBase {
     $this->fillField('Action', 'rules_send_email');
     $this->pressButton('Continue');
 
+    // Maximum allowed length of string input is 255 characters.
     $suboptimal_user_input = [
-      "  \r\nwhitespace at beginning of input\r\n",
+      "  \r\nwhitespace at beginning\r\n",
       "text\r\n",
       "trailing space  \r\n",
       "\rleading terminator\r\n",
       "  leading space\r\n",
-      "multiple words, followed by primitive values\r\n",
+      "multiple words, then primitives\r\n ",
       "0\r\n",
       "0.0\r\n",
       "128\r\n",
@@ -464,13 +465,13 @@ class ConfigureAndExecuteTest extends RulesBrowserTestBase {
       "two empty lines\n\r\n\r",
       "terminator n\n",
       "terminator nr\n\r",
-      "whitespace at end of input\r\n        \r\n",
+      "whitespace at end of input\r\n    \r\n",
     ];
-    $this->fillField('context_definitions[to][setting]', implode($suboptimal_user_input));
+    $this->fillField('context_definitions[to][value]', implode($suboptimal_user_input));
 
     // Set the other required fields. These play no part in the test.
-    $this->fillField('context_definitions[subject][setting]', 'Hello');
-    $this->fillField('context_definitions[message][setting]', 'Dear Heart');
+    $this->fillField('context_definitions[subject][value]', 'Hello');
+    $this->fillField('context_definitions[message][value]', 'Dear Heart');
 
     $this->pressButton('Save');
 
@@ -481,12 +482,12 @@ class ConfigureAndExecuteTest extends RulesBrowserTestBase {
     // and that blank lines, leading and trailing whitespace, and wrong line
     // terminators were removed.
     $expected_config_value = [
-      "whitespace at beginning of input",
+      "whitespace at beginning",
       "text",
       "trailing space",
       "leading terminator",
       "leading space",
-      "multiple words, followed by primitive values",
+      "multiple words, then primitives",
       "0",
       "0.0",
       "128",
@@ -549,13 +550,13 @@ class ConfigureAndExecuteTest extends RulesBrowserTestBase {
     // Check that a switch button is not shown for 'data' and that the field is
     // an autocomplete selector field not plain text entry.
     $assert->buttonNotExists('edit-context-definitions-data-switch-button');
-    $assert->elementExists('xpath', '//input[@id="edit-context-definitions-data-setting" and contains(@class, "rules-autocomplete")]');
+    $assert->elementExists('xpath', '//input[@id="edit-context-definitions-data-value" and contains(@class, "rules-autocomplete")]');
     // Check that a switch button is not shown for 'operation'.
     $assert->buttonNotExists('edit-context-definitions-operation-switch-button');
     // Check that a switch button is shown for 'value' and that the default
     // field is plain text entry not an autocomplete selector field.
     $assert->buttonExists('edit-context-definitions-value-switch-button');
-    $assert->elementExists('xpath', '//input[@id="edit-context-definitions-value-setting" and not(contains(@class, "rules-autocomplete"))]');
+    $assert->elementExists('xpath', '//input[@id="edit-context-definitions-value-value" and not(contains(@class, "rules-autocomplete"))]');
 
     // Edit the action and assert that page loads correctly.
     $this->drupalGet('admin/config/workflow/rules/reactions/edit/test_rule/edit/' . $action1->getUuid());
@@ -563,7 +564,7 @@ class ConfigureAndExecuteTest extends RulesBrowserTestBase {
     // Check that a switch button is shown for 'message' and that the field is a
     // plain text entry field not an autocomplete selector field.
     $assert->buttonExists('edit-context-definitions-message-switch-button');
-    $assert->elementExists('xpath', '//input[@id="edit-context-definitions-message-setting" and not(contains(@class, "rules-autocomplete"))]');
+    $assert->elementExists('xpath', '//input[@id="edit-context-definitions-message-value" and not(contains(@class, "rules-autocomplete"))]');
     // Check that a switch button is shown for 'type'.
     $assert->buttonExists('edit-context-definitions-type-switch-button');
     // Check that a switch button is not shown for 'repeat'.

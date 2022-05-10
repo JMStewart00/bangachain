@@ -104,6 +104,32 @@ class BlazyField {
   }
 
   /**
+   * Provides field-related settings.
+   */
+  public static function settings(array &$settings, array $data, $field): void {
+    // @todo remove for blazies after admin updated and sub-modules.
+    $settings['blazies'] = $blazies = Blazy::settings();
+    $info = [
+      'field_label' => $field->getLabel(),
+      'field_name'  => $field->getName(),
+      'field_type'  => $field->getType(),
+      'entity_type' => $field->getTargetEntityTypeId(),
+    ];
+
+    foreach ($data as $key => $value) {
+      $blazies->set('field.' . $key, $value);
+    }
+
+    foreach ($info as $key => $value) {
+      $k = str_replace('field_', '', $key);
+      $blazies->set('field.' . $k, $value);
+
+      // @todo remove at 3.x after sub-modules.
+      $settings[$key] = $value;
+    }
+  }
+
+  /**
    * Returns the formatted renderable array of the field.
    */
   public static function view($entity, $field_name, $view_mode, $multiple = TRUE) {

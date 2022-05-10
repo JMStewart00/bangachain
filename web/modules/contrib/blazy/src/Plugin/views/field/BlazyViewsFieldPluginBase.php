@@ -197,7 +197,7 @@ abstract class BlazyViewsFieldPluginBase extends FieldPluginBase {
     // @todo remove `$scopes +` at Blazy 3.x.
     $definitions = $scopes;
     $definitions['scopes'] = $this->toPluginScopes($scopes);
-    $definitions['settings'] = array_filter($this->options);
+    $definitions['settings'] = $this->options;
     return $definitions;
   }
 

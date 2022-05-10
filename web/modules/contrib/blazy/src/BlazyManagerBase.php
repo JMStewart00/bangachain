@@ -287,14 +287,18 @@ abstract class BlazyManagerBase implements BlazyManagerInterface {
         $this->cachedData[$cid] = $result;
       }
       else {
-        if ($data && is_array($data)) {
+        // Allows empty array to trigger hook_alter.
+        if (is_array($data)) {
           $this->moduleHandler->alter($alter ?: $cid, $data, $context);
+        }
 
+        // Only if we have data, cache them.
+        if ($data && is_array($data)) {
           if (isset($data[1])) {
             $data = array_unique($data);
           }
 
-          sort($data);
+          ksort($data);
 
           $count = count($data);
           $tags = Cache::buildTags($cid, ['count:' . $count]);
@@ -416,6 +420,13 @@ abstract class BlazyManagerBase implements BlazyManagerInterface {
   /**
    * {@inheritdoc}
    */
+  public function moduleExists($name): bool {
+    return $this->moduleHandler->moduleExists($name);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function prepareData(array &$build, $entity = NULL): void {
     // Do nothing, let extenders share data at ease as needed.
   }
@@ -439,7 +450,7 @@ abstract class BlazyManagerBase implements BlazyManagerInterface {
     $lightboxes = $this->getLightboxes();
     $lightboxes = $blazies->get('lightbox.plugins', $lightboxes) ?: [];
     $is_blur = $fx == 'blur';
-    $is_resimage = $this->moduleHandler->moduleExists('responsive_image');
+    $is_resimage = $this->moduleExists('responsive_image');
 
     $blazies->set('fx', $fx)
       ->set('iframe_domain', $iframe_domain)

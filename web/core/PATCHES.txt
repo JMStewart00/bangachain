@@ -37,3 +37,7 @@ Support third party settings for components within a section
 Source: https://www.drupal.org/files/issues/2021-12-13/3015152-tps-9.3.x-128.patch
 
 
+/project/drupal/issues/3056633 - Drupal 9 updating issue plugin does not exist
+Source: https://www.drupal.org/files/issues/2022-04-05/3056633-147.patch
+
+

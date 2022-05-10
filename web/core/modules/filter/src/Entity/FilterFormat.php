@@ -140,6 +140,13 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
    */
   public function filters($instance_id = NULL) {
     if (!isset($this->filterCollection)) {
+      foreach ($this->filters as $filter => $filter_definition) {
+        $provider = $filter_definition['provider'];
+        if ($provider && !in_array($provider, ['core', 'component']) && !\Drupal::service('module_handler')->moduleExists($provider)) {
+          unset($this->filters[$filter]);
+        }
+      }
+
       $this->filterCollection = new FilterPluginCollection(\Drupal::service('plugin.manager.filter'), $this->filters);
       $this->filterCollection->sort();
     }

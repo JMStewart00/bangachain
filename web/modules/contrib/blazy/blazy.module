@@ -123,7 +123,9 @@ function blazy_config_schema_info_alter(array &$definitions) {
  * Implements hook_library_info_alter().
  */
 function blazy_library_info_alter(&$libraries, $extension) {
-  $core = $extension === 'core' && (isset($libraries['once']) || isset($libraries['drupal.debounce']));
+  $core = $extension === 'core'
+    && (isset($libraries['once'])
+    || isset($libraries['drupal.debounce']));
   if ($extension === 'blazy' || $extension === 'media' || $core) {
     BlazyAlter::libraryInfoAlter($libraries, $extension);
   }
@@ -212,8 +214,10 @@ function blazy_filter_cleanup($module = 'blazy') {
   }
 
   // Just to be safe and sure, reset filter_formats cache, etc.
-  if (function_exists('drupal_static_reset')) {
-    drupal_static_reset('filter_formats');
+  // @todo re-check if core deprecated this function at or by D10.
+  $reset = 'drupal_static_reset';
+  if (is_callable('drupal_static_reset')) {
+    $reset('filter_formats');
   }
 
   blazy()->getStorage('filter_format')->resetCache();

@@ -19,7 +19,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '384845e5aca43eb266e7dc541b6f2a8a9ceece89',
+    'reference' => '99f6e0dd908205742edda7aad0a0bd171fc6425d',
     'name' => 'oomphinc/drupal-scaffold',
   ),
   'versions' => 
@@ -523,12 +523,12 @@ private static $installed = array (
     ),
     'drupal/blazy' => 
     array (
-      'pretty_version' => '2.10.0',
-      'version' => '2.10.0.0',
+      'pretty_version' => '2.11.0',
+      'version' => '2.11.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '8.x-2.10',
+      'reference' => '8.x-2.11',
     ),
     'drupal/block' => 
     array (
@@ -624,12 +624,12 @@ private static $installed = array (
     ),
     'drupal/coder' => 
     array (
-      'pretty_version' => '8.3.14',
-      'version' => '8.3.14.0',
+      'pretty_version' => '8.3.15',
+      'version' => '8.3.15.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'adb06efa79ba8b91afed2f351014a6b94192622f',
+      'reference' => '0cfad3a21f1168bdc3030ae73351c31f88abba74',
     ),
     'drupal/coffee' => 
     array (
@@ -1554,12 +1554,12 @@ private static $installed = array (
     ),
     'drupal/honeypot' => 
     array (
-      'pretty_version' => '2.0.2',
-      'version' => '2.0.2.0',
+      'pretty_version' => '2.1.0',
+      'version' => '2.1.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '2.0.2',
+      'reference' => '2.1.0',
     ),
     'drupal/htmlmail' => 
     array (
@@ -2013,12 +2013,12 @@ private static $installed = array (
     ),
     'drupal/quick_node_clone' => 
     array (
-      'pretty_version' => '1.14.0',
-      'version' => '1.14.0.0',
+      'pretty_version' => '1.15.0',
+      'version' => '1.15.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '8.x-1.14',
+      'reference' => '8.x-1.15',
     ),
     'drupal/quickedit' => 
     array (
@@ -2843,7 +2843,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '384845e5aca43eb266e7dc541b6f2a8a9ceece89',
+      'reference' => '99f6e0dd908205742edda7aad0a0bd171fc6425d',
     ),
     'orno/di' => 
     array (
@@ -2976,21 +2976,21 @@ private static $installed = array (
     ),
     'phpstan/phpdoc-parser' => 
     array (
-      'pretty_version' => '1.4.5',
-      'version' => '1.4.5.0',
+      'pretty_version' => '1.5.1',
+      'version' => '1.5.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '129a63b3bc7caeb593c224c41f420675e63cfefc',
+      'reference' => '981cc368a216c988e862a75e526b6076987d1b50',
     ),
     'phpstan/phpstan' => 
     array (
-      'pretty_version' => '1.6.4',
-      'version' => '1.6.4.0',
+      'pretty_version' => '1.6.8',
+      'version' => '1.6.8.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'e4cd0c2dd97809fcfdcd1f367ccf0be86c235168',
+      'reference' => 'd76498c5531232cb8386ceb6004f7e013138d3ba',
     ),
     'phpstan/phpstan-deprecation-rules' => 
     array (
@@ -3418,12 +3418,12 @@ private static $installed = array (
     ),
     'slevomat/coding-standard' => 
     array (
-      'pretty_version' => '7.1',
-      'version' => '7.1.0.0',
+      'pretty_version' => '7.2.0',
+      'version' => '7.2.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'b521bd358b5f7a7d69e9637fd139e036d8adeb6f',
+      'reference' => 'b4f96a8beea515d2d89141b7b9ad72f526d84071',
     ),
     'square/square' => 
     array (

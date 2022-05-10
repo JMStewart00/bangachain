@@ -244,9 +244,8 @@ class Placeholder {
     }
 
     // With CSS background, IMG may be empty, add thumbnail to the container.
+    $blazies->set('thumbnail.url', $tn_url);
     if ($tn_url) {
-      $blazies->set('thumbnail.url', $tn_url);
-
       self::derivative($blazies, $uri, $tn_uri, $style, 'thumbnail');
     }
 

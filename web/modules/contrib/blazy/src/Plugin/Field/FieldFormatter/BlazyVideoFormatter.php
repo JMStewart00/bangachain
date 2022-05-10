@@ -38,6 +38,11 @@ class BlazyVideoFormatter extends BlazyVideoBase {
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
+    // Early opt-out if the field is empty.
+    if ($items->isEmpty()) {
+      return [];
+    }
+
     return $this->commonViewElements($items, $langcode);
   }
 

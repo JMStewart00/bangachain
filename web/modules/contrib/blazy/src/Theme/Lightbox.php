@@ -260,8 +260,15 @@ class Lightbox {
     $title   = $item->title ?? '';
     $alt     = $item->alt ?? '';
     $delta   = $blazies->get('delta');
-    $file    = $item ? $item->entity : NULL;
-    $entity  = $blazies->get('entity.instance') ?: $file;
+    $object  = NULL;
+
+    // @todo re-check this if any issues, might be a fake stdClass image item.
+    if ($item) {
+      $object = method_exists($item, 'getEntity')
+        ? $item->getEntity() : $item->entity;
+    }
+
+    $entity  = $blazies->get('entity.instance') ?: $object;
     $caption = '';
 
     switch ($settings['box_caption']) {
@@ -285,16 +292,17 @@ class Lightbox {
         break;
 
       case 'entity_title':
-        $caption = $entity ? $entity->label() : '';
+        $caption = $entity && method_exists($entity, 'label')
+          ? $entity->label() : '';
         break;
 
       case 'custom':
         $caption = '';
-        if (!empty($settings['box_caption_custom']) && $entity) {
+
+        if (!empty($settings['box_caption_custom']) && $object) {
           $options = ['clear' => TRUE];
           $caption = \Drupal::token()->replace($settings['box_caption_custom'], [
-            $entity->getEntityTypeId() => $entity,
-            'file' => $file,
+            $object->getEntityTypeId() => $object,
           ], $options);
 
           // Checks for multi-value text fields, and maps its delta to image.

@@ -26,8 +26,16 @@ trait BlazyFormatterViewTrait {
     array $entities = [],
     array $settings = []
   ) {
-    // Early opt-out if the field is empty.
-    if ($items->isEmpty()) {
+    // Modifies settings before building elements.
+    $entities = empty($entities) ? [] : array_values($entities);
+    $elements = $entities ?: $items;
+
+    // Early opt-out if the field is empty, and also entities are empty.
+    // Entities might not be empty even if items are when defaults are provided.
+    // Specific to file, media, entity_reference, this was checked upstream.
+    // Only needed during transition to Blazy:3.x for sub-modules BC.
+    // This can be removed when sub-modules have all extended Blazy view at 3.x.
+    if (empty($elements)) {
       return [];
     }
 
@@ -40,12 +48,9 @@ trait BlazyFormatterViewTrait {
     // Build the settings.
     $build = ['settings' => $settings];
 
-    // Modifies settings before building elements.
-    $entities = empty($entities) ? [] : array_values($entities);
+    // Build the elements.
     $this->formatter->preBuildElements($build, $items, $entities);
 
-    // Build the elements.
-    $elements = $entities ?: $items;
     $this->buildElements($build, $elements, $langcode);
 
     // Modifies settings post building elements.

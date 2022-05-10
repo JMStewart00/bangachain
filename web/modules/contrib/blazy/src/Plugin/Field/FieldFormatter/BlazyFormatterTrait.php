@@ -2,7 +2,7 @@
 
 namespace Drupal\blazy\Plugin\Field\FieldFormatter;
 
-use Drupal\blazy\Blazy;
+use Drupal\blazy\Field\BlazyField;
 use Drupal\blazy\Traits\PluginScopesTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -140,36 +140,33 @@ trait BlazyFormatterTrait {
   /**
    * Defines the common scope for both front and admin.
    *
-   * @todo convert all these into BlazySettings as well at 3.x.
+   * @todo convert all these into BlazySettings as well at 3.x after admin
+   * updated and sub-modules.
    */
   public function getCommonFieldDefinition() {
     $field = $this->fieldDefinition;
-
-    // @todo remove for blazies after admin updated and sub-modules.
     $settings = [
       'namespace'   => 'blazy',
-      'field_name'  => $field->getName(),
-      'field_type'  => $field->getType(),
-      'entity_type' => $field->getTargetEntityTypeId(),
       'plugin_id'   => $this->getPluginId(),
       'target_type' => $this->getFieldSetting('target_type'),
-      'blazies'     => Blazy::settings(),
     ];
 
     // Exposes few basic formatter settings w/o use_field.
+    $data = [
+      'label_display' => $this->label,
+      'third_party'   => $this->getThirdPartySettings(),
+      'view_mode'     => $this->viewMode,
+    ];
+
+    foreach (['plugin_id', 'target_type'] as $key) {
+      $data[$key] = $settings[$key];
+    }
+
+    BlazyField::settings($settings, $data, $field);
     $blazies = $settings['blazies'];
 
-    $blazies->set('field.label', $field->getLabel())
-      ->set('field.label_display', $this->label)
-      ->set('field.name', $field->getName())
-      ->set('field.type', $field->getType())
-      ->set('field.plugin_id', $this->getPluginId())
-      ->set('field.entity_type', $field->getTargetEntityTypeId())
-      ->set('field.target_type', $this->getFieldSetting('target_type'))
-      ->set('field.view_mode', $this->viewMode)
-      ->set('field.third_party', $this->getThirdPartySettings());
-
-    if (method_exists($this, 'getPluginScopes') && $scopes = $this->getPluginScopes()) {
+    if (method_exists($this, 'getPluginScopes')
+      && $scopes = $this->getPluginScopes()) {
       if (!empty($scopes['target_bundles'])) {
         $blazies->set('field.target_bundles', $scopes['target_bundles']);
       }
@@ -192,7 +189,8 @@ trait BlazyFormatterTrait {
    */
   public function getScopedFormElements() {
     // Compat for BVEF till updated to adopt Blazy 2.10 BlazyVideoFormatter.
-    $scopes = method_exists($this, 'getPluginScopes') ? $this->getPluginScopes() : [];
+    $scopes = method_exists($this, 'getPluginScopes')
+      ? $this->getPluginScopes() : [];
 
     // @todo remove `$scopes +` at Blazy 3.x.
     $definitions = $scopes + $this->getCommonScopedFormElements();

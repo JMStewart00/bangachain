@@ -41,3 +41,7 @@ Source: https://www.drupal.org/files/issues/2021-12-13/3015152-tps-9.3.x-128.pat
 Source: https://www.drupal.org/files/issues/2022-04-05/3056633-147.patch
 
 
+/project/drupal/issues/3207813 - ModuleHandler skips all hook implementations when invoked before the module files have been loaded
+Source: https://www.drupal.org/files/issues/2022-01-20/3207813-8.patch
+
+

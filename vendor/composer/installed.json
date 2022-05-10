@@ -6019,7 +6019,8 @@
                     "Views file name suggestions often missing from Twig debugging": "https://www.drupal.org/files/issues/views-template-suggestions-2839945-2.patch",
                     "'Negate' form value for condition plugins should be cast to boolean in validation.": "https://www.drupal.org/files/issues/2021-01-06/3114467-16.patch",
                     "Support third party settings for components within a section": "https://www.drupal.org/files/issues/2021-12-13/3015152-tps-9.3.x-128.patch",
-                    "/project/drupal/issues/3056633 - Drupal 9 updating issue plugin does not exist": "https://www.drupal.org/files/issues/2022-04-05/3056633-147.patch"
+                    "/project/drupal/issues/3056633 - Drupal 9 updating issue plugin does not exist": "https://www.drupal.org/files/issues/2022-04-05/3056633-147.patch",
+                    "/project/drupal/issues/3207813 - ModuleHandler skips all hook implementations when invoked before the module files have been loaded": "https://www.drupal.org/files/issues/2022-01-20/3207813-8.patch"
                 }
             },
             "installation-source": "dist",

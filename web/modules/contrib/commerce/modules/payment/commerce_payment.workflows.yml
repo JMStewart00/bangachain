@@ -73,7 +73,7 @@ payment_manual:
       to: pending
     receive:
       label: 'Receive payment'
-      from: [pending]
+      from: [pending, new]
       to: completed
     partially_refund:
       label: 'Partially refund payment'

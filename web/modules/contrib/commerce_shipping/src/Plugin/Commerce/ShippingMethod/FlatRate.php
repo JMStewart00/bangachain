@@ -66,20 +66,20 @@ class FlatRate extends ShippingMethodBase {
 
     $form['rate_label'] = [
       '#type' => 'textfield',
-      '#title' => t('Rate label'),
-      '#description' => t('Shown to customers when selecting the rate.'),
+      '#title' => $this->t('Rate label'),
+      '#description' => $this->t('Shown to customers when selecting the rate.'),
       '#default_value' => $this->configuration['rate_label'],
       '#required' => TRUE,
     ];
     $form['rate_description'] = [
       '#type' => 'textfield',
-      '#title' => t('Rate description'),
-      '#description' => t('Provides additional details about the rate to the customer.'),
+      '#title' => $this->t('Rate description'),
+      '#description' => $this->t('Provides additional details about the rate to the customer.'),
       '#default_value' => $this->configuration['rate_description'],
     ];
     $form['rate_amount'] = [
       '#type' => 'commerce_price',
-      '#title' => t('Rate amount'),
+      '#title' => $this->t('Rate amount'),
       '#default_value' => $amount,
       '#required' => TRUE,
     ];

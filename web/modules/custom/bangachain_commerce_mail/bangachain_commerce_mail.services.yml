@@ -1,0 +1,6 @@
+services:
+  bangachain_commerce_mail.order_complete:
+    class: Drupal\bangachain_commerce_mail\EventSubscriber\POSOrderCompleteSubscriber
+    arguments: ['@entity_type.manager', '@plugin.manager.mail']
+    tags:
+      - { name: event_subscriber }

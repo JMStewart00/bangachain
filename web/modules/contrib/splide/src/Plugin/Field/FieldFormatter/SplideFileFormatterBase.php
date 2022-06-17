@@ -14,7 +14,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 abstract class SplideFileFormatterBase extends BlazyFileFormatterBase {
 
   use SplideFormatterTrait;
-  use SplideFormatterViewTrait;
 
   /**
    * {@inheritdoc}
@@ -49,65 +48,59 @@ abstract class SplideFileFormatterBase extends BlazyFileFormatterBase {
    * Build the splide carousel elements.
    */
   public function buildElements(array &$build, $files) {
-    $settings   = &$build['settings'];
-    $item_id    = $settings['item_id'];
+    $settings   = $build['settings'];
+    $blazies    = $settings['blazies'];
+    $item_id    = $blazies->get('item.id');
+    $caption_id = 'caption';
     $tn_caption = empty($settings['nav_caption']) ? NULL : $settings['nav_caption'];
+    $elements   = $this->getElements($build, $files, $caption_id);
 
-    foreach ($files as $delta => $file) {
-      $settings['delta'] = $delta;
-      $settings['type'] = 'image';
+    foreach ($elements as $delta => $element) {
+      $sets = $element['settings'];
+      $captions = $element[$caption_id] ?? [];
 
-      /** @var Drupal\image\Plugin\Field\FieldType\ImageItem $item */
-      $item = $file->_referringItem;
-
-      $settings['file_tags'] = $file->getCacheTags();
-      $settings['uri']       = $file->getFileUri();
-
-      $element = ['item' => $item, 'settings' => $settings];
-
-      // @todo Remove, no longer file entity/VEF/M for pure Media.
-      $this->buildElement($element, $file);
-      $settings = $element['settings'];
+      // Do not pass captions to theme_blazy().
+      unset($element[$caption_id]);
 
       // Image with responsive image, lazyLoad, and lightbox supports.
-      $element[$item_id] = $this->formatter->getBlazy($element);
+      $element[$item_id] = $this->formatter->getBlazy($element, $delta);
 
-      if (!empty($settings['caption'])) {
-        foreach ($settings['caption'] as $caption) {
-          $element['caption'][$caption] = empty($element['item']->{$caption}) ? [] : ['#markup' => Xss::filterAdmin($element['item']->{$caption})];
-        }
-      }
+      // Build captions if so configured.
+      $element[$caption_id] = $captions;
 
       // Build individual splide item.
-      $build['items'][$delta] = $element;
+      $build['items'][] = $element;
 
       // Build individual splide thumbnail.
-      if (!empty($settings['nav'])) {
-        $thumb = ['settings' => $settings];
+      if (!empty($sets['nav'])) {
+        $item = $element['item'];
+        $nav = ['settings' => $sets];
 
         // Thumbnail usages: asNavFor pagers, dot, arrows, photobox thumbnails.
-        $thumb[$item_id] = $this->formatter->getThumbnail($settings, $element['item']);
-        $thumb['caption'] = empty($element['item']->{$tn_caption}) ? [] : ['#markup' => Xss::filterAdmin($element['item']->{$tn_caption})];
+        $nav[$item_id] = empty($sets['thumbnail_style']) ? [] : $this->formatter->getThumbnail($sets, $item);
 
-        $build['nav']['items'][$delta] = $thumb;
-        unset($thumb);
+        $markup = empty($item->{$tn_caption}) ? [] : [
+          '#markup' => Xss::filterAdmin($item->{$tn_caption}),
+        ];
+        $nav[$caption_id] = $tn_caption ? $markup : [];
+
+        $build['nav']['items'][] = $nav;
+        unset($nav);
       }
-
-      unset($element);
     }
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getScopedFormElements() {
+  protected function getPluginScopes(): array {
     $captions = ['title' => $this->t('Title'), 'alt' => $this->t('Alt')];
     return [
       'namespace'       => 'splide',
       'nav'             => TRUE,
       'thumb_captions'  => $captions,
       'thumb_positions' => TRUE,
-    ] + parent::getScopedFormElements();
+    ] + parent::getPluginScopes();
   }
 
 }

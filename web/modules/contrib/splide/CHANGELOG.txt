@@ -1,4 +1,14 @@
 
+Splide 1.0.2-dev, 2022-05-28
+----------------------------
+- Updated SpideTextFormatter to extend BlazyTextFormatter.
+
+Splide 1.0.2-dev, 2022-03-14
+----------------------------
+- Required Blazy:2.10+.
+- Fixed for grid text, or vanilla one.
+- Added settings by container attributes for SplideFilter, requires Blazy:2.10.
+
 Splide 1.0.2-dev, 2022-02-08
 ----------------------------
 - Issue #3262982 by gausarts, trickfun: [PHP8] array_intersect() does not accept

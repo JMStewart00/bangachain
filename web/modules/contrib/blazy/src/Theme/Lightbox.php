@@ -88,29 +88,31 @@ class Lightbox {
     // See https://drupal.org/node/3210636#comment-14097266.
     $is_multimedia = $blazies->is('multimedia');
     $ok = $valid && $_box_style && !$blazies->is('unstyled');
-    if (!$is_multimedia && $ok && $blazies->is('resimage')) {
+    if (!$is_multimedia && $ok) {
       // Change xdebug.show_exception_trace = 1 to 0 to catch exceptions.
       // The _responsive_image_build_source_attributes is WSOD if missing.
-      try {
-        $resimage = $manager->entityLoad($_box_style, 'responsive_image_style');
-        if (empty($element['#lightbox_html']) && $resimage) {
-          $is_resimage = TRUE;
-          $json['type'] = 'rich';
-          $element['#lightbox_html'] = [
-            '#theme' => 'responsive_image',
-            '#responsive_image_style_id' => $resimage->id(),
-            '#uri' => $uri,
-          ];
+      if ($blazies->is('resimage')) {
+        try {
+          $resimage = $manager->entityLoad($_box_style, 'responsive_image_style');
+          if (empty($element['#lightbox_html']) && $resimage) {
+            $is_resimage = TRUE;
+            $json['type'] = 'rich';
+            $element['#lightbox_html'] = [
+              '#theme' => 'responsive_image',
+              '#responsive_image_style_id' => $resimage->id(),
+              '#uri' => $uri,
+            ];
+          }
         }
-      }
-      catch (\Exception $e) {
-        // Silently failed like regular images when missing rather than WSOD.
+        catch (\Exception $e) {
+          // Silently failed like regular images when missing rather than WSOD.
+        }
       }
 
       // Use non-responsive images if not-so-configured.
       if (!isset($is_resimage) && $box_style) {
         $dimensions = array_merge($dimensions, BlazyImage::transformDimensions($box_style, $dimensions));
-        $box_url = BlazyFile::transformRelative($uri, $box_style);
+        $box_url = $url = BlazyFile::transformRelative($uri, $box_style);
       }
     }
 

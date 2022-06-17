@@ -184,7 +184,7 @@ class ContextConfig {
    * @todo Implement.
    */
   public function checkConfig(CoreContextAwarePluginInterface $plugin) {
-    // @todo.
+    // @todo Implement.
   }
 
 }

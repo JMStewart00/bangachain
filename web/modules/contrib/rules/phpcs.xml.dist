@@ -3,6 +3,11 @@
   <description>Default PHP CodeSniffer configuration for Rules.</description>
   <file>.</file>
 
+  <!-- Temporary fix until drupal.org testbot script is changed. This is also
+    compatible with running phpcs locally, and on Travis, so can be committed.
+    See https://www.drupal.org/project/drupalci_testbot/issues/3283978 -->
+  <config name="installed_paths" value="../../drupal/coder/coder_sniffer/,../../sirbrillig/phpcs-variable-analysis/,../../slevomat/coding-standard/"/>
+
   <exclude-pattern>./d7-tests/</exclude-pattern>
   <exclude-pattern>./vendor/</exclude-pattern>
   <exclude-pattern>./config/</exclude-pattern>
@@ -47,6 +52,13 @@
   </rule>
   <rule ref="DrupalPractice">
     <exclude name="DrupalPractice.Commenting.CommentEmptyLine.SpacingAfter"/>
+  </rule>
+
+  <!-- Increase the allowed line length for inline array declarations. -->
+  <rule ref="Drupal.Arrays.Array">
+    <properties>
+      <property name="lineLimit" value="100"/>
+    </properties>
   </rule>
 
   <!-- We always want short array syntax only. -->

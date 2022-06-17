@@ -9,6 +9,7 @@
 
   var Blazy = function (Splide, Components) {
     var root = Splide.root;
+    var _blazy = Drupal.blazy || {};
 
     return {
       mount: function () {
@@ -31,7 +32,7 @@
        *   Whether to lazyload ahead (at move/ beforeChange event), or not.
        */
       preload: function (ahead) {
-        if (!('blazy' in Drupal)) {
+        if (!_blazy || !_blazy.init) {
           return;
         }
 
@@ -41,7 +42,7 @@
           if (root.querySelector(blazy) !== null) {
             var els = root.querySelectorAll(ahead ? blazy : visible);
             if (els.length) {
-              Drupal.blazy.init.load(els);
+              _blazy.init.load(els);
             }
           }
 

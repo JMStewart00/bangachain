@@ -127,6 +127,7 @@ module:
   menu_ui: 0
   metatag: 0
   mimemail: 0
+  mysql: 0
   node: 0
   nodeaccess: 0
   options: 0
@@ -183,6 +184,11 @@ module:
   views_infinite_scroll: 0
   views_ui: 0
   viewsreference: 0
+  webform: 0
+  webform_scheduled_email: 0
+  webform_submission_export_import: 0
+  webform_submission_log: 0
+  webform_ui: 0
   extlink: 1
   pathauto: 1
   views: 10

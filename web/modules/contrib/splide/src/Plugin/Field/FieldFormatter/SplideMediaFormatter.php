@@ -22,10 +22,12 @@ use Drupal\Core\Field\FieldItemListInterface;
  */
 class SplideMediaFormatter extends SplideEntityReferenceFormatterBase {
 
-  use SplideFormatterViewTrait;
+  use SplideFormatterTrait {
+    pluginSettings as traitPluginSettings;
+  }
 
   /**
-   * Returns the blazy manager.
+   * Overrides the blazy manager.
    */
   public function blazyManager() {
     return $this->formatter;
@@ -50,24 +52,28 @@ class SplideMediaFormatter extends SplideEntityReferenceFormatterBase {
   }
 
   /**
-   * Builds the settings.
-   *
-   * @todo inherit and extends parent post blazy:2.x.
+   * {@inheritdoc}
    */
-  public function buildSettings() {
-    return ['blazy' => TRUE] + $this->traitBuildSettings();
+  protected function pluginSettings(&$blazies, array &$settings): void {
+    $this->traitPluginSettings($blazies, $settings);
+    $blazies->set('is.blazy', TRUE);
+
+    // @todo remove.
+    $settings['blazy'] = TRUE;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getScopedFormElements() {
-    $multiple = $this->fieldDefinition->getFieldStorageDefinition()->isMultiple();
+  protected function getPluginScopes(): array {
+    $multiple = $this->fieldDefinition
+      ->getFieldStorageDefinition()
+      ->isMultiple();
 
     return [
       'grid_form' => $multiple,
       'style'     => $multiple,
-    ] + $this->getCommonScopedFormElements() + parent::getScopedFormElements();
+    ] + parent::getPluginScopes();
   }
 
   /**

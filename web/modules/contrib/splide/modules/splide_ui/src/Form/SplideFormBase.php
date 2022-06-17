@@ -4,6 +4,8 @@ namespace Drupal\splide_ui\Form;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
+// @todo before Blazy:3.x:
+// use Drupal\blazy\Traits\EasingTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -11,6 +13,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 abstract class SplideFormBase extends EntityForm {
 
+  // @todo before Blazy:3.x:
+  // use EasingTrait;
   /**
    * Defines the nice anme.
    *
@@ -156,7 +160,7 @@ abstract class SplideFormBase extends EntityForm {
    *   An array of available jQuery Easing options as fallback for browsers that
    *   don't support pure CSS easing.
    *
-   * @todo remove for Drupal\blazy\Dejavu\BlazyEasingTrait before 3.0.0.
+   * @todo remove for Drupal\blazy\Traits\EasingTrait before 3.0.0.
    */
   public function getJsEasingOptions() {
     if (!isset($this->jsEasingOptions)) {
@@ -210,7 +214,7 @@ abstract class SplideFormBase extends EntityForm {
    * @see https://github.com/Splidejs/splideissues/118
    * @see http://matthewlein.com/ceaser/
    * @see http://www.w3.org/TR/css3-transitions/
-   * @todo remove for Drupal\blazy\Dejavu\BlazyEasingTrait before 3.0.0.
+   * @todo remove for Drupal\blazy\Traits\EasingTrait before 3.0.0.
    */
   public function getCssEasingOptions($map = FALSE) {
     $css_easings = [];
@@ -267,7 +271,7 @@ abstract class SplideFormBase extends EntityForm {
    * @return string
    *   A string of unfriendly bezier equivalent, or NULL.
    *
-   * @todo remove for Drupal\blazy\Dejavu\BlazyEasingTrait before 3.0.0.
+   * @todo remove for Drupal\blazy\Traits\EasingTrait before 3.0.0.
    */
   public function getBezier($easing = NULL) {
     $bezier = '';

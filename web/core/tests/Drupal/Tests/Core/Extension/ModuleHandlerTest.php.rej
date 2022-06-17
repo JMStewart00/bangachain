@@ -1,0 +1,10 @@
+--- tests/Drupal/Tests/Core/Extension/ModuleHandlerTest.php	(revision 23cc4a5cd6cf0056a4875edafa56d8543f856013)
++++ tests/Drupal/Tests/Core/Extension/ModuleHandlerTest.php	(revision cb22a9ddd07a3febabccc2ce03926383b4f1792f)
+@@ -369,6 +369,7 @@
+    *
+    * @covers ::getImplementations
+    * @covers ::getImplementationInfo
++   * @covers ::verifyImplementations
+    */
+   public function testCachedGetImplementationsMissingMethod() {
+     $this->cacheBackend->expects($this->exactly(1))

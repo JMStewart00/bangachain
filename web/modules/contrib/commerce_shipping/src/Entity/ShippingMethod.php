@@ -282,7 +282,7 @@ class ShippingMethod extends ContentEntityBase implements ShippingMethodInterfac
       ->setLabel(t('Stores'))
       ->setDescription(t('The stores for which the shipping method is valid.'))
       ->setCardinality(BaseFieldDefinition::CARDINALITY_UNLIMITED)
-      ->setRequired(TRUE)
+      ->setSetting('optional_label', t('Restrict to specific stores'))
       ->setSetting('target_type', 'commerce_store')
       ->setSetting('handler', 'default')
       ->setDisplayOptions('form', [

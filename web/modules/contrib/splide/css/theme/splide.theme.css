@@ -145,7 +145,7 @@
 }
 
 /* Center the image to reduce gap at RHS with smaller image, larger container */
-.media__image {
+img.media__element {
   margin: 0 auto;
 }
 

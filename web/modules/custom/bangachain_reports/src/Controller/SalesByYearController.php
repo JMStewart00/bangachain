@@ -8,11 +8,31 @@ use Drupal\commerce_order\Entity\Order;
 use Drupal\commerce_payment\Entity\Payment;
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\HttpFoundation\Request;
+use Drupal\bangachain_reports\MemoryReclaimer;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Sales By Year controller.
  */
 class SalesByYearController extends ControllerBase {
+  /**
+   * Service to reclaim unused memory.
+   *
+   * @var \Drupal\bangachain_reports\MemoryReclaimer
+   */
+  private $memoryReclaimer;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    $memoryReclaimer = $container->get('bangachain_reports.memory_reclaimer');
+    return new static($memoryReclaimer);
+  }
+
+  public function __construct(MemoryReclaimer $memoryReclaimer) {
+    $this->memoryReclaimer = $memoryReclaimer;
+  }
 
   /**
    * Returns a render-able array for a people clean up page.
@@ -96,7 +116,12 @@ class SalesByYearController extends ControllerBase {
     $cash_total = 0;
     $pos_giftcard_total = 0;
 
-    foreach ($ids as $id) {
+    $i = 0;
+    foreach ($ids as  $id) {
+      if ($i % 100 === 0) {
+        $this->memoryReclaimer->checkMemoryExceeded();
+      }
+
       $order = Order::load($id);
 
       $subtotal = floatval($order->getSubtotalPrice()->getNumber());
@@ -190,6 +215,7 @@ class SalesByYearController extends ControllerBase {
       ]);
 
     }
+    $i++;
     return [
       'rows' => $rows,
       'total_payments' => [

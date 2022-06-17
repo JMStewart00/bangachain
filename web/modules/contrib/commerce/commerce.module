@@ -25,7 +25,7 @@ function commerce_mail($key, &$message, $params) {
     $message['from'] = $params['from'];
   }
   $message['subject'] = $params['subject'];
-  $message['body'][] = $renderer->render($params['body']);
+  $message['body'][] = $renderer->renderPlain($params['body']);
 }
 
 /**

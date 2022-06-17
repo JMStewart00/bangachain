@@ -22,8 +22,11 @@ content:
     settings:
       image_link: ''
       image_style: sc400x400
+      image_loading:
+        attribute: lazy
     third_party_settings: {  }
     weight: 0
     region: content
 hidden:
   description: true
+  search_api_excerpt: true

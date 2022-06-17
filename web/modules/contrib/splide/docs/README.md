@@ -62,7 +62,8 @@ Not all plugins are supported or implemented, below are:
 
   + `/libraries/splidejs--splide-extension-auto-scroll` (via packagist)
   + `/libraries/splide-extension-auto-scroll` (via github)
-  + Or any supported path by priority, and they must have `/dist/js/splide-extension-auto-scroll.min.js`.  
+  + Or any supported path by priority, and they must have
+    `/dist/js/splide-extension-auto-scroll.min.js`.  
 
 2. [Intersection](https://github.com/Splidejs/splide-extension-intersection):  
 

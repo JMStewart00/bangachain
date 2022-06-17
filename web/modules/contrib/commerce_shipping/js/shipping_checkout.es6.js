@@ -28,7 +28,7 @@
     init(context) {
       // Everytime a required field value is updated, attempt to trigger the
       // shipping rates recalculation if possible.
-      const requiredInputs = document.getElementById(this.wrapper).querySelectorAll('input[required], select[required]');
+      const requiredInputs = document.getElementById(this.wrapper).querySelectorAll('input[required], select[required], input[type=checkbox]');
       if (requiredInputs.length) {
         once('shipping-recalculate', requiredInputs, context).forEach((element) => {
           element.addEventListener('change', (el) => {

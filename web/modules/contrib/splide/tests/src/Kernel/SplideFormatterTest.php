@@ -121,17 +121,20 @@ class SplideFormatterTest extends BlazyKernelTestBase {
    *
    * @param string $uri
    *   The uri being tested.
+   * @param bool $use_item
+   *   Whether to use ImageItem.
    * @param bool $expected
    *   The expected output.
    *
    * @covers \Drupal\splide\SplideFormatter::getThumbnail
    * @dataProvider providerTestGetThumbnail
    */
-  public function testGetThumbnail($uri, $expected) {
+  public function testGetThumbnail($uri, $use_item, $expected) {
     $settings = $this->getFormatterSettings() + SplideDefault::extendedSettings();
     $settings['uri'] = empty($uri) ? '' : $this->uri;
+    $item = $use_item ? $this->testItem : NULL;
 
-    $thumbnail = $this->splideFormatter->getThumbnail($settings, $this->testItem);
+    $thumbnail = $this->splideFormatter->getThumbnail($settings, $item);
     $this->assertEquals($expected, !empty($thumbnail));
   }
 
@@ -145,9 +148,16 @@ class SplideFormatterTest extends BlazyKernelTestBase {
     $data[] = [
       '',
       FALSE,
+      FALSE,
+    ];
+    $data[] = [
+      '',
+      TRUE,
+      TRUE,
     ];
     $data[] = [
       'public://example.jpg',
+      FALSE,
       TRUE,
     ];
 

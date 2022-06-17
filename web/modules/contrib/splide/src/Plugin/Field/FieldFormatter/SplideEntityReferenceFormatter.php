@@ -2,8 +2,6 @@
 
 namespace Drupal\splide\Plugin\Field\FieldFormatter;
 
-use Drupal\Core\Field\FieldDefinitionInterface;
-
 /**
  * Plugin implementation of the 'Splide Entity Reference' formatter.
  *
@@ -20,15 +18,4 @@ use Drupal\Core\Field\FieldDefinitionInterface;
  *   }
  * )
  */
-class SplideEntityReferenceFormatter extends SplideEntityFormatterBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function isApplicable(FieldDefinitionInterface $field_definition) {
-    $storage = $field_definition->getFieldStorageDefinition();
-
-    return $storage->isMultiple();
-  }
-
-}
+class SplideEntityReferenceFormatter extends SplideEntityFormatterBase {}

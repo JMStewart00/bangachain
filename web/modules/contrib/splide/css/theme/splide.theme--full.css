@@ -108,4 +108,29 @@
     top: auto;
     width: 100%;
   }
+
+  .splide .slide--caption--center-bottom .slide__overlay {
+    margin: 0 auto;
+    max-width: 42%;
+  }
+
+  .splide .slide--caption--center-bottom .slide__caption {
+    left: 50%;
+    margin: 0 auto 15px;
+    min-height: 80px;
+    bottom: 0;
+    text-align: center;
+    top: auto;
+    transform: translate(-50%, 0);
+  }
+
+  /* @todo remove, just sample. */
+  .splide .slide--caption--center-bottom .slide__title {
+    color: #fff;
+    font-size: 2rem;
+  }
+
+  .splide.is-arrowed--down > .splide__arrows {
+    bottom: 0;
+  }
 }

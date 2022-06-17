@@ -7,6 +7,7 @@ dependencies:
     - field.field.node.events.field_event_page
     - field.field.node.events.field_link
     - field.field.node.events.field_photo
+    - field.field.node.events.field_registration
     - field.field.node.events.field_registration_opens
     - field.field.node.events.field_tournament_dates
     - node.type.events
@@ -17,6 +18,7 @@ dependencies:
     - media_library
     - path
     - text
+    - webform
 id: node.events.default
 targetEntityType: node
 bundle: events
@@ -60,6 +62,14 @@ content:
     region: content
     settings:
       media_types: {  }
+    third_party_settings: {  }
+  field_registration:
+    type: webform_entity_reference_select
+    weight: 26
+    region: content
+    settings:
+      default_data: true
+      webforms: {  }
     third_party_settings: {  }
   field_registration_opens:
     type: datetime_default

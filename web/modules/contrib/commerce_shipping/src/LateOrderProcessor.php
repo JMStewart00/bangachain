@@ -5,6 +5,8 @@ namespace Drupal\commerce_shipping;
 use Drupal\commerce_order\Adjustment;
 use Drupal\commerce_order\Entity\OrderInterface;
 use Drupal\commerce_order\OrderProcessorInterface;
+use Drupal\commerce_shipping\Entity\ShipmentInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Completes the order refresh process for shipments.
@@ -17,6 +19,8 @@ use Drupal\commerce_order\OrderProcessorInterface;
  * @see \Drupal\commerce_shipping\EarlyOrderProcessor
  */
 class LateOrderProcessor implements OrderProcessorInterface {
+
+  use StringTranslationTrait;
 
   /**
    * The shipping order manager.
@@ -47,7 +51,7 @@ class LateOrderProcessor implements OrderProcessorInterface {
     $single_shipment = count($shipments) === 1;
 
     foreach ($shipments as $shipment) {
-      if ($shipment->hasTranslationChanges()) {
+      if ($this->shouldSave($shipment)) {
         $shipment->save();
       }
 
@@ -55,7 +59,7 @@ class LateOrderProcessor implements OrderProcessorInterface {
         // Shipments without an amount are incomplete / unrated.
         $order->addAdjustment(new Adjustment([
           'type' => 'shipping',
-          'label' => $single_shipment ? t('Shipping') : $shipment->getTitle(),
+          'label' => $single_shipment ? $this->t('Shipping') : $shipment->getTitle(),
           'amount' => $amount,
           'source_id' => $shipment->id(),
         ]));
@@ -71,6 +75,22 @@ class LateOrderProcessor implements OrderProcessorInterface {
         }
       }
     }
+  }
+
+  /**
+   * Whether shipments should be saved during processing.
+   *
+   * Normally this is true, but in certain circumstances, saving
+   * should not occur. e.g. during shipment estimates.
+   *
+   * @param \Drupal\commerce_shipping\Entity\ShipmentInterface $shipment
+   *   The shipment.
+   *
+   * @return bool
+   *   Whether save should occur.
+   */
+  protected function shouldSave(ShipmentInterface $shipment): bool {
+    return $shipment->hasTranslationChanges();
   }
 
 }

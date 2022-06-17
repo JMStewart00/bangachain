@@ -1,4 +1,21 @@
 
+Blazy 8.x-2.0-dev, 2022-05-31
+-----------------------------
+- Issue #3283156 by YazanMajadba: Support align/style(float) attribute on
+  blazy filter.
+- Issue #3282785 by jurgenhaas, Anybody, gausarts, Rajab Natshah: WSOD after
+  update to 2.12: Error: Call to a member function get() on null.
+
+Blazy 8.x-2.0-dev, 2022-05-18
+-----------------------------
+- Fixed for vanilla regressions.
+
+Blazy 8.x-2.0-dev, 2022-05-17
+-----------------------------
+- Issue #3279831 by poedan: Allow multiple thumbnails on the same video url.
+- Issue #3280769 by gausarts, bgreco: "Lightbox image style" setting does
+  not work.
+
 Blazy 8.x-2.0-dev, 2022-05-07
 -----------------------------
 - Fixed for dup thumbnail regression, see #3278525.

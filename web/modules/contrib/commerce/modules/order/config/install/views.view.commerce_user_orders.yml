@@ -546,7 +546,7 @@ display:
             type: commerce_current_user
             fail: 'not found'
           validate_options:
-            admin_permission: 'administer commerce_order'
+            admin_permission: 'view commerce_order'
           break_phrase: false
           not: false
           entity_type: commerce_order

@@ -9384,7 +9384,7 @@ div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
   .c-header__hours {
     position: absolute;
     right: calc(var(--lh__base) * 2 * var(--rvr-multiplier));
-    top: 0.6875rem;
+    top: 0.375rem;
     padding: 0; } }
 
 .c-header__hours .o-icon {
@@ -10101,6 +10101,13 @@ div:not(.bangachain-table) table tbody tr:nth-of-type(even) {
   .c-field-favorite-discs {
     -ms-grid-columns: minmax(150px, 1fr) [4];
     grid-template-columns: repeat(4, minmax(150px, 1fr)); } }
+
+.c-view-discs li,
+.c-view-bags li,
+.c-view-accessories li,
+.c-view-apparel li,
+.c-field-favorite-discs li {
+  list-style: none; }
 
 .c-field-favorite-discs {
   -ms-grid-columns: 1fr [1] !important;

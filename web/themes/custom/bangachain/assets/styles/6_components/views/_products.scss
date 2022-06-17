@@ -39,6 +39,10 @@
   @include media-breakpoint-up(xl) {
     grid-template-columns: repeat(4, minmax(150px, 1fr));
   }
+
+  li {
+    list-style: none;
+  }
 }
 
 .c-field-favorite-discs {

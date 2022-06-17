@@ -5,6 +5,7 @@ namespace Drupal\splide_ui\Form;
 use Drupal\Core\Url;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\blazy\Blazy;
 use Drupal\splide\Entity\Splide;
 use Drupal\splide\SplideDefault;
 
@@ -18,7 +19,7 @@ class SplideForm extends SplideFormBase {
    */
   public function form(array $form, FormStateInterface $form_state) {
     $form      = parent::form($form, $form_state);
-    $path      = SplideDefault::getPath('module', 'splide');
+    $path      = Blazy::getPath('module', 'splide');
     $splide    = $this->entity;
     $options   = $splide->getOptions() ?: [];
     $tooltip   = ['class' => ['is-tooltip']];

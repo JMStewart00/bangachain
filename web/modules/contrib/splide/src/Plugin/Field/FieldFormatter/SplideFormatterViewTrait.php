@@ -6,13 +6,15 @@ use Drupal\Core\Field\FieldItemListInterface;
 
 /**
  * A Trait common for all blazy formatters.
+ *
+ * @todo remove post Blazy:2.10, and use BlazyFormatterViewTrait instead.
  */
 trait SplideFormatterViewTrait {
 
   /**
    * Returns similar view elements.
    */
-  public function commonViewElements(FieldItemListInterface $items, $langcode, array $entities = [], array $settings = []) {
+  public function deprecatedViewElements(FieldItemListInterface $items, $langcode, array $entities = [], array $settings = []) {
     // Collects specific settings to this formatter.
     $settings['langcode'] = $langcode;
     $settings = array_merge($this->buildSettings(), $settings);
@@ -36,10 +38,9 @@ trait SplideFormatterViewTrait {
       // Return field-vanilla without field markup.
       return $this->manager->build($build);
     }
-    else {
-      // Return as array to render in regular field.html.twig:
-      return [$this->manager->build($build)];
-    }
+
+    // Return as array to render in regular field.html.twig:
+    return [$this->manager->build($build)];
   }
 
 }

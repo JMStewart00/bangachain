@@ -5,6 +5,7 @@ namespace Drupal\Tests\commerce_shipping\Functional;
 use Drupal\commerce_price\Price;
 use Drupal\commerce_shipping\Entity\ShipmentType;
 use Drupal\commerce_shipping\ShipmentItem;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\physical\Weight;
 use Drupal\Tests\commerce\Functional\CommerceBrowserTestBase;
 
@@ -14,6 +15,8 @@ use Drupal\Tests\commerce\Functional\CommerceBrowserTestBase;
  * @group commerce_shipping
  */
 class ShipmentTypeTest extends CommerceBrowserTestBase {
+
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
@@ -166,14 +169,14 @@ class ShipmentTypeTest extends CommerceBrowserTestBase {
 
     // Try to delete the shipment type.
     $this->drupalGet('admin/commerce/config/shipment-types/foo/delete');
-    $this->assertSession()->pageTextContains(t('@type is used by 1 shipment on your site. You can not remove this shipment type until you have removed all of the @type shipments.', ['@type' => $type->label()]));
+    $this->assertSession()->pageTextContains($this->t('@type is used by 1 shipment on your site. You can not remove this shipment type until you have removed all of the @type shipments.', ['@type' => $type->label()]));
     $this->assertSession()->pageTextNotContains('This action cannot be undone.');
     $this->assertSession()->pageTextNotContains('The shipment type deletion confirmation form is not available');
 
     // Deleting the shipment type when its not being referenced by a shipment.
     $shipment->delete();
     $this->drupalGet('admin/commerce/config/shipment-types/foo/delete');
-    $this->assertSession()->pageTextContains(t('Are you sure you want to delete the shipment type @type?', ['@type' => $type->label()]));
+    $this->assertSession()->pageTextContains($this->t('Are you sure you want to delete the shipment type @type?', ['@type' => $type->label()]));
     $this->saveHtmlOutput();
     $this->assertSession()->pageTextContains('This action cannot be undone.');
     $this->submitForm([], 'Delete');

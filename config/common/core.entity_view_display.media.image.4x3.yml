@@ -27,6 +27,8 @@ content:
     settings:
       image_link: ''
       image_style: responsive_4_3_950w
+      image_loading:
+        attribute: lazy
     third_party_settings: {  }
     weight: 1
     region: content

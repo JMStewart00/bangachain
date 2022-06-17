@@ -171,10 +171,15 @@ class DefaultPaymentAdminTest extends CommerceBrowserTestBase {
     $this->assertSession()->addressEquals($this->paymentUri);
     $this->assertSession()->elementContains('css', 'table tbody tr td:nth-child(2)', 'Completed');
 
+    $this->order = $this->reloadEntity($this->order);
     \Drupal::entityTypeManager()->getStorage('commerce_payment')->resetCache([1]);
     /** @var \Drupal\commerce_payment\Entity\PaymentInterface $payment */
     $payment = Payment::load(1);
     $this->assertEquals($this->order->id(), $payment->getOrderId());
+    $billing_profile = $this->order->getBillingProfile();
+    $this->assertNotEmpty($billing_profile);
+    $this->assertEquals($payment->getPaymentMethod()->id(), $this->order->get('payment_method')->target_id);
+    $this->assertEquals($billing_profile->get('address')->first()->toArray(), $payment->getPaymentMethod()->getBillingProfile()->get('address')->first()->toArray());
     $this->assertEquals('100.00', $payment->getAmount()->getNumber());
     $this->assertNotEmpty($payment->getCompletedTime());
     $this->assertEquals('A', $payment->getAvsResponseCode());

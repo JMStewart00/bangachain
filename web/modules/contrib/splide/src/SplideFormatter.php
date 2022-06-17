@@ -2,10 +2,8 @@
 
 namespace Drupal\splide;
 
-use Drupal\Component\Utility\UrlHelper;
 use Drupal\splide\Entity\Splide;
 use Drupal\blazy\BlazyFormatter;
-use Drupal\image\Plugin\Field\FieldType\ImageItem;
 
 /**
  * Provides Splide field formatters utilities.
@@ -17,18 +15,17 @@ class SplideFormatter extends BlazyFormatter implements SplideFormatterInterface
    */
   public function buildSettings(array &$build, $items) {
     $settings = &$build['settings'];
-
-    // Prepare integration with Blazy.
-    $settings['item_id']   = 'slide';
-    $settings['namespace'] = 'splide';
+    $settings += SplideDefault::htmlSettings();
 
     // Splide specific stuffs.
-    // @todo move this into ::prepareData() post Blazy 2.7.
-    $build['optionset'] = $optionset = Splide::loadWithFallback($settings['optionset']);
-    if (isset($settings['blazies'])) {
-      $blazies = &$settings['blazies'];
-      $blazies->set('initial', $optionset->getSetting('start'));
-    }
+    $settings['_unload'] = FALSE;
+
+    // @todo move it into self::preSettingsData() post Blazy 2.10.
+    $optionset = Splide::verifyOptionset($build, $settings['optionset']);
+
+    // Prepare integration with Blazy.
+    $blazies = $settings['blazies'];
+    $blazies->set('initial', $optionset->getSetting('start'));
 
     // Pass basic info to parent::buildSettings().
     parent::buildSettings($build, $items);
@@ -59,25 +56,6 @@ class SplideFormatter extends BlazyFormatter implements SplideFormatterInterface
     }
 
     $this->getModuleHandler()->alter('splide_settings', $build, $items);
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @todo Remove post Blazy 2.5+.
-   */
-  public function getThumbnail(array $settings = [], $item = NULL) {
-    if (!empty($settings['uri'])) {
-      $external = UrlHelper::isExternal($settings['uri']);
-      return [
-        '#theme'      => $external ? 'image' : 'image_style',
-        '#style_name' => empty($settings['thumbnail_style']) ? 'thumbnail' : $settings['thumbnail_style'],
-        '#uri'        => $settings['uri'],
-        '#item'       => $item,
-        '#alt'        => $item && $item instanceof ImageItem ? $item->getValue()['alt'] : '',
-      ];
-    }
-    return [];
   }
 
 }

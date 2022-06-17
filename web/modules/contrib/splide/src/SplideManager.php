@@ -91,7 +91,7 @@ class SplideManager extends BlazyManagerBase implements SplideManagerInterface {
     unset($element['#build']);
 
     $optionset = &$build['optionset'];
-    $settings = &$build['settings'];
+    $settings  = &$build['settings'];
     $settings += SplideDefault::htmlSettings();
 
     if ($settings['display'] == 'main') {
@@ -191,13 +191,28 @@ class SplideManager extends BlazyManagerBase implements SplideManagerInterface {
       unset($slide);
     }
 
-    $result = BlazyGrid::build($output, $settings);
+    $result = $this->grid($output, $settings);
+
     $result['#attributes']['class'][] = empty($settings['unsplide']) ? 'slide__content' : 'splide__grid';
 
     $build = ['slide' => $result, 'settings' => $settings];
 
     $this->moduleHandler->alter('splide_grid_item', $build, $settings);
     return $build;
+  }
+
+  /**
+   * Returns items as a grid display.
+   *
+   * @todo remove and call self::toGrid() directly post Blazy:2.10.
+   */
+  public function grid(array $output, array $settings): array {
+    // @todo remove check post Blazy 2.10.
+    if (method_exists($this, 'toGrid')) {
+      return $this->toGrid($output, $settings);
+    }
+
+    return BlazyGrid::build($output, $settings);
   }
 
   /**
@@ -224,18 +239,16 @@ class SplideManager extends BlazyManagerBase implements SplideManagerInterface {
   /**
    * Prepares js-related options.
    */
-  protected function prepareOptions($optionset, array &$options, array &$settings) {
-    // Disable draggable for Layout Builder UI to not conflict with UI sortable.
-    if (strpos($settings['route_name'], 'layout_builder.') === 0 || !empty($settings['is_preview'])) {
-      $options['drag'] = FALSE;
-    }
+  protected function prepareOptions(Splide &$optionset, array &$options, array &$settings): void {
+    $blazies = $settings['blazies'];
 
     // Supports programmatic options defined within skin definitions to allow
     // addition of options with other libraries integrated with Splide without
     // modifying optionset such as for Zoom, Reflection, Slicebox, Transit, etc.
-    if (!empty($settings['skin']) && $skins = $this->skinManager->getSkinsByGroup('main')) {
-      if (isset($skins[$settings['skin']]['options'])) {
-        $options = array_merge($options, $skins[$settings['skin']]['options']);
+    $skin = $settings['skin'] ?? NULL;
+    if ($skin && $skins = $this->skinManager->getSkinsByGroup('main')) {
+      if (isset($skins[$skin]['options'])) {
+        $options = array_merge($options, $skins[$skin]['options']);
       }
     }
 
@@ -259,45 +272,94 @@ class SplideManager extends BlazyManagerBase implements SplideManagerInterface {
         }
       }
     }
+
+    // Disable draggable for Layout Builder UI to not conflict with UI sortable.
+    $count = $blazies->get('count');
+    $options['count'] = $count;
+
+    if (strpos($blazies->get('route_name', ''), 'layout_builder.') === 0
+      || $blazies->is('sandboxed')) {
+      $options['drag'] = FALSE;
+    }
+
+    $this->moduleHandler->alter('splide_options', $options, $settings, $optionset);
+    // Disabled irrelevant options when lacking of slides.
+    $this->unsplide($options, $settings);
   }
 
   /**
    * Prepare settings for the known module features, not necessarily users'.
    */
   protected function prepareSettings(array &$element, array &$build) {
-    $settings = array_merge(SplideDefault::htmlSettings(), $build['settings']);
+    $settings  = &$build['settings'];
+    $settings += SplideDefault::htmlSettings();
+    $options   = &$build['options'];
+
+    Blazy::verify($settings);
+    $blazies = $settings['blazies'];
+    $splides = $settings['splides'];
 
     // Formatters or Views may set this, but not custom works.
-    if (empty($build['optionset'])) {
-      $build['optionset'] = Splide::loadWithFallback($settings['optionset']);
-    }
-
-    $optionset = &$build['optionset'];
-    $options = &$build['options'];
-    $this->prepareOptions($optionset, $options, $settings);
+    Splide::verifyOptionset($build, $settings['optionset']);
 
     // Additional settings, Splide supports nav for Vanilla, unlike Slick.
-    $settings['down']         = $optionset->getSetting('down');
-    $settings['count']        = empty($settings['count']) ? count($build['items']) : $settings['count'];
-    $settings['nav']          = $settings['nav'] && (!empty($settings['optionset_nav']) && isset($build['items'][1]));
-    $settings['navpos']       = ($settings['nav'] && !empty($settings['navpos'])) ? $settings['navpos'] : '';
-    $settings['transition']   = $options['type'] ?? $optionset->getSetting('type');
-    $settings['vertical']     = ($options['direction'] ?? FALSE) == 'ttb';
-    $settings['wheel']        = $options['wheel'] ?? $optionset->getSetting('wheel');
-    $settings['autoscroll']   = $optionset->getSetting('autoScroll');
-    $settings['intersection'] = $optionset->getSetting('intersection');
+    $optionset = &$build['optionset'];
+    $count     = $settings['count'] ?? NULL;
+    $count     = $settings['count'] = $count ?: count($build['items']);
+    $wheel     = $options['wheel'] ?? $optionset->getSetting('wheel');
+    $navpos    = $settings['navpos'] ?? NULL;
+    $nav       = $splides->is('nav', !empty($settings['nav']));
+    $nav       = $nav
+      && (!empty($settings['optionset_nav'])
+      && isset($build['items'][1]));
 
     // Removes pagination thumbnail effect if has no thumbnails.
     $pagination = $options['pagination'] ?? $optionset->getSetting('pagination');
     $pagination = Splide::toBoolOrString($pagination);
-    $fx = $pagination && (!empty($settings['thumbnail_style']) || !empty($settings['thumbnail']));
-    $settings['pagination_fx'] = $fx ? $settings['thumbnail_effect'] : '';
-    $settings['pagination_tab'] = $pagination && !empty($settings['pagination_texts']);
+    $fx         = $pagination
+      && (!empty($settings['thumbnail_style'])
+      || !empty($settings['thumbnail']));
+
+    $data = [
+      'count'          => $count,
+      'down'           => $optionset->getSetting('down'),
+      'nav'            => $nav,
+      'navpos'         => ($nav && $navpos) ? $navpos : '',
+      'pagination_fx'  => $fx ? $settings['thumbnail_effect'] : '',
+      'pagination_tab' => $pagination && !empty($settings['pagination_texts']),
+      'vertical'       => $optionset->getSetting('vertical'),
+      'transition'     => $options['type'] ?? $optionset->getSetting('type'),
+      'vertical'       => ($options['direction'] ?? FALSE) == 'ttb',
+      'autoscroll'     => $optionset->getSetting('autoScroll'),
+      'intersection'   => $optionset->getSetting('intersection'),
+      'wheel'          => $wheel,
+    ];
+
+    foreach ($data as $key => $value) {
+      // @todo remove settings after migration.
+      $settings[$key] = $value;
+      $splides->set(is_bool($value) ? 'is.' . $key : $key, $value);
+    }
+
+    // Few dups are generic and needed by Blazy to interop Slick and Splide.
+    $blazies->set('count', $count)
+      ->set('is.nav', $splides->is('nav'));
+
+    $this->prepareOptions($optionset, $options, $settings);
 
     if ($settings['nav']) {
-      $optionset_nav            = $build['optionset_nav'] = Splide::loadWithFallback($settings['optionset_nav']);
-      $settings['vertical_nav'] = $optionset_nav->getSetting('direction') == 'ttb';
-      $settings['wheel']        = $options['wheel'] ?? $optionset_nav->getSetting('wheel');
+      $optionset_nav = $build['optionset_nav'] = Splide::loadWithFallback($settings['optionset_nav']);
+
+      $data = [
+        'vertical_nav' => $optionset_nav->getSetting('direction') == 'ttb',
+        'wheel' => $options['wheel'] ?? $optionset_nav->getSetting('wheel'),
+      ];
+
+      foreach ($data as $key => $value) {
+        // @todo remove settings after migration.
+        $settings[$key] = $value;
+        $splides->set(is_bool($value) ? 'is.' . $key : $key, $value);
+      }
     }
     else {
       // Pass extra attributes such as those from Commerce product variations to
@@ -309,19 +371,17 @@ class SplideManager extends BlazyManagerBase implements SplideManagerInterface {
 
     // Supports Blazy multi-breakpoint or lightbox images if provided.
     // Cases: Blazy within Views gallery, or references without direct image.
-    if (!empty($settings['check_blazy']) && !empty($settings['first_image'])) {
-      $this->isBlazy($settings, $settings['first_image']);
+    if ($data = $blazies->get('first.data')) {
+      if (is_array($data)) {
+        $this->isBlazy($settings, $data);
+      }
     }
-
     // Formatters might have checked this, but not views, nor custom works.
     // Why the formatters should check it first? It is so known to children.
-    if (empty($settings['_lazy'])) {
-      $optionset->whichLazy($settings);
-    }
+    $optionset->whichLazy($settings);
 
-    $build['options']     = $options;
     $attachments          = $this->attach($settings);
-    $element['#settings'] = $build['settings'] = $settings;
+    $element['#settings'] = $settings;
     $element['#attached'] = empty($build['attached']) ? $attachments : NestedArray::mergeDeep($build['attached'], $attachments);
   }
 
@@ -334,13 +394,17 @@ class SplideManager extends BlazyManagerBase implements SplideManagerInterface {
       $build[$key] = $navs[$key] ?? [];
     }
 
-    $optionset             = $build['optionset_nav'];
     $settings              = array_merge($settings, $build['settings']);
+    $options               = &$build['options'];
+    $optionset             = $build['optionset_nav'];
     $settings['optionset'] = $settings['optionset_nav'];
     $settings['skin']      = $settings['skin_nav'];
     $settings['display']   = 'nav';
     $build['optionset']    = $optionset;
     $build['settings']     = $settings;
+
+    // Disabled irrelevant options when lacking of slides.
+    $this->unsplide($options, $settings);
 
     // The splide thumbnail navigation has the same structure as the main one.
     unset($build['optionset_nav']);
@@ -360,6 +424,7 @@ class SplideManager extends BlazyManagerBase implements SplideManagerInterface {
     // Checks if we have thumbnail navigation.
     $navs     = $build['nav'] ?? [];
     $settings = $build['settings'];
+    $splides  = $settings['splides'];
 
     // Prevents unused thumb going through the main display.
     unset($build['nav']);
@@ -368,12 +433,12 @@ class SplideManager extends BlazyManagerBase implements SplideManagerInterface {
     $splide[0] = $this->splide($build);
 
     // Build the thumbnail Splide.
-    if ($settings['nav'] && $navs) {
+    if ($splides->is('nav') && $navs) {
       $splide[1] = $this->buildNavigation($build, $navs);
     }
 
     // Reverse splides if thumbnail position is provided to get CSS float work.
-    if ($settings['navpos']) {
+    if ($splides->get('navpos')) {
       $splide = array_reverse($splide);
     }
 
@@ -381,7 +446,6 @@ class SplideManager extends BlazyManagerBase implements SplideManagerInterface {
     $element['#items'] = $splide;
     $element['#cache'] = $this->getCacheMetadata($build);
 
-    unset($build);
     return $element;
   }
 
@@ -403,6 +467,24 @@ class SplideManager extends BlazyManagerBase implements SplideManagerInterface {
     ];
     $this->moduleHandler->alter('splide_transition_types', $types);
     return $types;
+  }
+
+  /**
+   * Disabled irrelevant options when lacking of slides, unsplide softly.
+   *
+   * Unlike `settings.unsplide`, this doesn't destroy the markups so that
+   * `settings.unsplide` can be overriden as needed unless being forced.
+   */
+  private function unsplide(array &$options, array $settings) {
+    $splides = $settings['splides'];
+    if ($splides->get('count') < 2) {
+      $options['arrows'] = FALSE;
+      $options['drag'] = FALSE;
+      $options['pagination'] = FALSE;
+      $options['perPage'] = $options['perMove'] = 1;
+      $options['start'] = 0;
+      $options['type'] = 'fade';
+    }
   }
 
 }

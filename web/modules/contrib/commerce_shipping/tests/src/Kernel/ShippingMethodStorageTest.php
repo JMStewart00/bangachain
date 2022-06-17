@@ -171,6 +171,12 @@ class ShippingMethodStorageTest extends ShippingKernelTestBase {
     $shipping_methods = $this->storage->loadMultipleForShipment($this->shipment);
     $this->assertCount(1, $shipping_methods);
     $this->assertEquals($shipping_method1->id(), reset($shipping_methods)->id());
+
+    // The shipping method is no longer restricted to a single store.
+    $shipping_method2->set('stores', NULL);
+    $shipping_method2->save();
+    $shipping_methods = $this->storage->loadMultipleForShipment($this->shipment);
+    $this->assertCount(2, $shipping_methods);
   }
 
   /**

@@ -21,6 +21,7 @@ class ProductVariationSkuConstraintValidator extends ConstraintValidator {
     $sku = $item->value;
     if (isset($sku) && $sku !== '') {
       $sku_exists = (bool) \Drupal::entityQuery('commerce_product_variation')
+        ->accessCheck(FALSE)
         ->condition('sku', $sku)
         ->condition('variation_id', (int) $items->getEntity()->id(), '<>')
         ->range(0, 1)

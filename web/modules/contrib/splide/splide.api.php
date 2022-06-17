@@ -459,7 +459,6 @@
  *
  * @section sec_dots Defines Splide dot skins
  *
- * Unlike Slick, the classes are moved to the .splide due to troublesome option.
  * The provided dot skins will be available at sub-module UI form.
  * A skin dot named 'hop' will have a class 'is-paginated--hop' for the .slide.
  *
@@ -473,7 +472,6 @@
  *
  * @section sec_arrows Defines Splide arrow skins
  *
- * Unlike Slick, the classes are moved to the .splide due to troublesome option.
  * The provided arrow skins will be available at sub-module UI form.
  * A skin arrow 'slit' will have a class 'is-arrowed--slit' for the .slide.
  *
@@ -556,6 +554,26 @@ function hook_splide_optionset_alter(Splide &$splide, array $settings) {
 }
 
 /**
+ * Modifies Splide options before being passed to preprocess, or templates.
+ *
+ * Alternative to hook_splide_optionset_alter modify options directly.
+ *
+ * @param array $options
+ *   The modified options related to JavaScript options.
+ * @param array $settings
+ *   The contextual settings related to UI and HTML layout settings.
+ * @param \Drupal\splide\Entity\Splide $splide
+ *   The Splide object being modified.
+ *
+ * @see \Drupal\splide\SplideManager::preRenderSplide()
+ *
+ * @ingroup splide_api
+ */
+function hook_splide_options_alter(array &$options, array $settings, Splide $splide) {
+  // Change options as needed based on the given settings.
+}
+
+/**
  * Modifies Splide HTML settings before being passed to preprocess/ templates.
  *
  * If you need to override globally to be inherited by all blazy-related
@@ -573,17 +591,18 @@ function hook_splide_optionset_alter(Splide &$splide, array $settings) {
  */
 function hook_splide_settings_alter(array &$build, $items) {
   $settings = &$build['settings'];
+  $blazies = &$settings['blazies'];
 
   // See blazy_blazy_settings_alter() at blazy.module for existing samples.
   // First check the $settings array. Splide Views may have different array.
-  if (isset($settings['entity_id'])) {
+  if ($id = $blazies->get('entity.id')) {
     // Change skin if meeting a particular criteria.
     if ($settings['optionset'] == 'x_splide_for') {
-      $settings['skin'] = $settings['entity_id'] == 54 ? 'fullwidth' : $settings['skin'];
+      $settings['skin'] = $id == 54 ? 'fullwidth' : $settings['skin'];
     }
 
     // Swap optionset at particular pages.
-    if (in_array($settings['entity_id'], [54, 64, 74])) {
+    if (in_array($id, [54, 64, 74])) {
       $settings['optionset'] == 'my_splide_pages';
     }
   }

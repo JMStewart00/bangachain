@@ -88,7 +88,8 @@ class OrderTypeForm extends CommerceBundleEntityFormBase {
     ];
     $form['generate_number'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Generate a sequential order number when the order is placed'),
+      '#title' => $this->t('Generate a sequential order number when the order is placed.'),
+      '#description' => $this->t('If unchecked, the order ID will be used as the order number.'),
       '#default_value' => (bool) $order_type->getNumberPatternId(),
     ];
     $form['numberPattern'] = [

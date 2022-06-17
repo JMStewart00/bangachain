@@ -158,28 +158,45 @@ abstract class SplideViewsBase extends BlazyStylePluginBase {
   public function buildElements(array $settings, $rows) {
     $build   = [];
     $view    = $this->view;
-    $item_id = $settings['item_id'];
+    $blazies = $settings['blazies'];
+    $item_id = $blazies->get('item.id', 'slide');
 
     foreach ($rows as $index => $row) {
       $view->row_index = $index;
 
       $slide = [];
       $thumb = $slide[$item_id] = [];
+      $sets  = $settings;
+
+      $this->reset($sets);
+      $blazies = $sets['blazies'];
+      $blazies->set('is.reset', TRUE);
 
       // Provides a potential unique thumbnail different from the main image.
-      if (!empty($settings['thumbnail'])) {
-        $thumbnail = $this->getFieldRenderable($row, 0, $settings['thumbnail']);
-        if (isset($thumbnail['rendered']['#image_style'], $thumbnail['rendered']['#item']) && $item = $thumbnail['rendered']['#item']) {
-          $uri = (($entity = $item->entity) && empty($item->uri)) ? $entity->getFileUri() : $item->uri;
-          $settings['thumbnail_style'] = $thumbnail['rendered']['#image_style'];
-          $settings['thumbnail_uri'] = empty($settings['thumbnail_style']) ? $uri : $this->manager->entityLoad($settings['thumbnail_style'], 'image_style')->buildUri($uri);
+      if (!empty($sets['thumbnail'])) {
+        $tn = $this->getFieldRenderable($row, 0, $sets['thumbnail']);
+        if (isset($tn['rendered']['#image_style'])) {
+          if ($item = $tn['rendered']['#item'] ?? NULL) {
+            $uri = (($entity = $item->entity) && empty($item->uri)) ? $entity->getFileUri() : $item->uri;
+            $sets['thumbnail_style'] = $tn_style = $tn['rendered']['#image_style'];
+            $tn_uri = empty($tn_style)
+              ? $uri
+              : $this->manager
+                ->entityLoad($tn_style, 'image_style')
+                ->buildUri($uri);
+
+            if ($tn_uri) {
+              $sets['thumbnail_uri'] = $tn_uri;
+              $blazies->set('thumbnail.uri', $tn_uri);
+            }
+          }
         }
       }
 
-      $slide['settings'] = $settings;
+      $slide['settings'] = $sets;
 
       // Use Vanilla splide if so configured, ignoring Splide markups.
-      if (!empty($settings['vanilla'])) {
+      if (!empty($sets['vanilla'])) {
         $slide[$item_id] = $view->rowPlugin->render($row);
       }
       else {
@@ -189,20 +206,23 @@ abstract class SplideViewsBase extends BlazyStylePluginBase {
 
       // Build thumbnail navs if so configured.
       // @todo move it back to non-vanilla if any issue.
-      if (!empty($settings['nav'])) {
-        $thumb[$item_id] = empty($settings['thumbnail']) ? [] : $this->getFieldRendered($index, $settings['thumbnail']);
-        $thumb['caption'] = empty($settings['nav_caption']) ? [] : $this->getFieldRendered($index, $settings['nav_caption']);
+      if (!empty($sets['nav'])) {
+        $thumb[$item_id] = empty($sets['thumbnail']) ? []
+          : $this->getFieldRendered($index, $sets['thumbnail']);
+
+        $thumb['caption'] = empty($sets['nav_caption']) ? []
+          : $this->getFieldRendered($index, $sets['nav_caption']);
 
         $build['nav']['items'][$index] = $thumb;
       }
 
-      if (!empty($settings['class'])) {
-        $classes = $this->getFieldString($row, $settings['class'], $index);
+      if (!empty($sets['class'])) {
+        $classes = $this->getFieldString($row, $sets['class'], $index);
         $slide['settings']['class'] = empty($classes[$index]) ? [] : $classes[$index];
       }
 
-      if (empty($slide[$item_id]) && !empty($settings['image'])) {
-        $slide[$item_id] = $this->getFieldRendered($index, $settings['image']);
+      if (empty($slide[$item_id]) && !empty($sets['image'])) {
+        $slide[$item_id] = $this->getFieldRendered($index, $sets['image']);
       }
 
       $build['items'][$index] = $slide;
@@ -211,6 +231,28 @@ abstract class SplideViewsBase extends BlazyStylePluginBase {
 
     unset($view->row_index);
     return $build;
+  }
+
+  /**
+   * Check Blazy formatter to build lightbox galleries.
+   */
+  protected function checkBlazy(array &$settings, array $build, array $rows = []) {
+    // Extracts Blazy formatter settings if available.
+    // @todo re-check and remove, first.data already takes care of this.
+    // if (empty($settings['vanilla']) && isset($build['items'][0])) {
+    // $this->blazyManager()->isBlazy($settings, $build['items'][0]);
+    // }
+    // @todo remove check Blazy 2.10.
+    $blazies = $settings['blazies'] ?? NULL;
+    if ($data = $this->getFirstImage($rows[0] ?? NULL)) {
+      if ($blazies) {
+        $blazies->set('first.data', $data);
+      }
+      // @todo remove post Blazy 2.10.
+      else {
+        $settings['first_image'] = $data;
+      }
+    }
   }
 
 }

@@ -185,12 +185,15 @@ class AdminForm extends ConfigFormBase {
     $form['mimemail']['user_plaintext_field'] = [
       '#type' => 'select',
       '#title' => $this->t('Plain text email only field'),
-      '#description' => $this->t('Allows users to specify they only want plain text email. This is done via a boolean field on the user profile. The site administrator must first <a href=":fields">add a boolean field to the user profile</a>, then choose that field here and save this setting. If the value of that field is TRUE for a given user, Mime Mail will only send plain text email to that user.', [
-        ':fields' => Url::fromRoute('entity.user.field_ui_fields')->toString(),
-      ]),
+      '#description' => $this->t('Allows users to specify they only want plain text email. This is done via a boolean field on the user profile. The site administrator must first add a boolean field to the user profile, then choose that field here and save this setting. If the value of that field is TRUE for a given user, Mime Mail will only send plain text email to that user.'),
       '#options' => $fields,
       '#default_value' => $config->get('user_plaintext_field'),
     ];
+    if ($this->moduleHandler->moduleExists('field_ui')) {
+      $form['mimemail']['user_plaintext_field']['#description'] = $this->t('Allows users to specify they only want plain text email. This is done via a boolean field on the user profile. The site administrator must first <a href=":fields">add a boolean field to the user profile</a>, then choose that field here and save this setting. If the value of that field is TRUE for a given user, Mime Mail will only send plain text email to that user.', [
+        ':fields' => Url::fromRoute('entity.user.field_ui_fields')->toString(),
+      ]);
+    }
 
     // Get a list of all formats.
     $formats = filter_formats();

@@ -15,7 +15,7 @@ class Car extends Vehicle implements \JsonSerializable
     private $haveTrunk;
 
     /**
-     * @param int $numberOfTyres
+     * @param string $numberOfTyres
      * @param bool $haveTrunk
      */
     public function __construct($numberOfTyres, $haveTrunk)
@@ -52,6 +52,7 @@ class Car extends Vehicle implements \JsonSerializable
      *
      * @return array|stdClass
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize($asArrayWhenEmpty = false)
     {
         $json = [];

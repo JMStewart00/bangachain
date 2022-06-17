@@ -62,6 +62,7 @@ class BlazyOEmbedFormatter extends FormatterBase {
     $settings   = &$build['settings'];
     $blazies    = $settings['blazies'];
     $field_name = $this->fieldDefinition->getName();
+    $entity     = $items->getParent()->getEntity();
 
     foreach ($items as $delta => $item) {
       $main_property = $item->getFieldDefinition()
@@ -80,13 +81,22 @@ class BlazyOEmbedFormatter extends FormatterBase {
 
       $data = ['item' => NULL, 'settings' => $settings];
 
-      // Attempts to fetch media entity.
-      $media = $this->formatter
-        ->loadByProperties([
-          $field_name => $value,
-        ], 'media', TRUE);
+      if ($entity->getEntityTypeId() == 'media'
+            && $entity->hasField($field_name)
+            && $entity->get($field_name)->getString() == $value) {
+        // We are on the right media entity.
+        $media = $entity;
+      }
+      else {
+        // Attempts to fetch media entity.
+        $media = $this->formatter
+          ->loadByProperties([
+            $field_name => $value,
+          ], 'media', TRUE);
+        $media = reset($media);
+      }
 
-      if ($media = reset($media)) {
+      if ($media) {
         $this->blazyOembed->build($data, $media);
       }
 

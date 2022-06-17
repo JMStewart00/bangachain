@@ -26,7 +26,7 @@
   ]
 %}
 {% block splide_minimal %}
-  <li{{ attributes.addClass(classes) }}>
+  {% if settings.wrapper %}<li{{ attributes.addClass(classes) }}>{% endif %}
     {% if settings.current_item == 'nav' %}
       {# The thumbnail navigation. If item.slide is empty, regular tabs apply. #}
       {% if item.slide is not empty %}
@@ -39,5 +39,5 @@
       {# The vanilla content. #}
       {{ item }}
     {% endif %}
-  </li>
+  {% if settings.wrapper %}</li>{% endif %}
 {% endblock %}

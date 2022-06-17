@@ -110,7 +110,7 @@ class Shipping extends TaxTypeBase {
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form['strategy'] = [
       '#type' => 'radios',
-      '#title' => t('Strategy'),
+      '#title' => $this->t('Strategy'),
       '#options' => [
         'default' => $this->t("Apply the default (standard) rate of the order's tax type"),
         'highest' => $this->t('Apply the highest rate found on the order'),

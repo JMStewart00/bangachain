@@ -13,7 +13,7 @@ test_dependencies:
 # Add a fake version so local drush and Git checkouts do not fail dependencies.
 # version: 8.x-2.x
 
-# Information added by Drupal.org packaging script on 2022-05-07
-version: '8.x-2.11'
+# Information added by Drupal.org packaging script on 2022-05-31
+version: '8.x-2.13'
 project: 'blazy'
-datestamp: 1651925246
+datestamp: 1653986633

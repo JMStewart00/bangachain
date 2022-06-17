@@ -22,7 +22,11 @@ function template_preprocess_splide(&$variables) {
 
   $variables['settings'] += SplideDefault::htmlSettings();
   $sets = &$variables['settings'];
-  $optionset = $variables['optionset'] ?: Splide::loadWithFallback($sets['optionset']);
+  $blazies = $settings['blazies'] ?? NULL;
+
+  Splide::verifyOptionset($variables, $sets['optionset']);
+
+  $optionset = $variables['optionset'];
   $variables['options'] += $optionset->getSettings();
   $key = 'content_attributes';
   $variables[$key] = $element["#$key"] ?? new Attribute();
@@ -49,11 +53,13 @@ function template_preprocess_splide(&$variables) {
 
   // Blazy can still lazyload an unsplide.
   // The lazy supercedes JS lazyLoad for background, breakpoints, media, etc.
-  $sets['lazy'] = $sets['lazy'] ?: $js['lazyLoad'];
-  if ($sets['lazy'] == 'blazy' || !empty($sets['blazy'])) {
-    $js['lazyLoad'] = 'blazy';
-    if (!empty($sets['background'])) {
-      $js['cover'] = FALSE;
+  if ($display != 'nav' && $blazies) {
+    if ($blazies->is('blazy') && !$blazies->is('unlazy')) {
+      $js['lazyLoad'] = 'blazy';
+
+      if (!empty($sets['background'])) {
+        $js['cover'] = FALSE;
+      }
     }
   }
 
@@ -141,7 +147,6 @@ function template_preprocess_splide_slide(&$variables) {
   $sets['fullwidth'] = !empty($sets['skin']) && strpos($sets['skin'], 'full') !== FALSE;
   $sets['grid']      = !empty($sets['grid']);
   $sets['detroy']    = $sets['current_item'] == 'main' && !empty($sets['grid']) && !empty($sets['unsplide']);
-  $sets['wrapper']   = $sets['current_item'] != 'grid';
   $sets['use_ca']    = empty($sets['grid']) || !empty($variables['content_attributes']);
 }
 
@@ -154,6 +159,9 @@ function _splide_preprocess_splide_item(&$variables) {
     $default = $key == 'delta' ? NULL : [];
     $variables[$key] = $element["#$key"] ?? $default;
   }
+
+  $sets = &$variables['settings'];
+  $sets['wrapper'] = $sets['current_item'] != 'grid';
 
   // Because Twig prepends new classes, not appends as expected by BEM.
   $attributes = &$variables['attributes'];

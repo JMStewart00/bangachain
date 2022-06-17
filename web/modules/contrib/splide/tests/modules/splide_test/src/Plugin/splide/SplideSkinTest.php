@@ -2,8 +2,8 @@
 
 namespace Drupal\splide_test\Plugin\splide;
 
+use Drupal\blazy\Blazy;
 use Drupal\splide\SplideSkinPluginBase;
-use Drupal\splide\SplideDefault;
 
 /**
  * Provides splide skin tests.
@@ -24,7 +24,7 @@ class SplideSkinTest extends SplideSkinPluginBase {
     // If you copy this file, be sure to add base_path() before any asset path
     // (css or js) as otherwise failing to load the assets. Your module can
     // register paths pointing to a theme. Check out splide.api.php for details.
-    $path = SplideDefault::getPath('module', 'splide_test', TRUE);
+    $path = Blazy::getPath('module', 'splide_test', TRUE);
     $skins = [
       'test' => [
         'name' => 'Test',
@@ -51,7 +51,7 @@ class SplideSkinTest extends SplideSkinPluginBase {
    * @inheritdoc
    */
   protected function setArrows() {
-    $path = SplideDefault::getPath('module', 'splide_test', TRUE);
+    $path = Blazy::getPath('module', 'splide_test', TRUE);
     $skins = [
       'arrows' => [
         'name' => 'Arrows',
@@ -75,7 +75,7 @@ class SplideSkinTest extends SplideSkinPluginBase {
    * @inheritdoc
    */
   protected function setDots() {
-    $path = SplideDefault::getPath('module', 'splide_test', TRUE);
+    $path = Blazy::getPath('module', 'splide_test', TRUE);
     $skins = [
       'dots' => [
         'name' => 'Dots',

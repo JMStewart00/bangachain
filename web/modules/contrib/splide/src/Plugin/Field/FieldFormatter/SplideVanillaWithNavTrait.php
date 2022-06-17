@@ -4,8 +4,7 @@ namespace Drupal\splide\Plugin\Field\FieldFormatter;
 
 use Drupal\Component\Utility\Xss;
 use Drupal\blazy\BlazyDefault;
-// @todo replace at Blazy 2.7+ with use Drupal\blazy\Media\BlazyMedia;
-use Drupal\blazy\BlazyMedia;
+use Drupal\blazy\Field\BlazyField;
 
 /**
  * A Trait common for splide vanilla formatters.
@@ -20,18 +19,14 @@ trait SplideVanillaWithNavTrait {
 
     // Supports Vanilla with thumbnail navigation.
     $settings = $build['settings'];
-    if (!empty($settings['vanilla']) && !empty($settings['nav'])) {
-      $delta = $settings['delta'];
-      $element = ['settings' => $settings, 'item' => NULL];
-      // Built media item including custom highres video thumbnail.
-      // @todo re-check/ refine for Paragraphs, etc.
-      $this->blazyOembed->getMediaItem($element, $entity);
+    $blazies = $settings['blazies'];
 
-      // This used to be for File entity (non-media), repurposed.
-      // Extracts image item from other entities than Media, such as Paragraphs.
-      if (empty($element['item']) && empty($settings['uri']) && !empty($settings['image'])) {
-        BlazyMedia::imageItem($element, $entity);
-      }
+    if (!empty($settings['vanilla']) && !empty($settings['nav'])) {
+      $delta = $blazies->get('delta');
+      $element = ['settings' => $settings, 'item' => NULL];
+      // Build media item including custom highres video thumbnail.
+      // @todo re-check/ refine for Paragraphs, etc.
+      $this->blazyOembed->build($element, $entity);
 
       $this->buildElementThumbnail($build, $element, $entity, $delta);
     }
@@ -48,29 +43,32 @@ trait SplideVanillaWithNavTrait {
       return;
     }
 
-    $item_id = $settings['item_id'];
-    $element['caption'] = [];
+    $blazies    = $settings['blazies'];
+    $item_id    = $blazies->get('item.id');
+    $view_mode  = $settings['view_mode'] ?? '';
+    $caption_id = 'caption';
+    $item       = $element['item'] ?? NULL;
+
+    $element[$caption_id] = [];
 
     // Thumbnail usages: asNavFor pagers, dot, arrows, photobox thumbnails.
-    $element[$item_id] = empty($settings['thumbnail_style']) ? [] : $this->formatter->getThumbnail($settings, $element['item']);
+    $element[$item_id] = empty($settings['thumbnail_style']) ? [] : $this->formatter->getThumbnail($settings, $item);
 
-    $name = $settings['nav_caption'] ?? '';
-    $item = $element['item'] ?? NULL;
-    if ($name) {
+    if ($name = $settings['nav_caption'] ?? '') {
       /** @var Drupal\image\Plugin\Field\FieldType\ImageItem $item */
       if ($item) {
         // Provides basic captions based on image attributes (Alt, Title).
         foreach (['title', 'alt'] as $attribute) {
-          if ($name == $attribute && $caption = trim($item->get($attribute)->getString())) {
+          if ($name == $attribute && $caption = trim($item->{$attribute} ?? '')) {
             $markup = Xss::filter($caption, BlazyDefault::TAGS);
-            $element['caption'] = ['#markup' => $markup];
+            $element[$caption_id] = ['#markup' => $markup];
           }
         }
       }
 
       // Otherwise a caption field.
-      if (empty($element['caption'])) {
-        $element['caption'] = $this->blazyEntity->getFieldRenderable($entity, $name, $settings['view_mode']);
+      if (empty($element[$caption_id])) {
+        $element[$caption_id] = BlazyField::view($entity, $name, $view_mode);
       }
     }
 

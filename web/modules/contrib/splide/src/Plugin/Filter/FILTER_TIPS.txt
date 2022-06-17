@@ -38,6 +38,12 @@ slashes, single and double quotes:</p>
      'layout': 'bottom'}"]...[/splide]</code><br>
      To force disabling enabled navigation, add <code>'nav': false</code>
   </li>
+  <li><b>UI settings only</b>: any HTML settings relevant from
+  <code>SplideDefault::filterSettings()</code> methods:<br>
+     <code>[splide optionset="x_main" skin="fullwidth" layout="bottom"]...
+     [/splide]</code><br>
+     To force disabling enabled navigation, add <code>nav="false"</code>
+  </li>
   <li><b>With grid</b>: similar to Blazy grid + visible items:<br>
      <code>STYLE:SMALL-MEDIUM-LARGE:VISIBLE_ITEMS</code>
      <code>[splide grid="nativegrid:2-3-4:8" /]</code><br>

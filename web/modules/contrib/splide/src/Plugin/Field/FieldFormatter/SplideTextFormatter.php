@@ -3,9 +3,7 @@
 namespace Drupal\splide\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Field\FormatterBase;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\blazy\Plugin\Field\FieldFormatter\BlazyTextFormatter;
 use Drupal\splide\SplideDefault;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -23,26 +21,17 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   quickedit = {"editor" = "disabled"}
  * )
  */
-class SplideTextFormatter extends FormatterBase implements ContainerFactoryPluginInterface {
+class SplideTextFormatter extends BlazyTextFormatter {
 
-  use SplideFormatterViewTrait;
   use SplideFormatterTrait {
-    buildSettings as traitBuildSettings;
+    pluginSettings as traitPluginSettings;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    $instance = new static(
-      $plugin_id,
-      $plugin_definition,
-      $configuration['field_definition'],
-      $configuration['settings'],
-      $configuration['label'],
-      $configuration['view_mode'],
-      $configuration['third_party_settings']
-    );
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
     return self::injectServices($instance, $container, 'text');
   }
 
@@ -54,31 +43,11 @@ class SplideTextFormatter extends FormatterBase implements ContainerFactoryPlugi
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function viewElements(FieldItemListInterface $items, $langcode) {
-    return $this->commonViewElements($items, $langcode);
-  }
-
-  /**
    * Build the splide carousel elements.
    */
   public function buildElements(array &$build, $items) {
-    // The ProcessedText element already handles cache context & tag bubbling.
-    // @see \Drupal\filter\Element\ProcessedText::preRenderText()
-    foreach ($items as $key => $item) {
-      if (empty($item->value)) {
-        continue;
-      }
-
-      $element = [
-        '#type'     => 'processed_text',
-        '#text'     => $item->value,
-        '#format'   => $item->format,
-        '#langcode' => $item->getLangcode(),
-      ];
-      $build['items'][$key] = $element;
-      unset($element);
+    foreach ($this->getElements($items) as $element) {
+      $build['items'][] = $element;
     }
   }
 
@@ -94,23 +63,31 @@ class SplideTextFormatter extends FormatterBase implements ContainerFactoryPlugi
   }
 
   /**
-   * Builds the settings.
+   * {@inheritdoc}
    */
-  public function buildSettings() {
-    return ['vanilla' => TRUE, 'navless' => TRUE] + $this->traitBuildSettings();
+  protected function pluginSettings(&$blazies, array &$settings): void {
+    $this->traitPluginSettings($blazies, $settings);
+
+    $blazies->set('is.navless', TRUE)
+      ->set('is.text', TRUE)
+      ->set('is.vanilla', TRUE);
+
+    // @todo remove.
+    $settings['navless'] = TRUE;
+    $settings['vanilla'] = TRUE;
   }
 
   /**
-   * Defines the scope for the form elements.
+   * {@inheritdoc}
    */
-  public function getScopedFormElements() {
+  protected function getPluginScopes(): array {
     return [
       'grid_form'        => TRUE,
       'no_image_style'   => TRUE,
       'no_layouts'       => TRUE,
       'responsive_image' => FALSE,
       'style'            => TRUE,
-    ] + $this->getCommonScopedFormElements();
+    ];
   }
 
 }

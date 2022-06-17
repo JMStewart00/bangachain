@@ -1,0 +1,13 @@
+<?php
+
+
+/**
+* Implements hook_mail().
+*/
+function bangachain_commerce_mail_mail($key, &$message, $params) {
+  switch ($key) {
+    case 'send_pos_receipt':
+      $message['body'][] = $params['message'];
+      break;
+  }
+ }

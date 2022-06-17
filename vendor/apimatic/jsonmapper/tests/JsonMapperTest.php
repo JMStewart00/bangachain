@@ -10,6 +10,7 @@
  * @license  OSL-3.0 http://opensource.org/licenses/osl-3.0
  * @link     http://www.netresearch.de/
  */
+
 require_once 'JsonMapperTest/Array.php';
 require_once 'JsonMapperTest/Broken.php';
 require_once 'JsonMapperTest/DependencyInjector.php';
@@ -26,6 +27,7 @@ require_once 'JsonMapperTest/FactoryMethodWithError.php';
 require_once 'JsonMapperTest/MapsWithSetters.php';
 require_once 'JsonMapperTest/ClassWithCtor.php';
 require_once 'JsonMapperTest/ComplexClassWithCtor.php';
+require_once 'JsonMapperTest/JsonMapperCommentsDiscardedException.php';
 
 if (PHP_VERSION_ID >= 70000) {
     require_once 'JsonMapperTest/Php7TypedClass.php';
@@ -406,6 +408,36 @@ class JsonMapperTest extends \PHPUnit\Framework\TestCase
         $sn = $jm->mapClass(123, 'JsonMapperTest_Simple');
     }
 
+    public function testOpCacheSaveCommentsDiscarded()
+    {
+        $enable = ["1", "on", "true", "yes"];
+        if (in_array(strtolower(ini_get("opcache.save_comments")), $enable, true)) {
+            // if save_comments is enabled locally then JsonMapperException
+            // could never be thrown, since we can't use ini_set(save_comments).
+            // So we are not running the actual test of expectExceptionMessage
+            $this->assertInstanceOf(JsonMapper::class, new JsonMapper());
+        }
+        else {
+            $this->expectException(JsonMapperException::class);
+            $this->expectExceptionMessage("Comments cannot be discarded in the configuration file i.e. the php.ini file; doc comments are a requirement for JsonMapper. Following configuration keys must have a value set to \"1\": zend_optimizerplus.save_comments, opcache.save_comments.");
+
+            new JsonMapperCommentsDiscardedException(["opcache.save_comments" => "0"]);
+        }
+    }
+
+    /**
+     * This test assumes that zend_optimizerplus.save_comments key is either not present in the local PHP directives or is set to "0".
+     * This is true, at the time of writing, for the Github Actions environment, hence an exception is thrown.
+     * Furthermore, the class JsonMapperCommentsDiscardedException mocks the loading of Zend Optimizer+ extension.
+     */
+    public function testZendOptimizerPlusCommentsDiscarded()
+    {
+        $this->expectException(JsonMapperException::class);
+        $this->expectExceptionMessage("Comments cannot be discarded in the configuration file i.e. the php.ini file; doc comments are a requirement for JsonMapper. Following configuration keys must have a value set to \"1\": zend_optimizerplus.save_comments, opcache.save_comments.");
+
+        new JsonMapperCommentsDiscardedException(["zend_optimizerplus.save_comments" => "0"]);
+    }
+
     public function testMapNullJson()
     {
         $this->expectException(InvalidArgumentException::class);
@@ -597,7 +629,7 @@ class JsonMapperTest extends \PHPUnit\Framework\TestCase
     public function testMapEmpty()
     {
         $this->expectException(JsonMapperException::class);
-        $this->expectExceptionMessage('Empty type at property "JsonMapperTest_Simple::$empty"');
+        $this->expectExceptionMessage("Empty type at property 'JsonMapperTest_Simple::\$empty'");
         $jm = new JsonMapper();
         $sn = $jm->map(
             json_decode(
@@ -766,7 +798,7 @@ class JsonMapperTest extends \PHPUnit\Framework\TestCase
     public function testMissingDataException()
     {
         $this->expectException(JsonMapperException::class);
-        $this->expectExceptionMessage('Required property "pMissingData" of class JsonMapperTest_Broken is missing in JSON data');
+        $this->expectExceptionMessage("Required property 'pMissingData' of class 'JsonMapperTest_Broken' is missing in JSON data");
         $jm = new JsonMapper();
         $jm->bExceptionOnMissingData = true;
         $sn = $jm->map(
@@ -792,7 +824,7 @@ class JsonMapperTest extends \PHPUnit\Framework\TestCase
     public function testUndefinedPropertyException()
     {
         $this->expectException(JsonMapperException::class);
-        $this->expectExceptionMessage('JSON property "undefinedProperty" does not exist in object of type JsonMapperTest_Broken');
+        $this->expectExceptionMessage("JSON property 'undefinedProperty' does not exist in object of type 'JsonMapperTest_Broken'");
         $jm = new JsonMapper();
         $jm->bExceptionOnUndefinedProperty = true;
         $sn = $jm->map(
@@ -818,7 +850,7 @@ class JsonMapperTest extends \PHPUnit\Framework\TestCase
     public function testPrivatePropertyWithNoSetter()
     {
         $this->expectException(JsonMapperException::class);
-        $this->expectExceptionMessage('JSON property "privateNoSetter" has no public setter method in object of type PrivateWithSetter');
+        $this->expectExceptionMessage("JSON property 'privateNoSetter' has no public setter method in object of type 'PrivateWithSetter'");
         $jm = new JsonMapper();
         $jm->bExceptionOnUndefinedProperty = true;
         $logger = new JsonMapperTest_Logger();
@@ -834,7 +866,7 @@ class JsonMapperTest extends \PHPUnit\Framework\TestCase
     public function testPrivatePropertyWithPrivateSetter()
     {
         $this->expectException(JsonMapperException::class);
-        $this->expectExceptionMessage('JSON property "privatePropertyPrivateSetter" has no public setter method in object of type PrivateWithSetter');
+        $this->expectExceptionMessage("JSON property 'privatePropertyPrivateSetter' has no public setter method in object of type 'PrivateWithSetter'");
         $jm = new JsonMapper();
         $jm->bExceptionOnUndefinedProperty = true;
         $logger = new JsonMapperTest_Logger();
@@ -1114,7 +1146,7 @@ class JsonMapperTest extends \PHPUnit\Framework\TestCase
     public function testFactoryMethodException()
     {
         $this->expectException(JsonMapperException::class);
-        $this->expectExceptionMessage('Factory method "NonExistentMethod" referenced by "FactoryMethodWithError" is not callable');
+        $this->expectExceptionMessage("Factory method 'NonExistentMethod' referenced by 'FactoryMethodWithError' is not callable");
         $jm = new JsonMapper();
         $fm = $jm->map(
             json_decode('{"simple":"hello world"}'),

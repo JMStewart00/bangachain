@@ -3,6 +3,7 @@
 namespace Drupal\splide;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\blazy\Blazy;
 use Drupal\blazy\BlazyDefault;
 
 /**
@@ -121,32 +122,50 @@ class SplideDefault extends BlazyDefault {
   }
 
   /**
+   * Returns Splide specific settings.
+   */
+  public static function splides() {
+    return [
+      'autoscroll'     => FALSE,
+      'display'        => 'main',
+      // 'nav'            => FALSE,
+      // 'navpos'         => FALSE,
+      'pagination_fx'  => '',
+      'pagination_tab' => FALSE,
+      'thumbnail_uri'  => '',
+      '_unload'        => FALSE,
+      'unsplide'       => FALSE,
+      'vanilla'        => FALSE,
+      'vertical'       => FALSE,
+      'vertical_nav'   => FALSE,
+    ];
+  }
+
+  /**
    * Returns HTML or layout related settings to shut up notices.
    *
    * @return array
    *   The default settings.
    */
   public static function htmlSettings() {
+    $items = [];
+    foreach (self::splides() as $key => $value) {
+      if (is_bool($value)) {
+        $items['is'][$key] = $value;
+      }
+      else {
+        $items[$key] = $value;
+      }
+    }
+
     return [
-      'autoscroll'      => FALSE,
-      'display'         => 'main',
-      'grid'            => 0,
-      'id'              => '',
-      'lazy'            => '',
-      'namespace'       => 'splide',
-      'nav'             => FALSE,
-      'navpos'          => FALSE,
-      'pagination_fx'   => '',
-      'pagination_tab'  => FALSE,
-      'thumbnail_uri'   => '',
-      'route_name'      => '',
-      '_unload'         => FALSE,
-      'unsplide'        => FALSE,
-      'vanilla'         => FALSE,
-      'vertical'        => FALSE,
-      'vertical_nav'    => FALSE,
-      'view_name'       => '',
-    ] + self::imageSettings();
+      'splides'   => Blazy::settings($items),
+      'item_id'   => 'slide',
+      'namespace' => 'splide',
+      // @todo remove `+ self::splides()`.
+    ] + self::splides()
+      + self::imageSettings()
+      + parent::htmlSettings();
   }
 
   /**
@@ -179,28 +198,12 @@ class SplideDefault extends BlazyDefault {
   }
 
   /**
-   * Returns a wrapper to pass tests, or DI where adding params is troublesome.
-   *
-   * @todo remove for Blazy::pathResolver() post Blazy:2.6+.
-   */
-  public static function pathResolver() {
-    return \Drupal::hasService('extension.path.resolver') ? \Drupal::service('extension.path.resolver') : NULL;
-  }
-
-  /**
    * Returns the commonly used path, or just the base path.
    *
-   * @todo remove for Blazy::getPath post Blazy:2.6+ when min D9.3.
+   * @todo deprected and removed for Blazy::getPath post Blazy:2.6+.
    */
   public static function getPath($type, $name, $absolute = FALSE): string {
-    $function = 'drupal_get_path';
-    if ($resolver = self::pathResolver()) {
-      $path = $resolver->getPath($type, $name);
-    }
-    else {
-      $path = is_callable($function) ? $function($type, $name) : '';
-    }
-    return $absolute ? \base_path() . $path : $path;
+    return Blazy::getPath($type, $name, $absolute);
   }
 
 }

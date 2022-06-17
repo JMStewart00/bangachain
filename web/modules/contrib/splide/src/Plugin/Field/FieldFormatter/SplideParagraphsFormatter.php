@@ -22,13 +22,12 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 class SplideParagraphsFormatter extends SplideMediaFormatter {
 
   /**
-   * Overrides the scope for the form elements.
+   * {@inheritdoc}
    */
-  public function getScopedFormElements() {
+  protected function getPluginScopes(): array {
     $admin       = $this->admin();
     $target_type = $this->getFieldSetting('target_type');
-    $views_ui    = $this->getFieldSetting('handler') == 'default';
-    $bundles     = $views_ui ? [] : $this->getFieldSetting('handler_settings')['target_bundles'];
+    $bundles     = $this->getAvailableBundles();
     $media       = $admin->getFieldOptions($bundles, ['entity_reference'], $target_type, 'media');
     $types       = ['image', 'entity_reference'];
     $stages      = $admin->getFieldOptions($bundles, $types, $target_type);
@@ -36,7 +35,7 @@ class SplideParagraphsFormatter extends SplideMediaFormatter {
     return [
       'images'   => $stages,
       'overlays' => $stages + $media,
-    ] + parent::getScopedFormElements();
+    ] + parent::getPluginScopes();
   }
 
   /**

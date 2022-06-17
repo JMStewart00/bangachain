@@ -1,0 +1,28 @@
+--- composer.json
++++ composer.json
+@@ -19,8 +19,24 @@
+       "role": "Maintainer"
+     }
+   ],
++  "repositories": [
++    {
++        "type": "package",
++        "package": {
++          "name": "furf/jquery-ui-touch-punch",
++          "version": "0.0.1",
++          "type": "drupal-library",
++          "source": {
++            "url": "https://github.com/furf/jquery-ui-touch-punch",
++            "type": "git",
++            "reference": "master"
++          }
++        }
++    }
++  ],
+   "require": {
+-    "drupal/jquery_ui": "^1.0"
++    "drupal/jquery_ui": "^1.0",
++    "forf/jquery-ui-touch-punch": "*"
+   },
+   "suggest": {
+     "furf/jquery-ui-touch-punch": "Required to use drupal/jquery_ui_touch_punch module."

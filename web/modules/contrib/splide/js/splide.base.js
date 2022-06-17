@@ -27,6 +27,7 @@
   _ds.extensions = {};
   _ds.listeners = {};
   _ds.transitions = [];
+  _ds.options = {};
 
   // Init non-module library built-in, yet separated, extensions.
   _ds.initExtensions = function () {

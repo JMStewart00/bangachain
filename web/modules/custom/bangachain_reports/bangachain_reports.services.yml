@@ -1,0 +1,6 @@
+services:
+  bangachain_reports.memory_reclaimer:
+    class: Drupal\bangachain_reports\MemoryReclaimer
+    arguments: [
+      '@entity.memory_cache', '@logger.factory'
+    ]

@@ -58,6 +58,17 @@ class BlazyFormatter extends BlazyManager implements BlazyFormatterInterface {
   public function preBuildElements(array &$build, $items, array $entities = []) {
     $settings = &$build['settings'];
 
+    // BC for mismatched minor versions.
+    Blazy::verify($settings);
+
+    $blazies   = $settings['blazies'];
+    $plugin_id = $blazies->get('field.plugin_id');
+
+    // BC for non-nego vanilla formatters identified by its plugin ID.
+    if ($plugin_id && strpos($plugin_id, 'vanilla') !== FALSE) {
+      $settings['vanilla'] = TRUE;
+    }
+
     // Extracts initial settings:
     // - Container or root level settings: lightboxes, grids, etc.
     // - Map (Responsive) image style option to its entity, etc.

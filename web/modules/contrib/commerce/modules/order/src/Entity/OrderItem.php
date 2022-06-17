@@ -445,7 +445,7 @@ class OrderItem extends CommerceContentEntityBase implements OrderItemInterface 
       ->setLabel(t('Total price'))
       ->setDescription(t('The total price of the order item.'))
       ->setReadOnly(TRUE)
-      ->setDisplayConfigurable('form', FALSE)
+      ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['adjustments'] = BaseFieldDefinition::create('commerce_adjustment')

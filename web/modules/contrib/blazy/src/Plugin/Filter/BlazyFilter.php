@@ -222,6 +222,16 @@ class BlazyFilter extends BlazyFilterBase {
         elseif ($item && !isset($item->target_id)) {
           $build['item_attributes'][$name] = $value;
         }
+
+        // Add classes for alignment.
+        if ($name == 'align' || $name == 'style') {
+          if ($value == 'left' || $value == 'float:left') {
+            $build['media_attributes']['class'][] = 'alignment-left';
+          }
+          elseif ($value == 'right' || $value == 'float:right') {
+            $build['media_attributes']['class'][] = 'alignment-right';
+          }
+        }
       }
 
       $build['media_attributes']['class'] = array_unique($build['media_attributes']['class']);

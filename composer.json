@@ -238,6 +238,7 @@
         "drupal/views_data_export": "^1.0",
         "drupal/views_infinite_scroll": "1.x-dev@dev",
         "drupal/viewsreference": "^1.4",
+        "drupal/webform": "^6.1",
         "drush/drush": "^10",
         "enyo/dropzone": "^5.7",
         "furf/jquery-ui-touch-punch": "^0.0.1",
@@ -260,7 +261,17 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/installers": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "cweagans/composer-patches": true,
+            "drupal-composer/preserve-paths": true,
+            "drupal/core-composer-scaffold": true,
+            "drupal/core-project-message": true,
+            "oomphinc/composer-installers-extender": true,
+            "zaporylie/composer-drupal-optimizations": true
+        }
     },
     "scripts": {
         "remove-git-submodules": "find . -mindepth 2 -type d -name .git | xargs rm -rf",

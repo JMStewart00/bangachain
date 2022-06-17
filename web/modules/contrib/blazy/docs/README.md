@@ -200,9 +200,13 @@ libraries are not present, nothing will show up under `Media switch` option.
 Clear cache if they do not appear as options due to being permanently cached.
 
 Most lightboxes, not all, supports (responsive) image, (local|remote) video.
-Magnific Popup supports picture.
-Splidebox supports AJAX contents.
+Known lightboxes which has supports for Responsive image:
+Colorbox, Magnific popup, Slick Lightbox, Splidebox, Blazy PhotoSwipe.
+Magnific Popup/ Splidebox also supports picture.
+Splidebox also supports AJAX contents.
+Others might not.
 
+### Lightbox requirements
 * Colorbox, PhotoSwipe, etc. requires both modules and their libraries present.
 * Photobox, Magnific Popup, requires only libraries to be present:  
   + `/libraries/photobox/photobox/jquery.photobox.js`
@@ -211,7 +215,7 @@ Splidebox supports AJAX contents.
   re-usable options to bother provided by them. Aside from the fact, Blazy has
   its own loader aka initializer for advanced features like multimedia (remote
   |local video), or (responsive|picture) image, fieldable captions, etc. which
-  are not supported by these modules.
+  are not (fully) shipped/ supported by these modules.
 
 ***
 ## <a name="features"> </a>FEATURES

@@ -8,6 +8,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\blazy\Blazy;
 use Drupal\blazy\Dejavu\BlazyAdminExtended;
 use Drupal\splide\SplideManagerInterface;
 use Drupal\splide\SplideDefault;
@@ -131,7 +132,7 @@ class SplideAdmin implements SplideAdminInterface {
    * Modifies the opening form elements.
    */
   public function openingForm(array &$form, &$definition = []): void {
-    $path         = SplideDefault::getPath('module', 'splide');
+    $path         = Blazy::getPath('module', 'splide');
     $is_splide_ui = $this->manager()->getModuleHandler()->moduleExists('splide_ui');
     $is_help      = $this->manager()->getModuleHandler()->moduleExists('help');
     $route_name   = ['name' => 'splide_ui'];
@@ -262,8 +263,6 @@ class SplideAdmin implements SplideAdminInterface {
     $this->blazyAdmin->mediaSwitchForm($form, $definition);
 
     if (isset($form['media_switch'])) {
-      $form['media_switch']['#description'] = $this->t('Depends on the enabled supported modules, or has known integration with Splide.<ol><li>Link to content: for aggregated small splides.</li><li>Image to iframe: audio/video is hidden below image until toggled, otherwise iframe is always displayed, and draggable fails. Aspect ratio applies.</li><li>Colorbox.</li><li>Photobox. Be sure to select "Thumbnail style" for the overlay thumbnails.</li><li>Intense: image to fullscreen intense image.</li>');
-
       if (!empty($definition['multimedia']) && isset($definition['fieldable_form'])) {
         $form['media_switch']['#description'] .= ' ' . $this->t('<li>Image rendered by its formatter: image-related settings here will be ignored: breakpoints, image style, CSS background, aspect ratio, lazyload, etc. Only choose if needing a special image formatter such as Image Link Formatter.</li>');
       }
@@ -453,19 +452,20 @@ class SplideAdmin implements SplideAdminInterface {
    */
   public function getLayoutOptions(): array {
     return [
-      'bottom'      => $this->t('Caption bottom'),
-      'top'         => $this->t('Caption top'),
-      'right'       => $this->t('Caption right'),
-      'left'        => $this->t('Caption left'),
-      'center'      => $this->t('Caption center'),
-      'center-top'  => $this->t('Caption center top'),
-      'below'       => $this->t('Caption below the slide'),
-      'stage-right' => $this->t('Caption left, stage right'),
-      'stage-left'  => $this->t('Caption right, stage left'),
-      'split-right' => $this->t('Caption left, stage right, split half'),
-      'split-left'  => $this->t('Caption right, stage left, split half'),
-      'stage-zebra' => $this->t('Stage zebra'),
-      'split-zebra' => $this->t('Split half zebra'),
+      'bottom'        => $this->t('Caption bottom'),
+      'top'           => $this->t('Caption top'),
+      'right'         => $this->t('Caption right'),
+      'left'          => $this->t('Caption left'),
+      'center'        => $this->t('Caption center'),
+      'center-bottom' => $this->t('Caption center bottom'),
+      'center-top'    => $this->t('Caption center top'),
+      'below'         => $this->t('Caption below the slide'),
+      'stage-right'   => $this->t('Caption left, stage right'),
+      'stage-left'    => $this->t('Caption right, stage left'),
+      'split-right'   => $this->t('Caption left, stage right, split half'),
+      'split-left'    => $this->t('Caption right, stage left, split half'),
+      'stage-zebra'   => $this->t('Stage zebra'),
+      'split-zebra'   => $this->t('Split half zebra'),
     ];
   }
 

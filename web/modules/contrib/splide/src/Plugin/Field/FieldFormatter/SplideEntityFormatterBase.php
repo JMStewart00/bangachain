@@ -2,32 +2,24 @@
 
 namespace Drupal\splide\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\blazy\Dejavu\BlazyEntityBase;
+// @todo enabled post Blazy:2.10:
+// use Drupal\blazy\Field\BlazyEntityVanillaBase;
+use Drupal\blazy\Dejavu\BlazyEntityBase as BlazyEntityVanillaBase;
 use Drupal\splide\SplideDefault;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base class for splide entity reference formatters without field details.
  *
- * @see \Drupal\splide_paragraphs\Plugin\Field\FieldFormatter
- * @see \Drupal\splide_entityreference\Plugin\Field\FieldFormatter
+ * @see \Drupal\splide\Plugin\Field\FieldFormatter\SplideEntityReferenceFormatterBase
+ * @see \Drupal\splide\Plugin\Field\FieldFormatter\SplideParagraphsFormatter
  */
-abstract class SplideEntityFormatterBase extends BlazyEntityBase implements ContainerFactoryPluginInterface {
+abstract class SplideEntityFormatterBase extends BlazyEntityVanillaBase {
 
-  use SplideFormatterViewTrait;
   use SplideVanillaWithNavTrait;
-  use SplideFormatterTrait {
-    buildSettings as traitBuildSettings;
-  }
-
-  /**
-   * The logger factory.
-   *
-   * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
-   */
-  protected $loggerFactory;
+  use SplideFormatterTrait;
 
   /**
    * {@inheritdoc}
@@ -70,41 +62,36 @@ abstract class SplideEntityFormatterBase extends BlazyEntityBase implements Cont
   }
 
   /**
-   * Builds the settings.
-   *
-   * @todo inherit and extend parent post Blazy 2.x release.
+   * {@inheritdoc}
    */
-  public function buildSettings() {
-    return ['blazy' => TRUE, 'vanilla' => TRUE] + $this->traitBuildSettings();
+  protected function getPluginScopes(): array {
+    $admin       = $this->admin();
+    $target_type = $this->getFieldSetting('target_type');
+    $bundles     = $this->getAvailableBundles();
+    $text_fields = ['text', 'text_long', 'string', 'string_long', 'link'];
+    $texts       = $this->getFieldOptions($text_fields);
+    $texts2      = $admin->getValidFieldOptions($bundles, $target_type);
+
+    return [
+      'fieldable_form'   => TRUE,
+      'image_style_form' => TRUE,
+      'images'           => $this->getFieldOptions(['image']),
+      'thumb_captions'   => $texts,
+      'thumb_positions'  => TRUE,
+      'thumbnail_style'  => TRUE,
+      'nav'              => TRUE,
+      'nav_state'        => TRUE,
+      'pagination_texts' => $texts2,
+    ] + parent::getPluginScopes();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getScopedFormElements() {
-    $admin       = $this->admin();
-    $target_type = $this->getFieldSetting('target_type');
-    $views_ui    = $this->getFieldSetting('handler') == 'default';
-    $bundles     = $views_ui ? [] : $this->getFieldSetting('handler_settings')['target_bundles'];
-    $text_fields = ['text', 'text_long', 'string', 'string_long', 'link'];
-    $texts       = $admin->getFieldOptions($bundles, $text_fields, $target_type);
-    $texts2      = $admin->getValidFieldOptions($bundles, $target_type);
+  public static function isApplicable(FieldDefinitionInterface $field_definition) {
+    $storage = $field_definition->getFieldStorageDefinition();
 
-    return [
-      'fieldable_form'         => TRUE,
-      'image_style_form'       => TRUE,
-      'images'                 => $admin->getFieldOptions($bundles, ['image'], $target_type),
-      'no_layouts'             => TRUE,
-      'no_image_style'         => TRUE,
-      'responsive_image'       => FALSE,
-      'thumb_captions'         => $texts,
-      'thumb_positions'        => TRUE,
-      'thumbnail_style'        => TRUE,
-      'nav'                    => TRUE,
-      'nav_state'              => TRUE,
-      'vanilla'                => TRUE,
-      'pagination_texts' => $texts2,
-    ] + $this->getCommonScopedFormElements() + parent::getScopedFormElements();
+    return $storage->isMultiple();
   }
 
 }

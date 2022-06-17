@@ -122,3 +122,10 @@ function commerce_shipping_update_8205() {
   $entity_type->setHandlerClass('event', ShipmentEvent::class);
   $entity_definition_update->updateEntityType($entity_type);
 }
+
+/**
+ * Mark the shipping method "stores" field as optional.
+ */
+function commerce_shipping_update_8206() {
+  \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
+}

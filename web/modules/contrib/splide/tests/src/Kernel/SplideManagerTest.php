@@ -184,7 +184,6 @@ class SplideManagerTest extends BlazyKernelTestBase {
         'overridables' => ['arrows' => FALSE, 'pagination' => TRUE],
         'skin_dots' => 'dots',
         'cache' => -1,
-        'cache_tags' => ['url.site'],
       ],
       ['pagination' => TRUE],
       TRUE,

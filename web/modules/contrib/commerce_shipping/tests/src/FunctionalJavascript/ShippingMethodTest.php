@@ -3,6 +3,7 @@
 namespace Drupal\Tests\commerce_shipping\FunctionalJavascript;
 
 use Drupal\commerce_shipping\Entity\ShippingMethod;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Tests\commerce\FunctionalJavascript\CommerceWebDriverTestBase;
 
 /**
@@ -11,6 +12,8 @@ use Drupal\Tests\commerce\FunctionalJavascript\CommerceWebDriverTestBase;
  * @group commerce_shipping
  */
 class ShippingMethodTest extends CommerceWebDriverTestBase {
+
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
@@ -92,7 +95,7 @@ class ShippingMethodTest extends CommerceWebDriverTestBase {
       'plugin[0][target_plugin_configuration][flat_rate][workflow]' => 'shipment_missing_finalize',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertSession()->pageTextContains(t('The Missing finalize workflow does not have a "Finalize" transition.'));
+    $this->assertSession()->pageTextContains($this->t('The Missing finalize workflow does not have a "Finalize" transition.'));
 
     // Test that cancel transition is required.
     $edit = [
@@ -101,7 +104,7 @@ class ShippingMethodTest extends CommerceWebDriverTestBase {
       'plugin[0][target_plugin_configuration][flat_rate][workflow]' => 'shipment_missing_cancel',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertSession()->pageTextContains(t('The Missing cancel workflow does not have a "Cancel" transition.'));
+    $this->assertSession()->pageTextContains($this->t('The Missing cancel workflow does not have a "Cancel" transition.'));
 
     $edit = [
       'name[0][value]' => $new_shipping_method_name,

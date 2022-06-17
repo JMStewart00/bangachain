@@ -28,15 +28,13 @@
      *
      * @param {HTMLElement} elm
      *   The .splide HTML element.
-     * @param {undefined|object|int} opts
-     *   The options, default to index or undefined.
      *
      * @return {Splide}
      *   The Splide instance.
      */
-    init: function (elm, opts) {
+    init: function (elm) {
       if (!elm.splide) {
-        elm.splide = doSplide(elm, opts);
+        elm.splide = doSplide(elm);
       }
       return elm.splide;
     }
@@ -48,22 +46,27 @@
    *
    * @param {HTMLElement} elm
    *   The .splide HTML element.
-   * @param {undefined|object|int} opts
-   *   The options, default to index or undefined.
    *
    * @return {Splide}
    *   The Splide instance.
    */
-  function doSplide(elm, opts) {
+  function doSplide(elm) {
     var d = $.attr(elm, 'data-' + _id);
     var s = $.parse(d);
-    var o = $.extend({}, _defaults, s, $.isObj(opts) ? opts : {});
+    var o = $.extend({}, _defaults, s);
     var r = o.breakpoints;
     var e = _defaults.extras ? _defaults.extras : _defaults;
     var isSplide = o.lazyLoad !== 'blazy';
     var unSplide = $.hasClass(elm, 'unsplide');
     var instance;
     var b;
+
+    // @todo remove if these are taken care of by the library.
+    if (o.count && o.count === 1) {
+      var resets = _defaults.resets || {};
+      e = $.extend(e, resets);
+      o = $.extend(o, resets);
+    }
 
     if (r) {
       for (b in r) {

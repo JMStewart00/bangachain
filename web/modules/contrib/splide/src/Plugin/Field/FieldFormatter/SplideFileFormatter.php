@@ -3,7 +3,6 @@
 namespace Drupal\splide\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\blazy\Dejavu\BlazyVideoTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -17,8 +16,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class SplideFileFormatter extends SplideFileFormatterBase {
 
-  // @todo remove post blazy:2.x.
-  use BlazyVideoTrait;
+  use SplideFormatterTrait {
+    pluginSettings as traitPluginSettings;
+  }
 
   /**
    * {@inheritdoc}
@@ -32,27 +32,7 @@ class SplideFileFormatter extends SplideFileFormatterBase {
    * {@inheritdoc}
    */
   public function buildElement(array &$build, $entity) {
-    $settings = $build['settings'];
-    $data = [];
-    /** @var Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem $item */
-    // EntityReferenceItem provides $item->entity Drupal\file\Entity\File.
-    if (empty($build['item'])) {
-      // @todo remove condition post blazy:2.x.
-      if (method_exists($this->blazyOembed, 'getImageItem')) {
-        $data = $this->blazyOembed->getImageItem($entity);
-      }
-      // @todo remove post blazy:2.x.
-      elseif (method_exists($this, 'getImageItem')) {
-        $data = $this->getImageItem($entity);
-      }
-
-      if ($data) {
-        $build['item'] = $data['item'];
-        $build['settings'] = array_merge($settings, $data['settings']);
-      }
-    }
-
-    $this->blazyOembed->getMediaItem($build, $entity);
+    $this->blazyOembed->build($build, $entity);
   }
 
   /**
@@ -65,12 +45,22 @@ class SplideFileFormatter extends SplideFileFormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function getScopedFormElements() {
+  protected function pluginSettings(&$blazies, array &$settings): void {
+    $this->traitPluginSettings($blazies, $settings);
+    $blazies->set('is.blazy', TRUE);
+
+    // @todo remove.
+    $settings['blazy'] = TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getPluginScopes(): array {
     return [
       'fieldable_form' => TRUE,
       'multimedia'     => TRUE,
-      'view_mode'      => $this->viewMode,
-    ] + $this->getCommonScopedFormElements() + parent::getScopedFormElements();
+    ] + parent::getPluginScopes();
   }
 
   /**

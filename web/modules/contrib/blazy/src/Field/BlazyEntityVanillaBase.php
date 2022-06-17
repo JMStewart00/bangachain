@@ -58,11 +58,16 @@ abstract class BlazyEntityVanillaBase extends EntityReferenceFormatterBase {
     $view_mode = $settings['view_mode'] ?? 'full';
 
     // Sub-modules always flag `vanilla` as required, -- configurable, or not.
+    // The "paragraphs_type" entity type did not specify a view_builder handler.
     if (!empty($settings['vanilla'])) {
-      $build['items'][] = $this->formatter
-        ->getEntityTypeManager()
-        ->getViewBuilder($entity->getEntityTypeId())
-        ->view($entity, $view_mode, $langcode);
+      $manager = $this->formatter->getEntityTypeManager();
+      $type = $entity->getEntityTypeId();
+
+      if ($manager->hasHandler($type, 'view_builder')) {
+        $build['items'][] = $manager
+          ->getViewBuilder($type)
+          ->view($entity, $view_mode, $langcode);
+      }
     }
   }
 

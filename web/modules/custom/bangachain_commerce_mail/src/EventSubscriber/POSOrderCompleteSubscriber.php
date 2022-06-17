@@ -63,36 +63,36 @@ class POSOrderCompleteSubscriber implements EventSubscriberInterface {
     $order = $event->getEntity();
     // Order items in the cart.
     $items = $order->getItems();
-    $this->sendEmail($order, $items);
+    // $this->sendEmail($order, $items);
 
     // Write your custom logic here.
 
   }
 
 
-  /**
-   * Sends the email.
-   *
-   * @param Order $order
-   *   The transition event.
-   */
-  public function sendEmail(Order $order, array $items): void {
-    // Create the email.
-    $to = $order->getEmail();
-    $params = [
-      'from' => $order->getStore()->getEmail(),
-      'subject' => t(
-        'Your order [#@number]',
-        ['@number' => $order->getOrderNumber()]
-      ),
-      'body' => ['#markup' => t(
-        'Thank you for your recent stop into Bangachain. We hope you enjoyed your shopping experience. Here is your receipt for order [#@number]',
-        ['@number' => $order->getOrderNumber()]
-      )],
-    ];
+  // /**
+  //  * Sends the email.
+  //  *
+  //  * @param Order $order
+  //  *   The transition event.
+  //  */
+  // public function sendEmail(Order $order, array $items): void {
+  //   // Create the email.
+  //   $to = $order->getEmail();
+  //   $params = [
+  //     'from' => $order->getStore()->getEmail(),
+  //     'subject' => t(
+  //       'Your order [#@number]',
+  //       ['@number' => $order->getOrderNumber()]
+  //     ),
+  //     'body' => ['#markup' => t(
+  //       'Thank you for your recent stop into Bangachain. We hope you enjoyed your shopping experience. Here is your receipt for order [#@number]',
+  //       ['@number' => $order->getOrderNumber()]
+  //     )],
+  //   ];
 
-    // Send the email.
-    $this->mailManager->mail('bangachain_commerce_mail', 'send_pos_receipt', $to, $order->getStore()->getDefaultLangcode(), $params);
-  }
+  //   // Send the email.
+  //   $this->mailManager->mail('bangachain_commerce_mail', 'send_pos_receipt', $to, $order->getStore()->getDefaultLangcode(), $params);
+  // }
 
 }

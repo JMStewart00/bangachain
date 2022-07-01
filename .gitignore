@@ -10,8 +10,13 @@
 pantheon.upstream.yml
 /web/modules/contrib/**/.git
 
+.env
+
 # Lando
 /drupal8.*.gz
 /.lando.local.yml
 /node_modules
 *.sql
+
+# Drupal 9
+/config/common/smtp.settings.yml

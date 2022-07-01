@@ -1,0 +1,12 @@
+description: 'List queues.'
+options: {}
+arguments: {}
+table-headers:
+  id: 'ID'
+  label: 'Label'
+  jobs: 'Jobs'
+counts:
+  queued: 'Queued: %d'
+  processing: 'Processing: %d'
+  success: 'Success: %d'
+  failure: 'Failure: %d'

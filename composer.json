@@ -126,7 +126,7 @@
         }
     },
     "require": {
-        "ext-json": "^1.6",
+        "ext-json": "*",
         "bgrins/spectrum": "1.8.1",
         "bower-asset/bootstrap": "^4.0",
         "bower-asset/clipboard": "^2.0",
@@ -139,6 +139,7 @@
         "cweagans/composer-patches": "^1.7",
         "drupal-composer/preserve-paths": "^0.1.4",
         "drupal/admin_toolbar": "^2.0",
+        "drupal/advancedqueue": "^1.0@RC",
         "drupal/ape": "^1.5",
         "drupal/better_exposed_filters": "^5.0@beta",
         "drupal/block_class": "^1.1",
@@ -254,7 +255,7 @@
         "zaporylie/composer-drupal-optimizations": "^1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^6.5",
+        "phpunit/phpunit": "^9.0",
         "sensiolabs/security-checker": "^6.0",
         "symfony/phpunit-bridge": "^4.0"
     },
@@ -328,7 +329,7 @@
                 "'Negate' form value for condition plugins should be cast to boolean in validation.": "https://www.drupal.org/files/issues/2021-01-06/3114467-16.patch",
                 "Support third party settings for components within a section": "https://www.drupal.org/files/issues/2021-12-13/3015152-tps-9.3.x-128.patch",
                 "/project/drupal/issues/3056633 - Drupal 9 updating issue plugin does not exist": "https://www.drupal.org/files/issues/2022-04-05/3056633-147.patch",
-                "/project/drupal/issues/3207813 - ModuleHandler skips all hook implementations when invoked before the module files have been loaded": "https://www.drupal.org/files/issues/2022-01-20/3207813-8.patch"
+                "/project/drupal/issues/3207813 - ModuleHandler skips all hook implementations when invoked before the module files have been loaded": "https://www.drupal.org/files/issues/2022-06-21/3207813-15.patch"
             },
             "drupal/block_class": {
                 "Integration with Drupal core's new Layout Builder": "https://www.drupal.org/files/issues/2019-06-28/block_class-support-layout-builder-2998114-45.patch"
@@ -344,9 +345,6 @@
             },
             "drupal/commerce": {
                 "Promotion without coupons is always applied": "https://www.drupal.org/files/issues/promotion_without-2884888-12.patch"
-            },
-            "drupal/jquery_ui_touch_punch": {
-                "Download the library": "https://www.drupal.org/files/issues/2020-11-19/3159222-32.patch"
             },
             "drupal/simple_image_rotate": {
                 "Undefined methond getThirdPartySettings()": "https://www.drupal.org/files/issues/2020-08-26/simple-image-rotate-issue-3126067-undefined-getThirdPartySettings-method.patch"
@@ -365,9 +363,6 @@
             },
             "drupal/commerce_pos": {
                 "Auto set register to id of 1": "./patches/load-only-register-1b.patch"
-            },
-            "drupal/commerce_email": {
-                "Log emails into order activity log": "https://www.drupal.org/files/issues/2020-12-24/commerce_email-log-emails-to-order-activity-log-3189770-2.patch"
             },
             "drupal/feeds": {
                 "Undefined Index: allowed_extensions AJAX error when creating feed types.": "https://www.drupal.org/files/issues/2019-02-06/3031019-undefined-index-ajax-2.patch"

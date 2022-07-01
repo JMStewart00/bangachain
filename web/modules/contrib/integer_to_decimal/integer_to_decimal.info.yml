@@ -2,11 +2,11 @@ name: Field Updater
 type: module
 description: 'Changes field type numeric with data to field type decimal.'
 package: Other
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^8 || ^9 || ^10
 dependencies:
   - node
 
-# Information added by Drupal.org packaging script on 2021-12-14
-version: '2.0.0'
+# Information added by Drupal.org packaging script on 2022-06-27
+version: '2.0.1'
 project: 'integer_to_decimal'
-datestamp: 1639510047
+datestamp: 1656349293

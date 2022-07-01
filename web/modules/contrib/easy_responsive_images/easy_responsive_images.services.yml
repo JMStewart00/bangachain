@@ -3,3 +3,6 @@ services:
     class: Drupal\easy_responsive_images\TwigExtension\ImageUrl
     tags:
       - { name: twig.extension }
+  easy_responsive_images.manager:
+    class: Drupal\easy_responsive_images\EasyResponsiveImagesManager
+    arguments: ['@entity_type.manager', '@module_handler', '@file_url_generator']

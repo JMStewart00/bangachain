@@ -1,0 +1,10 @@
+description: 'Clear a queue'
+options:
+  queue-id: 'The queue ID'
+arguments:
+  job-state: 'Allowed job states'
+messages:
+  not-found: 'Could not find queue "%s".'
+  unknown-state: 'Unknown job state "%s".'
+  nothing-to-do: 'Finished. No jobs found in the %s queue.'
+  finished: 'Finished. Removed %s jobs from the %s queue.'

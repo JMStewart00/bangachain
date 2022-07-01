@@ -417,6 +417,7 @@ class ModuleHandlerTest extends UnitTestCase {
    * Tests getImplementations.
    *
    * @covers ::invokeAllWith
+   * @covers ::verifyImplementations
    */
   public function testCachedGetImplementationsMissingMethod() {
     $this->cacheBackend->expects($this->exactly(1))
@@ -561,7 +562,7 @@ class ModuleHandlerTest extends UnitTestCase {
   /**
    * Tests that modules are included in case of a partial cache miss.
    *
-   * @covers ::getImplementations
+   * @covers ::hasImplementations
    * @covers ::getImplementationInfo
    * @covers ::buildImplementationInfo
    */
@@ -577,8 +578,7 @@ class ModuleHandlerTest extends UnitTestCase {
       ]);
 
     $module_handler = $this->getModuleHandler();
-    $implementations = $module_handler->getImplementations('hook');
-    $this->assertEquals(['module_handler_test'], $implementations);
+    $this->assertTrue($module_handler->hasImplementations('hook', 'module_handler_test'));
   }
 
 }

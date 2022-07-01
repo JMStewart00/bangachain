@@ -49,7 +49,7 @@ class RulesLog implements LoggerInterface {
    * @todo Create a TypedData logger-entry object.
    * @see https://www.drupal.org/node/2625238
    */
-  public function log($level, $message, array $context = []) {
+  public function log($level, $message, array $context = []): void {
     // Remove any backtraces since they may contain an unserializable variable.
     unset($context['backtrace']);
 

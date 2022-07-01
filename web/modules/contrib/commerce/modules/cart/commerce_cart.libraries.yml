@@ -17,6 +17,7 @@ cart_block:
     - core/jquery
     - core/once
     - core/drupal
+    - core/drupal.form
 
 cart_form:
   version: VERSION
@@ -26,3 +27,4 @@ cart_form:
     - core/jquery
     - core/once
     - core/drupal
+    - core/drupal.form

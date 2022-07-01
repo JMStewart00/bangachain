@@ -152,10 +152,11 @@ class EmailForm extends EntityForm {
       '#element_validate' => ['token_element_validate'],
       '#token_types' => [$target_entity_type_id],
     ];
-    $form['logIntoOrder'] = [
+    $form['queue'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Logging emails that are sent by Commerce Email into order activity log'),
-      '#default_value' => $email->getLogIntoOrder() ?? 0,
+      '#title' => $this->t('Use queue'),
+      '#description' => $this->t('Queue these emails instead of sending them immediately.'),
+      '#default_value' => $email->shouldQueue(),
     ];
     $form['token_help'] = [
       '#theme' => 'token_tree_link',

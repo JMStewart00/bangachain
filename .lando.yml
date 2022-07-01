@@ -2,7 +2,7 @@ name: bangachain
 recipe: pantheon
 
 config:
-  php: "7.4"
+  php: "8.0"
   webroot: web
   xdebug: false
   id: 2b62a896-ca8f-4f60-a9b3-5497d8e23a8f
@@ -21,7 +21,7 @@ services:
       - cd $LANDO_MOUNT && composer install
 
   nodejs:
-    type: node:10
+    type: node:14
     globals:
       gulp-cli: latest
     run:

@@ -44,8 +44,9 @@ INSTALLATION
 Local installation (non-composer):
 
     1. Download the CKEditor font plugin (v4.13.x to be compatible with Drupal
-       8) from http://ckeditor.com/addon/font.
-    2. Place the plugin in the root libraries folder (/libraries).
+       9) from http://ckeditor.com/addon/font.
+    2. Place the plugin in the root libraries folder (/libraries or 
+      /libraries/ckeditor/plugins).
     3. Install as you would normally install a contributed Drupal module. Visit
        https://www.drupal.org/node/895232/ for further information.
 

@@ -71,11 +71,18 @@ class FontCKEditorButton extends CKEditorPluginBase implements CKEditorPluginCon
     }
 
     foreach ($directories as $dir) {
+      // Default where composer installs the library
       if (file_exists(DRUPAL_ROOT . '/' . $dir . 'font/plugin.js')) {
         return $dir . 'font';
       }
-    }
 
+      // Edge-case webform-like install paths
+      // https://www.drupal.org/project/ckeditor_font/issues/3046772
+      elseif (file_exists(DRUPAL_ROOT . '/' . $dir . 'ckeditor/plugins/font/plugin.js')) {
+        return $dir . 'ckeditor/plugins/font';        
+      }
+    }
+    
     return FALSE;
   }
 

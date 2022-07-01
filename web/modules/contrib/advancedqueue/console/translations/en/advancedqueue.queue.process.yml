@@ -1,0 +1,6 @@
+description: 'Process a queue.'
+options: {}
+arguments: {}
+messages:
+  not-found: 'Could not find queue "%s".'
+  finished: 'Processed %s jobs from the %s queue in %.2f seconds.'

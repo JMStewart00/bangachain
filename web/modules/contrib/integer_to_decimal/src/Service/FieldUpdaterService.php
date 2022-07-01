@@ -65,7 +65,7 @@ class FieldUpdaterService implements FieldUpdaterServiceInterface {
 
     $entity_type_manager = \Drupal::getContainer()->get('entity_type.manager');
     // Get an instance of Drupal\Core\Entity\Sql\DefaultTableMapping class
-    $table_mapping = $entity_type_manager->getStorage('commerce_product')->getTableMapping();
+    $table_mapping = $entity_type_manager->getStorage('node')->getTableMapping();
     $storage_definitions = $entity_type_manager->getFieldStorageDefinitions($entity_type);
     $data_table = $table_mapping->getDedicatedDataTableName($storage_definitions[$field]);
     if ($data_table) {

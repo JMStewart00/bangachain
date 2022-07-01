@@ -1,0 +1,42 @@
+<?php
+
+/**
+ * @file
+ * DrImage core functions.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function easy_responsive_images_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'easy_responsive_images.image':
+      return '<p>' . t('For a full description of the module, visit the project page: https://drupal.org/project/drimage') . '</p>';
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function easy_responsive_images_theme() {
+  return [
+    'easy_responsive_images_formatter' => [
+      'variables' => [
+        'item' => NULL,
+        'item_attributes' => NULL,
+        'image_attributes' => [],
+        'alt' => NULL,
+        'width' => NULL,
+        'height' => NULL,
+        'loading_method' => NULL,
+        'decoding_method' => NULL,
+        'fetch_priority' => NULL,
+        'data' => NULL,
+        'src' => NULL,
+        'srcset' => NULL,
+      ],
+    ],
+  ];
+}

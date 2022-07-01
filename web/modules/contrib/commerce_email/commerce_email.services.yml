@@ -5,10 +5,10 @@ services:
 
   commerce_email.email_subscriber:
     class: Drupal\commerce_email\EventSubscriber\EmailSubscriber
-    arguments: ['@commerce_email.email_sender', '@plugin.manager.commerce_email_event', '@event_dispatcher']
+    arguments: ['@commerce_email.email_sender', '@plugin.manager.commerce_email_event', '@event_dispatcher', '@queue', '@module_handler', '@entity_type.manager']
     tags:
       - { name: event_subscriber }
 
   commerce_email.email_sender:
     class: Drupal\commerce_email\EmailSender
-    arguments: ['@commerce.mail_handler', '@token', '@entity_type.manager']
+    arguments: ['@commerce.mail_handler', '@token']

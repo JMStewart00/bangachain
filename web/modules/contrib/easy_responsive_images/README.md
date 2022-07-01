@@ -25,9 +25,16 @@ USAGE
 ------------
 
 After generating the desired image styles for the different aspect ratio's,
-create a media view mode for each aspect ratio. The module provides a Twig
-filter to create URLs for the images styles (including an optimized WebP
-version of the image when using
+create a media view mode for each aspect ratio. The Easy Responsive Images
+formatter can be used to select an aspect ratio for the image in the media
+view mode. When using the media item in other content, render the media item
+using the view mode needed for the specific display.
+
+
+### Twig
+
+The module also provides a Twig filter to create URLs for the images styles
+(including an optimized WebP version of the image when using
 [ImageAPI Optimize WebP](https://www.drupal.org/project/imageapi_optimize_webp)).
 
 Create a template for your media view mode, eg. `media--image--16-9.html.twig`
@@ -45,15 +52,18 @@ for a `16_9` view mode, containing the following code:
 {% set file = media.field_media_image.entity %}
 {% set src = file.uri.value|image_url('responsive_16_9_50w') %}
 {% set srcset = [
-  file.uri.value|image_url('responsive_16_9_150w') ~ ' 150w',
-  file.uri.value|image_url('responsive_16_9_350w') ~ ' 350w',
-  file.uri.value|image_url('responsive_16_9_550w') ~ ' 550w',
-  file.uri.value|image_url('responsive_16_9_950w') ~ ' 950w',
-  file.uri.value|image_url('responsive_16_9_1250w') ~ ' 1250w',
-  file.uri.value|image_url('responsive_16_9_1450w') ~ ' 1450w',
+  file.uri.value|image_url('responsive_16_9_150w')|render ~ ' 150w',
+  file.uri.value|image_url('responsive_16_9_350w')|render ~ ' 350w',
+  file.uri.value|image_url('responsive_16_9_550w')|render ~ ' 550w',
+  file.uri.value|image_url('responsive_16_9_950w')|render ~ ' 950w',
+  file.uri.value|image_url('responsive_16_9_1250w')|render ~ ' 1250w',
+  file.uri.value|image_url('responsive_16_9_1450w')|render ~ ' 1450w',
 ] %}
-<img src="{{ src }}" data-srcset="{{ srcset|join(',') }}" alt="{{ media.field_media_image.alt }}" loading="lazy" />
-
+<img
+  src="{{ src }}"
+  data-srcset="{{ srcset|join(',') }}"
+  alt="{{ media.field_media_image.alt }}"
+  loading="lazy" />
 ```
 
 Each time media is displayed using the view mode, the JavaScript will check the

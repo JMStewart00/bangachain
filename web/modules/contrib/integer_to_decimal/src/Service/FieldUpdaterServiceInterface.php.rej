@@ -1,9 +1,0 @@
---- src/Service/FieldUpdaterServiceInterface.php
-+++ src/Service/FieldUpdaterServiceInterface.php
-@@ -26,5 +26,5 @@ interface FieldUpdaterServiceInterface
-    *
-    * @return mixed
-    */
--    public function fieldUpdater($field, $type, $bundle, $precision, $scale);
--}+    public function fieldUpdater($field, $type, $entity_type, $bundle, $precision, $scale);
-+}

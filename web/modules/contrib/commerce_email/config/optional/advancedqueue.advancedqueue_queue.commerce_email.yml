@@ -1,0 +1,7 @@
+status: true
+id: commerce_email
+label: 'Commerce Email'
+backend: database
+processor: cron
+processing_time: 180
+locked: false

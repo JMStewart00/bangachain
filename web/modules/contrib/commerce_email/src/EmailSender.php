@@ -5,7 +5,6 @@ namespace Drupal\commerce_email;
 use Drupal\commerce\MailHandlerInterface;
 use Drupal\commerce_email\Entity\EmailInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Utility\Token;
 
 class EmailSender implements EmailSenderInterface {
@@ -25,26 +24,16 @@ class EmailSender implements EmailSenderInterface {
   protected $token;
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * Constructs a new EmailSender object.
    *
    * @param \Drupal\commerce\MailHandlerInterface $mail_handler
    *   The mail handler.
    * @param \Drupal\Core\Utility\Token $token
    *   The token service.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
    */
-  public function __construct(MailHandlerInterface $mail_handler, Token $token, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(MailHandlerInterface $mail_handler, Token $token) {
     $this->mailHandler = $mail_handler;
     $this->token = $token;
-    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -74,26 +63,8 @@ class EmailSender implements EmailSenderInterface {
       'cc' => $this->replaceTokens($email->getCc(), $entity),
       'bcc' => $this->replaceTokens($email->getBcc(), $entity),
     ];
-    $result = $this->mailHandler->sendMail($to, $subject, $body, $params);
 
-    if ($email->getLogIntoOrder() && $event_entity_type_id === 'commerce_order') {
-      /** @var \Drupal\commerce_log\LogStorageInterface $log_storage */
-      $log_storage = $this->entityTypeManager->getStorage('commerce_log');
-      $email_id = $email->id();
-      $template_id = $result ? 'mail_' . $email_id : 'mail_' . $email_id . '_failure';
-      if (!isset($definitions[$template_id])) {
-        $template_id = $result ? 'order_mail' : 'order_mail_failure';
-      }
-
-      $log_params = [
-        'id' => $email->label(),
-        'to_email' => $to,
-      ];
-      $log_storage->generate($entity, $template_id, $log_params)->save();
-    }
-
-    return $result;
-
+    return $this->mailHandler->sendMail($to, $subject, $body, $params);
   }
 
   /**

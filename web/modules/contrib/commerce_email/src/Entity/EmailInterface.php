@@ -167,22 +167,22 @@ interface EmailInterface extends ConfigEntityInterface {
   public function setBody($body);
 
   /**
-   * Gets the 'log into order' value.
+   * Gets whether to email the email should be queued.
    *
    * @return bool
-   *   The value.
+   *   TRUE if the email should be queued, FALSE otherwise.
    */
-  public function getLogIntoOrder();
+  public function shouldQueue();
 
   /**
-   * Sets the 'log into order' value.
+   * Sets whether to email the email should be queued.
    *
-   * @param bool $value
-   *   The value.
+   * @param bool $queue
+   *   TRUE if the email should be queued, FALSE otherwise.
    *
    * @return $this
    */
-  public function setLogIntoOrder($value);
+  public function setQueue(bool $queue);
 
   /**
    * Gets the email conditions.

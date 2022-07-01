@@ -25,7 +25,7 @@ class ComposerAutoloaderInit3d80e700841ab59d16fa8cf88fa4b442
         require __DIR__ . '/platform_check.php';
 
         spl_autoload_register(array('ComposerAutoloaderInit3d80e700841ab59d16fa8cf88fa4b442', 'loadClassLoader'), true, true);
-        self::$loader = $loader = new \Composer\Autoload\ClassLoader();
+        self::$loader = $loader = new \Composer\Autoload\ClassLoader(\dirname(\dirname(__FILE__)));
         spl_autoload_unregister(array('ComposerAutoloaderInit3d80e700841ab59d16fa8cf88fa4b442', 'loadClassLoader'));
 
         $includePaths = require __DIR__ . '/include_paths.php';
@@ -69,11 +69,16 @@ class ComposerAutoloaderInit3d80e700841ab59d16fa8cf88fa4b442
     }
 }
 
+/**
+ * @param string $fileIdentifier
+ * @param string $file
+ * @return void
+ */
 function composerRequire3d80e700841ab59d16fa8cf88fa4b442($fileIdentifier, $file)
 {
     if (empty($GLOBALS['__composer_autoload_files'][$fileIdentifier])) {
-        require $file;
-
         $GLOBALS['__composer_autoload_files'][$fileIdentifier] = true;
+
+        require $file;
     }
 }

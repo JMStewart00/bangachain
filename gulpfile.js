@@ -28,105 +28,94 @@ const reactFilePaths = [
   "web/modules/custom/react_search/js/**/*.js",
 ];
 
-// Default task.
-gulp.task('default', ['build']);
+gulp.task('build:js', () => {
+  return gulp
+    .src(javascriptFilePaths)
+    .pipe(babel({
+      presets: ['@babel/env']
+    }))
+    .pipe(rename((path) => {
+      path.basename = path.basename.replace('.es6', '');
+    }))
+    .pipe(gulp.dest((file) => {
+      return file.base;
+    }));
+})
 
-// Build tasks.
-gulp
-  .task('build', ['build:js', 'build:sass', 'build:react'])
-  .task('build:js', () => {
-    return gulp
-      .src(javascriptFilePaths)
-      .pipe(babel({
-        presets: ['@babel/env']
-      }))
-      .pipe(rename((path) => {
-        path.basename = path.basename.replace('.es6', '');
-      }))
-      .pipe(gulp.dest((file) => {
-        return file.base;
-      }));
-  })
-  .task('build:sass', () => {
-    return gulp
-      .src(scssFilePaths)
-      .pipe(sassGlob())
-      .pipe(sass({
-        includePaths: [
-          "node_modules",
-          "web/libraries",
-        ]
-      }))
-      .pipe(autoprefixer({
-        browsers: ['last 2 versions'],
-        cascade: false,
-        grid: true
-      }))
-      .pipe(sass().on('error', sass.logError))
-      .pipe(gulp.dest((file) => {
-        return file.base;
-      }));
-  })
-  .task('build:react', () => {
-    return buildReact();
-  });
+gulp.task('build:sass', () => {
+  return gulp
+    .src(scssFilePaths)
+    .pipe(sassGlob())
+    .pipe(sass({
+      includePaths: [
+        "node_modules",
+        "web/libraries",
+      ]
+    }))
+    .pipe(autoprefixer({
+      browsers: ['last 2 versions'],
+      cascade: false,
+      grid: true
+    }))
+    .pipe(sass().on('error', sass.logError))
+    .pipe(gulp.dest((file) => {
+      return file.base;
+    }));
+})
 
-// Watch tasks.
-gulp
-  .task('watch', ['watch:js', 'watch:sass', 'watch:react'])
-  .task('watch:js', () => {
-    return gulp.watch(javascriptFilePaths, ['build:js']);
-  })
-  .task('watch:sass', () => {
-    return gulp.watch(scssFilePaths, ['build:sass']);
-  })
-  .task('watch:react', () => {
-    return gulp.watch(reactFilePaths, ['build:react']);
-  });
+gulp.task('build:react', () => {
+  return buildReact();
+});
 
-// Validate tasks.
-gulp
-  .task('validate', ['validate:js', 'validate:sass'])
-  .task('validate:sass', () => {
-    return gulp
-      .src(scssFilePaths)
-      .pipe(stylelint({
-        reporters: [
-          {
-            formatter: 'verbose',
-            console: true,
-          }
-        ],
-        debug: true,
-      }));
-  })
-  .task('validate:js', () => {
-    return gulp
-      .src(javascriptFilePaths)
-      .pipe(eslint())
-      .pipe(eslint.format())
-      .pipe(eslint.failAfterError());
-  });
+gulp.task('watchJS', () => {
+  return gulp.watch(javascriptFilePaths, ['build:js']);
+});
+gulp.task('watchSass', () => {
+  return gulp.watch(scssFilePaths, ['build:sass']);
+});
+gulp.task('watchReact', () => {
+  return gulp.watch(reactFilePaths, ['build:react']);
+});
 
-// Syntax fixer tasks.
-gulp
-  .task('fix', ['fix:js', 'fix:sass'])
-  .task('fix:js', () => {
-    return gulp
-      .src(javascriptFilePaths)
-      .pipe(eslint({ fix: true }))
-      .pipe(gulp.dest((file) => {
-        return file.base;
-      }))
-  })
-  .task('fix:sass', () => {
-    return gulp
-      .src(scssFilePaths)
-      .pipe(stylelint({ fix: true }))
-      .pipe(gulp.dest((file) => {
-        return file.base;
-      }));
-  });
+gulp.task('validateSass', () => {
+  return gulp
+    .src(scssFilePaths)
+    .pipe(stylelint({
+      reporters: [
+        {
+          formatter: 'verbose',
+          console: true,
+        }
+      ],
+      debug: true,
+    }));
+})
+
+gulp.task('validateJS', () => {
+  return gulp
+    .src(javascriptFilePaths)
+    .pipe(eslint())
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError());
+});
+
+gulp.task('fixJS', () => {
+  return gulp
+    .src(javascriptFilePaths)
+    .pipe(eslint({ fix: true }))
+    .pipe(gulp.dest((file) => {
+      return file.base;
+    }))
+});
+
+gulp.task('fixSass', () => {
+  return gulp
+    .src(scssFilePaths)
+    .pipe(stylelint({ fix: true }))
+    .pipe(gulp.dest((file) => {
+      return file.base;
+    }));
+});
 
 
 function buildReact() {
@@ -142,3 +131,18 @@ function buildReact() {
     })
   })
 }
+
+// Default task.
+gulp.task('default', gulp.series('build:js', 'build:sass', 'build:react'));
+
+// Build tasks.
+gulp.task('build', gulp.series('build:js', 'build:sass', 'build:react'))
+
+// Watch tasks.
+gulp.task('watch', gulp.series('watchJS', 'watchSass', 'watchReact'))
+
+// Validate tasks.
+gulp.task('validate', gulp.series('validateSass', 'validateJS'));
+
+// Syntax fixer tasks.
+gulp.task('fix', gulp.series('fixJS', 'fixSass'))

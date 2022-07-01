@@ -27,9 +27,9 @@ commerce_email.commerce_email.*:
       type: text
       label: 'Body'
       translatable: true
-    logIntoOrder:
+    queue:
       type: boolean
-      label: 'Logging emails into order activity log'
+      label: 'Use queue'
     conditions:
       type: sequence
       sequence:

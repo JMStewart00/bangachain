@@ -46,7 +46,7 @@ class RulesDebugLog implements LoggerInterface {
   /**
    * {@inheritdoc}
    */
-  public function log($level, $message, array $context = []) {
+  public function log($level, $message, array $context = []): void {
     // Remove any backtraces since they may contain an unserializable variable.
     unset($context['backtrace']);
 
@@ -86,21 +86,21 @@ class RulesDebugLog implements LoggerInterface {
    *     the last of the nested entries.
    *   - path: Path to edit this component.
    */
-  public function getLogs() {
+  public function getLogs(): array {
     return (array) $this->session->get('rules_debug_log');
   }
 
   /**
    * Clears the logs entries from the storage.
    */
-  public function clearLogs() {
+  public function clearLogs(): void {
     $this->session->remove('rules_debug_log');
   }
 
   /**
    * Renders the whole log.
    *
-   * @return string
+   * @return \Drupal\Component\Render\MarkupInterface
    *   An string already rendered to HTML.
    */
   public function render() {
@@ -114,7 +114,7 @@ class RulesDebugLog implements LoggerInterface {
    * @return array
    *   A Drupal render array.
    */
-  public function build() {
+  public function build(): array {
     $this->logs = $this->getLogs();
 
     if (count($this->logs) == 0) {
@@ -153,8 +153,14 @@ class RulesDebugLog implements LoggerInterface {
    * Renders the log of one event invocation.
    *
    * Called recursively, consuming all the log lines for this event.
+   *
+   * @param int $line
+   *   The line number of the log, starting at 0.
+   *
+   * @return array
+   *   A render array.
    */
-  public function renderHelper(&$line = 0) {
+  protected function renderHelper(int &$line = 0): array {
     $build = [];
     $startTime = $this->logs[$line]['timestamp'];
     while ($line < count($this->logs)) {

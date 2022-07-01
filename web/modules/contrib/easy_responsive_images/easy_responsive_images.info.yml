@@ -5,9 +5,9 @@ core_version_requirement: ^9
 package: Other
 configure: easy_responsive_images.generate
 dependencies:
-  - image
+  - drupal:image
 
-# Information added by Drupal.org packaging script on 2021-05-07
-version: '1.1.0'
+# Information added by Drupal.org packaging script on 2022-06-27
+version: '1.2.0'
 project: 'easy_responsive_images'
-datestamp: 1620369937
+datestamp: 1656342016

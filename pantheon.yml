@@ -1,6 +1,6 @@
 # Pantheon configuration
 api_version: 1
-php_version: 7.3
+php_version: 8.1
 database:
   version: 10.4
 

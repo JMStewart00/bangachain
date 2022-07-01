@@ -13,17 +13,23 @@ class ImageUrl extends AbstractExtension {
 
   /**
    * Generates a list of all Twig filters that this extension defines.
+   *
+   * @return array
+   *   An array of twig filters.
    */
-  public function getFilters() {
+  public function getFilters(): array {
     return [
-      new TwigFilter('image_url', [$this, 'ImageUrl']),
+      new TwigFilter('image_url', [$this, 'createImageUrl']),
     ];
   }
 
   /**
    * Gets a unique identifier for this Twig extension.
+   *
+   * @return string
+   *   The extension name.
    */
-  public function getName() {
+  public function getName(): string {
     return 'easy_responsive_images.image_url';
   }
 
@@ -32,14 +38,16 @@ class ImageUrl extends AbstractExtension {
    *
    * @param string $uri
    *   File URI or external image URL.
+   * @param string $style
+   *   The image style name.
    *
-   * @return array|void
+   * @return array
    *   The local image URL render-array.
    */
-  public static function ImageUrl($uri, $style) {
+  public static function createImageUrl(string $uri, string $style): array {
     $image_style = ImageStyle::load($style);
     if (!$uri || !$image_style || !$image_style->supportsUri($uri)) {
-      return;
+      return [];
     }
 
     // If we do not have a stream wrapper, it might be an external URL. If the
@@ -53,7 +61,7 @@ class ImageUrl extends AbstractExtension {
     }
 
     if (!$uri) {
-      return;
+      return [];
     }
 
     $file_url = file_url_transform_relative($image_style->buildUrl($uri));

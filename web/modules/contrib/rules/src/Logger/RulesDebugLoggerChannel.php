@@ -49,7 +49,7 @@ class RulesDebugLoggerChannel extends LoggerChannel {
    * backtracing. These are passed in via $context[] where they will be ignored
    * by any module that doesn't know about them ...
    */
-  public function log($level, $message, array $context = []) {
+  public function log($level, $message, array $context = []): void {
     // Log debugging information only if the debug_log.enabled setting is
     // enabled. Otherwise exit immediately.
     $config = $this->config->get('rules.settings');
@@ -84,9 +84,9 @@ class RulesDebugLoggerChannel extends LoggerChannel {
     }
 
     // Extract the Rules-specific defaults from $context.
-    $element = isset($context['element']) ? $context['element'] : NULL;
-    $scope = isset($context['scope']) ? $context['scope'] : NULL;
-    $path = isset($context['path']) ? $context['path'] : NULL;
+    $element = $context['element'] ?? NULL;
+    $scope = $context['scope'] ?? NULL;
+    $path = $context['path'] ?? NULL;
 
     if (!empty($element)) {
       // Need to know if we're in a Reaction Rule or a Rules Component, and need

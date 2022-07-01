@@ -7,12 +7,15 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandler;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form to generate image styles.
  */
 class GenerateImageStyles extends ConfigFormBase {
+
+  use StringTranslationTrait;
 
   /**
    * The entity type manager.
@@ -47,7 +50,7 @@ class GenerateImageStyles extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
+  public static function create(ContainerInterface $container): self {
     return new static(
       $container->get('config.factory'),
       $container->get('entity_type.manager'),
@@ -58,25 +61,25 @@ class GenerateImageStyles extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
+  public function getFormId(): string {
     return 'easy_responsive_images_generator';
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getEditableConfigNames() {
+  protected function getEditableConfigNames(): array {
     return ['easy_responsive_images.settings'];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state): array {
     $form['width'] = [
       '#type' => 'details',
       '#title' => $this->t('Width'),
-      '#description' => $this->t("Image styles will be generated between the minimum and maximum width with for images with a specific width but flexible height, maintaining the original aspect ratio of the image. To optimize the number of generated styles a fixed difference between the image style width can be configured. If there is a need to generate cropped images with a specific aspect ratio, a list of aspect ratio's can be defined."),
+      '#description' => $this->t("Image styles will be generated between the minimum and maximum width for images with a specific width but flexible height, maintaining the original aspect ratio of the image. To optimize the number of generated styles a fixed difference between the image style width can be configured. If there is a need to generate cropped images with a specific aspect ratio, a list of aspect ratios can be defined."),
       '#open' => TRUE,
       '#tree' => FALSE,
     ];
@@ -114,7 +117,7 @@ class GenerateImageStyles extends ConfigFormBase {
     $form['width']['aspect_ratios'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Supported aspect ratios'),
-      '#description' => $this->t("Define a list of aspect ratio's in the format w:h (eg. 16:9 or 4:3). Place each aspect ration on a separate line."),
+      '#description' => $this->t("Define a list of aspect ratios in the format w:h (eg. 16:9 or 4:3). Place each aspect ratio on a separate line."),
       '#default_value' => $this->config('easy_responsive_images.settings')->get('aspect_ratios'),
       '#attributes' => ['placeholder' => $this->t('eg. 16:9')],
     ];
@@ -162,7 +165,54 @@ class GenerateImageStyles extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state): void {
+    $width_threshold = $form_state->getValue('threshold_width');
+    $width_min = $form_state->getValue('minimum_width');
+    $width_max = $form_state->getValue('maximum_width');
+    $aspect_ratios = $form_state->getValue('aspect_ratios');
+
+    // If one of the values is set, the other fields should be required.
+    $field_names = [
+      'threshold_width',
+      'minimum_width',
+      'maximum_width',
+      'aspect_ratios',
+    ];
+    if ($width_threshold || $width_min || $width_max || $aspect_ratios) {
+      foreach ($field_names as $field_name) {
+        if (!$form_state->getValue($field_name)) {
+          $form_state->setErrorByName($field_name, $this->t('@name field is required.', [
+            '@name' => $form['width'][$field_name]['#title'],
+          ]));
+        }
+      }
+    }
+
+    $height_threshold = $form_state->getValue('threshold_height');
+    $height_min = $form_state->getValue('minimum_height');
+    $height_max = $form_state->getValue('maximum_height');
+
+    // If one of the values is set, the other fields should be required.
+    $field_names = [
+      'threshold_height',
+      'minimum_height',
+      'maximum_height',
+    ];
+    if ($height_threshold || $height_min || $height_max) {
+      foreach ($field_names as $field_name) {
+        if (!$form_state->getValue($field_name)) {
+          $form_state->setErrorByName($field_name, $this->t('@name field is required.', [
+            '@name' => $form['height'][$field_name]['#title'],
+          ]));
+        }
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     $config = $this->config('easy_responsive_images.settings');
     $config->set('threshold_width', $form_state->getValue('threshold_width'))
       ->set('minimum_width', $form_state->getValue('minimum_width'))
@@ -175,12 +225,12 @@ class GenerateImageStyles extends ConfigFormBase {
 
     $image_style_storage = $this->entityTypeManager->getStorage('image_style');
     $generated_styles = [];
-
-    // Generate the image styles for images with a specific width but flexible
-    // height, maintaining the original aspect ratio of the image.
     $width_threshold = $form_state->getValue('threshold_width') ?? 100;
     $width_min = $form_state->getValue('minimum_width');
     $width_max = $form_state->getValue('maximum_width');
+
+    // Generate the image styles for images with a specific width but flexible
+    // height, maintaining the original aspect ratio of the image.
     if ($width_min && $width_max) {
       for ($width = $width_min; $width <= $width_max; $width += $width_threshold) {
         $name = 'responsive_' . $width . 'w';
@@ -205,48 +255,51 @@ class GenerateImageStyles extends ConfigFormBase {
     }
 
     // Generate the image styles for images with a specific aspect ratio.
-    $aspect_ratios = array_filter(preg_split('/\s+/', $form_state->getValue('aspect_ratios')));
-    foreach ($aspect_ratios as $aspect_ratio) {
-      [$w, $h] = explode(':', $aspect_ratio);
-      for ($width = $width_min; $width <= $width_max; $width += $width_threshold) {
-        $height = ($width / $w) * $h;
-        $name = 'responsive_' . $w . '_' . $h . '_' . $width . 'w';
-        $generated_styles[] = $name;
-        if (!$image_style_storage->load($name)) {
-          /** @var \Drupal\image\ImageStyleInterface $style */
-          $style = $image_style_storage->create([
-            'name' => $name,
-            'label' => $name,
-          ]);
-          if ($this->moduleHandler->moduleExists('focal_point')) {
-            $style->addImageEffect([
-              'id' => 'focal_point_scale_and_crop',
-              'data' => [
-                'width' => $width,
-                'height' => $height,
-                'crop_type' => 'focal_point',
-              ],
+    if ($width_min && $width_max) {
+      $aspect_ratios = array_filter(preg_split('/\s+/', $form_state->getValue('aspect_ratios')));
+      foreach ($aspect_ratios as $aspect_ratio) {
+        [$w, $h] = explode(':', $aspect_ratio);
+        for ($width = $width_min; $width <= $width_max; $width += $width_threshold) {
+          $height = ($width / $w) * $h;
+          $name = 'responsive_' . $w . '_' . $h . '_' . $width . 'w';
+          $generated_styles[] = $name;
+          if (!$image_style_storage->load($name)) {
+            /** @var \Drupal\image\ImageStyleInterface $style */
+            $style = $image_style_storage->create([
+              'name' => $name,
+              'label' => $name,
             ]);
+            if ($this->moduleHandler->moduleExists('focal_point')) {
+              $style->addImageEffect([
+                'id' => 'focal_point_scale_and_crop',
+                'data' => [
+                  'width' => $width,
+                  'height' => $height,
+                  'crop_type' => 'focal_point',
+                ],
+              ]);
+            }
+            else {
+              $style->addImageEffect([
+                'id' => 'image_scale_and_crop',
+                'data' => [
+                  'width' => $width,
+                  'height' => $height,
+                ],
+              ]);
+            }
+            $style->save();
           }
-          else {
-            $style->addImageEffect([
-              'id' => 'image_scale_and_crop',
-              'data' => [
-                'width' => $width,
-                'height' => $height,
-              ],
-            ]);
-          }
-          $style->save();
         }
       }
     }
 
-    // Generate the image styles for images with a specific height but flexible
-    // width, maintaining the original aspect ratio of the image.
     $height_threshold = $form_state->getValue('threshold_height') ?? 100;
     $height_min = $form_state->getValue('minimum_height');
     $height_max = $form_state->getValue('maximum_height');
+
+    // Generate the image styles for images with a specific height but flexible
+    // width, maintaining the original aspect ratio of the image.
     if ($height_min && $height_max) {
       for ($height = $height_min; $height <= $height_max; $height += $height_threshold) {
         $name = 'responsive_' . $height . 'h';

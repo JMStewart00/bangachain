@@ -5,6 +5,7 @@ module:
   address: 0
   admin_toolbar: 0
   admin_toolbar_tools: 0
+  advancedqueue: 0
   ape: 0
   artwork_upload_pane: 0
   automated_cron: 0

@@ -55,7 +55,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
  *     "bcc",
  *     "subject",
  *     "body",
- *     "logIntoOrder",
+ *     "queue",
  *     "conditions",
  *     "conditionOperator",
  *   },
@@ -141,11 +141,11 @@ class Email extends ConfigEntityBase implements EmailInterface {
   protected $body;
 
   /**
-   * Logging to order activity log.
+   * Whether to email the email should be queued.
    *
-   * @var string
+   * @var bool
    */
-  protected $logIntoOrder;
+  protected $queue;
 
   /**
    * The conditions.
@@ -294,15 +294,15 @@ class Email extends ConfigEntityBase implements EmailInterface {
   /**
    * {@inheritdoc}
    */
-  public function getLogIntoOrder() {
-    return $this->logIntoOrder;
+  public function shouldQueue() {
+    return $this->queue;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setLogIntoOrder($value) {
-    $this->logIntoOrder = $value;
+  public function setQueue($queue) {
+    $this->queue = (bool) $queue;
     return $this;
   }
 

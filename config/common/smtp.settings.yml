@@ -8,7 +8,7 @@ smtp_protocol: standard
 smtp_autotls: false
 smtp_timeout: 30
 smtp_username: bangachain2012@gmail.com
-smtp_password: OmYVf1sg5IWwkFUS
+smtp_password: 5nZOrU3xpVqcdWbA
 smtp_from: no-reply@bangachain.com
 smtp_fromname: Bang-A-Chain
 smtp_client_hostname: ''

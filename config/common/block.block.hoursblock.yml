@@ -24,6 +24,6 @@ settings:
   label_display: visible
   provider: bangachain_custom_blocks
   content:
-    value: "<ul>\r\n\t<li>Wed-Sat 12:00 - 7:00 p.m.</li>\r\n\t<li>Sunday 12:00 - 5:00 p.m.</li>\r\n</ul>\r\n"
+    value: "<ul>\r\n\t<li>M&nbsp;: Closed | Tu: 2-8</li>\r\n\t<li>W-Sa: 12-8 | Su: 12-5</li>\r\n</ul>\r\n"
     format: full_html
 visibility: {  }

@@ -7,8 +7,8 @@ dependencies:
   module:
     - commerce_feeds
     - commerce_giftcard
-id: payout_import
 label: 'Payout Import'
+id: payout_import
 description: 'Importing payout for giftcards.'
 help: ''
 import_period: -1
@@ -25,14 +25,14 @@ processor: 'entity:commerce_giftcard'
 processor_configuration:
   values:
     type: payout
-  update_existing: 0
+  insert_new: 0
+  update_existing: 2
   update_non_existent: _keep
   skip_hash_check: false
   authorize: false
   expire: -1
   owner_feed_author: true
   owner_id: 0
-  insert_new: 1
 custom_sources:
   code:
     value: Code
@@ -65,7 +65,8 @@ mappings:
     map:
       value: code
     settings: {  }
-    unique: {  }
+    unique:
+      value: '1'
   -
     target: balance
     map:

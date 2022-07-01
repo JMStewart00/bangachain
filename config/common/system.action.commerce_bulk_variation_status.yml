@@ -1,6 +1,6 @@
 uuid: cafc76b8-fcd0-4b73-bf44-f6b46b5c00d8
 langcode: en
-status: true
+status: false
 dependencies:
   module:
     - commerce_bulk
